@@ -1,0 +1,1 @@
+export type Occupation = 'student' | 'unemployed' | 'employee' | 'entrepreneur';

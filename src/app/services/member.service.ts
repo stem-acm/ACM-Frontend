@@ -28,4 +28,8 @@ export class MemberService {
   addMember(member: Member) {
     return this.http.post<HttpResult>(`${this.URL}/member`, member);
   }
+
+  updateMember(member: Member) {
+    return this.http.put<HttpResult>(`${this.URL}/member`, member);
+  }
 }

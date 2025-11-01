@@ -4,12 +4,13 @@ import { HttpResult } from '../../types/httpResult';
 import { Member } from '../../interfaces/member';
 import { AcmLogoComponent } from '../../components/acm-logo/acm-logo.component';
 import { ActivatedRoute } from '@angular/router';
-import { MemberCardComponent } from '../../components/member-card/member-card.component';
+import { MemberCardDetailComponent } from '../../components/member-card-detail/member-card-detail.component';
+import dayjs from 'dayjs';
 
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [AcmLogoComponent, MemberCardComponent],
+  imports: [AcmLogoComponent, MemberCardDetailComponent],
   templateUrl: './profil.component.html',
   styleUrl: './profil.component.css'
 })
@@ -24,14 +25,21 @@ export class ProfilComponent {
     this.getMemberInfo(this.registrationNumber);
   }
 
+  convertDate(date: Date | string) {
+    return dayjs(date).format('YYYY-MM-DD');
+  }
+
   getMemberInfo(registrationNumber: string) {
     this.Member.getMemberByRegistrationNumber(registrationNumber)
       .subscribe((result: HttpResult) => {
         if(result.success && result.data) {
           this.member = result.data;
+          this.member.birthDate = this.convertDate(this.member.birthDate);
+          this.member.joinDate = this.convertDate(this.member.joinDate);
         } else {
           this.member = {
             registrationNumber: this.registrationNumber,
+              id: 0,
               firstName: '404',
               lastName: '',
               birthDate: '',

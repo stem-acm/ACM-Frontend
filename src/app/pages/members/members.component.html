@@ -56,5 +56,5 @@
 </div>
 
 @if(showAddForm) {
-    <app-add-member (showToast)="showAlert($event)" (canceled)="cancelForm($event)"/>
+    <app-add-member mode="insert" title="New Member" (showToast)="showAlert($event)" (canceled)="cancelForm($event)"/>
 }

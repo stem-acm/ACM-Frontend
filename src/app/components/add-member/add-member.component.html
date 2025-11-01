@@ -1,6 +1,6 @@
 <div class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center items-center">
   <form (ngSubmit)="saveMember()" class="max-w-2xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl">
-    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">New Member</h1>
+    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">{{ title }}</h1>
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
@@ -69,12 +69,26 @@
     @if(error.enabled) {<span class="text-xs font-bold text-red-500 bg-red-100">{{error.message}}</span>}
 
     <div class="flex justify-end gap-2">
-      <button type="button" (click)="cancel()" class="text-white bg-gray-400 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+      <button type="button" (click)="cancel()" class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
         Cancel
       </button>
-      <button type="submit" class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
-        Add member
-      </button>
+      @if(mode=='insert') {
+        <button *ngIf="loading" type="submit" class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+          <svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" clip-rule="evenodd" opacity=".2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z"/></g></svg>
+          Creating...
+        </button>
+        <button *ngIf="!loading" type="submit" class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+          Add member
+        </button>
+      } @else {
+        <button *ngIf="loading" type="submit" class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+          <svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" clip-rule="evenodd" opacity=".2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z"/></g></svg>
+          Updating...
+        </button>
+        <button *ngIf="!loading" type="submit" class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+          Update member
+        </button>
+      }
     </div>
   </form>
 </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { Occupation } from '../../types/occupation';
 import { MemberService } from '../../services/member.service';
 import { Member } from '../../interfaces/member';
@@ -6,7 +6,6 @@ import { HttpResult } from '../../types/httpResult';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../toast/toast.component';
-import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-add-member',
@@ -18,8 +17,13 @@ import { AppComponent } from '../../app.component';
 export class AddMemberComponent {
   @Output('canceled') emiterCancel = new EventEmitter<boolean>();
   @Output('showToast') emiterToast = new EventEmitter<string>();
+  @Output('updatedData') sendData = new EventEmitter<{data: Member, message: string}>();
   public occupations: Occupation[] = ['employee', 'entrepreneur', 'student', 'unemployed'];
   public error: {enabled: boolean, message: string} = {enabled: false, message: ''};
+  @Input() mode: 'update' | 'insert' = 'insert';
+  @Input() memberToUpdate!: Member;
+  @Input() title!: string;
+  public loading: boolean = false;
   public member: Member = {
     registrationNumber: '',
     firstName: '',
@@ -34,6 +38,12 @@ export class AddMemberComponent {
   };
 
   constructor(private memberService: MemberService) {}
+
+  ngOnInit() {
+    if(this.mode == 'update') {
+      this.member = { ...this.memberToUpdate };
+    }
+  }
 
   cancel() {
     this.emiterCancel.emit(true);
@@ -58,11 +68,21 @@ export class AddMemberComponent {
   }
 
   saveMember() {
+    this.loading = true;
+    if(this.mode=='insert') {
+      this.insertMember();
+    } else {
+      this.updateMember();
+    }
+  }
+
+  insertMember() {
     if (!this.checkValidation()) {
       this.error = {
             enabled: true,
             message: 'Please fill in all required fields.'
           }
+      this.loading = false;
       return;
     }
     this.memberService.addMember(this.member)
@@ -87,12 +107,45 @@ export class AddMemberComponent {
               joinDate: '',
             };
           }
+          this.loading = false;
         },
         (error) => {
           this.error = {
             enabled: true,
             message: error.error.message
           }
+        this.loading = false;
+        }
+      )
+  }
+
+  updateMember() {
+    if (!this.checkValidation()) {
+      this.error = {
+            enabled: true,
+            message: 'Please fill in all required fields.'
+          }
+      this.loading = false;
+      return;
+    }
+    this.memberService.updateMember(this.member)
+      .subscribe(
+        (result: HttpResult) => {
+          if(result.success) {
+            this.error = {
+              enabled: false,
+              message: ''
+            };
+            this.sendData.emit({data: this.member, message: `Member ${this.member.firstName} ${this.member.lastName} updated successfully`});
+          }
+          this.loading = false;
+        },
+        (error) => {
+          this.error = {
+            enabled: true,
+            message: error.error.message
+          }
+          this.loading = false;
         }
       )
   }

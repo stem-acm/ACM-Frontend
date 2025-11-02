@@ -26,8 +26,8 @@ export class FlexMenusComponent {
       exact: false
     },
     {
-      route: '/qr-code',
-      label: 'QR code',
+      route: '/volunteer',
+      label: 'Volunteer',
       exact: false
     },
   ];

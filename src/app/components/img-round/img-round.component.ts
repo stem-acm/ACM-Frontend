@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { BadgeComponent } from '../badge/badge.component';
 
 @Component({
   selector: 'app-img-round',
   standalone: true,
-  imports: [],
+  imports: [BadgeComponent],
   templateUrl: './img-round.component.html',
   styleUrl: './img-round.component.css'
 })

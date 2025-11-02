@@ -3,6 +3,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { MembersComponent } from './pages/members/members.component';
 import { ProfilComponent } from './pages/profil/profil.component';
 import { AuthComponent } from './pages/auth/auth.component';
+import { CardsComponent } from './pages/cards/cards.component';
 
 export const routes: Routes = [
     {
@@ -16,6 +17,10 @@ export const routes: Routes = [
     {
         path: 'profil/:reg_number',
         component: ProfilComponent
+    },
+    {
+        path: 'cards',
+        component: CardsComponent
     },
     {
         path: 'auth',

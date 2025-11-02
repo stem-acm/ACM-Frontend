@@ -62,4 +62,8 @@ export class MemberCardDetailComponent {
     this.showCard = true;
   }
 
+  printCard() {
+    window.print();
+  }
+
 }

@@ -8,3 +8,32 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@media print {
+  
+  body * {
+    visibility: hidden;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  #badgeSectionToPrint, #badgeSectionToPrint * {
+    visibility: visible;
+  }
+
+  #badgeSectionToPrint {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    transform: scale(0.87);
+    transform-origin: top center;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+}

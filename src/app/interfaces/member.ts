@@ -9,7 +9,7 @@ export interface Member {
   birthPlace: string;
   address: string;
   occupation: Occupation;
-  phoneNumber?: string;
+  phoneNumber: string;
   studyOrWorkPlace: string;
   joinDate: Date | string;
   profileImage?: string;

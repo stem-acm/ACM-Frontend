@@ -14,7 +14,7 @@
                         <app-list-value label="Occupation" value="{{member.occupation}}" />
                         <app-list-value label="Place of work/study" [value]="member.studyOrWorkPlace" />
                         <app-list-value label="Membership date" [value]="formatDate(member.joinDate)" />
-                        <app-list-value label="Phone Contact" [value]="formatDate(member.joinDate)" />
+                        <app-list-value label="Phone Contact" [value]="member.phoneNumber" />
                     </dl>
                 </div>
             </div>
@@ -59,21 +59,4 @@
     <app-add-member mode="update" title="Update Member" [memberToUpdate]="member" (updatedData)="showToast($event)" (canceled)="cancelForm($event)" />
 }
 
-<div *ngIf="showCard" class="fixed top-0 w-screen h-screen border z-20 bg-gray-700/50 flex justify-center items-center">
-    <div class="bg-white p-4 rounded-lg">
-        <h1 class="text-2xl text-center m-2">Membership Card</h1>
-        <div id="badgeSectionToPrint" class="border border-gray-200 rounded p-px">
-            <app-member-badge [member]="member"/>
-        </div>
-        <div class="flex gap-2 justify-end pt-3">
-            <button type="button" (click)="close()" class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
-                Close
-            </button>
-            <button type="button" (click)="printCard()" class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
-                Print
-            </button>
-        </div>
-    </div>
-</div>
-<!-- @if(showCard) {
-} -->
+<app-member-card-viewer *ngIf="showCard" (closed)="close($event)" [member]="member"/>

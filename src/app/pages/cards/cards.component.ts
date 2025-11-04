@@ -15,7 +15,7 @@ import { MemberCardViewerComponent } from '../../components/member-card-viewer/m
   styleUrl: './cards.component.css'
 })
 export class CardsComponent {
-  public memberClicked!: Member;
+  public membersClicked!: Member[];
   private member!: Member[];
   public membersChooseList: {selected: boolean, member: Member}[] = [];
   public showCard: boolean = false;
@@ -46,7 +46,7 @@ export class CardsComponent {
   }
 
   open(event: Member) {
-    this.memberClicked = event;
+    this.membersClicked = [event];
     this.showCard = true;
   }
 
@@ -65,8 +65,9 @@ export class CardsComponent {
   }
 
   printAllSelected() {
-    console.log(this.membersChooseList);
-    
+    const memberChoosed = this.membersChooseList.filter((e) => e.selected === true);
+    this.membersClicked = memberChoosed.map((e) => e.member);
+    this.showCard = true;
   }
 
   countMembersChooseList(select: boolean): number {

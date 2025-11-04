@@ -10,7 +10,7 @@ import { MemberBadgeComponent } from '../member-badge/member-badge.component';
   styleUrl: './member-card-viewer.component.css'
 })
 export class MemberCardViewerComponent {
-  @Input() member!: Member;
+  @Input() member!: Member[];
   @Output('closed') emiterClose = new EventEmitter<boolean>();
   
   close() {

@@ -1,8 +1,12 @@
 <div class="fixed top-0 w-screen h-screen border z-20 bg-gray-700/50 flex justify-center items-center">
     <div class="bg-white p-4 rounded-lg">
         <h1 class="text-2xl text-center m-2">Membership Card</h1>
-        <div id="badgeSectionToPrint" class="border border-gray-200 rounded p-px">
-            <app-member-badge [member]="member"/>
+        <div class="max-h-[70dvh] border overflow-auto">
+            <div id="badgeSectionToPrint" class="border border-gray-200 rounded p-px">
+                @for(item of member; track item) {
+                    <app-member-badge [member]="item"/>
+                }
+            </div>
         </div>
         <div class="flex gap-2 justify-end pt-3">
             <button type="button" (click)="close()" class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center cursor-pointer">

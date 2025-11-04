@@ -59,4 +59,4 @@
     <app-add-member mode="update" title="Update Member" [memberToUpdate]="member" (updatedData)="showToast($event)" (canceled)="cancelForm($event)" />
 }
 
-<app-member-card-viewer *ngIf="showCard" (closed)="close($event)" [member]="member"/>
+<app-member-card-viewer *ngIf="showCard" (closed)="close($event)" [member]="[member]"/>

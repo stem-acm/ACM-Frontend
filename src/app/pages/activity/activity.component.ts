@@ -50,6 +50,7 @@ export class ActivityComponent {
 
   showAlert(event: any) {
     this.app.showToast(event);
+    this.getActivityList();
   }
 
   clickEdit(event: Activity) {

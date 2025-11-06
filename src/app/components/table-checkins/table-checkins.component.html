@@ -5,13 +5,13 @@
                 Name
             </th>
             <th scope="col" class="px-6 py-3">
-                Occupation
+                Start time
             </th>
             <th scope="col" class="px-6 py-3">
-                Place of work/study
+                Purpose of visit
             </th>
             <th scope="col" class="px-6 py-3">
-                Member for
+                End time
             </th>
             <th scope="col" class="px-6 py-3">
                 Action
@@ -19,26 +19,26 @@
         </tr>
     </thead>
     <tbody>
-        @for(member of data; track member) {
+        @for(item of checkins; track item) {
             <tr class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                 <th scope="row" class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <img class="w-10 h-10 rounded-full" [src]="getfileUrl(member?.profileImage)" alt="Jese image">
+                    <img class="w-10 h-10 rounded-full" [src]="getfileUrl(item?.Member?.profileImage)" alt="Jese image">
                     <div class="ps-3">
-                        <div class="text-base font-semibold">{{ member?.lastName + ' ' + member?.firstName }}</div>
-                        <div class="font-normal text-gray-500">{{ member?.registrationNumber }}</div>
+                        <div class="text-base font-semibold">{{ item?.Member?.lastName + ' ' + item?.Member?.firstName }}</div>
+                        <div class="font-normal text-gray-500">{{ item?.Member?.registrationNumber }}</div>
                     </div>
                 </th>
                 <td class="px-6 py-4 capitalize">
-                    {{ member.occupation }}
+                    {{ formatTime(item.checkInTime) }}
                 </td>
                 <td class="px-6 py-4 capitalize">
-                    {{ member.studyOrWorkPlace }}
+                    {{ item.Activity?.name }}
                 </td>
                 <td class="px-6 py-4 capitalize">
-                    {{ formatDate(member.joinDate) }}
+                    {{ formatTime(item.checkOutTime) }}
                 </td>
                 <td class="px-6 py-4">
-                    <a [routerLink]="['/profil', member?.registrationNumber]" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View profil</a>
+                    <a [routerLink]="['/profil', item?.Member?.registrationNumber]" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View profil</a>
                 </td>
             </tr>
         }

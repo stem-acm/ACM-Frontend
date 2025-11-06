@@ -1,12 +1,39 @@
 import { Component } from '@angular/core';
+import { CardStatisticComponent } from '../../components/card-statistic/card-statistic.component';
+import { DashboardService } from '../../services/dashboard.service';
+import { HttpResult } from '../../types/httpResult';
+import { Checkin } from '../../interfaces/checkin';
+import { TableCheckinsComponent } from '../../components/table-checkins/table-checkins.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [CardStatisticComponent, TableCheckinsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  public statistics!: {
+    checkins: Checkin[],
+    member: number,
+    activity: number,
+  }
+
+  constructor(private dashboard: DashboardService) {}
+
+  ngOnInit() {
+    this.getStatistic();
+  }
+
+  getStatistic() {
+    this.dashboard.getStatistic()
+      .subscribe((result: HttpResult) => {
+        if(result.success) {
+          this.statistics = result.data;
+          console.log(result);
+          
+        }
+      })
+  }
 
 }

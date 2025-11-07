@@ -23,10 +23,10 @@
         </div>
     }
 
-    <div class="flex justify-between items-center">
-        <h1 class="text-xl font-bold text-blue-500 my-4">Members currently in the room</h1>
-    </div>
     @if(statistics) {
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-500 my-4">Members currently in the room</h1>
+        </div>
         <app-table-checkins [checkins]="statistics.checkins" />
     }
 

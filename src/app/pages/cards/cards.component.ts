@@ -6,11 +6,12 @@ import { MemberService } from '../../services/member.service';
 import { HttpResult } from '../../types/httpResult';
 import { CommonModule } from '@angular/common';
 import { MemberCardViewerComponent } from '../../components/member-card-viewer/member-card-viewer.component';
+import { CardSkeletonComponent } from '../../components/card-skeleton/card-skeleton.component';
 
 @Component({
   selector: 'app-cards',
   standalone: true,
-  imports: [MemberBadgeComponent, CardComponent, CommonModule, MemberCardViewerComponent],
+  imports: [MemberBadgeComponent, CardComponent, CommonModule, MemberCardViewerComponent, CardSkeletonComponent],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.css'
 })

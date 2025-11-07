@@ -22,6 +22,10 @@
             </button>
         </div>
     </div>
+    <div *ngIf="!membersChooseList" class="flex gap-3 flex-wrap justify-start p-4">
+        <app-card-skeleton />
+        <app-card-skeleton />
+    </div>
     <div *ngIf="membersChooseList" class="flex gap-3 flex-wrap justify-evenly p-4">
         <app-card *ngFor="let item of membersChooseList" (setSelectedMember)="open($event)" [memberChoose]="item" (memberSelectionChange)="onMemberSelectionChange($event)"/>
     </div>

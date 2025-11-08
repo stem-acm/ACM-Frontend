@@ -51,7 +51,11 @@
         </div>
     </div>
     <div class="relative rounded-lg overflow-x-auto shadow-lg">
-        <app-table-members [data]="memberFilter"/>
+        @if(!memberFilter) {
+            <app-table-loading [data]="{ columns: ['Name', 'Occupation', 'Place of work/study', 'Member for', 'Action'], textLoading: 'Search members...'}"/>
+        } @else {
+            <app-table-members [data]="memberFilter"/>
+        }
     </div>
 </div>
 

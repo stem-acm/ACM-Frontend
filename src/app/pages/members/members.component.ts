@@ -5,11 +5,12 @@ import { HttpResult } from '../../types/httpResult';
 import { Member } from '../../interfaces/member';
 import { AddMemberComponent } from '../../components/add-member/add-member.component';
 import { AppComponent } from '../../app.component';
+import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
 
 @Component({
   selector: 'app-members',
   standalone: true,
-  imports: [TableMembersComponent, AddMemberComponent],
+  imports: [TableMembersComponent, AddMemberComponent, TableLoadingComponent],
   templateUrl: './members.component.html',
   styleUrl: './members.component.css'
 })

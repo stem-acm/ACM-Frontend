@@ -5,11 +5,12 @@ import { HttpResult } from '../../types/httpResult';
 import { Checkin } from '../../interfaces/checkin';
 import { TableCheckinsComponent } from '../../components/table-checkins/table-checkins.component';
 import { CardStatisticSkeletonComponent } from '../../components/card-statistic-skeleton/card-statistic-skeleton.component';
+import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardStatisticComponent, TableCheckinsComponent, CardStatisticSkeletonComponent],
+  imports: [CardStatisticComponent, TableCheckinsComponent, CardStatisticSkeletonComponent, TableLoadingComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

@@ -1,0 +1,58 @@
+.scanner-container {
+  width: 100vw;
+  height: calc(100vh - 195px);
+  margin: 0 auto;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
+}
+
+#qr-reader {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Force video to be 500px height */
+#qr-reader video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Ensure canvas and other elements also respect the height */
+#qr-reader canvas,
+#qr-reader__dashboard,
+#qr-reader__dashboard_section {
+  max-height: 500px !important;
+}
+
+.camera-selection {
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.camera-selection label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.camera-selection select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

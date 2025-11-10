@@ -1,0 +1,28 @@
+<div class="flex flex-col justify-between overflow-x-hidden">
+  <h2>QR Code Scanner</h2>
+
+  <div *ngIf="scannerEnabled">
+    <div class="scanner-container">
+      <!-- The scanner will be rendered inside this div -->
+      <div id="qr-reader"></div>
+    </div>
+
+    <div *ngIf="availableDevices.length > 1" class="camera-selection">
+      <label for="cameraSelection">Select Camera:</label>
+      <select id="cameraSelection" (change)="onDeviceSelectChange($event)">
+        <option 
+          *ngFor="let device of availableDevices" 
+          [value]="device.id" 
+          [selected]="device.id === currentDeviceId">
+          {{ device.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="qrResultString">
+    <h3>Scanned Result:</h3>
+    <p>{{ qrResultString }}</p>
+    <button (click)="scanAgain()">Scan Again</button>
+  </div>
+</div>

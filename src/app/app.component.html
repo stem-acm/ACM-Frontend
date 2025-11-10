@@ -1,6 +1,13 @@
 @if(userConnected) {
-    <app-navbar/>
-}
+    @if (!hideMainLayout) {
+        <app-navbar/>
+    } @else {
+        <header class="flex justify-center items-center w-full p-3">
+            <a routerLink="/"><app-acm-logo /></a>
+        </header>
+    }
+} 
+
 <router-outlet />
 
 @if(toast.show) {

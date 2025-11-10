@@ -5,6 +5,7 @@ import { ProfilComponent } from './pages/profil/profil.component';
 import { AuthComponent } from './pages/auth/auth.component';
 import { CardsComponent } from './pages/cards/cards.component';
 import { ActivityComponent } from './pages/activity/activity.component';
+import { CheckinComponent } from './pages/checkin/checkin.component';
 
 export const routes: Routes = [
     {
@@ -31,5 +32,8 @@ export const routes: Routes = [
         path: 'activity',
         component: ActivityComponent
     },
-    
+    {
+        path: 'checkin',
+        component: CheckinComponent
+    }
 ];

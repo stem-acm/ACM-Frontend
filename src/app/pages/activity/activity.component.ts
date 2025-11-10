@@ -6,11 +6,12 @@ import { AppComponent } from '../../app.component';
 import { HttpResult } from '../../types/httpResult';
 import { TableActivitiesComponent } from '../../components/table-activities/table-activities.component';
 import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-activity',
   standalone: true,
-  imports: [AddActivityComponent, TableActivitiesComponent, TableLoadingComponent],
+  imports: [AddActivityComponent, TableActivitiesComponent, TableLoadingComponent, FormsModule],
   templateUrl: './activity.component.html',
   styleUrl: './activity.component.css'
 })
@@ -21,6 +22,7 @@ export class ActivityComponent {
   public showAddForm: boolean = false;
   public title: string = 'New Activity';
   public mode: 'insert' | 'update' = 'insert';
+  public searchWord!: string;
 
   constructor(private activityService: ActivityService, private app: AppComponent) {}
 
@@ -65,6 +67,14 @@ export class ActivityComponent {
     this.app.showToast(event.message);
     this.activityToUpdate = event.data;
     this.getActivityList();
+  }
+
+  search(keyWord: string) {
+    this.searchByName(keyWord);
+  }
+
+  searchByName(keyWord: string) {
+    this.activityFilter = this.activity.filter((e) => e.name.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 || e.description?.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1);
   }
 
 }

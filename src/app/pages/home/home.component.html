@@ -13,18 +13,7 @@
     }
 
     <div class="flex justify-between items-center">
-        <h1 class="text-xl font-bold text-blue-500 my-4">In Room</h1>
-    </div>
-    @if(!statistics) {
-        <app-card-statistic-skeleton />
-    } @else {
-        <div class="flex gap-4">
-            <app-card-statistic [data]="{title: 'Members', value: statistics.checkins.length, icon: 'people'}" />
-        </div>
-    }
-
-    <div class="flex justify-between items-center">
-        <h1 class="text-xl font-bold text-blue-500 my-4">Members currently in the room</h1>
+        <h1 class="text-xl font-bold text-blue-500 my-4">Members currently in the room ({{ statistics?statistics.checkins.length:0 }})</h1>
     </div>
     @if(!statistics) {
         <app-table-loading [data]="{ columns: ['Name', 'Start time', 'Purpose of visit', 'End time', 'Action'], textLoading: 'Looking for members in the room today...'}"/>

@@ -6,11 +6,12 @@ import { Member } from '../../interfaces/member';
 import { AddMemberComponent } from '../../components/add-member/add-member.component';
 import { AppComponent } from '../../app.component';
 import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-members',
   standalone: true,
-  imports: [TableMembersComponent, AddMemberComponent, TableLoadingComponent],
+  imports: [TableMembersComponent, AddMemberComponent, TableLoadingComponent, FormsModule],
   templateUrl: './members.component.html',
   styleUrl: './members.component.css'
 })
@@ -18,6 +19,7 @@ export class MembersComponent {
   private member!: Member[];
   public memberFilter!: Member[];
   public showAddForm: boolean = false;
+  public searchWord!: string;
 
   constructor(private Member: MemberService, private app: AppComponent) {}
 
@@ -48,6 +50,14 @@ export class MembersComponent {
 
   showAlert(event: any) {
     this.app.showToast(event);
+  }
+
+  search(keyWord: string) {
+    this.searchByName(keyWord);
+  }
+
+  searchByName(keyWord: string) {
+    this.memberFilter = this.member.filter((e) => e.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 || e.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1);
   }
 
 }

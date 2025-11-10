@@ -7,11 +7,12 @@ import { HttpResult } from '../../types/httpResult';
 import { CommonModule } from '@angular/common';
 import { MemberCardViewerComponent } from '../../components/member-card-viewer/member-card-viewer.component';
 import { CardSkeletonComponent } from '../../components/card-skeleton/card-skeleton.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cards',
   standalone: true,
-  imports: [MemberBadgeComponent, CardComponent, CommonModule, MemberCardViewerComponent, CardSkeletonComponent],
+  imports: [MemberBadgeComponent, CardComponent, CommonModule, MemberCardViewerComponent, CardSkeletonComponent, FormsModule],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.css'
 })
@@ -19,7 +20,9 @@ export class CardsComponent {
   public membersClicked!: Member[];
   private member!: Member[];
   public membersChooseList: {selected: boolean, member: Member}[] = [];
+  public membersChooseListFilter: {selected: boolean, member: Member}[] = [];
   public showCard: boolean = false;
+  public searchWord!: string;
 
   constructor(private Member: MemberService) {}
 
@@ -38,6 +41,7 @@ export class CardsComponent {
               member: e
             });
           });
+          this.membersChooseListFilter = this.membersChooseList;
         }
       })
   }
@@ -74,6 +78,14 @@ export class CardsComponent {
   countMembersChooseList(select: boolean): number {
     const memberChoose = this.membersChooseList.filter((e) => e.selected === select);
     return memberChoose.length;
+  }
+
+  search(keyWord: string) {
+    this.searchByName(keyWord);
+  }
+
+  searchByName(keyWord: string) {
+    this.membersChooseListFilter = this.membersChooseList.filter((e) => e.member.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 || e.member.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1);
   }
 
 }

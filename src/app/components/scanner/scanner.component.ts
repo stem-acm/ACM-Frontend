@@ -12,8 +12,8 @@ import { BrowserMultiFormatReader, Result } from '@zxing/library';
 export class ScannerComponent implements OnInit, OnDestroy {
   @ViewChild('video', { static: true }) videoElement!: ElementRef<HTMLVideoElement>;
   
-  @Input() scanZoneWidth: string = '300px';
-  @Input() scanZoneHeight: string = '300px';
+  @Input() scanZoneWidth: string = '320px';
+  @Input() scanZoneHeight: string = '320px';
   @Input() borderColor: string = '#FFC107';
   @Output() onScanComplete = new EventEmitter<string>();
 

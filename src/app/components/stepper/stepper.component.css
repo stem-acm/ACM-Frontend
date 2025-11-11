@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    overflow: hidden;
+    padding: 20px;
   }
 
 /* .stepper-container {

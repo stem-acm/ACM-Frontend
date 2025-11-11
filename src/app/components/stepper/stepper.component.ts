@@ -1,13 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, inject, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
 import { ClockComponent } from "../clock/clock.component";
+import { CheckinService } from '../../services/checkin.service';
+import { HttpResult } from '../../types/httpResult';
+import { ActivityService } from '../../services/activity.service';
+import { Activity } from '../../interfaces/activity';
+import { ToastService } from '../../services/toast.service';
 
-interface Activity {
+type ActivityToDsiplay = {
   id: number;
   name: string;
   icon: string;
-}
+};
 
 @Component({
   selector: 'app-stepper',
@@ -17,23 +22,35 @@ interface Activity {
   styleUrls: ['./stepper.component.css']
 })
 export class StepperComponent {
+
+  @Output() emiterToast = new EventEmitter<string>();
+
+  loading: boolean = false;
   currentStep = 1;
-  selectedActivities: Activity[] = [];
+  selectedActivities: ActivityToDsiplay[] = [];
   showMinutePicker = false;
   showHourPicker = false;
   scannedBadgeId: string | null = null;
 
-  activities: Activity[] = [
-    { id: 1, name: 'STEM', icon: '💡' },
-    { id: 2, name: 'BOOKS', icon: '📖' },
-    { id: 3, name: 'INTERNET', icon: '🌐' },
-    { id: 4, name: 'Kids Activity', icon: '👧' },
-    { id: 5, name: 'Small Table Talk', icon: '💬' },
-    { id: 6, name: 'Conversation Class', icon: '💭' },
+  checkinService = inject(CheckinService);
+  activityService = inject(ActivityService);
+  private toastService = inject(ToastService);
 
-  ];
+  activitiesToDisplay = [
+    { name: "Debate Club", icon: "🗣️"},
+    { name: 'STEM', icon: '💡' },
+    { name: 'Books', icon: '📖' },
+    { name: 'Internet', icon: '🌐' },
+    { name: 'Kids Activity', icon: '👧' },
+    { name: 'Small Table Talk', icon: '💬' },
+    { name: 'Conversation Class', icon: '💭' },
 
-  selectedTime = { hour: 8, minute: 0};
+  ]; 
+
+  activities: Activity[] = [];
+  finalActivities: ActivityToDsiplay[] = [];
+
+  selectedTime = { hour: 18, minute: 0};
 
   weekday = ["Monday", "Tuesday","Wednesday","Thursday","Friday", "Saturday"];
   normalWeekDay = ["Monday", "Tuesday","Wednesday","Thursday","Friday"]
@@ -48,6 +65,32 @@ export class StepperComponent {
 
   ngOnInit() {
     this.setTimeInput();
+    this.getActivities()
+  }
+
+  getActivities() {
+    this.loading = true;
+
+    this.activityService.getAllActivity().subscribe((result: HttpResult) => {
+      if (result.success) {
+        this.activities = result.data.filter((a: Activity) => a.isActive);
+
+        this.finalActivities = this.activitiesToDisplay.flatMap(a => {
+          let tmpAct = this.activities.filter(act => act.name == a.name);
+
+          return tmpAct.map(actv => ({
+            id: actv.id!,
+            name: actv.name,
+            icon: a.icon
+          }))
+        });
+
+        this.loading = false;
+
+      } else {
+        alert(result.message)
+      }
+    })
   }
 
   setTimeInput() {
@@ -55,9 +98,9 @@ export class StepperComponent {
       if (this.currentHour <= 12 && this.currentHour >= 6) {
         this.hours = Array.from({length: 12 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
         this.selectedTime.hour = 12;
-      } else if (this.currentHour <= 18 && this.currentHour >= 14) { 
-        this.hours = Array.from({length: 18 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        this.selectedTime.hour = 18;
+      } else if (this.currentHour <= 20 && this.currentHour >= 14) { 
+        this.hours = Array.from({length: 20 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
+        this.selectedTime.hour = 20;
       }
     } else {
       if (this.currentHour <= 17 && this.currentHour >= 6) { 
@@ -65,9 +108,11 @@ export class StepperComponent {
         this.selectedTime.hour = 17;
       }
     }
+
+    this.selectedTime.minute = 0;
   }
 
-  toggleActivity(activity: Activity) {
+  toggleActivity(activity: ActivityToDsiplay) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
     if (index > -1) {
       this.selectedActivities.splice(index, 1);
@@ -76,7 +121,7 @@ export class StepperComponent {
     }
   }
 
-  isActivitySelected(activity: Activity): boolean {
+  isActivitySelected(activity: ActivityToDsiplay): boolean {
     return this.selectedActivities.some(a => a.id === activity.id);
   }
 
@@ -125,13 +170,7 @@ export class StepperComponent {
   onBadgeScanned(badgeId: string) {
     this.scannedBadgeId = badgeId;
     console.log('Badge scanned:', badgeId);
-    // Automatically move to confirmation after scan
-    setTimeout(() => {
-      this.nextStep();
-    }, 1000);
-  }
 
-  finishCheckIn() {
     const date = new Date();
 
     date.setHours(this.selectedTime.hour);
@@ -140,17 +179,34 @@ export class StepperComponent {
     // Handle the complete check-in process
     console.log('Check-in complete:', {
       activityId: this.selectedActivities[0].id,
-      checkinTime: new Date(Date.now()).toISOString(),
-      checkoutTime: date.toISOString(),
+      checkInTime: new Date(Date.now()).toISOString(),
+      checkOutTime: date.toISOString(),
       registrationNumber: this.scannedBadgeId
     });
 
     const payload =  {
-      activityId: this.selectedActivities[0].id,
-      checkinTime: new Date(Date.now()).toISOString(),
-      checkoutTime: date.toISOString(),
-      registrationNumber: this.scannedBadgeId
+      activityId: this.selectedActivities[0].id!,
+      checkInTime: new Date(Date.now()),
+      checkOutTime: date,
+      //registrationNumber: this.scannedBadgeId!
+      registrationNumber: this.scannedBadgeId!.split("reg=")[1]
     }
+
+    this.checkinService.createCheckin(payload).subscribe((result: HttpResult) => {
+      if (result.success) {
+        this.nextStep();
+      } else {
+        alert(result.message)
+        this.toastService.showToast(result.message || 'Check-in failed');
+        this.reset();
+      }
+    }, (error) => {
+      alert(error)
+    });
+  }
+
+  finishCheckIn() {
+  
 
     // Reset or navigate as needed
     this.reset()

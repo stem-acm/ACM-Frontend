@@ -3,23 +3,8 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding: 20px;
-  }
 
-/* .stepper-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
-  padding: 20px;
-} */
+  }
 
 .header {
   margin-bottom: 40px;
@@ -436,9 +421,9 @@
     width: 140px;
   }
 
-  .stepper {
+ /*  .stepper {
     margin-top: 75px;
-  }
+  } */
 
   .content {
     margin-top: 40px;
@@ -457,9 +442,9 @@
  
 @media screen and (max-width: 768px) {
 
-  .stepper {
+ /*  .stepper {
     margin-top: 75px;
-  }
+  } */
 
   .content {
     margin-top: 40px;
@@ -492,9 +477,9 @@
     width: 100%;
   }
 
-  .stepper {
+ /*  .stepper {
     margin-top: 75px;
-  }
+  } */
 
   .content {
     margin-top: 40px;

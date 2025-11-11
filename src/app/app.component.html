@@ -2,8 +2,8 @@
     @if (!hideMainLayout) {
         <app-navbar/>
     } @else {
-        <header class="flex justify-center items-center w-full p-3">
-            <a routerLink="/"><app-acm-logo /></a>
+        <header class="flex justify-start items-center w-full p-3 z-100 bg-transparent relative">
+            <a class=" bg-white p-2 rounded-sm" routerLink="/"><app-acm-logo class="w-48 z-100" /></a>
         </header>
     }
 } 

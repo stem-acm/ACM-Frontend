@@ -1,7 +1,7 @@
 import { Member } from "../interfaces/member";
 
-export type HttpResult = {
+export type HttpResult<T> = {
   success: boolean;
   message: string;
-  data: Member | Member[] | any;
+  data: T
 };

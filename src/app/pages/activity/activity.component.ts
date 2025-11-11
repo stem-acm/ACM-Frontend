@@ -32,12 +32,10 @@ export class ActivityComponent {
 
   getActivityList() {
     this.activityService.getAllActivity()
-      .subscribe((result: HttpResult) => {
+      .subscribe((result: HttpResult<Activity[]>) => {
         if(result.success && result.data) {
           this.activity = result.data;
-          this.activityFilter = this.activity;
-          // console.log(this.activity);
-          
+          this.activityFilter = this.activity;          
         }
       })
   }

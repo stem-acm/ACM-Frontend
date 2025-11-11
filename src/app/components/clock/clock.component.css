@@ -1,0 +1,45 @@
+.clock-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+}
+
+.clock {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+    user-select: none;
+}
+
+.clock line.dragging {
+    stroke-width: 10;
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+.time-display {
+    margin-top: 30px;
+    font-size: 48px;
+    font-weight: bold;
+    color: black;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@media (max-width: 768px) {
+    .clock {
+    max-width: 300px;
+    }
+    
+    .time-display {
+    font-size: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .time-display {
+    font-size: 28px;
+    }
+}

@@ -19,13 +19,20 @@
   <div class="content" *ngIf="currentStep === 1">
     <h2 class="title">CHOOSE ACTIVITIES:</h2>
     
-    <div class="activities-grid">
+    <div *ngIf="loading" class="activities-grid">
+      <div class="activity-card h-40"></div>
+      <div class="activity-card h-40"></div>
+      <div class="activity-card h-40"></div>
+      <div class="activity-card h-40"></div>
+    </div>
+
+    <div *ngIf="!loading" class="activities-grid">
       <div 
-        *ngFor="let activity of activities"
+        *ngFor="let activity of finalActivities"
         class="activity-card"
         [class.selected]="isActivitySelected(activity)"
         (click)="toggleActivity(activity)">
-        <div class="activity-icon">{{ activity.icon }}</div>
+       <div class="activity-icon">{{ activity.icon }}</div>
         <div class="activity-name">{{ activity.name }}</div>
       </div>
     </div>

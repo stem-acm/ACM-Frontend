@@ -7,11 +7,12 @@ import { HttpResult } from './types/httpResult';
 import { ToastComponent } from './components/toast/toast.component';
 import { filter } from 'rxjs/operators';
 import { AcmLogoComponent } from "./components/acm-logo/acm-logo.component";
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, ToastComponent, AcmLogoComponent, RouterLink],
+  imports: [RouterOutlet, NavbarComponent, ToastComponent, AcmLogoComponent, RouterLink, NgxSpinnerModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

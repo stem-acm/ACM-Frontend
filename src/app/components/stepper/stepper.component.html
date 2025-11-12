@@ -1,9 +1,7 @@
-<div *ngIf="loading" class="activities-grid">
-      <div class="activity-card h-40"></div>
-      <div class="activity-card h-40"></div>
-      <div class="activity-card h-40"></div>
-      <div class="activity-card h-40"></div>
-    </div>
+
+  <ngx-spinner *ngIf="loading">
+    <p class="text-white">loading...</p>
+</ngx-spinner>
 
 <div *ngIf="!loading" class="stepper-container">
 

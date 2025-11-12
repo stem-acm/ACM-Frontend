@@ -7,6 +7,7 @@ import { HttpResult } from '../../types/httpResult';
 import { ActivityService } from '../../services/activity.service';
 import { Activity } from '../../interfaces/activity';
 import { ToastService } from '../../services/toast.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 type ActivityToDsiplay = {
   id: number;
@@ -17,7 +18,7 @@ type ActivityToDsiplay = {
 @Component({
   selector: 'app-stepper',
   standalone: true,
-  imports: [CommonModule, ScannerComponent, ClockComponent],
+  imports: [CommonModule, ScannerComponent, ClockComponent, NgxSpinnerModule],
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css']
 })
@@ -209,7 +210,7 @@ export class StepperComponent {
       if (error.status == 404) {
         alert("Member not found");
       }
-      
+
        this.reset();
     });
   }

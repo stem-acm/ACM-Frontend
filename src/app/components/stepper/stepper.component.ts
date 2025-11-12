@@ -72,10 +72,13 @@ export class StepperComponent {
     this.loading = true;
 
     this.activityService.getAllActivity().subscribe((result: HttpResult) => {
-      if (result.success) {
-        this.activities = result.data.filter((a: Activity) => a.isActive);
+      console.log({result})
 
-        this.finalActivities = this.activitiesToDisplay.flatMap(a => {
+      if (result.success) {
+        this.activities = result.data;
+
+
+     /*    this.finalActivities = this.activitiesToDisplay.flatMap(a => {
           let tmpAct = this.activities.filter(act => act.name == a.name);
 
           return tmpAct.map(actv => ({
@@ -83,7 +86,7 @@ export class StepperComponent {
             name: actv.name,
             icon: a.icon
           }))
-        });
+        }); */
 
         this.loading = false;
 
@@ -98,9 +101,9 @@ export class StepperComponent {
       if (this.currentHour <= 12 && this.currentHour >= 6) {
         this.hours = Array.from({length: 12 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
         this.selectedTime.hour = 12;
-      } else if (this.currentHour <= 20 && this.currentHour >= 14) { 
-        this.hours = Array.from({length: 20 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        this.selectedTime.hour = 20;
+      } else if (this.currentHour <= 23 && this.currentHour >= 14) { 
+        this.hours = Array.from({length: 23 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
+        this.selectedTime.hour = 23;
       }
     } else {
       if (this.currentHour <= 17 && this.currentHour >= 6) { 
@@ -112,7 +115,7 @@ export class StepperComponent {
     this.selectedTime.minute = 0;
   }
 
-  toggleActivity(activity: ActivityToDsiplay) {
+  toggleActivity(activity: any) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
     if (index > -1) {
       this.selectedActivities.splice(index, 1);
@@ -121,7 +124,7 @@ export class StepperComponent {
     }
   }
 
-  isActivitySelected(activity: ActivityToDsiplay): boolean {
+  isActivitySelected(activity: any): boolean {
     return this.selectedActivities.some(a => a.id === activity.id);
   }
 
@@ -196,12 +199,18 @@ export class StepperComponent {
       if (result.success) {
         this.nextStep();
       } else {
-        alert(result.message)
+        console.log(result.message)
         this.toastService.showToast(result.message || 'Check-in failed');
         this.reset();
       }
     }, (error) => {
-      alert(error)
+      console.log(error)
+
+      if (error.status == 404) {
+        alert("Member not found");
+      }
+      
+       this.reset();
     });
   }
 

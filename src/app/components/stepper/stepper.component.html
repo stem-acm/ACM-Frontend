@@ -1,4 +1,11 @@
-<div class="stepper-container">
+<div *ngIf="loading" class="activities-grid">
+      <div class="activity-card h-40"></div>
+      <div class="activity-card h-40"></div>
+      <div class="activity-card h-40"></div>
+      <div class="activity-card h-40"></div>
+    </div>
+
+<div *ngIf="!loading" class="stepper-container">
 
   <!-- Progress Stepper -->
   <div class="stepper">
@@ -18,21 +25,14 @@
   <!-- Step 1: Choose Activities -->
   <div class="content" *ngIf="currentStep === 1">
     <h2 class="title">CHOOSE ACTIVITIES:</h2>
-    
-    <div *ngIf="loading" class="activities-grid">
-      <div class="activity-card h-40"></div>
-      <div class="activity-card h-40"></div>
-      <div class="activity-card h-40"></div>
-      <div class="activity-card h-40"></div>
-    </div>
 
     <div *ngIf="!loading" class="activities-grid">
       <div 
-        *ngFor="let activity of finalActivities"
+        *ngFor="let activity of activities"
         class="activity-card"
         [class.selected]="isActivitySelected(activity)"
         (click)="toggleActivity(activity)">
-       <div class="activity-icon">{{ activity.icon }}</div>
+       <!-- <div class="activity-icon">{{ activity.icon }}</div> -->
         <div class="activity-name">{{ activity.name }}</div>
       </div>
     </div>

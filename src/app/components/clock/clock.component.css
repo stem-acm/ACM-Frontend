@@ -4,13 +4,14 @@
     align-items: center;
     justify-content: center;
     padding: 0px;
+    margin-top: -20px;
 }
 
 .clock {
     width: 100%;
-    max-width: 200px;
+    max-width: 100px;
     height: auto;
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+    /* filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3)); */
     user-select: none;
 }
 
@@ -20,7 +21,7 @@
 }
 
 .time-display {
-    margin-top: 30px;
+    /* margin-top: 30px; */
     font-size: 48px;
     font-weight: bold;
     color: black;
@@ -30,7 +31,7 @@
 
 @media (max-width: 768px) {
     .clock {
-    max-width: 300px;
+    max-width: 100px;
     }
     
     .time-display {

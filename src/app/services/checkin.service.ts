@@ -13,6 +13,6 @@ export class CheckinService {
   constructor(private http:HttpClient) { }
 
   createCheckin(memberData: Checkin) {
-    return this.http.post<HttpResult>(`${this.URL}/checkin`, memberData);
+    return this.http.post<HttpResult>(`${this.URL}/checkins`, memberData);
   }
 }

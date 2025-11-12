@@ -35,5 +35,10 @@ export class FlexMenusComponent {
       label: 'Activity',
       exact: false
     },
+    {
+      route: "/checkin",
+      label: "Checkin",
+      exact: false
+    }
   ];
 }

@@ -31,7 +31,7 @@ export class ProfilComponent {
 
   getMemberInfo(registrationNumber: string) {
     this.Member.getMemberByRegistrationNumber(registrationNumber)
-      .subscribe((result: HttpResult) => {
+      .subscribe((result: HttpResult<Member>) => {
         if(result.success && result.data) {
           this.member = result.data;
           this.member.birthDate = this.convertDate(this.member.birthDate);

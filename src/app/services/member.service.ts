@@ -12,24 +12,23 @@ export class MemberService {
 
   constructor(private http: HttpClient) { }
 
-  // Get all members
   getAllMembers() {
-    return this.http.get<HttpResult>(`${this.URL}/member`);
+    return this.http.get<HttpResult<Member[]>>(`${this.URL}/member`);
   }
 
   getMemberById(id: number) {
-    return this.http.get<HttpResult>(`${this.URL}/member/${id}`);
+    return this.http.get<HttpResult<Member>>(`${this.URL}/member/${id}`);
   }
 
   getMemberByRegistrationNumber(registrationNumber: string) {
-    return this.http.get<HttpResult>(`${this.URL}/member/reg/${registrationNumber}`);
+    return this.http.get<HttpResult<Member>>(`${this.URL}/member/reg/${registrationNumber}`);
   }
 
   addMember(member: Member) {
-    return this.http.post<HttpResult>(`${this.URL}/member`, member);
+    return this.http.post<HttpResult<Member>>(`${this.URL}/member`, member);
   }
 
   updateMember(member: Member) {
-    return this.http.put<HttpResult>(`${this.URL}/member`, member);
+    return this.http.put<HttpResult<Member>>(`${this.URL}/member`, member);
   }
 }

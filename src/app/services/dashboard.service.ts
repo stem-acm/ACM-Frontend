@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpResult } from '../types/httpResult';
 import { environment } from '../../environments/environment';
+import { Statistics } from '../interfaces/statisctics';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,6 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   getStatistic() {
-    return this.http.get<HttpResult>(`${this.URL}/dashboard`);
+    return this.http.get<HttpResult<Statistics>>(`${this.URL}/dashboard`);
   }
 }

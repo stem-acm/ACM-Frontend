@@ -14,19 +14,19 @@ export class ActivityService {
 
   // Get all activities
   getAllActivity() {
-    return this.http.get<HttpResult>(`${this.URL}/activity`);
+    return this.http.get<HttpResult<Activity[]>>(`${this.URL}/activity`);
   }
 
   getActivityById(id: number) {
-    return this.http.get<HttpResult>(`${this.URL}/activity/${id}`);
+    return this.http.get<HttpResult<Activity>>(`${this.URL}/activity/${id}`);
   }
 
   addActivity(activity: Activity) {
-    return this.http.post<HttpResult>(`${this.URL}/activity`, activity);
+    return this.http.post<HttpResult<Activity>>(`${this.URL}/activity`, activity);
   }
 
   updateActivity(activity: Activity) {
-    return this.http.put<HttpResult>(`${this.URL}/activity`, activity);
+    return this.http.put<HttpResult<Activity>>(`${this.URL}/activity`, activity);
   }
 
 }

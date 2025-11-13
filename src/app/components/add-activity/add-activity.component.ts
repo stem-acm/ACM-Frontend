@@ -70,7 +70,7 @@ export class AddActivityComponent {
     }
     this.activityService.addActivity(this.activity)
       .subscribe(
-        (result: HttpResult) => {
+        (result: HttpResult<Activity>) => {
           if(result.success) {
             this.error = {
               enabled: false,
@@ -108,7 +108,7 @@ export class AddActivityComponent {
     }
     this.activityService.updateActivity(this.activity)
       .subscribe(
-        (result: HttpResult) => {
+        (result: HttpResult<Activity>) => {
           if(result.success) {
             this.error = {
               enabled: false,

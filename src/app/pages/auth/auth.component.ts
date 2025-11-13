@@ -37,7 +37,7 @@ export class AuthComponent {
   onLogin() {
     this.authService.login({ username: this.username, password: this.password })
       .subscribe(
-        (res: HttpResult) => {
+        (res) => {
           this.authService.saveToken(res.data.token);
           this.loading = false;
           this.app.userConnected = true;

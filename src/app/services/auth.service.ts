@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { HttpResult } from '../types/httpResult';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(credentials: { username: string; password: string }) {
-    return this.http.post<HttpResult>(`${this.URL}/auth/login`, credentials);
+    return this.http.post<HttpResult<{ user: User; token: string }>>(`${this.URL}/auth/login`, credentials);
   }
 
   logout(): void {
@@ -33,7 +34,7 @@ export class AuthService {
 
   verifyToken() {
     const token: any = this.getToken();
-    return this.http.get<HttpResult>(`${this.URL}/auth/token`, {
+    return this.http.get<HttpResult<User>>(`${this.URL}/auth/token`, {
       params: {
         auth: token
       }

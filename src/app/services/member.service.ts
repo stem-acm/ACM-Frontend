@@ -12,7 +12,6 @@ export class MemberService {
 
   constructor(private http: HttpClient) { }
 
-  // Get all members
   getAllMembers() {
     return this.http.get<HttpResult>(`${this.URL}/members`);
   }

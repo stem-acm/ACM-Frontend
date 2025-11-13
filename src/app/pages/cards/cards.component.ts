@@ -32,7 +32,7 @@ export class CardsComponent {
 
   getMemberList() {
     this.Member.getAllMembers()
-      .subscribe((result: HttpResult) => {
+      .subscribe((result: HttpResult<Member[]>) => {
         if(result.success && result.data) {
           this.member = result.data;
           this.member.map((e) => {

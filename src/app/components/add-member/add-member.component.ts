@@ -87,7 +87,7 @@ export class AddMemberComponent {
     }
     this.memberService.addMember(this.member)
       .subscribe(
-        (result: HttpResult) => {
+        (result: HttpResult<Member>) => {
           if(result.success) {
             this.error = {
               enabled: false,
@@ -130,7 +130,7 @@ export class AddMemberComponent {
     }
     this.memberService.updateMember(this.member)
       .subscribe(
-        (result: HttpResult) => {
+        (result: HttpResult<Member>) => {
           if(result.success) {
             this.error = {
               enabled: false,

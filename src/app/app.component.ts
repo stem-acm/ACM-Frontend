@@ -45,7 +45,7 @@ export class AppComponent {
   verifyToken() {
     this.authService.verifyToken()
       .subscribe(
-        (result: HttpResult) => {
+        (result: HttpResult<User>) => {
           if(result.success) {
             this.user = result.data;
             this.userConnected = true;
@@ -56,7 +56,7 @@ export class AppComponent {
             this.router.navigate(['/auth']);
           }
         },
-        (error: any) => {
+        (error) => {
           this.router.navigate(['/auth']);
         }
       )

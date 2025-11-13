@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-acm-logo',
@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './acm-logo.component.css'
 })
 export class AcmLogoComponent {
-
+  @Input("class") public class: string = "";
 }

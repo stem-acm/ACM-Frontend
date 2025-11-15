@@ -41,6 +41,8 @@ export class ScannerComponent implements OnInit, OnDestroy {
       // Use a cast to any to avoid TS errors.
       (this.codeReader as any).timeBetweenScansMillis = 0;
 
+      this.videoElement.nativeElement.style.transform = "scaleX(-1)";
+
       this.codeReader.decodeFromVideoDevice(
         this.currentDeviceId,
         this.videoElement.nativeElement,

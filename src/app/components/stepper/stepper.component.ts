@@ -29,7 +29,7 @@ export class StepperComponent {
   icon = "🔎";
 
   loading: boolean = false;
-  currentStep = 1;
+  currentStep = 2;
   selectedActivities: ActivityToDsiplay[] = [];
   showMinutePicker = false;
   showHourPicker = false;
@@ -103,19 +103,43 @@ export class StepperComponent {
     if (this.normalWeekDay.includes(this.today)) {
       if (this.currentHour <= 12 && this.currentHour >= 6) {
         this.hours = Array.from({length: 12 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        this.selectedTime.hour = 12;
+        //this.selectedTime.hour = 12;
       } else if (this.currentHour <= 18 && this.currentHour >= 14) { 
         this.hours = Array.from({length: 18 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        this.selectedTime.hour = 18;
+       // this.selectedTime.hour = 18;
       }
     } else {
-      if (this.currentHour <= 17 && this.currentHour >= 6) { 
-        this.hours = Array.from({length: 17 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        this.selectedTime.hour = 17;
+      if (this.currentHour <= 16 && this.currentHour >= 6) { 
+        this.hours = Array.from({length: 16 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
+        //this.selectedTime.hour = 16;
       }
     }
 
-    this.selectedTime.minute = 0;
+    // choose closest minute by excess (round up to next configured minute)
+    const desired = this.currentTime + 5;
+    const nextMinute = this.minutes.find(m => m >= desired);
+    const wrapped = nextMinute === undefined;
+
+    // if wrapped, take the first minute (0) and advance hour if possible
+    this.selectedTime.minute = wrapped ? this.minutes[0] : (nextMinute as number);
+
+    if (wrapped) {
+      // prefer advancing within allowed hours if `this.hours` is defined
+      if (this.hours && this.hours.length) {
+        const currentIdx = this.hours.indexOf(this.currentHour);
+        if (currentIdx >= 0 && currentIdx < this.hours.length - 1) {
+          this.selectedTime.hour = this.hours[currentIdx + 1];
+        } else {
+          // already at last allowed hour, clamp to last hour
+          this.selectedTime.hour = this.hours[this.hours.length - 1];
+        }
+      } else {
+        // no hours array: just increment hour but clamp at 23
+        this.selectedTime.hour = Math.min(this.currentHour + 1, 23);
+      }
+    } else {
+      this.selectedTime.hour = this.currentHour;
+    }
   }
 
  /*  toggleActivity(activity: any) {

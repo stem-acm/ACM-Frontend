@@ -59,7 +59,7 @@
        <div class="hour-picker" *ngIf="showHourPicker">
         <div 
           *ngFor="let hour of hours"
-          class="minute-option"
+          class="minute-option shadow-lg"
           [class.selected]="selectedTime.hour === hour"
           (click)="selectHour(hour)">
           {{ hour.toString().padStart(2, '0') }}

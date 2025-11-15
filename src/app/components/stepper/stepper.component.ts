@@ -26,7 +26,7 @@ export class StepperComponent {
 
   @Output() emiterToast = new EventEmitter<string>();
 
-  icon = "😄";
+  icon = "🔎";
 
   loading: boolean = false;
   currentStep = 1;

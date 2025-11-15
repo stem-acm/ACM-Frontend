@@ -30,16 +30,16 @@
         class="activity-card"
         [class.selected]="isActivitySelected(activity)"
         (click)="toggleActivity(activity)">
-       <!-- <div class="activity-icon">{{ activity.icon }}</div> -->
+        <div class="activity-icon">{{ icon }}</div>
         <div class="activity-name">{{ activity.name }}</div>
       </div>
     </div>
 
-    <div class="navigation">
+    <!-- <div class="navigation">
       <button class="nav-button next" (click)="nextStep()" [disabled]="selectedActivities.length === 0">
         <span class="arrow">→</span>
       </button>
-    </div>
+    </div> -->
   </div>
 
   <!-- Step 2: Checkout Time -->
@@ -79,10 +79,12 @@
 
     <div class="navigation">
       <button class="nav-button back" (click)="previousStep()">
-        <span class="arrow">←</span>
+        <!-- <span class="arrow">←</span> -->
+        <img src="/back.webp" class="arrow" alt="Back Arrow" />
       </button>
       <button class="nav-button next" (click)="nextStep()">
-        <span class="arrow">→</span>
+        <!-- <span class="arrow">→</span> -->
+         <img src="/next.webp" class="arrow" alt="Next Arrow" />
       </button>
     </div>
   </div>
@@ -93,8 +95,8 @@
     
     <div class="scanner-wrapper">
       <app-scanner
-        [scanZoneWidth]="'320px'"
-        [scanZoneHeight]="'320px'"
+        [scanZoneWidth]="'500px'"
+        [scanZoneHeight]="'500px'"
         [borderColor]="'#FFC107'"
         (onScanComplete)="onBadgeScanned($event)">
       </app-scanner>
@@ -120,20 +122,22 @@
       </div>
 
       <div class="go-section">
-        <div class="arrow-icon">→</div>
+       <!--  <div class="arrow-icon text-8xl">→</div> -->
+        <img src="/arrow.webp" class="arrow-icon w-48" alt="Arrow" />
         <div class="go-text">GO</div>
       </div>
 
       <div class="running-icon">
-        <svg width="200" height="200" viewBox="0 0 200 200">
-          <!-- Running person icon -->
+        <img src="run.webp" class="h-32" alt="Running person" />
+        <!-- <svg width="200" height="200" viewBox="0 0 200 200">
+         
           <circle cx="70" cy="30" r="20" fill="#A0564E" opacity="0.7"/>
           <path d="M70 50 L90 80 L70 110" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
           <path d="M70 110 L50 140" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
           <path d="M70 110 L95 135" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
           <path d="M90 80 L110 70" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
           <path d="M90 80 L70 90" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
-        </svg>
+        </svg> -->
       </div>
     </div>
 

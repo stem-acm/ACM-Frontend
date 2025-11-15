@@ -12,8 +12,8 @@ import { BrowserMultiFormatReader, Result } from '@zxing/library';
 export class ScannerComponent implements OnInit, OnDestroy {
   @ViewChild('video', { static: true }) videoElement!: ElementRef<HTMLVideoElement>;
   
-  @Input() scanZoneWidth: string = '320px';
-  @Input() scanZoneHeight: string = '320px';
+  @Input() scanZoneWidth: string = '500px';
+  @Input() scanZoneHeight: string = '500px';
   @Input() borderColor: string = '#FFC107';
   @Output() onScanComplete = new EventEmitter<string>();
 
@@ -35,6 +35,11 @@ export class ScannerComponent implements OnInit, OnDestroy {
 
       const frontCamera = devices.find(d => d.label.toLowerCase().includes('front')) || devices[0];
       this.currentDeviceId = frontCamera.deviceId;
+
+      // Make scans run without the default delay (instantaneous continuous scanning)
+      // BrowserMultiFormatReader / BrowserCodeReader expose timeBetweenScansMillis internally.
+      // Use a cast to any to avoid TS errors.
+      (this.codeReader as any).timeBetweenScansMillis = 0;
 
       this.codeReader.decodeFromVideoDevice(
         this.currentDeviceId,
@@ -63,6 +68,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
   async resumeScan() {
     if (this.currentDeviceId) {
       this.result = null;
+      (this.codeReader as any).timeBetweenScansMillis = 0;
       this.codeReader.decodeFromVideoDevice(
         this.currentDeviceId,
         this.videoElement.nativeElement,

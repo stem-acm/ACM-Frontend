@@ -26,6 +26,8 @@ export class StepperComponent {
 
   @Output() emiterToast = new EventEmitter<string>();
 
+  icon = "😄";
+
   loading: boolean = false;
   currentStep = 1;
   selectedActivities: ActivityToDsiplay[] = [];
@@ -102,9 +104,9 @@ export class StepperComponent {
       if (this.currentHour <= 12 && this.currentHour >= 6) {
         this.hours = Array.from({length: 12 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
         this.selectedTime.hour = 12;
-      } else if (this.currentHour <= 23 && this.currentHour >= 14) { 
-        this.hours = Array.from({length: 23 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        this.selectedTime.hour = 23;
+      } else if (this.currentHour <= 18 && this.currentHour >= 14) { 
+        this.hours = Array.from({length: 18 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
+        this.selectedTime.hour = 18;
       }
     } else {
       if (this.currentHour <= 17 && this.currentHour >= 6) { 
@@ -116,12 +118,29 @@ export class StepperComponent {
     this.selectedTime.minute = 0;
   }
 
-  toggleActivity(activity: any) {
+ /*  toggleActivity(activity: any) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
     if (index > -1) {
       this.selectedActivities.splice(index, 1);
     } else if(this.selectedActivities.length !== 1)  { // change this line into else if multiple selection allowed
       this.selectedActivities.push(activity);
+      this.nextStep();
+    }
+  } */
+
+   toggleActivity(activity: any) {
+    const index = this.selectedActivities.findIndex(a => a.id === activity.id);
+    
+    if (index > -1) {
+      // Activity is already selected, deselect it
+      this.selectedActivities.splice(index, 1);
+    } else {
+      // Clear previous selection and select the new activity
+      this.selectedActivities = [];
+      this.selectedActivities.push(activity);
+      setTimeout(() => {
+        this.nextStep();
+      }, 500);
     }
   }
 

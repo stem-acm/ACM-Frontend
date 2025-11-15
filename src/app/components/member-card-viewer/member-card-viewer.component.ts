@@ -29,6 +29,9 @@ export class MemberCardViewerComponent {
     if (!content) return;
 
     const iframe = document.createElement('iframe');
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
     document.body.appendChild(iframe);
 
     const iframeWin = iframe.contentWindow;

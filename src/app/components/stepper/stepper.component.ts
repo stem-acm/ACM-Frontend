@@ -1,7 +1,6 @@
 import { Component, EventEmitter, inject, Output, HostListener} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
-import { ClockComponent } from "../clock/clock.component";
 import { CheckinService } from '../../services/checkin.service';
 import { HttpResult } from '../../types/httpResult';
 import { ActivityService } from '../../services/activity.service';
@@ -18,7 +17,7 @@ type ActivityToDsiplay = {
 @Component({
   selector: 'app-stepper',
   standalone: true,
-  imports: [CommonModule, ScannerComponent, ClockComponent, NgxSpinnerModule],
+  imports: [CommonModule, ScannerComponent, NgxSpinnerModule],
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css']
 })
@@ -38,17 +37,6 @@ export class StepperComponent {
   checkinService = inject(CheckinService);
   activityService = inject(ActivityService);
   private toastService = inject(ToastService);
-
-  activitiesToDisplay = [
-    { name: "Debate Club", icon: "🗣️"},
-    { name: 'STEM', icon: '💡' },
-    { name: 'Books', icon: '📖' },
-    { name: 'Internet', icon: '🌐' },
-    { name: 'Kids Activity', icon: '👧' },
-    { name: 'Small Table Talk', icon: '💬' },
-    { name: 'Conversation Class', icon: '💭' },
-
-  ]; 
 
   activities: Activity[] = [];
   finalActivities: ActivityToDsiplay[] = [];
@@ -133,15 +121,12 @@ export class StepperComponent {
     if (this.normalWeekDay.includes(this.today)) {
       if (this.currentHour <= 12 && this.currentHour >= 6) {
         this.hours = Array.from({length: 12 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        //this.selectedTime.hour = 12;
       } else if (this.currentHour <= 18 && this.currentHour >= 14) { 
         this.hours = Array.from({length: 18 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-       // this.selectedTime.hour = 18;
       }
     } else {
       if (this.currentHour <= 16 && this.currentHour >= 6) { 
         this.hours = Array.from({length: 16 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-        //this.selectedTime.hour = 16;
       }
     }
 
@@ -171,16 +156,6 @@ export class StepperComponent {
       this.selectedTime.hour = this.currentHour;
     }
   }
-
- /*  toggleActivity(activity: any) {
-    const index = this.selectedActivities.findIndex(a => a.id === activity.id);
-    if (index > -1) {
-      this.selectedActivities.splice(index, 1);
-    } else if(this.selectedActivities.length !== 1)  { // change this line into else if multiple selection allowed
-      this.selectedActivities.push(activity);
-      this.nextStep();
-    }
-  } */
 
    toggleActivity(activity: any) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
@@ -265,7 +240,6 @@ export class StepperComponent {
       activityId: this.selectedActivities[0].id!,
       checkInTime: new Date(Date.now()),
       checkOutTime: date,
-      //registrationNumber: this.scannedBadgeId!
       registrationNumber: this.scannedBadgeId!.split("reg=")[1]
     }
 
@@ -289,8 +263,6 @@ export class StepperComponent {
   }
 
   finishCheckIn() {
-  
-
     // Reset or navigate as needed
     this.reset()
   }

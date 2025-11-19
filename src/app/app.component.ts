@@ -34,11 +34,7 @@ export class AppComponent {
     this.router.events.pipe(
         filter(event => event instanceof NavigationEnd)
       ).subscribe((event: NavigationEnd) => {
-        if (event.url === '/checkin') {
-          this.hideMainLayout = true;
-        } else {
-          this.hideMainLayout = false;
-        }
+        this.hideMainLayout = event.url === '/checkin'
       });
   }
 

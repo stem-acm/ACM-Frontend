@@ -1,7 +1,7 @@
 export const environment = {
-    URL: 'http://192.168.88.135:3000/api',
-    FILEURL: 'http://192.168.88.135:3000/uploads',
-    STATICWEBURL: 'http://192.168.88.135:3000'
+    URL: 'http://localhost:3000/api',
+    FILEURL: 'http://localhost:3000/uploads',
+    STATICWEBURL: 'http://localhost:3000'
 };
 
 

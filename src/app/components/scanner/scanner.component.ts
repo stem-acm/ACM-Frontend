@@ -14,7 +14,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
   
   @Input() scanZoneWidth: string = '500px';
   @Input() scanZoneHeight: string = '500px';
-  @Input() borderColor: string = '#FFC107';
+  @Input() borderColor: string = '#FF0000';
   @Output() onScanComplete = new EventEmitter<string>();
 
   codeReader = new BrowserMultiFormatReader();
@@ -33,7 +33,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
         throw new Error('No camera devices found.');
       }
 
-      const frontCamera = devices.find(d => d.label.toLowerCase().includes('front')) || devices[0];
+      const frontCamera = devices.find(d => d.label.toLowerCase().includes('front') || d.label.toLowerCase().includes('user')) || devices[0];
       this.currentDeviceId = frontCamera.deviceId;
 
       // Make scans run without the default delay (instantaneous continuous scanning)

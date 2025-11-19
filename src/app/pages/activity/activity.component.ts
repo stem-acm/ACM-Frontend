@@ -43,6 +43,9 @@ export class ActivityComponent {
   }
 
   addActivity() {
+    this.mode = 'insert';
+    this.title = 'New Activity';
+    this.activityToUpdate = undefined!; // Resetting to undefined to clear the form
     this.showAddForm = true;
   }
 
@@ -63,6 +66,7 @@ export class ActivityComponent {
 
   clickEdit(event: Activity) {
     this.mode = 'update';
+    this.title = 'Update Activity';
     this.showAddForm = true;
     this.activityToUpdate = event;
   }

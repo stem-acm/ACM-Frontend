@@ -26,7 +26,7 @@ export class ActivityService {
   }
 
   updateActivity(activity: Activity) {
-    return this.http.put<HttpResult>(`${this.URL}/activities`, activity);
+    return this.http.put<HttpResult>(`${this.URL}/activities/${activity.id}`, activity);
   }
 
 }

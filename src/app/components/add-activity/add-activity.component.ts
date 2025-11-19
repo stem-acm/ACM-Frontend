@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Activity, DayOfWeek } from '../../interfaces/activity';
 import { FormsModule } from '@angular/forms';
 import { ActivityService } from '../../services/activity.service';
@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
   templateUrl: './add-activity.component.html',
   styleUrl: './add-activity.component.css'
 })
-export class AddActivityComponent {
+export class AddActivityComponent implements OnChanges {
   @Output('canceled') emiterCancel = new EventEmitter<boolean>();
   @Output('success') emiterSuccess = new EventEmitter<boolean>();
   @Output('showToast') emiterToast = new EventEmitter<string>();
@@ -55,6 +55,41 @@ export class AddActivityComponent {
   ngOnInit() {
     if(this.mode == 'update') {
       this.activity = { ...this.activityToUpdate };
+    } else {
+      // Explicitly reset the form when in insert mode
+      this.activity = {
+        name: '',
+        description: '',
+        image: '',
+        isPeriodic: true,
+        dayOfWeek: 'tuesday',
+        startDate: '',
+        endDate: '',
+        startTime: '',
+        endTime: ''
+      };
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['mode']) {
+      if (this.mode === 'insert') {
+        this.activity = {
+          name: '',
+          description: '',
+          image: '',
+          isPeriodic: true,
+          dayOfWeek: 'tuesday',
+          startDate: '',
+          endDate: '',
+          startTime: '',
+          endTime: ''
+        };
+      }
+    }
+    
+    if (changes['activityToUpdate'] && this.mode === 'update') {
+      this.activity = { ...this.activityToUpdate };
     }
   }
 
@@ -63,9 +98,29 @@ export class AddActivityComponent {
   }
 
   formatTime(time: string) {
+    if (!time) return '';
+    
+    // If it's an ISO timestamp (contains 'T'), extract just the time portion
+    if (time.includes('T')) {
+      try {
+        const date = new Date(time);
+        // Use UTC to avoid timezone issues
+        const hours = date.getUTCHours().toString().padStart(2, '0');
+        const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+        const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+      } catch (e) {
+        console.error('Error formatting time:', time, e);
+        return '';
+      }
+    }
+    
+    // If it's already in HH:mm format, add seconds
     if (time.length === 5) {
       return time + ':00';
     }
+    
+    // Otherwise return as-is (already in HH:mm:ss format)
     return time;
   }
 

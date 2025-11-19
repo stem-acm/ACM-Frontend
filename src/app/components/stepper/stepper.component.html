@@ -6,7 +6,7 @@
 <div *ngIf="!loading" class="stepper-container">
 
   <!-- Progress Stepper -->
-  <div class="stepper">
+ <!--  <div class="stepper">
     <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
       <div class="step-circle">1</div>
       <div class="step-line" [class.active]="currentStep > 1"></div>
@@ -18,6 +18,12 @@
     <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
       <div class="step-circle">3</div>
     </div>
+  </div> -->
+
+  <div class="stepper">
+    <h2 *ngIf="currentStep === 1" class="font-bold mb-3 underline text-lg">Step {{ currentStep }}</h2>
+    <h2 *ngIf="currentStep === 2" class="font-bold mb-3 underline text-lg">Step {{ currentStep }}</h2>
+    <h2 *ngIf="currentStep === 3" class="font-bold mb-3 underline text-lg bg-white py-2 px-6 rounded-md relative z-1000">Step {{ currentStep }}</h2>
   </div>
 
   <!-- Step 1: Choose Activities -->
@@ -44,15 +50,15 @@
 
   <!-- Step 2: Checkout Time -->
   <div class="content" *ngIf="currentStep === 2">
-    <h2 class="title">CHECKOUT TIME:</h2>
+    <h2 class="title">LEAVING TIME:</h2>
 
-    <app-clock />
+    <!-- <app-clock /> -->
     
     <div class="time-picker">
       <div class="time-display">
-        <div class="time-part hour" (click)="toggleHourPicker()" >{{ selectedTime.hour.toString().padStart(2, '0') }}</div>
+        <div class="time-part hour animate-attention" (click)="toggleHourPicker()" >{{ selectedTime.hour.toString().padStart(2, '0') }}</div>
         <div class="time-separator">:</div>
-        <div class="time-part minute" (click)="toggleMinutePicker()">
+        <div class="time-part minute animate-attention-with-delay" (click)="toggleMinutePicker()">
           {{ selectedTime.minute.toString().padStart(2, '0') }}
         </div>
       </div>

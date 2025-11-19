@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output} from '@angular/core';
+import { Component, EventEmitter, inject, Output, HostListener} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
 import { ClockComponent } from "../clock/clock.component";
@@ -29,7 +29,7 @@ export class StepperComponent {
   icon = "🔎";
 
   loading: boolean = false;
-  currentStep = 2;
+  currentStep = 1;
   selectedActivities: ActivityToDsiplay[] = [];
   showMinutePicker = false;
   showHourPicker = false;
@@ -78,7 +78,7 @@ export class StepperComponent {
       console.log({result})
 
       if (result.success) {
-        this.activities = result.data;
+        this.activities = result.data.filter((act: any) => act.isActive);
 
 
      /*    this.finalActivities = this.activitiesToDisplay.flatMap(a => {
@@ -263,5 +263,14 @@ export class StepperComponent {
 
     // Reset or navigate as needed
     this.reset()
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.time-picker')) {
+      this.showHourPicker = false;
+      this.showMinutePicker = false;
+    }
   }
 }

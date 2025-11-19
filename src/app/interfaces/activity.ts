@@ -7,6 +7,7 @@ export interface Activity {
     name: string;
     description?: string | null;
     image?: string | null;
+    emoji?: string | null;
     isPeriodic: boolean;
     dayOfWeek?: DayOfWeek;
     startDate?: string;

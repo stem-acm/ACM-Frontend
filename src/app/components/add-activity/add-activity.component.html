@@ -1,5 +1,5 @@
-<div class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center items-center">
-  <form (ngSubmit)="saveActivity()" class="max-w-md w-1/2 mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl">
+<div class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center overflow-y-scroll py-8">
+  <form (ngSubmit)="saveActivity()" class="max-w-md w-1/2 mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl h-fit">
     <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">{{ title }}</h1>
 
     <!-- Nom -->
@@ -31,6 +31,39 @@
                focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700
                dark:border-gray-600 dark:text-white"
       ></textarea>
+    </div>
+
+    <!-- Emoji Picker -->
+    <div class="mb-5">
+      <label class="block mb-2 text-sm font-medium">Activity Emoji</label>
+      <div class="flex items-center gap-2">
+        <div class="text-4xl">{{ activity.emoji || '😊' }}</div>
+        <button 
+          type="button"
+          (click)="showEmojiPicker = !showEmojiPicker"
+          class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+        >
+          {{ showEmojiPicker ? 'Close' : 'Choose Emoji' }}
+        </button>
+      </div>
+      
+      @if(showEmojiPicker) {
+        <div class="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600 max-h-64 overflow-y-auto">
+          <div class="grid grid-cols-8 gap-1">
+            @for(emoji of commonEmojis; track emoji) {
+              <button
+                type="button"
+                (click)="selectEmoji(emoji)"
+                class="text-2xl w-12 h-12 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                [class.bg-blue-100]="activity.emoji === emoji"
+                [class.dark:bg-blue-900]="activity.emoji === emoji"
+              >
+                {{ emoji }}
+              </button>
+            }
+          </div>
+        </div>
+      }
     </div>
 
     <!-- Statut -->

@@ -27,6 +27,7 @@ export class AddActivityComponent implements OnChanges {
     name: '',
     description: '',
     image: '',
+    emoji: '',
     isPeriodic: true,
     dayOfWeek: 'tuesday',
     startDate: '',
@@ -34,6 +35,42 @@ export class AddActivityComponent implements OnChanges {
     startTime: '',
     endTime: ''
   };
+
+  public showEmojiPicker = false;
+  public commonEmojis = [
+    // Education & Learning
+    '📚', '📖', '✏️', '📝', '🎓', '🏫', '', '📕', '📗', '📘', '📙', '📓',
+    // Technology & Innovation
+    '💻', '🖥️', '⌨️', '🖱️', '💾', '📱', '🔌', '🤖', '🚀', '💡', '🔬', '🧪', '🔭', '⚙️', '🔧', '🔨',
+    // Arts & Culture
+    '🎨', '🖼️', '🎭', '🎪', '🎬', '🎥', '📷', '📸', '🎵', '🎶', '🎤', '🎧', '🎹', '🎸', '🎺', '🎻',
+    // Sports & Recreation
+    '⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏓', '🏸', '🏒', '🏑', '🥊', '🥋', '⛳', '🎯', '🎳', '🏊',
+    // Communication & Discussion
+    '🗣️', '💬', '💭', '🗨️', '📢', '📣', '🎙️', '☎️', '📞', '✉️', '📧', '📬', '📮', '📪',
+    // Community & Social
+    '👥', '👫', '👬', '👭', '🤝', '👋', '🙌', '👏', '🤲', '🙏', '❤️', '💙', '💚', '💛',
+    // American & Global Culture
+    '🇺🇸', '🌎', '🌍', '🌏', '🌐', '🗽', '🏛️', '🎆', '🎇', '🗼', '🏰',
+    // Events & Celebrations
+    '🎉', '🎊', '🎈', '🎁', '🏆', '🥇', '🥈', '🥉', '🎖️', '🏅', '🎀', '🎗️',
+    // Food & Hospitality
+    '☕', '🍕', '🍔', '🌮', '🍿', '🧁', '🍰', '🎂', '🍪', '🥤', '🧃', '🍩',
+    // Nature & Environment
+    '🌱', '🌳', '🌲', '🌿', '♻️', '🌞', '🌈', '⛰️', '🌊', '🌸', '🌺', '🌻',
+    // Business & Leadership
+    '💼', '📊', '📈', '📉', '💰', '🎯', '🔑', '🏢', '📋', '📌', '📍', '🗂️',
+    // Health & Wellness
+    '🧘', '🏃', '🚴', '💪', '🧠', '�', '💊', '🏥', '⚕️',
+    // Reading & Writing
+    '📰', '📄', '📃', '📋', '📑', '🔖', '🖊️', '🖋️', '✒️', '📜', '📚',
+    // Gaming & Entertainment
+    '🎮', '🎲', '🃏', '🎰', '🧩', '🪀', '🎪', '🎡', '🎢',
+    // Travel & Adventure
+    '✈️', '🗺️', '🧳', '🎒', '🏕️', '⛺', '🚂', '🚗', '🚢',
+    // General Positive
+    '😊', '😃', '😄', '🙂', '👍', '✨', '🌟', '💫', '⭐', '🌠'
+  ];
 
   constructor(private activityService: ActivityService) {}
 
@@ -43,6 +80,7 @@ export class AddActivityComponent implements OnChanges {
       name: '',
       description: '',
       image: '',
+      emoji: '',
       isPeriodic: true,
       dayOfWeek: 'tuesday',
       startDate: '',
@@ -50,6 +88,12 @@ export class AddActivityComponent implements OnChanges {
       startTime: '',
       endTime: ''
     };
+    this.showEmojiPicker = false;
+  }
+
+  selectEmoji(emoji: string) {
+    this.activity.emoji = emoji;
+    this.showEmojiPicker = false;
   }
 
   ngOnInit() {
@@ -61,6 +105,7 @@ export class AddActivityComponent implements OnChanges {
         name: '',
         description: '',
         image: '',
+        emoji: '',
         isPeriodic: true,
         dayOfWeek: 'tuesday',
         startDate: '',
@@ -68,6 +113,7 @@ export class AddActivityComponent implements OnChanges {
         startTime: '',
         endTime: ''
       };
+      this.showEmojiPicker = false;
     }
   }
 
@@ -187,6 +233,7 @@ export class AddActivityComponent implements OnChanges {
               name: '',
               description: '',
               image: '',
+              emoji: '',
               isPeriodic: true,
               dayOfWeek: 'tuesday',
               startDate: '',
@@ -194,6 +241,7 @@ export class AddActivityComponent implements OnChanges {
               startTime: '',
               endTime: ''
             };
+            this.showEmojiPicker = false;
             this.emiterSuccess.emit(true);
           }
           this.loading = false;
@@ -247,6 +295,7 @@ export class AddActivityComponent implements OnChanges {
               name: '',
               description: '',
               image: '',
+              emoji: '',
               isPeriodic: true,
               dayOfWeek: 'tuesday',
               startDate: '',
@@ -254,6 +303,7 @@ export class AddActivityComponent implements OnChanges {
               startTime: '',
               endTime: ''
             };
+            this.showEmojiPicker = false;
             this.emiterSuccess.emit(true);
           }
           this.loading = false;

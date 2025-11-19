@@ -36,7 +36,7 @@
         class="activity-card"
         [class.selected]="isActivitySelected(activity)"
         (click)="toggleActivity(activity)">
-        <div class="activity-icon">{{ icon }}</div>
+        <div class="activity-icon">{{ activity.emoji || '😊' }}</div>
         <div class="activity-name">{{ activity.name }}</div>
       </div>
     </div>

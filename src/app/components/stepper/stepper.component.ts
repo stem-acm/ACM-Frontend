@@ -55,8 +55,8 @@ export class StepperComponent {
 
   selectedTime = { hour: 18, minute: 0};
 
-  weekday = ["Monday", "Tuesday","Wednesday","Thursday","Friday", "Saturday"];
-  normalWeekDay = ["Monday", "Tuesday","Wednesday","Thursday","Friday"]
+  weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  normalWeekDay = ["monday", "tuesday", "wednesday", "thursday", "friday"]
   today = this.weekday[new Date().getDay()];
 
   dateToday = new Date();
@@ -78,18 +78,8 @@ export class StepperComponent {
       console.log({result})
 
       if (result.success) {
-        this.activities = result.data.filter((act: any) => act.isActive);
-
-
-     /*    this.finalActivities = this.activitiesToDisplay.flatMap(a => {
-          let tmpAct = this.activities.filter(act => act.name == a.name);
-
-          return tmpAct.map(actv => ({
-            id: actv.id!,
-            name: actv.name,
-            icon: a.icon
-          }))
-        }); */
+        // Then filter by current day
+        this.activities = this.filterActivitiesByCurrentDay(result.data);
 
         this.loading = false;
 
@@ -97,6 +87,46 @@ export class StepperComponent {
         alert(result.message)
       }
     })
+  }
+
+  filterActivitiesByCurrentDay(activities: Activity[]): Activity[] {
+    const today = new Date();
+    const todayDayOfWeek = this.today as any; // Current day name in lowercase
+    
+    console.log('Today is:', todayDayOfWeek);
+    console.log('All activities before filtering:', activities);
+    
+    const filtered = activities.filter(activity => {
+      console.log('Checking activity:', activity.name, 'isPeriodic:', activity.isPeriodic, 'dayOfWeek:', activity.dayOfWeek);
+      
+      if (activity.isPeriodic) {
+        // For periodic activities, check if dayOfWeek matches today
+        const matches = activity.dayOfWeek === todayDayOfWeek;
+        console.log(`  Periodic activity "${activity.name}": dayOfWeek=${activity.dayOfWeek}, today=${todayDayOfWeek}, matches=${matches}`);
+        return matches;
+      } else {
+        // For non-periodic activities, check if today falls within the date range
+        if (!activity.startDate || !activity.endDate) {
+          console.log(`  Non-periodic activity "${activity.name}": missing dates`);
+          return false;
+        }
+        
+        const startDate = new Date(activity.startDate);
+        const endDate = new Date(activity.endDate);
+        
+        // Reset time to compare only dates
+        today.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+        
+        const inRange = today >= startDate && today <= endDate;
+        console.log(`  Non-periodic activity "${activity.name}": startDate=${activity.startDate}, endDate=${activity.endDate}, inRange=${inRange}`);
+        return inRange;
+      }
+    });
+    
+    console.log('Filtered activities:', filtered);
+    return filtered;
   }
 
   setTimeInput() {

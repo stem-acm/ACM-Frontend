@@ -34,7 +34,7 @@
     </div>
 
     <!-- Statut -->
-    <div class="mb-5 flex items-center">
+  <!--   <div class="mb-5 flex items-center">
       <input
         type="checkbox"
         id="isActive"
@@ -45,6 +45,61 @@
                focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
       />
       <label for="isActive" class="ml-2 text-sm font-medium">Active</label>
+    </div> -->
+
+    <!-- Periodicité -->
+    <div class="mb-5 flex items-center">
+      <input
+        type="checkbox"
+        id="isPeriodic"
+        [(ngModel)]="activity.isPeriodic"
+        name="isPeriodic"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
+               focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800
+               focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label for="isPeriodic" class="ml-2 text-sm font-medium">Periodic</label>
+    </div>
+
+    @if(activity.isPeriodic) {
+      <div class="mb-5">
+        <label for="dayOfWeek" class="ml-2 text-sm font-medium">Day of Week</label>
+        <select id="dayOfWeek" [(ngModel)]="activity.dayOfWeek" name="dayOfWeek" class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50
+               focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700
+               dark:border-gray-600 dark:text-white">
+          <option value="tuesday">Tuesday</option>
+          <option value="wednesday">Wednesday</option>
+          <option value="thursday">Thursday</option>
+          <option value="friday">Friday</option>
+          <option value="saturday">Saturday</option>
+        </select>
+      </div>
+    } @else {
+      <div class="mb-5">
+         <label for="startDate" class="ml-2 text-sm font-medium">Start date</label>
+         <input type="date" id="startDate" [(ngModel)]="activity.startDate" name="startDate" class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50
+               focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700
+               dark:border-gray-600 dark:text-white">
+      </div>
+      <div class="mb-5">
+         <label for="endDate" class="ml-2 text-sm font-medium">End date</label>
+         <input type="date" id="endDate" [(ngModel)]="activity.endDate" name="endDate" class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50
+               focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700
+               dark:border-gray-600 dark:text-white">
+      </div>
+    }
+
+    <div class="mb-5">
+      <label for="startTime" class="ml-2 text-sm font-medium">Start Time</label>
+      <input type="time" id="startTime" [(ngModel)]="activity.startTime" name="startTime" class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50
+            focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700
+            dark:border-gray-600 dark:text-white">
+    </div>
+    <div class="mb-5">
+      <label for="endTime" class="ml-2 text-sm font-medium">End Time</label>
+      <input type="time" id="endTime" [(ngModel)]="activity.endTime" name="endTime" class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50
+            focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700
+            dark:border-gray-600 dark:text-white">
     </div>
 
     @if(error.enabled) {<span class="text-xs font-bold text-red-500 bg-red-100">{{error.message}}</span>}

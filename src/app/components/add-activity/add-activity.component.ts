@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Activity } from '../../interfaces/activity';
+import { Activity, DayOfWeek } from '../../interfaces/activity';
 import { FormsModule } from '@angular/forms';
 import { ActivityService } from '../../services/activity.service';
 import { HttpResult } from '../../types/httpResult';
 import { CommonModule } from '@angular/common';
+import dayjs from 'dayjs';
 
 @Component({
   selector: 'app-add-activity',
@@ -14,6 +15,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AddActivityComponent {
   @Output('canceled') emiterCancel = new EventEmitter<boolean>();
+  @Output('success') emiterSuccess = new EventEmitter<boolean>();
   @Output('showToast') emiterToast = new EventEmitter<string>();
   @Output('updatedData') sendData = new EventEmitter<{data: Activity, message: string}>();
   public error: {enabled: boolean, message: string} = {enabled: false, message: ''};
@@ -24,13 +26,30 @@ export class AddActivityComponent {
   public activity: Activity = {
     name: '',
     description: '',
-    isActive: false
+    image: '',
+    isPeriodic: true,
+    dayOfWeek: 'tuesday',
+    startDate: '',
+    endDate: '',
+    startTime: '',
+    endTime: ''
   };
 
   constructor(private activityService: ActivityService) {}
 
   cancel() {
     this.emiterCancel.emit(true);
+    this.activity = {
+      name: '',
+      description: '',
+      image: '',
+      isPeriodic: true,
+      dayOfWeek: 'tuesday',
+      startDate: '',
+      endDate: '',
+      startTime: '',
+      endTime: ''
+    };
   }
 
   ngOnInit() {
@@ -39,15 +58,28 @@ export class AddActivityComponent {
     }
   }
 
+  formatDate(date: Date | string) {
+    return dayjs(date).format('YYYY-MM-DD');
+  }
+
+  formatTime(time: string) {
+    if (time.length === 5) {
+      return time + ':00';
+    }
+    return time;
+  }
+
   checkValidation(): boolean {
     const m = this.activity;
-    if (
-      m.name?.trim() &&
-      m.description
-    ) {
-      return true;
+    const commonFields = m.name?.trim() && m.description && m.startTime && m.endTime;
+    
+    if (!commonFields) return false;
+
+    if (m.isPeriodic) {
+      return !!m.dayOfWeek;
+    } else {
+      return !!(m.startDate && m.endDate);
     }
-    return false;
   }
 
   saveActivity() {
@@ -68,6 +100,24 @@ export class AddActivityComponent {
       this.loading = false;
       return;
     }
+
+    const baseDate = this.activity.startDate ? this.activity.startDate : new Date();
+    const formattedStartTime = this.formatTime(this.activity.startTime);
+    const formattedEndTime = this.formatTime(this.activity.endTime);
+    
+    // Always send startDate and endDate, defaulting to baseDate if not present
+    // Only send startDate and endDate if NOT periodic
+    const formattedStartDate = !this.activity.isPeriodic ? this.formatDate(this.activity.startDate || baseDate) : undefined;
+    const formattedEndDate = !this.activity.isPeriodic ? this.formatDate(this.activity.endDate || baseDate) : undefined;
+
+    this.activity = { 
+      ...this.activity, 
+      startDate: formattedStartDate, 
+      endDate: formattedEndDate,
+      startTime: formattedStartTime,
+      endTime: formattedEndTime
+    };
+
     this.activityService.addActivity(this.activity)
       .subscribe(
         (result: HttpResult<Activity>) => {
@@ -77,11 +127,19 @@ export class AddActivityComponent {
               message: ''
             };
             this.emiterToast.emit(`Activity ${this.activity.name} created successfully`)
+            console.log("Activity=" + JSON.stringify(this.activity));
             this.activity = {
               name: '',
               description: '',
-              isActive: false
+              image: '',
+              isPeriodic: true,
+              dayOfWeek: 'tuesday',
+              startDate: '',
+              endDate: '',
+              startTime: '',
+              endTime: ''
             };
+            this.emiterSuccess.emit(true);
           }
           this.loading = false;
         },
@@ -106,6 +164,21 @@ export class AddActivityComponent {
       this.loading = false;
       return;
     }
+    const baseDate = this.activity.startDate ? this.activity.startDate : new Date();
+    const formattedStartTime = this.formatTime(this.activity.startTime);
+    const formattedEndTime = this.formatTime(this.activity.endTime);
+
+    const formattedStartDate = !this.activity.isPeriodic ? this.formatDate(this.activity.startDate || baseDate) : undefined;
+    const formattedEndDate = !this.activity.isPeriodic ? this.formatDate(this.activity.endDate || baseDate) : undefined;
+
+    this.activity = { 
+      ...this.activity, 
+      startDate: formattedStartDate, 
+      endDate: formattedEndDate,
+      startTime: formattedStartTime,
+      endTime: formattedEndTime
+    };
+
     this.activityService.updateActivity(this.activity)
       .subscribe(
         (result: HttpResult<Activity>) => {
@@ -115,6 +188,18 @@ export class AddActivityComponent {
               message: ''
             };
             this.sendData.emit({data: this.activity, message: `Activity ${this.activity.name} updated successfully`});
+             this.activity = {
+              name: '',
+              description: '',
+              image: '',
+              isPeriodic: true,
+              dayOfWeek: 'tuesday',
+              startDate: '',
+              endDate: '',
+              startTime: '',
+              endTime: ''
+            };
+            this.emiterSuccess.emit(true);
           }
           this.loading = false;
         },

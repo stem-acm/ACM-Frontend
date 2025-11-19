@@ -35,7 +35,9 @@ export class ActivityComponent {
       .subscribe((result: HttpResult<Activity[]>) => {
         if(result.success && result.data) {
           this.activity = result.data;
-          this.activityFilter = this.activity;          
+          this.activityFilter = this.activity;
+          console.log("Activity from activity compnent" + JSON.stringify(this.activity));
+
         }
       })
   }
@@ -48,6 +50,11 @@ export class ActivityComponent {
     if(event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
+
+  closeForm(event: any) {
+    if(event) this.showAddForm = false;
+  }
+
 
   showAlert(event: any) {
     this.app.showToast(event);

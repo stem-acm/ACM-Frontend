@@ -1,6 +1,6 @@
 @if(userConnected) {
     @if (!hideMainLayout) {
-        <app-navbar/>
+        <app-navbar [user]="user"/>
     } @else {
         <header class="flex justify-start items-center w-full p-3 z-100 bg-transparent relative">
             <app-acm-logo class="w-48 z-100 bg-white p-2 rounded-sm" />

@@ -41,6 +41,7 @@ export class AuthComponent {
           this.authService.saveToken(res.data.token);
           this.loading = false;
           this.app.userConnected = true;
+          this.app.user = res.data.user;
           this.router.navigate(['/']);
         },
         (err) => {

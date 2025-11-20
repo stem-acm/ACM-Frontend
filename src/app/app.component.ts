@@ -27,7 +27,7 @@ export class AppComponent {
 
   ngOnInit() {
     this.verifyToken();
-    this.checkRoute()
+    this.checkRoute();
   }
 
   checkRoute() {

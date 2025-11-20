@@ -1,0 +1,27 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - develop
+      - feat/deploy
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cd ${{ secrets.PROJECT_FOLDER }}
+            git reset --hard && git checkout develop && git pull &&  rm -rf node_modules package-lock.json && npm install --legacy-peer-deps
+            npm run build --prod
+            npm run serve:prod
+            pm2 restart acm-frontend

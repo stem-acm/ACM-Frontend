@@ -12,7 +12,7 @@ import { environment } from '../../../environments/environment';
 })
 export class MemberBadgeVersoComponent {
   @Input() registrationNumber!: string;
-  private URL: string = environment.STATICWEBURL;
+  private URL: string = environment.STATIC_WEB_URL;
 
   getLink(): string {
     return `${this.URL}/member?reg=${this.registrationNumber}`;

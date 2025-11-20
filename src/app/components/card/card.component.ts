@@ -14,7 +14,7 @@ export class CardComponent {
   @Output('setSelectedMember') emiterMember = new EventEmitter<Member>();
   @Output('memberSelectionChange') emiterMemberSelectionChange = new EventEmitter<{ selected: boolean, member: Member }>();
 
-  private URL: string = environment.FILEURL;
+  private URL: string = environment.FILE_URL;
 
   getfileUrl(fileName: any) {
     return `${this.URL}/${fileName ??= 'user.png'}`;

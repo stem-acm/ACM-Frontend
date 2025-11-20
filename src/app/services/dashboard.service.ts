@@ -8,7 +8,7 @@ import { Statistics } from '../interfaces/statistics';
   providedIn: 'root'
 })
 export class DashboardService {
-  private URL: string = environment.URL;
+  private URL: string = environment.API_URL;
 
   constructor(private http: HttpClient) { }
 

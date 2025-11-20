@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
   styleUrl: './table-members.component.css'
 })
 export class TableMembersComponent {
-  private URL: string = environment.FILEURL;
+  private URL: string = environment.FILE_URL;
   public userImg: string = `${this.URL}/user.png`;
   @Input() data!: Member[];
 

@@ -1,7 +1,7 @@
 export const environment = {
-    URL: 'http://localhost:3000/api',
-    FILEURL: 'http://localhost:3000/uploads',
-    STATICWEBURL: 'http://localhost:3000'
+    API_URL: 'http://localhost:3000/api',
+    FILE_URL: 'http://localhost:3000/uploads',
+    STATIC_WEB_URL: 'http://localhost:3000'
 };
 
 

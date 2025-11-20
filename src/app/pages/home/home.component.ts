@@ -16,7 +16,11 @@ import { Statistics } from '../../interfaces/statisctics';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  public statistics!: Statistics
+  public statistics!: {
+    checkins: Checkin[],
+    members: number,
+    activities: number,
+  }
   constructor(private dashboard: DashboardService) {}
 
   ngOnInit() {
@@ -27,7 +31,8 @@ export class HomeComponent {
     this.dashboard.getStatistic()
       .subscribe((result: HttpResult<Statistics>) => {
         if(result.success) {
-          this.statistics = result.data;          
+          this.statistics = result.data;
+          console.log(result);
         }
       })
   }

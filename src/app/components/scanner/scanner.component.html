@@ -1,0 +1,24 @@
+<div class="scanner-container">
+  <video #video autoplay muted playsinline></video>
+
+  <div
+    class="scan-zone"
+    [ngStyle]="{
+      width: scanZoneWidth,
+      height: scanZoneHeight,
+      borderColor: borderColor
+    }"
+  ></div>
+
+  <!-- <div class="controls">
+    <button (click)="pauseScan()" [disabled]="!scanning">⏸ Pause</button>
+    <button (click)="resumeScan()" [disabled]="scanning">▶ Resume</button>
+  </div> -->
+
+  <img class="absolute top-5 left-1/2 -translate-x-1/2 z-100 h-10" src="camera.webp" alt="Camera Image" />
+
+  <div class="result" *ngIf="result">
+    <p>Scanned Code:</p>
+    <strong>{{ result }}</strong>
+  </div>
+</div>

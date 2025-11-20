@@ -1,0 +1,154 @@
+
+  <ngx-spinner type="cube-transition" *ngIf="loading">
+    <p class="text-white">loading...</p>
+</ngx-spinner>
+
+<div *ngIf="!loading" class="stepper-container">
+
+  <!-- Progress Stepper -->
+ <!--  <div class="stepper">
+    <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+      <div class="step-circle">1</div>
+      <div class="step-line" [class.active]="currentStep > 1"></div>
+    </div>
+    <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+      <div class="step-circle">2</div>
+      <div class="step-line" [class.active]="currentStep > 2"></div>
+    </div>
+    <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+      <div class="step-circle">3</div>
+    </div>
+  </div> -->
+
+  <div class="stepper">
+    <h2 *ngIf="currentStep === 1" class="font-bold mb-3 underline text-lg">Step {{ currentStep }}</h2>
+    <h2 *ngIf="currentStep === 2" class="font-bold mb-3 underline text-lg">Step {{ currentStep }}</h2>
+    <h2 *ngIf="currentStep === 3" class="font-bold mb-3 underline text-lg bg-white py-2 px-6 rounded-md relative z-1000">Step {{ currentStep }}</h2>
+  </div>
+
+  <!-- Step 1: Choose Activities -->
+  <div class="content" *ngIf="currentStep === 1">
+    <h2 class="title">CHOOSE ACTIVITIES:</h2>
+
+    <div *ngIf="!loading" class="activities-grid">
+      <div 
+        *ngFor="let activity of activities"
+        class="activity-card"
+        [class.selected]="isActivitySelected(activity)"
+        (click)="toggleActivity(activity)">
+        <div class="activity-icon">{{ activity.emoji || '😊' }}</div>
+        <div class="activity-name">{{ activity.name }}</div>
+      </div>
+    </div>
+
+    <!-- <div class="navigation">
+      <button class="nav-button next" (click)="nextStep()" [disabled]="selectedActivities.length === 0">
+        <span class="arrow">→</span>
+      </button>
+    </div> -->
+  </div>
+
+  <!-- Step 2: Checkout Time -->
+  <div class="content" *ngIf="currentStep === 2">
+    <h2 class="title">LEAVING TIME:</h2>
+
+    <!-- <app-clock /> -->
+    
+    <div class="time-picker">
+      <div class="time-display">
+        <div class="time-part hour animate-attention" (click)="toggleHourPicker()" >{{ selectedTime.hour.toString().padStart(2, '0') }}</div>
+        <div class="time-separator">:</div>
+        <div class="time-part minute animate-attention-with-delay" (click)="toggleMinutePicker()">
+          {{ selectedTime.minute.toString().padStart(2, '0') }}
+        </div>
+      </div>
+       <div class="hour-picker" *ngIf="showHourPicker">
+        <div 
+          *ngFor="let hour of hours"
+          class="minute-option shadow-lg"
+          [class.selected]="selectedTime.hour === hour"
+          (click)="selectHour(hour)">
+          {{ hour.toString().padStart(2, '0') }}
+        </div>
+      </div>
+
+      <div class="minute-picker" *ngIf="showMinutePicker">
+        <div 
+          *ngFor="let minute of minutes"
+          class="minute-option"
+          [class.selected]="selectedTime.minute === minute"
+          (click)="selectMinute(minute)">
+          {{ minute.toString().padStart(2, '0') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="navigation">
+      <button class="nav-button back" (click)="previousStep()">
+        <!-- <span class="arrow">←</span> -->
+        <img src="/back.webp" class="arrow" alt="Back Arrow" />
+      </button>
+      <button class="nav-button next" (click)="nextStep()">
+        <!-- <span class="arrow">→</span> -->
+         <img src="/next.webp" class="arrow" alt="Next Arrow" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 3: Scan Badge -->
+  <div class="content scanner-step" *ngIf="currentStep === 3">
+    <h2 class="title scan-title">SCAN BADGE</h2>
+    
+    <div class="scanner-wrapper">
+      <app-scanner
+        [scanZoneWidth]="'500px'"
+        [scanZoneHeight]="'500px'"
+        [borderColor]="'#ff0000'"
+        (onScanComplete)="onBadgeScanned($event)">
+      </app-scanner>
+    </div>
+<!-- 
+    <div class="navigation">
+      <button class="nav-button back" (click)="previousStep()">
+        <span class="arrow">←</span>
+      </button>
+    </div> -->
+  </div>
+
+  <!-- Step 4: Welcome Confirmation -->
+  <div class="content welcome-step" *ngIf="currentStep === 4">
+    <h2 class="title welcome-title">WELCOME</h2>
+    
+    <div class="welcome-content">
+      <div class="success-badge">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="#4CAF50"/>
+          <path d="M35 60 L52 77 L85 44" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="go-section">
+       <!--  <div class="arrow-icon text-8xl">→</div> -->
+        <img src="/arrow.webp" class="arrow-icon w-48" alt="Arrow" />
+        <div class="go-text">GO</div>
+      </div>
+
+      <div class="running-icon">
+        <img src="run.webp" class="h-32" alt="Running person" />
+        <!-- <svg width="200" height="200" viewBox="0 0 200 200">
+         
+          <circle cx="70" cy="30" r="20" fill="#A0564E" opacity="0.7"/>
+          <path d="M70 50 L90 80 L70 110" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M70 110 L50 140" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M70 110 L95 135" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M90 80 L110 70" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
+          <path d="M90 80 L70 90" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
+        </svg> -->
+      </div>
+    </div>
+
+    <button class="finish-button" (click)="finishCheckIn()">
+      Complete Check-In
+    </button>
+  </div>
+</div>

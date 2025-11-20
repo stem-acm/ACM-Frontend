@@ -1,0 +1,118 @@
+<div class="clock-container">
+    <svg 
+    class="clock" 
+    viewBox="0 0 400 400"
+    >
+    <!-- Clock face -->
+    <circle cx="200" cy="200" r="190" fill="white" stroke="#333" stroke-width="4"/>
+    
+    <!-- Hour markers and numbers -->
+    <g *ngFor="let hour of hours">
+        <line 
+        [attr.x1]="getHourMarkX1(hour)" 
+        [attr.y1]="getHourMarkY1(hour)"
+        [attr.x2]="getHourMarkX2(hour)" 
+        [attr.y2]="getHourMarkY2(hour)"
+        stroke="#333" 
+        stroke-width="3"
+        />
+        <text 
+        [attr.x]="getHourTextX(hour)" 
+        [attr.y]="getHourTextY(hour)"
+        text-anchor="middle" 
+        dominant-baseline="middle"
+        font-size="24" 
+        font-weight="bold"
+        fill="#333"
+        >
+        {{ hour === 0 ? 12 : hour }}
+        </text>
+    </g>
+    
+    <!-- Minute markers -->
+    <g *ngFor="let minute of minutes">
+        <line 
+        [attr.x1]="getMinuteMarkX1(minute)" 
+        [attr.y1]="getMinuteMarkY1(minute)"
+        [attr.x2]="getMinuteMarkX2(minute)" 
+        [attr.y2]="getMinuteMarkY2(minute)"
+        stroke="#666" 
+        stroke-width="1"
+        />
+    </g>
+    
+    <!-- Hour hand -->
+    <line 
+        x1="200" 
+        y1="200" 
+        [attr.x2]="hourHandX" 
+        [attr.y2]="hourHandY"
+        stroke="#1e40af" 
+        stroke-width="8" 
+        stroke-linecap="round"
+        [class.dragging]="isDraggingHour"
+    />
+    
+    <!-- Minute hand -->
+    <line 
+        x1="200" 
+        y1="200" 
+        [attr.x2]="minuteHandX" 
+        [attr.y2]="minuteHandY"
+        stroke="#60a5fa" 
+        stroke-width="6" 
+        stroke-linecap="round"
+        [class.dragging]="isDraggingMinute"
+    />
+    
+    <!-- Center dot -->
+    <circle cx="200" cy="200" r="8" fill="#333"/>
+    
+    <!-- Invisible larger hit areas for hands -->
+    <!-- <line 
+        x1="200" 
+        y1="200" 
+        [attr.x2]="hourHandX" 
+        [attr.y2]="hourHandY"
+        stroke="transparent" 
+        stroke-width="30" 
+        style="cursor: pointer;"
+        (mousedown)="startDraggingHour($event)"
+        (touchstart)="startDraggingHour($event)"
+    />
+    <line 
+        x1="200" 
+        y1="200" 
+        [attr.x2]="minuteHandX" 
+        [attr.y2]="minuteHandY"
+        stroke="transparent" 
+        stroke-width="30" 
+        style="cursor: pointer;"
+        (mousedown)="startDraggingMinute($event)"
+        (touchstart)="startDraggingMinute($event)"
+    /> -->
+
+    <line 
+        x1="200" 
+        y1="200" 
+        [attr.x2]="hourHandX" 
+        [attr.y2]="hourHandY"
+        stroke="transparent" 
+        stroke-width="30" 
+        style="cursor: pointer;"
+    />
+    <line 
+        x1="200" 
+        y1="200" 
+        [attr.x2]="minuteHandX" 
+        [attr.y2]="minuteHandY"
+        stroke="transparent" 
+        stroke-width="30" 
+        style="cursor: pointer;"
+    />
+    </svg>
+    
+    <!--  <div class="time-display">
+    {{ formatTime() }}
+    </div> -->
+</div>

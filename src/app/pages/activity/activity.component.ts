@@ -35,12 +35,17 @@ export class ActivityComponent {
       .subscribe((result: HttpResult<Activity[]>) => {
         if(result.success && result.data) {
           this.activity = result.data;
-          this.activityFilter = this.activity;          
+          this.activityFilter = this.activity;
+          console.log("Activity from activity compnent" + JSON.stringify(this.activity));
+
         }
       })
   }
 
   addActivity() {
+    this.mode = 'insert';
+    this.title = 'New Activity';
+    this.activityToUpdate = undefined!; // Resetting to undefined to clear the form
     this.showAddForm = true;
   }
 
@@ -49,6 +54,11 @@ export class ActivityComponent {
     this.app.showToast('Canceled form...');
   }
 
+  closeForm(event: any) {
+    if(event) this.showAddForm = false;
+  }
+
+
   showAlert(event: any) {
     this.app.showToast(event);
     this.getActivityList();
@@ -56,6 +66,7 @@ export class ActivityComponent {
 
   clickEdit(event: Activity) {
     this.mode = 'update';
+    this.title = 'Update Activity';
     this.showAddForm = true;
     this.activityToUpdate = event;
   }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Member } from '../../interfaces/member';
-import { MemberBadgeComponent } from '../member-badge/member-badge.component';
+import { Member } from '@/app/interfaces/member';
+import { MemberBadgeComponent } from '@/app/components/member-badge/member-badge.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({

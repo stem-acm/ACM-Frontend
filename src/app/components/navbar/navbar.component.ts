@@ -30,7 +30,7 @@ export class NavbarComponent {
 
   logout() {
     this.auth.logout();
-    this.router.navigate(['/auth']);
+    window.location.reload();
   }
 
   toggleUserMenu() {

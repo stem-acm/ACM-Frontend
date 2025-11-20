@@ -6,7 +6,7 @@ import { Checkin } from '../../interfaces/checkin';
 import { TableCheckinsComponent } from '../../components/table-checkins/table-checkins.component';
 import { CardStatisticSkeletonComponent } from '../../components/card-statistic-skeleton/card-statistic-skeleton.component';
 import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
-import { Statistics } from '../../interfaces/statisctics';
+import { Statistics } from '../../interfaces/statistics';
 
 @Component({
   selector: 'app-home',
@@ -16,11 +16,7 @@ import { Statistics } from '../../interfaces/statisctics';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  public statistics!: {
-    checkins: Checkin[],
-    members: number,
-    activities: number,
-  }
+  public statistics!:Statistics;
   constructor(private dashboard: DashboardService) {}
 
   ngOnInit() {

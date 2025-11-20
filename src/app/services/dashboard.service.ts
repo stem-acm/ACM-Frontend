@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HttpResult } from '../types/httpResult';
 import { environment } from '../../environments/environment';
-import { Statistics } from '../interfaces/statisctics';
+import { Statistics } from '../interfaces/statistics';
 
 @Injectable({
   providedIn: 'root'

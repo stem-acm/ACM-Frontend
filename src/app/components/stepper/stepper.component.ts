@@ -7,6 +7,7 @@ import { ActivityService } from '../../services/activity.service';
 import { Activity } from '../../interfaces/activity';
 import { ToastService } from '../../services/toast.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { Checkin } from '../../interfaces/checkin';
 
 type ActivityToDsiplay = {
   id: number;
@@ -62,7 +63,7 @@ export class StepperComponent {
   getActivities() {
     this.loading = true;
 
-    this.activityService.getAllActivity().subscribe((result: HttpResult) => {
+    this.activityService.getAllActivity().subscribe((result: HttpResult<Activity[]>) => {
       console.log({result})
 
       if (result.success) {
@@ -80,13 +81,13 @@ export class StepperComponent {
   filterActivitiesByCurrentDay(activities: Activity[]): Activity[] {
     const today = new Date();
     const todayDayOfWeek = this.today as any; // Current day name in lowercase
-    
+
     console.log('Today is:', todayDayOfWeek);
     console.log('All activities before filtering:', activities);
-    
+
     const filtered = activities.filter(activity => {
       console.log('Checking activity:', activity.name, 'isPeriodic:', activity.isPeriodic, 'dayOfWeek:', activity.dayOfWeek);
-      
+
       if (activity.isPeriodic) {
         // For periodic activities, check if dayOfWeek matches today
         const matches = activity.dayOfWeek === todayDayOfWeek;
@@ -98,21 +99,21 @@ export class StepperComponent {
           console.log(`  Non-periodic activity "${activity.name}": missing dates`);
           return false;
         }
-        
+
         const startDate = new Date(activity.startDate);
         const endDate = new Date(activity.endDate);
-        
+
         // Reset time to compare only dates
         today.setHours(0, 0, 0, 0);
         startDate.setHours(0, 0, 0, 0);
         endDate.setHours(0, 0, 0, 0);
-        
+
         const inRange = today >= startDate && today <= endDate;
         console.log(`  Non-periodic activity "${activity.name}": startDate=${activity.startDate}, endDate=${activity.endDate}, inRange=${inRange}`);
         return inRange;
       }
     });
-    
+
     console.log('Filtered activities:', filtered);
     return filtered;
   }
@@ -121,11 +122,11 @@ export class StepperComponent {
     if (this.normalWeekDay.includes(this.today)) {
       if (this.currentHour <= 12 && this.currentHour >= 6) {
         this.hours = Array.from({length: 12 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
-      } else if (this.currentHour <= 18 && this.currentHour >= 14) { 
+      } else if (this.currentHour <= 18 && this.currentHour >= 14) {
         this.hours = Array.from({length: 18 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
       }
     } else {
-      if (this.currentHour <= 16 && this.currentHour >= 6) { 
+      if (this.currentHour <= 16 && this.currentHour >= 6) {
         this.hours = Array.from({length: 16 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
       }
     }
@@ -159,7 +160,7 @@ export class StepperComponent {
 
    toggleActivity(activity: any) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
-    
+
     if (index > -1) {
       // Activity is already selected, deselect it
       this.selectedActivities.splice(index, 1);
@@ -243,7 +244,7 @@ export class StepperComponent {
       registrationNumber: this.scannedBadgeId!.split("reg=")[1]
     }
 
-    this.checkinService.createCheckin(payload).subscribe((result: HttpResult) => {
+    this.checkinService.createCheckin(payload).subscribe((result: HttpResult<Checkin>) => {
       if (result.success) {
         this.nextStep();
       } else {

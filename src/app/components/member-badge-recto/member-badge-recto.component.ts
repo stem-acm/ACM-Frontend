@@ -9,12 +9,12 @@ import { environment } from '../../../environments/environment';
   standalone: true,
   imports: [TextCursiveComponent],
   templateUrl: './member-badge-recto.component.html',
-  styleUrl: './member-badge-recto.component.css'
+  styleUrl: './member-badge-recto.component.css',
 })
 export class MemberBadgeRectoComponent {
   @Input() member!: Member;
   private URL: string = environment.FILE_URL;
-  @Input() checkData!: { stamp: boolean, signature: boolean };
+  @Input() checkData!: { stamp: boolean; signature: boolean };
 
   formatDate(date?: Date | string) {
     if (!date) return 'no date';
@@ -22,7 +22,6 @@ export class MemberBadgeRectoComponent {
   }
 
   getfileUrl(fileName: any) {
-    return `${this.URL}/${fileName ??= 'user.png'}`;
+    return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
-
 }

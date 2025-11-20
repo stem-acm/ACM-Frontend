@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TableMembersComponent } from '../../components/table-members/table-members.component';
 import { MemberService } from '../../services/member.service';
 import { HttpResult } from '../../types/httpResult';
@@ -13,28 +13,30 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [TableMembersComponent, AddMemberComponent, TableLoadingComponent, FormsModule],
   templateUrl: './members.component.html',
-  styleUrl: './members.component.css'
+  styleUrl: './members.component.css',
 })
-export class MembersComponent {
+export class MembersComponent implements OnInit {
   private member!: Member[];
   public memberFilter!: Member[];
-  public showAddForm: boolean = false;
+  public showAddForm = false;
   public searchWord!: string;
 
-  constructor(private Member: MemberService, private app: AppComponent) {}
+  constructor(
+    private Member: MemberService,
+    private app: AppComponent,
+  ) {}
 
   ngOnInit() {
     this.getMemberList();
   }
 
   getMemberList() {
-    this.Member.getAllMembers()
-      .subscribe((result: HttpResult<Member[]>) => {
-        if(result.success && result.data) {
-          this.member = result.data;
-          this.memberFilter = this.member;          
-        }
-      })
+    this.Member.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
+      if (result.success && result.data) {
+        this.member = result.data;
+        this.memberFilter = this.member;
+      }
+    });
   }
 
   addMember() {
@@ -42,7 +44,7 @@ export class MembersComponent {
   }
 
   cancelForm(event: any) {
-    if(event) this.showAddForm = false;
+    if (event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
 
@@ -55,7 +57,10 @@ export class MembersComponent {
   }
 
   searchByName(keyWord: string) {
-    this.memberFilter = this.member.filter((e) => e.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 || e.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1);
+    this.memberFilter = this.member.filter(
+      e =>
+        e.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
+        e.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
+    );
   }
-
 }

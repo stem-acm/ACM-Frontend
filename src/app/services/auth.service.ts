@@ -5,15 +5,18 @@ import { HttpResult } from '../types/httpResult';
 import { User } from '../interfaces/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private URL: string = environment.API_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   login(credentials: { username: string; password: string }) {
-    return this.http.post<HttpResult<{ user: User; token: string }>>(`${this.URL}/auth/login`, credentials);
+    return this.http.post<HttpResult<{ user: User; token: string }>>(
+      `${this.URL}/auth/login`,
+      credentials,
+    );
   }
 
   logout(): void {
@@ -36,8 +39,8 @@ export class AuthService {
     const token: any = this.getToken();
     return this.http.get<HttpResult<User>>(`${this.URL}/auth/token`, {
       params: {
-        auth: token
-      }
+        auth: token,
+      },
     });
   }
 }

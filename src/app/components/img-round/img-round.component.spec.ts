@@ -8,9 +8,8 @@ describe('ImgRoundComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ImgRoundComponent]
-    })
-    .compileComponents();
+      imports: [ImgRoundComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ImgRoundComponent);
     component = fixture.componentInstance;

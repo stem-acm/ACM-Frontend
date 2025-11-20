@@ -8,13 +8,13 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [MemberBadgeComponent, FormsModule],
   templateUrl: './member-card-viewer.component.html',
-  styleUrl: './member-card-viewer.component.css'
+  styleUrl: './member-card-viewer.component.css',
 })
 export class MemberCardViewerComponent {
   @Input() member!: Member[];
   @Output('closed') emiterClose = new EventEmitter<boolean>();
-  public checkData: { stamp: boolean, signature: boolean } = { stamp: false, signature: false }
-  
+  public checkData: { stamp: boolean; signature: boolean } = { stamp: false, signature: false };
+
   close() {
     this.emiterClose.emit(true);
   }
@@ -29,9 +29,9 @@ export class MemberCardViewerComponent {
     if (!content) return;
 
     const iframe = document.createElement('iframe');
-    iframe.style.width = "0";
-    iframe.style.height = "0";
-    iframe.style.border = "0";
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
     document.body.appendChild(iframe);
 
     const iframeWin = iframe.contentWindow;
@@ -64,7 +64,7 @@ export class MemberCardViewerComponent {
       if (!imgs.length) return Promise.resolve();
 
       let loaded = 0;
-      return new Promise<void>((resolve) => {
+      return new Promise<void>(resolve => {
         for (let i = 0; i < imgs.length; i++) {
           if (imgs[i].complete) {
             loaded++;
@@ -89,6 +89,4 @@ export class MemberCardViewerComponent {
       document.body.removeChild(iframe);
     });
   }
-
-
 }

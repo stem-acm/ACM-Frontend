@@ -12,23 +12,26 @@ import { User } from '../../interfaces/user';
   standalone: true,
   imports: [AcmLogoComponent, FlexMenusComponent, CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   @Input() user!: User;
   public isShowUserMenu: boolean = false;
-  public userMenu: {route: string, label: string}[] = [
+  public userMenu: { route: string; label: string }[] = [
     {
       route: '/setting',
-      label: 'Settings'
+      label: 'Settings',
     },
     {
       route: '/user',
-      label: 'Manage intern'
-    }
-  ]
+      label: 'Manage intern',
+    },
+  ];
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {}
 
   logout() {
     this.auth.logout();
@@ -38,5 +41,4 @@ export class NavbarComponent {
   toggleUserMenu() {
     this.isShowUserMenu = !this.isShowUserMenu;
   }
-
 }

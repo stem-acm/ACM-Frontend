@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './badge.component.html',
-  styleUrl: './badge.component.css'
+  styleUrl: './badge.component.css',
 })
-export class BadgeComponent {
-
-}
+export class BadgeComponent {}

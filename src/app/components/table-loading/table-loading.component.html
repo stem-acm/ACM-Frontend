@@ -1,17 +1,30 @@
 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-    <thead class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-            @for(item of data.columns; track item) {
-                <th scope="col" class="px-6 py-3">
-                    {{ item }}
-                </th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
+  <thead
+    class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+  >
+    <tr>
+      @for (item of data.columns; track item) {
+        <th scope="col" class="px-6 py-3">
+          {{ item }}
+        </th>
+      }
+    </tr>
+  </thead>
+  <tbody></tbody>
 </table>
-<div class="bg-white w-full px-6 py-4 flex justify-center items-center gap-2 text-gray-500 hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-    <svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" clip-rule="evenodd" opacity=".2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z"/></g></svg>
-    <span class="block">{{ data.textLoading }}</span>
+<div
+  class="bg-white w-full px-6 py-4 flex justify-center items-center gap-2 text-gray-500 hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
+>
+  <svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <g fill="currentColor">
+      <path
+        fill-rule="evenodd"
+        d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z"
+        clip-rule="evenodd"
+        opacity=".2"
+      />
+      <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
+    </g>
+  </svg>
+  <span class="block">{{ data.textLoading }}</span>
 </div>

@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
   standalone: true,
   imports: [AcmLogoComponent, QrCodeComponent],
   templateUrl: './member-badge-verso.component.html',
-  styleUrl: './member-badge-verso.component.css'
+  styleUrl: './member-badge-verso.component.css',
 })
 export class MemberBadgeVersoComponent {
   @Input() registrationNumber!: string;

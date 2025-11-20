@@ -1,62 +1,137 @@
 <div class="w-full max-w-4xl flex items-center justify-center h-auto flex-wrap mx-auto py-4">
-    <div class="rounded-lg shadow-2xl bg-white dark:bg-gray-800 opacity-75 m-6">
-    
-        <div *ngIf="member" class="p-12 text-center">
-            <app-img-round [imgUrl]="getfileUrl(member.profileImage)"/>
-            <app-title [titleText]="member.lastName + ' ' + member.firstName"/>
-            <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
-            <div *ngIf="member.id" class="text-left">
-                <div class="mt-6 border-t border-gray-100">
-                    <dl class="divide-y divide-gray-100">
-                        <app-list-value label="Full name" [value]="'Mr. / Mrs. / Miss. ' + member.firstName + ' ' + member.lastName" />
-                        <app-list-value label="Date and Place of birth" value="{{formatDate(member.birthDate)}}, in {{member.birthPlace}}" />
-                        <app-list-value label="Physical Adress (in Mahajanga)" [value]="member.address" />
-                        <app-list-value label="Occupation" value="{{member.occupation}}" />
-                        <app-list-value label="Place of work/study" [value]="member.studyOrWorkPlace" />
-                        <app-list-value label="Membership date" [value]="formatDate(member.joinDate)" />
-                        <app-list-value label="Phone Contact" [value]="member.phoneNumber" />
-                    </dl>
-                </div>
-            </div>
-            <app-text-description *ngIf="!member.id" textDescription="Member {{member.registrationNumber}} is not found."/>
+  <div class="rounded-lg shadow-2xl bg-white dark:bg-gray-800 opacity-75 m-6">
+    <div *ngIf="member" class="p-12 text-center">
+      <app-img-round [imgUrl]="getfileUrl(member.profileImage)" />
+      <app-title [titleText]="member.lastName + ' ' + member.firstName" />
+      <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
+      <div *ngIf="member.id" class="text-left">
+        <div class="mt-6 border-t border-gray-100">
+          <dl class="divide-y divide-gray-100">
+            <app-list-value
+              label="Full name"
+              [value]="'Mr. / Mrs. / Miss. ' + member.firstName + ' ' + member.lastName"
+            />
+            <app-list-value
+              label="Date and Place of birth"
+              value="{{ formatDate(member.birthDate) }}, in {{ member.birthPlace }}"
+            />
+            <app-list-value label="Physical Adress (in Mahajanga)" [value]="member.address" />
+            <app-list-value label="Occupation" value="{{ member.occupation }}" />
+            <app-list-value label="Place of work/study" [value]="member.studyOrWorkPlace" />
+            <app-list-value label="Membership date" [value]="formatDate(member.joinDate)" />
+            <app-list-value label="Phone Contact" [value]="member.phoneNumber" />
+          </dl>
         </div>
-    
-        <div *ngElse class="p-12 text-center animate-pulse">
-            <app-img-round [imgUrl]="getfileUrl('user.png')"/>
-            <app-title titleText="..."/>
-            <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
-            <app-member-description text="..."/>
-            <app-member-description text="..."/>
-            <app-text-description textDescription="..."/>
-        </div>
-    
-        <div class="flex justify-end gap-2 p-4">
-            <button *ngIf="member&&member.id" (click)="open()" type="button" class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2">
-                <svg class="h-6" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000" stroke="#000">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>badge_line</title> <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="User" transform="translate(-576.000000, 0.000000)" fill-rule="nonzero"> <g id="badge_line" transform="translate(576.000000, 0.000000)"><path d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z" id="MingCute" fill-rule="nonzero"> </path> <path d="M14.4472,1.10555 C14.9412,1.35254 15.1414,1.95321 14.8944,2.44719 L14.118,3.99997 L18,3.99997 C19.1046,3.99997 20,4.89541 20,5.99998 L20,20 C20,21.1045 19.1046,22 18,22 L6,22 C4.89543,22 4,21.1045 4,20 L4,5.99998 C4,4.89541 4.89543,3.99997 6,3.99997 L9.88197,3.99997 L9.10557,2.44719 C8.85858,1.95321 9.05881,1.35254 9.55279,1.10555 C10.0468,0.858558 10.6474,1.05878 10.8944,1.55276 L12,3.76391 L13.1056,1.55276 C13.3526,1.05878 13.9532,0.858558 14.4472,1.10555 Z M10.882,5.99998 L6,5.99998 L6,20 L18,20 L18,5.99998 L13.0002,5.99998 C12.9999,6.36652 12.7974,6.71932 12.4472,6.8944 C11.9532,7.14139 11.3526,6.94117 11.1056,6.44719 L10.882,5.99998 Z M13.5,14 C14.8807,14 16,15.1193 16,16.5 L16,17 C16,17.5523 15.5523,18 15,18 C14.4477,18 14,17.5523 14,17 L14,16.5 C14,16.2238 13.7761,16 13.5,16 L10.5,16 C10.2239,16 10,16.2238 10,16.5 L10,17 C10,17.5523 9.55228,18 9,18 C8.44772,18 8,17.5523 8,17 L8,16.5 C8,15.1193 9.11929,14 10.5,14 L13.5,14 Z M12,8.99998 C13.1046,8.99998 14,9.89541 14,11 C14,12.1045 13.1046,13 12,13 C10.8954,13 10,12.1045 10,11 C10,9.89541 10.8954,8.99998 12,8.99998 Z" id="形状" fill="#000"> </path></g> </g> </g> </g>
-                </svg>
-                Generate Cards
-            </button>
-            <button *ngIf="member&&member.id" type="button" (click)="updateMember()" class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2">
-                <svg class="w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path d="M4 21C4 17.134 7.13401 14 11 14C11.3395 14 11.6734 14.0242 12 14.0709M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7ZM12.5898 21L14.6148 20.595C14.7914 20.5597 14.8797 20.542 14.962 20.5097C15.0351 20.4811 15.1045 20.4439 15.1689 20.399C15.2414 20.3484 15.3051 20.2848 15.4324 20.1574L19.5898 16C20.1421 15.4477 20.1421 14.5523 19.5898 14C19.0376 13.4477 18.1421 13.4477 17.5898 14L13.4324 18.1574C13.3051 18.2848 13.2414 18.3484 13.1908 18.421C13.1459 18.4853 13.1088 18.5548 13.0801 18.6279C13.0478 18.7102 13.0302 18.7985 12.9948 18.975L12.5898 21Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </g>
-                </svg>
-                Edit Member
-            </button>
-            <button *ngIf="member&&!member.id" type="button" routerLink="/members" class="text-white w-full text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2">
-                <svg class="w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                Go Back to the Lists
-            </button>
-        </div>
-    
+      </div>
+      <app-text-description
+        *ngIf="!member.id"
+        textDescription="Member {{ member.registrationNumber }} is not found."
+      />
     </div>
+
+    <div *ngElse class="p-12 text-center animate-pulse">
+      <app-img-round [imgUrl]="getfileUrl('user.png')" />
+      <app-title titleText="..." />
+      <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
+      <app-member-description text="..." />
+      <app-member-description text="..." />
+      <app-text-description textDescription="..." />
+    </div>
+
+    <div class="flex justify-end gap-2 p-4">
+      <button
+        *ngIf="member && member.id"
+        (click)="open()"
+        type="button"
+        class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+      >
+        <svg
+          class="h-6"
+          viewBox="0 0 24 24"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          fill="#000"
+          stroke="#000"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <title>badge_line</title>
+            <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="User" transform="translate(-576.000000, 0.000000)" fill-rule="nonzero">
+                <g id="badge_line" transform="translate(576.000000, 0.000000)">
+                  <path
+                    d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z"
+                    id="MingCute"
+                    fill-rule="nonzero"
+                  ></path>
+                  <path
+                    d="M14.4472,1.10555 C14.9412,1.35254 15.1414,1.95321 14.8944,2.44719 L14.118,3.99997 L18,3.99997 C19.1046,3.99997 20,4.89541 20,5.99998 L20,20 C20,21.1045 19.1046,22 18,22 L6,22 C4.89543,22 4,21.1045 4,20 L4,5.99998 C4,4.89541 4.89543,3.99997 6,3.99997 L9.88197,3.99997 L9.10557,2.44719 C8.85858,1.95321 9.05881,1.35254 9.55279,1.10555 C10.0468,0.858558 10.6474,1.05878 10.8944,1.55276 L12,3.76391 L13.1056,1.55276 C13.3526,1.05878 13.9532,0.858558 14.4472,1.10555 Z M10.882,5.99998 L6,5.99998 L6,20 L18,20 L18,5.99998 L13.0002,5.99998 C12.9999,6.36652 12.7974,6.71932 12.4472,6.8944 C11.9532,7.14139 11.3526,6.94117 11.1056,6.44719 L10.882,5.99998 Z M13.5,14 C14.8807,14 16,15.1193 16,16.5 L16,17 C16,17.5523 15.5523,18 15,18 C14.4477,18 14,17.5523 14,17 L14,16.5 C14,16.2238 13.7761,16 13.5,16 L10.5,16 C10.2239,16 10,16.2238 10,16.5 L10,17 C10,17.5523 9.55228,18 9,18 C8.44772,18 8,17.5523 8,17 L8,16.5 C8,15.1193 9.11929,14 10.5,14 L13.5,14 Z M12,8.99998 C13.1046,8.99998 14,9.89541 14,11 C14,12.1045 13.1046,13 12,13 C10.8954,13 10,12.1045 10,11 C10,9.89541 10.8954,8.99998 12,8.99998 Z"
+                    id="形状"
+                    fill="#000"
+                  ></path>
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+        Generate Cards
+      </button>
+      <button
+        *ngIf="member && member.id"
+        type="button"
+        (click)="updateMember()"
+        class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+      >
+        <svg class="w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M4 21C4 17.134 7.13401 14 11 14C11.3395 14 11.6734 14.0242 12 14.0709M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7ZM12.5898 21L14.6148 20.595C14.7914 20.5597 14.8797 20.542 14.962 20.5097C15.0351 20.4811 15.1045 20.4439 15.1689 20.399C15.2414 20.3484 15.3051 20.2848 15.4324 20.1574L19.5898 16C20.1421 15.4477 20.1421 14.5523 19.5898 14C19.0376 13.4477 18.1421 13.4477 17.5898 14L13.4324 18.1574C13.3051 18.2848 13.2414 18.3484 13.1908 18.421C13.1459 18.4853 13.1088 18.5548 13.0801 18.6279C13.0478 18.7102 13.0302 18.7985 12.9948 18.975L12.5898 21Z"
+              stroke="#fff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </g>
+        </svg>
+        Edit Member
+      </button>
+      <button
+        *ngIf="member && !member.id"
+        type="button"
+        routerLink="/members"
+        class="text-white w-full text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2"
+      >
+        <svg class="w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z"
+              stroke="#ffffff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </g>
+        </svg>
+        Go Back to the Lists
+      </button>
+    </div>
+  </div>
 </div>
 
-@if(showAddForm) {
-    <app-add-member mode="update" title="Update Member" [memberToUpdate]="member" (updatedData)="showToast($event)" (canceled)="cancelForm($event)" />
+@if (showAddForm) {
+  <app-add-member
+    mode="update"
+    title="Update Member"
+    [memberToUpdate]="member"
+    (updatedData)="showToast($event)"
+    (canceled)="cancelForm($event)"
+  />
 }
 
-<app-member-card-viewer *ngIf="showCard" (closed)="close($event)" [member]="[member]"/>
+<app-member-card-viewer *ngIf="showCard" (closed)="close($event)" [member]="[member]" />

@@ -5,12 +5,12 @@ import { HttpResult } from '../types/httpResult';
 import { Activity } from '../interfaces/activity';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ActivityService {
   private URL: string = environment.API_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Get all activities
   getAllActivity() {
@@ -28,5 +28,4 @@ export class ActivityService {
   updateActivity(activity: Activity) {
     return this.http.put<HttpResult<Activity>>(`${this.URL}/activities/${activity.id}`, activity);
   }
-
 }

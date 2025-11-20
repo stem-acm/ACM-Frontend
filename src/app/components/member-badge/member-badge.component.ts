@@ -8,9 +8,9 @@ import { Member } from '../../interfaces/member';
   standalone: true,
   imports: [MemberBadgeRectoComponent, MemberBadgeVersoComponent],
   templateUrl: './member-badge.component.html',
-  styleUrl: './member-badge.component.css'
+  styleUrl: './member-badge.component.css',
 })
 export class MemberBadgeComponent {
   @Input() member!: Member;
-  @Input() checkData!: { stamp: boolean, signature: boolean };
+  @Input() checkData!: { stamp: boolean; signature: boolean };
 }

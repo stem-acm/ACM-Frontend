@@ -8,9 +8,8 @@ describe('MemberBadgeRectoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MemberBadgeRectoComponent]
-    })
-    .compileComponents();
+      imports: [MemberBadgeRectoComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MemberBadgeRectoComponent);
     component = fixture.componentInstance;

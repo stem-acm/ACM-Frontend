@@ -6,7 +6,7 @@ import { Activity } from '../../interfaces/activity';
   standalone: true,
   imports: [],
   templateUrl: './table-activities.component.html',
-  styleUrl: './table-activities.component.css'
+  styleUrl: './table-activities.component.css',
 })
 export class TableActivitiesComponent {
   @Input() data!: Activity[];

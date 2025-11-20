@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MemberService } from '../../services/member.service';
 import { HttpResult } from '../../types/httpResult';
 import { Member } from '../../interfaces/member';
@@ -12,13 +12,16 @@ import dayjs from 'dayjs';
   standalone: true,
   imports: [AcmLogoComponent, MemberCardDetailComponent],
   templateUrl: './profil.component.html',
-  styleUrl: './profil.component.css'
+  styleUrl: './profil.component.css',
 })
-export class ProfilComponent {
+export class ProfilComponent implements OnInit {
   public member!: Member;
   private registrationNumber!: string;
 
-  constructor(private Member: MemberService, private route: ActivatedRoute) {}
+  constructor(
+    private Member: MemberService,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
     this.registrationNumber = this.route.snapshot.paramMap.get('reg_number')!;
@@ -30,29 +33,29 @@ export class ProfilComponent {
   }
 
   getMemberInfo(registrationNumber: string) {
-    this.Member.getMemberByRegistrationNumber(registrationNumber)
-      .subscribe((result: HttpResult<Member>) => {
-        if(result.success && result.data) {
+    this.Member.getMemberByRegistrationNumber(registrationNumber).subscribe(
+      (result: HttpResult<Member>) => {
+        if (result.success && result.data) {
           this.member = result.data;
           this.member.birthDate = this.convertDate(this.member.birthDate);
           this.member.joinDate = this.convertDate(this.member.joinDate);
         } else {
           this.member = {
             registrationNumber: this.registrationNumber,
-              id: 0,
-              firstName: '404',
-              lastName: '',
-              birthDate: '',
-              birthPlace: '',
-              address: '',
-              occupation: 'unemployed',
-              phoneNumber: '',
-              studyOrWorkPlace: '',
-              joinDate: '',
-              profileImage: 'user.png'
-          }
+            id: 0,
+            firstName: '404',
+            lastName: '',
+            birthDate: '',
+            birthPlace: '',
+            address: '',
+            occupation: 'unemployed',
+            phoneNumber: '',
+            studyOrWorkPlace: '',
+            joinDate: '',
+            profileImage: 'user.png',
+          };
         }
-      })
+      },
+    );
   }
-
 }

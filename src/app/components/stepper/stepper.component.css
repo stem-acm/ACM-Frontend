@@ -1,10 +1,9 @@
- .stepper-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-
-  }
+.stepper-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
 
 .header {
   margin-bottom: 40px;
@@ -128,7 +127,7 @@
 
 .activity-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .activity-card.selected {
@@ -192,18 +191,21 @@
   transition: transform 0.2s;
 }
 
-.time-part.minute:hover, .time-part.hour:hover {
+.time-part.minute:hover,
+.time-part.hour:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(30, 77, 139, 0.4);
 }
 
-.time-part.minute:active, .time-part.hour:active {
+.time-part.minute:active,
+.time-part.hour:active {
   transform: scale(0.95);
   transition: transform 0.1s;
 }
 
 @keyframes attention-blink {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 rgba(30, 77, 139, 0);
     outline: 2px solid transparent;
     background-color: #1e4d8b;
@@ -211,14 +213,15 @@
   }
   50% {
     box-shadow: 0 0 20px rgba(30, 77, 139, 0.6);
-    outline: 2px solid #FFC107;
+    outline: 2px solid #ffc107;
     background-color: #2a65b0;
     transform: scale(1.1);
   }
 }
 
 @keyframes attention-blink-minute {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 rgba(30, 77, 139, 0);
     outline: 2px solid transparent;
     background-color: #1e4d8b;
@@ -227,7 +230,7 @@
   }
   50% {
     box-shadow: 0 0 20px rgba(30, 77, 139, 0.6);
-    outline: 2px solid #FFC107;
+    outline: 2px solid #ffc107;
     background-color: #2a65b0;
     transform: scale(1.1);
     color: white;
@@ -267,7 +270,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   z-index: 10;
 }
 
@@ -282,7 +285,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   z-index: 10;
 }
 
@@ -370,14 +373,14 @@
 
 .arrow-icon {
   font-size: 64px;
-  color: #FF0000;
+  color: #ff0000;
   font-weight: bold;
 }
 
 .go-text {
   font-size: 72px;
   font-weight: bold;
-  color: #FF0000;
+  color: #ff0000;
 }
 
 .running-icon {
@@ -385,7 +388,8 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -394,7 +398,7 @@
 }
 
 .finish-button {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   border: none;
   padding: 20px 60px;
@@ -449,7 +453,6 @@
 }
 
 @media screen and (max-width: 1024px) {
-
   .stepper-container {
     display: flex;
     flex-direction: column;
@@ -469,14 +472,13 @@
     width: 140px;
   }
 
- /*  .stepper {
+  /*  .stepper {
     margin-top: 75px;
   } */
 
   .content {
     margin-top: 40px;
   }
-
 
   .hour-picker {
     left: -70px;
@@ -485,12 +487,10 @@
   .minute-picker {
     right: -70px;
   }
-
 }
- 
-@media screen and (max-width: 768px) {
 
- /*  .stepper {
+@media screen and (max-width: 768px) {
+  /*  .stepper {
     margin-top: 75px;
   } */
 
@@ -516,7 +516,6 @@
 }
 
 @media (max-width: 596px) {
-
   .stepper-container {
     display: flex;
     flex-direction: column;
@@ -525,7 +524,7 @@
     width: 100%;
   }
 
- /*  .stepper {
+  /*  .stepper {
     margin-top: 75px;
   } */
 
@@ -537,17 +536,17 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .step-circle {
     width: 60px;
     height: 60px;
     font-size: 24px;
   }
-  
+
   .step-line {
     width: 80px;
   }
-  
+
   .title {
     font-size: 24px;
   }

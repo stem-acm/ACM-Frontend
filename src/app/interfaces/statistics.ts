@@ -1,4 +1,4 @@
-import { Checkin } from "./checkin";
+import { Checkin } from './checkin';
 
 export interface Statistics {
   checkins: Checkin[];

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, HostListener} from '@angular/core';
+import { Component, EventEmitter, inject, Output, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
 import { CheckinService } from '../../services/checkin.service';
@@ -9,26 +9,25 @@ import { ToastService } from '../../services/toast.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { Checkin } from '../../interfaces/checkin';
 
-type ActivityToDsiplay = {
+interface ActivityToDsiplay {
   id: number;
   name: string;
   icon: string;
-};
+}
 
 @Component({
   selector: 'app-stepper',
   standalone: true,
   imports: [CommonModule, ScannerComponent, NgxSpinnerModule],
   templateUrl: './stepper.component.html',
-  styleUrls: ['./stepper.component.css']
+  styleUrls: ['./stepper.component.css'],
 })
-export class StepperComponent {
-
+export class StepperComponent implements OnInit {
   @Output() emiterToast = new EventEmitter<string>();
 
-  icon = "🔎";
+  icon = '🔎';
 
-  loading: boolean = false;
+  loading = false;
   currentStep = 1;
   selectedActivities: ActivityToDsiplay[] = [];
   showMinutePicker = false;
@@ -42,10 +41,10 @@ export class StepperComponent {
   activities: Activity[] = [];
   finalActivities: ActivityToDsiplay[] = [];
 
-  selectedTime = { hour: 18, minute: 0};
+  selectedTime = { hour: 18, minute: 0 };
 
-  weekday = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-  normalWeekDay = ["monday", "tuesday", "wednesday", "thursday", "friday"]
+  weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  normalWeekDay = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
   today = this.weekday[new Date().getDay()];
 
   dateToday = new Date();
@@ -57,25 +56,24 @@ export class StepperComponent {
 
   ngOnInit() {
     this.setTimeInput();
-    this.getActivities()
+    this.getActivities();
   }
 
   getActivities() {
     this.loading = true;
 
     this.activityService.getAllActivity().subscribe((result: HttpResult<Activity[]>) => {
-      console.log({result})
+      console.log({ result });
 
       if (result.success) {
         // Then filter by current day
         this.activities = this.filterActivitiesByCurrentDay(result.data);
 
         this.loading = false;
-
       } else {
-        alert(result.message)
+        alert(result.message);
       }
-    })
+    });
   }
 
   filterActivitiesByCurrentDay(activities: Activity[]): Activity[] {
@@ -86,12 +84,21 @@ export class StepperComponent {
     console.log('All activities before filtering:', activities);
 
     const filtered = activities.filter(activity => {
-      console.log('Checking activity:', activity.name, 'isPeriodic:', activity.isPeriodic, 'dayOfWeek:', activity.dayOfWeek);
+      console.log(
+        'Checking activity:',
+        activity.name,
+        'isPeriodic:',
+        activity.isPeriodic,
+        'dayOfWeek:',
+        activity.dayOfWeek,
+      );
 
       if (activity.isPeriodic) {
         // For periodic activities, check if dayOfWeek matches today
         const matches = activity.dayOfWeek === todayDayOfWeek;
-        console.log(`  Periodic activity "${activity.name}": dayOfWeek=${activity.dayOfWeek}, today=${todayDayOfWeek}, matches=${matches}`);
+        console.log(
+          `  Periodic activity "${activity.name}": dayOfWeek=${activity.dayOfWeek}, today=${todayDayOfWeek}, matches=${matches}`,
+        );
         return matches;
       } else {
         // For non-periodic activities, check if today falls within the date range
@@ -109,7 +116,9 @@ export class StepperComponent {
         endDate.setHours(0, 0, 0, 0);
 
         const inRange = today >= startDate && today <= endDate;
-        console.log(`  Non-periodic activity "${activity.name}": startDate=${activity.startDate}, endDate=${activity.endDate}, inRange=${inRange}`);
+        console.log(
+          `  Non-periodic activity "${activity.name}": startDate=${activity.startDate}, endDate=${activity.endDate}, inRange=${inRange}`,
+        );
         return inRange;
       }
     });
@@ -121,13 +130,22 @@ export class StepperComponent {
   setTimeInput() {
     if (this.normalWeekDay.includes(this.today)) {
       if (this.currentHour <= 12 && this.currentHour >= 6) {
-        this.hours = Array.from({length: 12 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
+        this.hours = Array.from(
+          { length: 12 - this.currentHour + 1 },
+          (_, index) => this.currentHour + index,
+        );
       } else if (this.currentHour <= 18 && this.currentHour >= 14) {
-        this.hours = Array.from({length: 18 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
+        this.hours = Array.from(
+          { length: 18 - this.currentHour + 1 },
+          (_, index) => this.currentHour + index,
+        );
       }
     } else {
       if (this.currentHour <= 16 && this.currentHour >= 6) {
-        this.hours = Array.from({length: 16 - this.currentHour + 1 }, (_, index) => this.currentHour + index)
+        this.hours = Array.from(
+          { length: 16 - this.currentHour + 1 },
+          (_, index) => this.currentHour + index,
+        );
       }
     }
 
@@ -158,7 +176,7 @@ export class StepperComponent {
     }
   }
 
-   toggleActivity(activity: any) {
+  toggleActivity(activity: any) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
 
     if (index > -1) {
@@ -193,7 +211,7 @@ export class StepperComponent {
   reset() {
     this.currentStep = 1;
     this.selectedActivities = [];
-    this.selectedTime = { hour: this.currentHour, minute: 0};
+    this.selectedTime = { hour: this.currentHour, minute: 0 };
     this.showMinutePicker = false;
     this.showHourPicker = false;
     this.scannedBadgeId = null;
@@ -234,38 +252,41 @@ export class StepperComponent {
       activityId: this.selectedActivities[0].id,
       checkInTime: new Date(Date.now()).toISOString(),
       checkOutTime: date.toISOString(),
-      registrationNumber: this.scannedBadgeId
+      registrationNumber: this.scannedBadgeId,
     });
 
-    const payload =  {
+    const payload = {
       activityId: this.selectedActivities[0].id!,
       checkInTime: new Date(Date.now()),
       checkOutTime: date,
-      registrationNumber: this.scannedBadgeId!.split("reg=")[1]
-    }
+      registrationNumber: this.scannedBadgeId!.split('reg=')[1],
+    };
 
-    this.checkinService.createCheckin(payload).subscribe((result: HttpResult<Checkin>) => {
-      if (result.success) {
-        this.nextStep();
-      } else {
-        console.log(result.message)
-        this.toastService.showToast(result.message || 'Check-in failed');
+    this.checkinService.createCheckin(payload).subscribe(
+      (result: HttpResult<Checkin>) => {
+        if (result.success) {
+          this.nextStep();
+        } else {
+          console.log(result.message);
+          this.toastService.showToast(result.message || 'Check-in failed');
+          this.reset();
+        }
+      },
+      error => {
+        console.log(error);
+
+        if (error.status == 404) {
+          alert('Member not found');
+        }
+
         this.reset();
-      }
-    }, (error) => {
-      console.log(error)
-
-      if (error.status == 404) {
-        alert("Member not found");
-      }
-
-       this.reset();
-    });
+      },
+    );
   }
 
   finishCheckIn() {
     // Reset or navigate as needed
-    this.reset()
+    this.reset();
   }
 
   @HostListener('document:click', ['$event'])

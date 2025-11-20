@@ -16,15 +16,25 @@ import { MemberCardViewerComponent } from '../member-card-viewer/member-card-vie
 @Component({
   selector: 'app-member-card-detail',
   standalone: true,
-  imports: [ImgRoundComponent, TitleComponent, TextDescriptionComponent, MemberDescriptionComponent, CommonModule, ListValueComponent, AddMemberComponent, RouterModule, MemberCardViewerComponent],
+  imports: [
+    ImgRoundComponent,
+    TitleComponent,
+    TextDescriptionComponent,
+    MemberDescriptionComponent,
+    CommonModule,
+    ListValueComponent,
+    AddMemberComponent,
+    RouterModule,
+    MemberCardViewerComponent,
+  ],
   templateUrl: './member-card-detail.component.html',
-  styleUrl: './member-card-detail.component.css'
+  styleUrl: './member-card-detail.component.css',
 })
 export class MemberCardDetailComponent {
   @Input() member!: Member;
   private URL: string = environment.FILE_URL;
-  public showAddForm: boolean = false;
-  public showCard: boolean = false;
+  public showAddForm = false;
+  public showCard = false;
 
   constructor(private app: AppComponent) {}
 
@@ -36,16 +46,16 @@ export class MemberCardDetailComponent {
   }
 
   getfileUrl(fileName: any) {
-    return `${this.URL}/${fileName ??= 'user.png'}`;
+    return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 
   cancelForm(event: any) {
-    if(event) this.showAddForm = false;
+    if (event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
 
   showToast(event: any) {
-    if(event) this.showAddForm = false;
+    if (event) this.showAddForm = false;
     this.app.showToast(event.message);
     this.member = event.data;
   }
@@ -61,5 +71,4 @@ export class MemberCardDetailComponent {
   open() {
     this.showCard = true;
   }
-
 }

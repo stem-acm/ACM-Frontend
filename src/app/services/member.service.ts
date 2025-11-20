@@ -5,12 +5,12 @@ import { HttpResult } from '../types/httpResult';
 import { Member } from '../interfaces/member';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MemberService {
   private URL: string = environment.API_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllMembers() {
     return this.http.get<HttpResult<Member[]>>(`${this.URL}/members`);
@@ -21,7 +21,9 @@ export class MemberService {
   }
 
   getMemberByRegistrationNumber(registrationNumber: string) {
-    return this.http.get<HttpResult<Member>>(`${this.URL}/members/registration/${registrationNumber}`);
+    return this.http.get<HttpResult<Member>>(
+      `${this.URL}/members/registration/${registrationNumber}`,
+    );
   }
 
   addMember(member: Member) {

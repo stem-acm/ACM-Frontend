@@ -8,9 +8,8 @@ describe('FlexMenusComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FlexMenusComponent]
-    })
-    .compileComponents();
+      imports: [FlexMenusComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FlexMenusComponent);
     component = fixture.componentInstance;

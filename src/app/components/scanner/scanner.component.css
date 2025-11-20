@@ -30,9 +30,9 @@ video {
 }
 
 .scan-zone::before {
-  content: "";
+  content: '';
   display: block;
-  background-image: url("../../../../public/arrow-right.png");
+  background-image: url('../../../../public/arrow-right.png');
   background-size: cover;
   background-repeat: no-repeat;
   width: 70px;
@@ -45,9 +45,9 @@ video {
 }
 
 .scan-zone::after {
-  content: "";
+  content: '';
   display: block;
-  background-image: url("../../../../public/arrow-left.png");
+  background-image: url('../../../../public/arrow-left.png');
   background-size: cover;
   background-repeat: no-repeat;
   width: 70px;
@@ -93,7 +93,8 @@ button:hover {
 }
 
 @media screen and (max-width: 596px) {
-  .scan-zone::before, .scan-zone::after {
-    display: "none";
+  .scan-zone::before,
+  .scan-zone::after {
+    display: 'none';
   }
 }

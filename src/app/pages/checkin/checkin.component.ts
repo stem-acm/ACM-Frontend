@@ -6,8 +6,6 @@ import { StepperComponent } from '../../components/stepper/stepper.component';
   standalone: true,
   imports: [StepperComponent],
   templateUrl: './checkin.component.html',
-  styleUrl: './checkin.component.css'
+  styleUrl: './checkin.component.css',
 })
-export class CheckinComponent {
-
-}
+export class CheckinComponent {}

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CardStatisticComponent } from '../../components/card-statistic/card-statistic.component';
 import { DashboardService } from '../../services/dashboard.service';
 import { HttpResult } from '../../types/httpResult';
@@ -11,12 +11,17 @@ import { Statistics } from '../../interfaces/statistics';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardStatisticComponent, TableCheckinsComponent, CardStatisticSkeletonComponent, TableLoadingComponent],
+  imports: [
+    CardStatisticComponent,
+    TableCheckinsComponent,
+    CardStatisticSkeletonComponent,
+    TableLoadingComponent,
+  ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
-export class HomeComponent {
-  public statistics!:Statistics;
+export class HomeComponent implements OnInit {
+  public statistics!: Statistics;
   constructor(private dashboard: DashboardService) {}
 
   ngOnInit() {
@@ -24,13 +29,11 @@ export class HomeComponent {
   }
 
   getStatistic() {
-    this.dashboard.getStatistic()
-      .subscribe((result: HttpResult<Statistics>) => {
-        if(result.success) {
-          this.statistics = result.data;
-          console.log(result);
-        }
-      })
+    this.dashboard.getStatistic().subscribe((result: HttpResult<Statistics>) => {
+      if (result.success) {
+        this.statistics = result.data;
+        console.log(result);
+      }
+    });
   }
-
 }

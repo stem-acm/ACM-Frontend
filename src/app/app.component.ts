@@ -1,25 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet, NavigationEnd, RouterLink } from '@angular/router';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { User } from './interfaces/user';
-import { AuthService } from './services/auth.service';
-import { HttpResult } from './types/httpResult';
-import { ToastComponent } from './components/toast/toast.component';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { NavbarComponent } from '@/app/components/navbar/navbar.component';
+import { User } from '@/app/interfaces/user';
+import { AuthService } from '@/app/services/auth.service';
+import { HttpResult } from '@/app/types/httpResult';
+import { ToastComponent } from '@/app/components/toast/toast.component';
 import { filter } from 'rxjs/operators';
-import { AcmLogoComponent } from './components/acm-logo/acm-logo.component';
+import { AcmLogoComponent } from '@/app/components/acm-logo/acm-logo.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    RouterOutlet,
-    NavbarComponent,
-    ToastComponent,
-    AcmLogoComponent,
-    RouterLink,
-    NgxSpinnerModule,
-  ],
+  imports: [RouterOutlet, NavbarComponent, ToastComponent, AcmLogoComponent, NgxSpinnerModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -30,10 +23,8 @@ export class AppComponent implements OnInit {
   public toast: { show: boolean; message: string } = { show: false, message: '' };
   public hideMainLayout = false;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.verifyToken();
@@ -61,7 +52,7 @@ export class AppComponent implements OnInit {
           this.router.navigate(['/auth']);
         }
       },
-      error => {
+      _ => {
         this.router.navigate(['/auth']);
       },
     );
@@ -74,7 +65,7 @@ export class AppComponent implements OnInit {
     }, delay);
   }
 
-  closeToast(event: any) {
+  closeToast(event: boolean) {
     if (event) this.toast.show = false;
   }
 }

@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { AddActivityComponent } from '../../components/add-activity/add-activity.component';
-import { Activity } from '../../interfaces/activity';
-import { ActivityService } from '../../services/activity.service';
-import { AppComponent } from '../../app.component';
-import { HttpResult } from '../../types/httpResult';
-import { TableActivitiesComponent } from '../../components/table-activities/table-activities.component';
-import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
+import { Component, inject, OnInit } from '@angular/core';
+import { AddActivityComponent } from '@/app/components/add-activity/add-activity.component';
+import { Activity } from '@/app/interfaces/activity';
+import { ActivityService } from '@/app/services/activity.service';
+import { AppComponent } from '@/app/app.component';
+import { HttpResult } from '@/app/types/httpResult';
+import { TableActivitiesComponent } from '@/app/components/table-activities/table-activities.component';
+import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -24,10 +24,8 @@ export class ActivityComponent implements OnInit {
   public mode: 'insert' | 'update' = 'insert';
   public searchWord!: string;
 
-  constructor(
-    private activityService: ActivityService,
-    private app: AppComponent,
-  ) {}
+  private activityService = inject(ActivityService);
+  private app = inject(AppComponent);
 
   ngOnInit() {
     this.getActivityList();
@@ -50,16 +48,16 @@ export class ActivityComponent implements OnInit {
     this.showAddForm = true;
   }
 
-  cancelForm(event: any) {
+  cancelForm(event: boolean) {
     if (event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
 
-  closeForm(event: any) {
+  closeForm(event: boolean) {
     if (event) this.showAddForm = false;
   }
 
-  showAlert(event: any) {
+  showAlert(event: string) {
     this.app.showToast(event);
     this.getActivityList();
   }
@@ -71,7 +69,7 @@ export class ActivityComponent implements OnInit {
     this.activityToUpdate = event;
   }
 
-  showToast(event: any) {
+  showToast(event: { data: Activity; message: string }) {
     if (event) this.showAddForm = false;
     this.app.showToast(event.message);
     this.activityToUpdate = event.data;

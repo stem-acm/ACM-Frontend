@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
   styleUrl: './text-cursive.component.css',
 })
 export class TextCursiveComponent {
-  @Input() text!: any;
+  @Input() text!: string;
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StepperComponent } from '../../components/stepper/stepper.component';
+import { StepperComponent } from '@/app/components/stepper/stepper.component';
 
 @Component({
   selector: 'app-checkin',

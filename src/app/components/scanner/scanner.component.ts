@@ -24,7 +24,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
   @Input() scanZoneWidth = '500px';
   @Input() scanZoneHeight = '500px';
   @Input() borderColor = '#FF0000';
-  @Output() onScanComplete = new EventEmitter<string>();
+  @Output() scanComplete = new EventEmitter<string>();
 
   codeReader = new BrowserMultiFormatReader();
   scanning = false;
@@ -48,10 +48,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
         ) || devices[0];
       this.currentDeviceId = frontCamera.deviceId;
 
-      // Make scans run without the default delay (instantaneous continuous scanning)
-      // BrowserMultiFormatReader / BrowserCodeReader expose timeBetweenScansMillis internally.
-      // Use a cast to any to avoid TS errors.
-      (this.codeReader as any).timeBetweenScansMillis = 0;
+      (this.codeReader as unknown as { timeBetweenScansMillis: number }).timeBetweenScansMillis = 0;
 
       this.videoElement.nativeElement.style.transform = 'scaleX(-1)';
 
@@ -62,7 +59,7 @@ export class ScannerComponent implements OnInit, OnDestroy {
           if (res) {
             this.result = res.getText();
             console.log('QR Code detected:', this.result);
-            this.onScanComplete.emit(this.result);
+            this.scanComplete.emit(this.result);
             this.pauseScan();
           }
         },
@@ -82,14 +79,14 @@ export class ScannerComponent implements OnInit, OnDestroy {
   async resumeScan() {
     if (this.currentDeviceId) {
       this.result = null;
-      (this.codeReader as any).timeBetweenScansMillis = 0;
+      (this.codeReader as unknown as { timeBetweenScansMillis: number }).timeBetweenScansMillis = 0;
       this.codeReader.decodeFromVideoDevice(
         this.currentDeviceId,
         this.videoElement.nativeElement,
         (res: Result | undefined) => {
           if (res) {
             this.result = res.getText();
-            this.onScanComplete.emit(this.result);
+            this.scanComplete.emit(this.result);
             this.pauseScan();
           }
         },

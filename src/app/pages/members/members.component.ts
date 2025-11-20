@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TableMembersComponent } from '../../components/table-members/table-members.component';
-import { MemberService } from '../../services/member.service';
-import { HttpResult } from '../../types/httpResult';
-import { Member } from '../../interfaces/member';
-import { AddMemberComponent } from '../../components/add-member/add-member.component';
-import { AppComponent } from '../../app.component';
-import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
+import { TableMembersComponent } from '@/app/components/table-members/table-members.component';
+import { MemberService } from '@/app/services/member.service';
+import { HttpResult } from '@/app/types/httpResult';
+import { Member } from '@/app/interfaces/member';
+import { AddMemberComponent } from '@/app/components/add-member/add-member.component';
+import { AppComponent } from '@/app/app.component';
+import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -21,17 +21,15 @@ export class MembersComponent implements OnInit {
   public showAddForm = false;
   public searchWord!: string;
 
-  constructor(
-    private Member: MemberService,
-    private app: AppComponent,
-  ) {}
+  private memberService = inject(MemberService);
+  private app = inject(AppComponent);
 
   ngOnInit() {
     this.getMemberList();
   }
 
   getMemberList() {
-    this.Member.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
+    this.memberService.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
       if (result.success && result.data) {
         this.member = result.data;
         this.memberFilter = this.member;
@@ -43,12 +41,12 @@ export class MembersComponent implements OnInit {
     this.showAddForm = true;
   }
 
-  cancelForm(event: any) {
+  cancelForm(event: boolean) {
     if (event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
 
-  showAlert(event: any) {
+  showAlert(event: string) {
     this.app.showToast(event);
   }
 

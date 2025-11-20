@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Checkin } from '../../interfaces/checkin';
-import { environment } from '../../../environments/environment';
+import { Checkin } from '@/app/interfaces/checkin';
+import { environment } from '@/environments/environment';
 import dayjs from 'dayjs';
 import { RouterModule } from '@angular/router';
 
@@ -15,7 +15,7 @@ export class TableCheckinsComponent {
   private URL: string = environment.FILE_URL;
   @Input() checkins!: Checkin[];
 
-  getfileUrl(fileName: any) {
+  getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 

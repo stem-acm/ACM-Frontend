@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { MemberService } from '../../services/member.service';
-import { HttpResult } from '../../types/httpResult';
-import { Member } from '../../interfaces/member';
-import { AcmLogoComponent } from '../../components/acm-logo/acm-logo.component';
+import { Component, inject, OnInit } from '@angular/core';
+import { MemberService } from '@/app/services/member.service';
+import { HttpResult } from '@/app/types/httpResult';
+import { Member } from '@/app/interfaces/member';
 import { ActivatedRoute } from '@angular/router';
-import { MemberCardDetailComponent } from '../../components/member-card-detail/member-card-detail.component';
+import { MemberCardDetailComponent } from '@/app/components/member-card-detail/member-card-detail.component';
 import dayjs from 'dayjs';
 
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [AcmLogoComponent, MemberCardDetailComponent],
+  imports: [MemberCardDetailComponent],
   templateUrl: './profil.component.html',
   styleUrl: './profil.component.css',
 })
@@ -18,10 +17,8 @@ export class ProfilComponent implements OnInit {
   public member!: Member;
   private registrationNumber!: string;
 
-  constructor(
-    private Member: MemberService,
-    private route: ActivatedRoute,
-  ) {}
+  private memberService = inject(MemberService);
+  private route = inject(ActivatedRoute);
 
   ngOnInit() {
     this.registrationNumber = this.route.snapshot.paramMap.get('reg_number')!;
@@ -33,8 +30,9 @@ export class ProfilComponent implements OnInit {
   }
 
   getMemberInfo(registrationNumber: string) {
-    this.Member.getMemberByRegistrationNumber(registrationNumber).subscribe(
-      (result: HttpResult<Member>) => {
+    this.memberService
+      .getMemberByRegistrationNumber(registrationNumber)
+      .subscribe((result: HttpResult<Member>) => {
         if (result.success && result.data) {
           this.member = result.data;
           this.member.birthDate = this.convertDate(this.member.birthDate);
@@ -55,7 +53,6 @@ export class ProfilComponent implements OnInit {
             profileImage: 'user.png',
           };
         }
-      },
-    );
+      });
   }
 }

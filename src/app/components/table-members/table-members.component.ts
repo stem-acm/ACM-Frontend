@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { Member } from '../../interfaces/member';
+import { environment } from '@/environments/environment';
+import { Member } from '@/app/interfaces/member';
 import { RouterModule } from '@angular/router';
 import dayjs from 'dayjs';
 
@@ -16,7 +16,7 @@ export class TableMembersComponent {
   public userImg = `${this.URL}/user.png`;
   @Input() data!: Member[];
 
-  getfileUrl(fileName: any) {
+  getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 

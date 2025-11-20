@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '@/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { HttpResult } from '../types/httpResult';
-import { User } from '../interfaces/user';
+import { HttpResult } from '@/app/types/httpResult';
+import { User } from '@/app/interfaces/user';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private URL: string = environment.API_URL;
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   login(credentials: { username: string; password: string }) {
     return this.http.post<HttpResult<{ user: User; token: string }>>(
@@ -36,7 +36,11 @@ export class AuthService {
   }
 
   verifyToken() {
-    const token: any = this.getToken();
+    const token: string | null = this.getToken();
+    if (!token) {
+      return throwError(() => new Error('Unauthorized'));
+    }
+
     return this.http.get<HttpResult<User>>(`${this.URL}/auth/token`, {
       params: {
         auth: token,

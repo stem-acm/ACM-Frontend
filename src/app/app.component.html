@@ -11,5 +11,5 @@
 <router-outlet />
 
 @if (toast.show) {
-  <app-toast (close)="closeToast($event)" [message]="toast.message" />
+  <app-toast (closed)="closeToast($event)" [message]="toast.message" />
 }

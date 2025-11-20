@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { CardStatisticComponent } from '../../components/card-statistic/card-statistic.component';
+import { Component, inject, OnInit } from '@angular/core';
+import { CardStatisticComponent } from '@/app/components/card-statistic/card-statistic.component';
 import { DashboardService } from '../../services/dashboard.service';
-import { HttpResult } from '../../types/httpResult';
-import { Checkin } from '../../interfaces/checkin';
-import { TableCheckinsComponent } from '../../components/table-checkins/table-checkins.component';
-import { CardStatisticSkeletonComponent } from '../../components/card-statistic-skeleton/card-statistic-skeleton.component';
-import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
-import { Statistics } from '../../interfaces/statistics';
+import { HttpResult } from '@/app/types/httpResult';
+import { TableCheckinsComponent } from '@/app/components/table-checkins/table-checkins.component';
+import { CardStatisticSkeletonComponent } from '@/app/components/card-statistic-skeleton/card-statistic-skeleton.component';
+import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
+import { Statistics } from '@/app/interfaces/statistics';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +21,7 @@ import { Statistics } from '../../interfaces/statistics';
 })
 export class HomeComponent implements OnInit {
   public statistics!: Statistics;
-  constructor(private dashboard: DashboardService) {}
+  private dashboard = inject(DashboardService);
 
   ngOnInit() {
     this.getStatistic();

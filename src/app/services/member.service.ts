@@ -1,16 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { HttpResult } from '../types/httpResult';
-import { Member } from '../interfaces/member';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '@/environments/environment';
+import { HttpResult } from '@/app/types/httpResult';
+import { Member } from '@/app/interfaces/member';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MemberService {
   private URL: string = environment.API_URL;
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getAllMembers() {
     return this.http.get<HttpResult<Member[]>>(`${this.URL}/members`);

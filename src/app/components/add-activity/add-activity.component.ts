@@ -6,11 +6,12 @@ import {
   OnChanges,
   SimpleChanges,
   OnInit,
+  inject,
 } from '@angular/core';
-import { Activity, DayOfWeek } from '../../interfaces/activity';
+import { Activity } from '@/app/interfaces/activity';
 import { FormsModule } from '@angular/forms';
-import { ActivityService } from '../../services/activity.service';
-import { HttpResult } from '../../types/httpResult';
+import { ActivityService } from '@/app/services/activity.service';
+import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import dayjs from 'dayjs';
 
@@ -22,10 +23,10 @@ import dayjs from 'dayjs';
   styleUrl: './add-activity.component.css',
 })
 export class AddActivityComponent implements OnChanges, OnInit {
-  @Output('canceled') emiterCancel = new EventEmitter<boolean>();
-  @Output('success') emiterSuccess = new EventEmitter<boolean>();
-  @Output('showToast') emiterToast = new EventEmitter<string>();
-  @Output('updatedData') sendData = new EventEmitter<{ data: Activity; message: string }>();
+  @Output() canceled = new EventEmitter<boolean>();
+  @Output() success = new EventEmitter<boolean>();
+  @Output() showToast = new EventEmitter<string>();
+  @Output() updatedData = new EventEmitter<{ data: Activity; message: string }>();
   public error: { enabled: boolean; message: string } = { enabled: false, message: '' };
   @Input() mode: 'update' | 'insert' = 'insert';
   @Input() activityToUpdate!: Activity;
@@ -259,10 +260,10 @@ export class AddActivityComponent implements OnChanges, OnInit {
     '🌠',
   ];
 
-  constructor(private activityService: ActivityService) {}
+  private activityService = inject(ActivityService);
 
   cancel() {
-    this.emiterCancel.emit(true);
+    this.canceled.emit(true);
     this.activity = {
       name: '',
       description: '',
@@ -417,7 +418,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
             enabled: false,
             message: '',
           };
-          this.emiterToast.emit(`Activity ${this.activity.name} created successfully`);
+          this.showToast.emit(`Activity ${this.activity.name} created successfully`);
           console.log('Activity=' + JSON.stringify(this.activity));
           this.activity = {
             name: '',
@@ -432,7 +433,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
             endTime: '',
           };
           this.showEmojiPicker = false;
-          this.emiterSuccess.emit(true);
+          this.success.emit(true);
         }
         this.loading = false;
       },
@@ -483,7 +484,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
             enabled: false,
             message: '',
           };
-          this.sendData.emit({
+          this.updatedData.emit({
             data: this.activity,
             message: `Activity ${this.activity.name} updated successfully`,
           });
@@ -500,7 +501,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
             endTime: '',
           };
           this.showEmojiPicker = false;
-          this.emiterSuccess.emit(true);
+          this.success.emit(true);
         }
         this.loading = false;
       },

@@ -11,25 +11,25 @@ import { environment } from '../../../environments/environment';
 })
 export class CardComponent {
   @Input() memberChoose!: { selected: boolean; member: Member };
-  @Output('setSelectedMember') emiterMember = new EventEmitter<Member>();
-  @Output('memberSelectionChange') emiterMemberSelectionChange = new EventEmitter<{
+  @Output() setSelectedMember = new EventEmitter<Member>();
+  @Output() memberSelectionChange = new EventEmitter<{
     selected: boolean;
     member: Member;
   }>();
 
   private URL: string = environment.FILE_URL;
 
-  getfileUrl(fileName: any) {
+  getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 
   openCard(_member: Member) {
-    this.emiterMember.emit(_member);
+    this.setSelectedMember.emit(_member);
   }
 
   onCheckboxChange(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
-    this.emiterMemberSelectionChange.emit({
+    this.memberSelectionChange.emit({
       member: this.memberChoose.member,
       selected: isChecked,
     });

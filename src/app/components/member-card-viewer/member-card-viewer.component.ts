@@ -12,11 +12,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class MemberCardViewerComponent {
   @Input() member!: Member[];
-  @Output('closed') emiterClose = new EventEmitter<boolean>();
+  @Output() closed = new EventEmitter<boolean>();
   public checkData: { stamp: boolean; signature: boolean } = { stamp: false, signature: false };
 
   close() {
-    this.emiterClose.emit(true);
+    this.closed.emit(true);
   }
 
   print() {
@@ -60,21 +60,21 @@ export class MemberCardViewerComponent {
 
     /** 🔥 Attendre que toutes les images (QR code) soient chargées avant impression */
     const waitImagesLoaded = () => {
-      const imgs = iframeDoc.images;
+      const imgs = Array.from(iframeDoc.images);
       if (!imgs.length) return Promise.resolve();
 
       let loaded = 0;
       return new Promise<void>(resolve => {
-        for (let i = 0; i < imgs.length; i++) {
-          if (imgs[i].complete) {
+        for (const img of imgs) {
+          if (img.complete) {
             loaded++;
             if (loaded === imgs.length) resolve();
           } else {
-            imgs[i].onload = () => {
+            img.onload = () => {
               loaded++;
               if (loaded === imgs.length) resolve();
             };
-            imgs[i].onerror = () => {
+            img.onerror = () => {
               loaded++;
               if (loaded === imgs.length) resolve();
             };

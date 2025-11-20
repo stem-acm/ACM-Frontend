@@ -21,7 +21,7 @@ export class MemberBadgeRectoComponent {
     return dayjs(date).format('DD / MM / YYYY');
   }
 
-  getfileUrl(fileName: any) {
+  getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 }

@@ -29,7 +29,7 @@
       />
     </div>
 
-    <div *ngElse class="p-12 text-center animate-pulse">
+    <div *ngIf="!member" class="p-12 text-center animate-pulse">
       <app-img-round [imgUrl]="getfileUrl('user.png')" />
       <app-title titleText="..." />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>

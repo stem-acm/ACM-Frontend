@@ -4,12 +4,12 @@ import { ScannerComponent } from '../scanner/scanner.component';
 import { CheckinService } from '../../services/checkin.service';
 import { HttpResult } from '../../types/httpResult';
 import { ActivityService } from '../../services/activity.service';
-import { Activity } from '../../interfaces/activity';
+import { Activity, DayOfWeek } from '../../interfaces/activity';
 import { ToastService } from '../../services/toast.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { Checkin } from '../../interfaces/checkin';
 
-interface ActivityToDsiplay {
+interface ActivityToDisplay {
   id: number;
   name: string;
   icon: string;
@@ -29,7 +29,7 @@ export class StepperComponent implements OnInit {
 
   loading = false;
   currentStep = 1;
-  selectedActivities: ActivityToDsiplay[] = [];
+  selectedActivities: Activity[] = [];
   showMinutePicker = false;
   showHourPicker = false;
   scannedBadgeId: string | null = null;
@@ -39,7 +39,7 @@ export class StepperComponent implements OnInit {
   private toastService = inject(ToastService);
 
   activities: Activity[] = [];
-  finalActivities: ActivityToDsiplay[] = [];
+  finalActivities: ActivityToDisplay[] = [];
 
   selectedTime = { hour: 18, minute: 0 };
 
@@ -78,7 +78,7 @@ export class StepperComponent implements OnInit {
 
   filterActivitiesByCurrentDay(activities: Activity[]): Activity[] {
     const today = new Date();
-    const todayDayOfWeek = this.today as any; // Current day name in lowercase
+    const todayDayOfWeek = this.today as DayOfWeek;
 
     console.log('Today is:', todayDayOfWeek);
     console.log('All activities before filtering:', activities);
@@ -176,7 +176,7 @@ export class StepperComponent implements OnInit {
     }
   }
 
-  toggleActivity(activity: any) {
+  toggleActivity(activity: Activity) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
 
     if (index > -1) {
@@ -192,7 +192,7 @@ export class StepperComponent implements OnInit {
     }
   }
 
-  isActivitySelected(activity: any): boolean {
+  isActivitySelected(activity: Activity): boolean {
     return this.selectedActivities.some(a => a.id === activity.id);
   }
 
@@ -238,7 +238,7 @@ export class StepperComponent implements OnInit {
     this.showMinutePicker = false;
   }
 
-  onBadgeScanned(badgeId: string) {
+  badgeScanned(badgeId: string) {
     this.scannedBadgeId = badgeId;
     console.log('Badge scanned:', badgeId);
 

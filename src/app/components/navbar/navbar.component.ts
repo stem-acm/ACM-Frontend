@@ -1,11 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { AcmLogoComponent } from '../acm-logo/acm-logo.component';
 import { FlexMenusComponent } from '../flex-menus/flex-menus.component';
 import { AuthService } from '../../services/auth.service';
-import { Router, RouterModule } from '@angular/router';
-import { isSubscription } from 'rxjs/internal/Subscription';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { User } from '../../interfaces/user';
+import { User } from '@/app/interfaces/user';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +15,7 @@ import { User } from '../../interfaces/user';
 })
 export class NavbarComponent {
   @Input() user!: User;
-  public isShowUserMenu: boolean = false;
+  public isShowUserMenu = false;
   public userMenu: { route: string; label: string }[] = [
     {
       route: '/setting',
@@ -28,10 +27,7 @@ export class NavbarComponent {
     },
   ];
 
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-  ) {}
+  private auth = inject(AuthService);
 
   logout() {
     this.auth.logout();

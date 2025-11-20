@@ -1,4 +1,4 @@
-import { Occupation } from '../types/occupation';
+import { Occupation } from '@/app/types/occupation';
 
 export interface Member {
   id?: number;

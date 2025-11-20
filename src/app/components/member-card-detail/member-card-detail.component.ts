@@ -1,15 +1,15 @@
-import { Component, Input } from '@angular/core';
-import { Member } from '../../interfaces/member';
+import { Component, inject, Input } from '@angular/core';
+import { Member } from '@/app/interfaces/member';
 import { ImgRoundComponent } from '../img-round/img-round.component';
 import { TitleComponent } from '../title/title.component';
 import { TextDescriptionComponent } from '../text-description/text-description.component';
 import { MemberDescriptionComponent } from '../member-description/member-description.component';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../environments/environment';
+import { environment } from '@/environments/environment';
 import dayjs from 'dayjs';
 import { ListValueComponent } from '../list-value/list-value.component';
 import { AddMemberComponent } from '../add-member/add-member.component';
-import { AppComponent } from '../../app.component';
+import { AppComponent } from '@/app/app.component';
 import { RouterModule } from '@angular/router';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
 
@@ -35,8 +35,7 @@ export class MemberCardDetailComponent {
   private URL: string = environment.FILE_URL;
   public showAddForm = false;
   public showCard = false;
-
-  constructor(private app: AppComponent) {}
+  private app = inject(AppComponent);
 
   formatDate(date?: Date | string) {
     if (!date) return 'no date';
@@ -45,16 +44,16 @@ export class MemberCardDetailComponent {
     return `${formatted} (${age} yrs)`;
   }
 
-  getfileUrl(fileName: any) {
+  getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 
-  cancelForm(event: any) {
+  cancelForm(event: boolean) {
     if (event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
 
-  showToast(event: any) {
+  showToast(event: { message: string; data: Member }) {
     if (event) this.showAddForm = false;
     this.app.showToast(event.message);
     this.member = event.data;
@@ -64,7 +63,7 @@ export class MemberCardDetailComponent {
     this.showAddForm = true;
   }
 
-  close(event: any) {
+  close(_: boolean) {
     this.showCard = false;
   }
 

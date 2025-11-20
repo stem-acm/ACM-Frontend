@@ -1,23 +1,22 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
-import { Occupation } from '../../types/occupation';
-import { MemberService } from '../../services/member.service';
-import { Member } from '../../interfaces/member';
-import { HttpResult } from '../../types/httpResult';
+import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
+import { Occupation } from '@/app/types/occupation';
+import { MemberService } from '@/app/services/member.service';
+import { Member } from '@/app/interfaces/member';
+import { HttpResult } from '@/app/types/httpResult';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ToastComponent } from '../toast/toast.component';
 
 @Component({
   selector: 'app-add-member',
   standalone: true,
-  imports: [FormsModule, CommonModule, ToastComponent],
+  imports: [FormsModule, CommonModule],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.css',
 })
 export class AddMemberComponent implements OnInit {
-  @Output('canceled') emiterCancel = new EventEmitter<boolean>();
-  @Output('showToast') emiterToast = new EventEmitter<string>();
-  @Output('updatedData') sendData = new EventEmitter<{ data: Member; message: string }>();
+  @Output() canceled = new EventEmitter<boolean>();
+  @Output() showToast = new EventEmitter<string>();
+  @Output() updatedData = new EventEmitter<{ data: Member; message: string }>();
   public occupations: Occupation[] = ['employee', 'entrepreneur', 'student', 'unemployed'];
   public error: { enabled: boolean; message: string } = { enabled: false, message: '' };
   @Input() mode: 'update' | 'insert' = 'insert';
@@ -37,7 +36,7 @@ export class AddMemberComponent implements OnInit {
     joinDate: '',
   };
 
-  constructor(private memberService: MemberService) {}
+  private memberService = inject(MemberService);
 
   ngOnInit() {
     if (this.mode == 'update') {
@@ -46,7 +45,7 @@ export class AddMemberComponent implements OnInit {
   }
 
   cancel() {
-    this.emiterCancel.emit(true);
+    this.canceled.emit(true);
   }
 
   checkValidation(): boolean {
@@ -92,7 +91,7 @@ export class AddMemberComponent implements OnInit {
             enabled: false,
             message: '',
           };
-          this.emiterToast.emit(
+          this.showToast.emit(
             `Member ${this.member.firstName} ${this.member.lastName} created successfully`,
           );
           this.member = {
@@ -136,7 +135,7 @@ export class AddMemberComponent implements OnInit {
             enabled: false,
             message: '',
           };
-          this.sendData.emit({
+          this.updatedData.emit({
             data: this.member,
             message: `Member ${this.member.firstName} ${this.member.lastName} updated successfully`,
           });

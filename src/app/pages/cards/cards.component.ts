@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { MemberBadgeComponent } from '../../components/member-badge/member-badge.component';
+import { Component, inject, OnInit } from '@angular/core';
 import { CardComponent } from '../../components/card/card.component';
 import { Member } from '../../interfaces/member';
 import { MemberService } from '../../services/member.service';
@@ -13,7 +12,6 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-cards',
   standalone: true,
   imports: [
-    MemberBadgeComponent,
     CardComponent,
     CommonModule,
     MemberCardViewerComponent,
@@ -31,14 +29,14 @@ export class CardsComponent implements OnInit {
   public showCard = false;
   public searchWord!: string;
 
-  constructor(private Member: MemberService) {}
+  private memberService = inject(MemberService);
 
   ngOnInit() {
     this.getMemberList();
   }
 
   getMemberList() {
-    this.Member.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
+    this.memberService.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
       if (result.success && result.data) {
         this.member = result.data;
         this.member.map(e => {
@@ -52,7 +50,7 @@ export class CardsComponent implements OnInit {
     });
   }
 
-  close(event: any) {
+  close(_: boolean) {
     this.showCard = false;
   }
 

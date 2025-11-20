@@ -1,5 +1,5 @@
 export const environment = {
-    URL: 'https://acm-backend-iwde.onrender.com/api',
-    FILEURL: 'https://acm-backend-iwde.onrender.com/uploads',
-    STATICWEBURL: ''
+    API_URL: 'https://acm-backend.lazygeko.app/api',
+    FILE_URL: 'https://acm-backend.lazygeko.app/uploads',
+    STATIC_WEB_URL: ''
 };

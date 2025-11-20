@@ -13,7 +13,7 @@ import { environment } from '../../../environments/environment';
 })
 export class MemberBadgeRectoComponent {
   @Input() member!: Member;
-  private URL: string = environment.FILEURL;
+  private URL: string = environment.FILE_URL;
   @Input() checkData!: { stamp: boolean, signature: boolean };
 
   formatDate(date?: Date | string) {

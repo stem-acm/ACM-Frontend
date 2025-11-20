@@ -8,7 +8,7 @@ import { Member } from '../interfaces/member';
   providedIn: 'root'
 })
 export class MemberService {
-  private URL: string = environment.URL;
+  private URL: string = environment.API_URL;
 
   constructor(private http: HttpClient) { }
 

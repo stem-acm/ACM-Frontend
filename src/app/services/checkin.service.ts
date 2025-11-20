@@ -8,7 +8,7 @@ import { Checkin } from '../interfaces/checkin';
   providedIn: 'root'
 })
 export class CheckinService {
-  private URL: string = environment.URL;
+  private URL: string = environment.API_URL;
 
   constructor(private http:HttpClient) { }
 

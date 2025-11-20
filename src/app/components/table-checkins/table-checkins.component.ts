@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './table-checkins.component.css'
 })
 export class TableCheckinsComponent {
-  private URL: string = environment.FILEURL;
+  private URL: string = environment.FILE_URL;
   @Input() checkins!: Checkin[];
 
   getfileUrl(fileName: any) {

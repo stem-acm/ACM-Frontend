@@ -22,7 +22,7 @@ import { MemberCardViewerComponent } from '../member-card-viewer/member-card-vie
 })
 export class MemberCardDetailComponent {
   @Input() member!: Member;
-  private URL: string = environment.FILEURL;
+  private URL: string = environment.FILE_URL;
   public showAddForm: boolean = false;
   public showCard: boolean = false;
 

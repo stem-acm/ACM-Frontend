@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             cd ${{ secrets.PROJECT_FOLDER }}
-            git reset --hard && git checkout develop && git pull &&  rm -rf node_modules package-lock.json && npm install --legacy-peer-deps
+            git reset --hard && git checkout develop && git pull &&  rm -rf node_modules package-lock.json dist && npm install --legacy-peer-deps
             npm run build --prod
-            npm run serve:prod
             pm2 restart acm-frontend
+            pm2 save

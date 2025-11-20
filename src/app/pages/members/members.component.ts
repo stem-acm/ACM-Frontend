@@ -55,7 +55,12 @@ export class MembersComponent {
   }
 
   searchByName(keyWord: string) {
-    this.memberFilter = this.member.filter((e) => e.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 || e.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1);
+    this.memberFilter = this.member.filter(
+      (e) => e.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
+      e.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
+      e.occupation.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
+      e.studyOrWorkPlace?.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1
+  );
   }
 
 }

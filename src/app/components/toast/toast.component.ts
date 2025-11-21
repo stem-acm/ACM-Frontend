@@ -9,8 +9,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ToastComponent {
   @Input() message!: string;
-  @Output('closed') emiterClose = new EventEmitter<boolean>();
-
   @Output() closed = new EventEmitter<boolean>();
 
   close() {

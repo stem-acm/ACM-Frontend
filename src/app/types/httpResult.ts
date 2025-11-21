@@ -1,5 +1,5 @@
-export type HttpResult<T> = {
+export interface HttpResult<T> {
   success: boolean;
   message: string;
-  data: T
-};
+  data: T;
+}

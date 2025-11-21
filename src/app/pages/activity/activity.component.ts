@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
-import { AddActivityComponent } from '../../components/add-activity/add-activity.component';
-import { Activity } from '../../interfaces/activity';
-import { ActivityService } from '../../services/activity.service';
-import { AppComponent } from '../../app.component';
-import { HttpResult } from '../../types/httpResult';
-import { TableActivitiesComponent } from '../../components/table-activities/table-activities.component';
-import { TableLoadingComponent } from '../../components/table-loading/table-loading.component';
+import { Component, inject, OnInit } from '@angular/core';
+import { AddActivityComponent } from '@/app/components/add-activity/add-activity.component';
+import { Activity } from '@/app/interfaces/activity';
+import { ActivityService } from '@/app/services/activity.service';
+import { AppComponent } from '@/app/app.component';
+import { HttpResult } from '@/app/types/httpResult';
+import { TableActivitiesComponent } from '@/app/components/table-activities/table-activities.component';
+import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -13,33 +13,32 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [AddActivityComponent, TableActivitiesComponent, TableLoadingComponent, FormsModule],
   templateUrl: './activity.component.html',
-  styleUrl: './activity.component.css'
+  styleUrl: './activity.component.css',
 })
-export class ActivityComponent {
+export class ActivityComponent implements OnInit {
   private activity!: Activity[];
   public activityToUpdate!: Activity;
   public activityFilter!: Activity[];
-  public showAddForm: boolean = false;
-  public title: string = 'New Activity';
+  public showAddForm = false;
+  public title = 'New Activity';
   public mode: 'insert' | 'update' = 'insert';
   public searchWord!: string;
 
-  constructor(private activityService: ActivityService, private app: AppComponent) {}
+  private activityService = inject(ActivityService);
+  private app = inject(AppComponent);
 
   ngOnInit() {
     this.getActivityList();
   }
 
   getActivityList() {
-    this.activityService.getAllActivity()
-      .subscribe((result: HttpResult<Activity[]>) => {
-        if(result.success && result.data) {
-          this.activity = result.data;
-          this.activityFilter = this.activity;
-          console.log("Activity from activity compnent" + JSON.stringify(this.activity));
-
-        }
-      })
+    this.activityService.getAllActivity().subscribe((result: HttpResult<Activity[]>) => {
+      if (result.success && result.data) {
+        this.activity = result.data;
+        this.activityFilter = this.activity;
+        console.log('Activity from activity compnent' + JSON.stringify(this.activity));
+      }
+    });
   }
 
   addActivity() {
@@ -49,17 +48,16 @@ export class ActivityComponent {
     this.showAddForm = true;
   }
 
-  cancelForm(event: any) {
-    if(event) this.showAddForm = false;
+  cancelForm(event: boolean) {
+    if (event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
 
-  closeForm(event: any) {
-    if(event) this.showAddForm = false;
+  closeForm(event: boolean) {
+    if (event) this.showAddForm = false;
   }
 
-
-  showAlert(event: any) {
+  showAlert(event: string) {
     this.app.showToast(event);
     this.getActivityList();
   }
@@ -71,8 +69,8 @@ export class ActivityComponent {
     this.activityToUpdate = event;
   }
 
-  showToast(event: any) {
-    if(event) this.showAddForm = false;
+  showToast(event: { data: Activity; message: string }) {
+    if (event) this.showAddForm = false;
     this.app.showToast(event.message);
     this.activityToUpdate = event.data;
     this.getActivityList();
@@ -83,7 +81,10 @@ export class ActivityComponent {
   }
 
   searchByName(keyWord: string) {
-    this.activityFilter = this.activity.filter((e) => e.name.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 || e.description?.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1);
+    this.activityFilter = this.activity.filter(
+      e =>
+        e.name.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
+        e.description?.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
+    );
   }
-
 }

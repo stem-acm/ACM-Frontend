@@ -1,8 +1,17 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { Activity, DayOfWeek } from '../../interfaces/activity';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnChanges,
+  SimpleChanges,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { Activity } from '@/app/interfaces/activity';
 import { FormsModule } from '@angular/forms';
-import { ActivityService } from '../../services/activity.service';
-import { HttpResult } from '../../types/httpResult';
+import { ActivityService } from '@/app/services/activity.service';
+import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import dayjs from 'dayjs';
 
@@ -11,18 +20,18 @@ import dayjs from 'dayjs';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './add-activity.component.html',
-  styleUrl: './add-activity.component.css'
+  styleUrl: './add-activity.component.css',
 })
-export class AddActivityComponent implements OnChanges {
-  @Output('canceled') emiterCancel = new EventEmitter<boolean>();
-  @Output('success') emiterSuccess = new EventEmitter<boolean>();
-  @Output('showToast') emiterToast = new EventEmitter<string>();
-  @Output('updatedData') sendData = new EventEmitter<{data: Activity, message: string}>();
-  public error: {enabled: boolean, message: string} = {enabled: false, message: ''};
+export class AddActivityComponent implements OnChanges, OnInit {
+  @Output() canceled = new EventEmitter<boolean>();
+  @Output() success = new EventEmitter<boolean>();
+  @Output() showToast = new EventEmitter<string>();
+  @Output() updatedData = new EventEmitter<{ data: Activity; message: string }>();
+  public error: { enabled: boolean; message: string } = { enabled: false, message: '' };
   @Input() mode: 'update' | 'insert' = 'insert';
   @Input() activityToUpdate!: Activity;
   @Input() title = 'Add Activity';
-  public loading: boolean = false;
+  public loading = false;
   public activity: Activity = {
     name: '',
     description: '',
@@ -33,49 +42,228 @@ export class AddActivityComponent implements OnChanges {
     startDate: '',
     endDate: '',
     startTime: '',
-    endTime: ''
+    endTime: '',
   };
 
   public showEmojiPicker = false;
   public commonEmojis = [
     // Education & Learning
-    '📚', '📖', '✏️', '📝', '🎓', '🏫', '', '📕', '📗', '📘', '📙', '📓',
+    '📚',
+    '📖',
+    '✏️',
+    '📝',
+    '🎓',
+    '🏫',
+    '',
+    '📕',
+    '📗',
+    '📘',
+    '📙',
+    '📓',
     // Technology & Innovation
-    '💻', '🖥️', '⌨️', '🖱️', '💾', '📱', '🔌', '🤖', '🚀', '💡', '🔬', '🧪', '🔭', '⚙️', '🔧', '🔨',
+    '💻',
+    '🖥️',
+    '⌨️',
+    '🖱️',
+    '💾',
+    '📱',
+    '🔌',
+    '🤖',
+    '🚀',
+    '💡',
+    '🔬',
+    '🧪',
+    '🔭',
+    '⚙️',
+    '🔧',
+    '🔨',
     // Arts & Culture
-    '🎨', '🖼️', '🎭', '🎪', '🎬', '🎥', '📷', '📸', '🎵', '🎶', '🎤', '🎧', '🎹', '🎸', '🎺', '🎻',
+    '🎨',
+    '🖼️',
+    '🎭',
+    '🎪',
+    '🎬',
+    '🎥',
+    '📷',
+    '📸',
+    '🎵',
+    '🎶',
+    '🎤',
+    '🎧',
+    '🎹',
+    '🎸',
+    '🎺',
+    '🎻',
     // Sports & Recreation
-    '⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏓', '🏸', '🏒', '🏑', '🥊', '🥋', '⛳', '🎯', '🎳', '🏊',
+    '⚽',
+    '🏀',
+    '🏈',
+    '⚾',
+    '🎾',
+    '🏐',
+    '🏓',
+    '🏸',
+    '🏒',
+    '🏑',
+    '🥊',
+    '🥋',
+    '⛳',
+    '🎯',
+    '🎳',
+    '🏊',
     // Communication & Discussion
-    '🗣️', '💬', '💭', '🗨️', '📢', '📣', '🎙️', '☎️', '📞', '✉️', '📧', '📬', '📮', '📪',
+    '🗣️',
+    '💬',
+    '💭',
+    '🗨️',
+    '📢',
+    '📣',
+    '🎙️',
+    '☎️',
+    '📞',
+    '✉️',
+    '📧',
+    '📬',
+    '📮',
+    '📪',
     // Community & Social
-    '👥', '👫', '👬', '👭', '🤝', '👋', '🙌', '👏', '🤲', '🙏', '❤️', '💙', '💚', '💛',
+    '👥',
+    '👫',
+    '👬',
+    '👭',
+    '🤝',
+    '👋',
+    '🙌',
+    '👏',
+    '🤲',
+    '🙏',
+    '❤️',
+    '💙',
+    '💚',
+    '💛',
     // American & Global Culture
-    '🇺🇸', '🌎', '🌍', '🌏', '🌐', '🗽', '🏛️', '🎆', '🎇', '🗼', '🏰',
+    '🇺🇸',
+    '🌎',
+    '🌍',
+    '🌏',
+    '🌐',
+    '🗽',
+    '🏛️',
+    '🎆',
+    '🎇',
+    '🗼',
+    '🏰',
     // Events & Celebrations
-    '🎉', '🎊', '🎈', '🎁', '🏆', '🥇', '🥈', '🥉', '🎖️', '🏅', '🎀', '🎗️',
+    '🎉',
+    '🎊',
+    '🎈',
+    '🎁',
+    '🏆',
+    '🥇',
+    '🥈',
+    '🥉',
+    '🎖️',
+    '🏅',
+    '🎀',
+    '🎗️',
     // Food & Hospitality
-    '☕', '🍕', '🍔', '🌮', '🍿', '🧁', '🍰', '🎂', '🍪', '🥤', '🧃', '🍩',
+    '☕',
+    '🍕',
+    '🍔',
+    '🌮',
+    '🍿',
+    '🧁',
+    '🍰',
+    '🎂',
+    '🍪',
+    '🥤',
+    '🧃',
+    '🍩',
     // Nature & Environment
-    '🌱', '🌳', '🌲', '🌿', '♻️', '🌞', '🌈', '⛰️', '🌊', '🌸', '🌺', '🌻',
+    '🌱',
+    '🌳',
+    '🌲',
+    '🌿',
+    '♻️',
+    '🌞',
+    '🌈',
+    '⛰️',
+    '🌊',
+    '🌸',
+    '🌺',
+    '🌻',
     // Business & Leadership
-    '💼', '📊', '📈', '📉', '💰', '🎯', '🔑', '🏢', '📋', '📌', '📍', '🗂️',
+    '💼',
+    '📊',
+    '📈',
+    '📉',
+    '💰',
+    '🎯',
+    '🔑',
+    '🏢',
+    '📋',
+    '📌',
+    '📍',
+    '🗂️',
     // Health & Wellness
-    '🧘', '🏃', '🚴', '💪', '🧠', '�', '💊', '🏥', '⚕️',
+    '🧘',
+    '🏃',
+    '🚴',
+    '💪',
+    '🧠',
+    '�',
+    '💊',
+    '🏥',
+    '⚕️',
     // Reading & Writing
-    '📰', '📄', '📃', '📋', '📑', '🔖', '🖊️', '🖋️', '✒️', '📜', '📚',
+    '📰',
+    '📄',
+    '📃',
+    '📋',
+    '📑',
+    '🔖',
+    '🖊️',
+    '🖋️',
+    '✒️',
+    '📜',
+    '📚',
     // Gaming & Entertainment
-    '🎮', '🎲', '🃏', '🎰', '🧩', '🪀', '🎪', '🎡', '🎢',
+    '🎮',
+    '🎲',
+    '🃏',
+    '🎰',
+    '🧩',
+    '🪀',
+    '🎪',
+    '🎡',
+    '🎢',
     // Travel & Adventure
-    '✈️', '🗺️', '🧳', '🎒', '🏕️', '⛺', '🚂', '🚗', '🚢',
+    '✈️',
+    '🗺️',
+    '🧳',
+    '🎒',
+    '🏕️',
+    '⛺',
+    '🚂',
+    '🚗',
+    '🚢',
     // General Positive
-    '😊', '😃', '😄', '🙂', '👍', '✨', '🌟', '💫', '⭐', '🌠'
+    '😊',
+    '😃',
+    '😄',
+    '🙂',
+    '👍',
+    '✨',
+    '🌟',
+    '💫',
+    '⭐',
+    '🌠',
   ];
 
-  constructor(private activityService: ActivityService) {}
+  private activityService = inject(ActivityService);
 
   cancel() {
-    this.emiterCancel.emit(true);
+    this.canceled.emit(true);
     this.activity = {
       name: '',
       description: '',
@@ -86,7 +274,7 @@ export class AddActivityComponent implements OnChanges {
       startDate: '',
       endDate: '',
       startTime: '',
-      endTime: ''
+      endTime: '',
     };
     this.showEmojiPicker = false;
   }
@@ -97,7 +285,7 @@ export class AddActivityComponent implements OnChanges {
   }
 
   ngOnInit() {
-    if(this.mode == 'update') {
+    if (this.mode == 'update') {
       this.activity = { ...this.activityToUpdate };
     } else {
       // Explicitly reset the form when in insert mode
@@ -111,7 +299,7 @@ export class AddActivityComponent implements OnChanges {
         startDate: '',
         endDate: '',
         startTime: '',
-        endTime: ''
+        endTime: '',
       };
       this.showEmojiPicker = false;
     }
@@ -129,11 +317,11 @@ export class AddActivityComponent implements OnChanges {
           startDate: '',
           endDate: '',
           startTime: '',
-          endTime: ''
+          endTime: '',
         };
       }
     }
-    
+
     if (changes['activityToUpdate'] && this.mode === 'update') {
       this.activity = { ...this.activityToUpdate };
     }
@@ -145,7 +333,7 @@ export class AddActivityComponent implements OnChanges {
 
   formatTime(time: string) {
     if (!time) return '';
-    
+
     // If it's an ISO timestamp (contains 'T'), extract just the time portion
     if (time.includes('T')) {
       try {
@@ -160,12 +348,12 @@ export class AddActivityComponent implements OnChanges {
         return '';
       }
     }
-    
+
     // If it's already in HH:mm format, add seconds
     if (time.length === 5) {
       return time + ':00';
     }
-    
+
     // Otherwise return as-is (already in HH:mm:ss format)
     return time;
   }
@@ -173,7 +361,7 @@ export class AddActivityComponent implements OnChanges {
   checkValidation(): boolean {
     const m = this.activity;
     const commonFields = m.name?.trim() && m.description && m.startTime && m.endTime;
-    
+
     if (!commonFields) return false;
 
     if (m.isPeriodic) {
@@ -185,7 +373,7 @@ export class AddActivityComponent implements OnChanges {
 
   saveActivity() {
     this.loading = true;
-    if(this.mode=='insert') {
+    if (this.mode == 'insert') {
       this.insertActivity();
     } else {
       this.updateActivity();
@@ -195,9 +383,9 @@ export class AddActivityComponent implements OnChanges {
   insertActivity() {
     if (!this.checkValidation()) {
       this.error = {
-            enabled: true,
-            message: 'Please fill in all required fields.'
-          }
+        enabled: true,
+        message: 'Please fill in all required fields.',
+      };
       this.loading = false;
       return;
     }
@@ -205,65 +393,68 @@ export class AddActivityComponent implements OnChanges {
     const baseDate = this.activity.startDate ? this.activity.startDate : new Date();
     const formattedStartTime = this.formatTime(this.activity.startTime);
     const formattedEndTime = this.formatTime(this.activity.endTime);
-    
+
     // Always send startDate and endDate, defaulting to baseDate if not present
     // Only send startDate and endDate if NOT periodic
-    const formattedStartDate = !this.activity.isPeriodic ? this.formatDate(this.activity.startDate || baseDate) : undefined;
-    const formattedEndDate = !this.activity.isPeriodic ? this.formatDate(this.activity.endDate || baseDate) : undefined;
+    const formattedStartDate = !this.activity.isPeriodic
+      ? this.formatDate(this.activity.startDate || baseDate)
+      : undefined;
+    const formattedEndDate = !this.activity.isPeriodic
+      ? this.formatDate(this.activity.endDate || baseDate)
+      : undefined;
 
-    this.activity = { 
-      ...this.activity, 
-      startDate: formattedStartDate, 
+    this.activity = {
+      ...this.activity,
+      startDate: formattedStartDate,
       endDate: formattedEndDate,
       startTime: formattedStartTime,
-      endTime: formattedEndTime
+      endTime: formattedEndTime,
     };
 
-    this.activityService.addActivity(this.activity)
-      .subscribe(
-        (result: HttpResult<Activity>) => {
-          if(result.success) {
-            this.error = {
-              enabled: false,
-              message: ''
-            };
-            this.emiterToast.emit(`Activity ${this.activity.name} created successfully`)
-            console.log("Activity=" + JSON.stringify(this.activity));
-            this.activity = {
-              name: '',
-              description: '',
-              image: '',
-              emoji: '',
-              isPeriodic: true,
-              dayOfWeek: 'tuesday',
-              startDate: '',
-              endDate: '',
-              startTime: '',
-              endTime: ''
-            };
-            this.showEmojiPicker = false;
-            this.emiterSuccess.emit(true);
-          }
-          this.loading = false;
-        },
-        (error) => {
-          console.log(error);
-          
+    this.activityService.addActivity(this.activity).subscribe(
+      (result: HttpResult<Activity>) => {
+        if (result.success) {
           this.error = {
-            enabled: true,
-            message: error.error.message
-          }
-        this.loading = false;
+            enabled: false,
+            message: '',
+          };
+          this.showToast.emit(`Activity ${this.activity.name} created successfully`);
+          console.log('Activity=' + JSON.stringify(this.activity));
+          this.activity = {
+            name: '',
+            description: '',
+            image: '',
+            emoji: '',
+            isPeriodic: true,
+            dayOfWeek: 'tuesday',
+            startDate: '',
+            endDate: '',
+            startTime: '',
+            endTime: '',
+          };
+          this.showEmojiPicker = false;
+          this.success.emit(true);
         }
-      )
+        this.loading = false;
+      },
+      error => {
+        console.log(error);
+
+        this.error = {
+          enabled: true,
+          message: error.error.message,
+        };
+        this.loading = false;
+      },
+    );
   }
 
   updateActivity() {
     if (!this.checkValidation()) {
       this.error = {
-            enabled: true,
-            message: 'Please fill in all required fields.'
-          }
+        enabled: true,
+        message: 'Please fill in all required fields.',
+      };
       this.loading = false;
       return;
     }
@@ -271,51 +462,56 @@ export class AddActivityComponent implements OnChanges {
     const formattedStartTime = this.formatTime(this.activity.startTime);
     const formattedEndTime = this.formatTime(this.activity.endTime);
 
-    const formattedStartDate = !this.activity.isPeriodic ? this.formatDate(this.activity.startDate || baseDate) : undefined;
-    const formattedEndDate = !this.activity.isPeriodic ? this.formatDate(this.activity.endDate || baseDate) : undefined;
+    const formattedStartDate = !this.activity.isPeriodic
+      ? this.formatDate(this.activity.startDate || baseDate)
+      : undefined;
+    const formattedEndDate = !this.activity.isPeriodic
+      ? this.formatDate(this.activity.endDate || baseDate)
+      : undefined;
 
-    this.activity = { 
-      ...this.activity, 
-      startDate: formattedStartDate, 
+    this.activity = {
+      ...this.activity,
+      startDate: formattedStartDate,
       endDate: formattedEndDate,
       startTime: formattedStartTime,
-      endTime: formattedEndTime
+      endTime: formattedEndTime,
     };
 
-    this.activityService.updateActivity(this.activity)
-      .subscribe(
-        (result: HttpResult<Activity>) => {
-          if(result.success) {
-            this.error = {
-              enabled: false,
-              message: ''
-            };
-            this.sendData.emit({data: this.activity, message: `Activity ${this.activity.name} updated successfully`});
-             this.activity = {
-              name: '',
-              description: '',
-              image: '',
-              emoji: '',
-              isPeriodic: true,
-              dayOfWeek: 'tuesday',
-              startDate: '',
-              endDate: '',
-              startTime: '',
-              endTime: ''
-            };
-            this.showEmojiPicker = false;
-            this.emiterSuccess.emit(true);
-          }
-          this.loading = false;
-        },
-        (error) => {
+    this.activityService.updateActivity(this.activity).subscribe(
+      (result: HttpResult<Activity>) => {
+        if (result.success) {
           this.error = {
-            enabled: true,
-            message: error.error.message
-          }
-          this.loading = false;
+            enabled: false,
+            message: '',
+          };
+          this.updatedData.emit({
+            data: this.activity,
+            message: `Activity ${this.activity.name} updated successfully`,
+          });
+          this.activity = {
+            name: '',
+            description: '',
+            image: '',
+            emoji: '',
+            isPeriodic: true,
+            dayOfWeek: 'tuesday',
+            startDate: '',
+            endDate: '',
+            startTime: '',
+            endTime: '',
+          };
+          this.showEmojiPicker = false;
+          this.success.emit(true);
         }
-      )
+        this.loading = false;
+      },
+      error => {
+        this.error = {
+          enabled: true,
+          message: error.error.message,
+        };
+        this.loading = false;
+      },
+    );
   }
-
 }

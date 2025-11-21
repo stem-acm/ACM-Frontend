@@ -1,52 +1,103 @@
-<div class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center items-center">
-  <form (ngSubmit)="saveMember()" class="max-w-2xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl">
-    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">{{ title }}</h1>
+<div
+  class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center items-center"
+>
+  <form
+    (ngSubmit)="saveMember()"
+    class="max-w-2xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl"
+  >
+    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">
+      {{ title }}
+    </h1>
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
         <label for="firstName" class="block mb-2 text-sm font-medium">First Name</label>
-        <input type="text" id="firstName" [(ngModel)]="member.firstName" name="firstName" placeholder="eg: John" required
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input
+          type="text"
+          id="firstName"
+          [(ngModel)]="member.firstName"
+          name="firstName"
+          placeholder="eg: John"
+          required
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
 
       <div class="w-1/2 mb-5">
         <label for="lastName" class="block mb-2 text-sm font-medium">Last Name</label>
-        <input type="text" id="lastName" [(ngModel)]="member.lastName" name="lastName" placeholder="eg: Doe" required
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input
+          type="text"
+          id="lastName"
+          [(ngModel)]="member.lastName"
+          name="lastName"
+          placeholder="eg: Doe"
+          required
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
     </div>
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
         <label for="Birthday" class="block mb-2 text-sm font-medium">Birthday</label>
-        <input type="date" id="Birthday" [(ngModel)]="member.birthDate" name="birthDate" required
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input
+          type="date"
+          id="Birthday"
+          [(ngModel)]="member.birthDate"
+          name="birthDate"
+          required
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
 
       <div class="w-1/2 mb-5">
         <label for="birthPlace" class="block mb-2 text-sm font-medium">Place of birth</label>
-        <input type="text" id="birthPlace" [(ngModel)]="member.birthPlace" name="birthPlace" placeholder="eg: Mahajanga, Madagascar..." required
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input
+          type="text"
+          id="birthPlace"
+          [(ngModel)]="member.birthPlace"
+          name="birthPlace"
+          placeholder="eg: Mahajanga, Madagascar..."
+          required
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
     </div>
 
     <div class="flex gap-4">
       <div class="w-1/3 mb-5">
         <label for="adress" class="block mb-2 text-sm font-medium">Address</label>
-        <input type="text" id="adress" [(ngModel)]="member.address" name="address" placeholder="eg: Mahajanga..." required
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input
+          type="text"
+          id="adress"
+          [(ngModel)]="member.address"
+          name="address"
+          placeholder="eg: Mahajanga..."
+          required
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
 
       <div class="w-1/3 mb-5">
         <label for="tel" class="block mb-2 text-sm font-medium">Phone Number</label>
-        <input type="tel" id="tel" [(ngModel)]="member.phoneNumber" name="phoneNumber" placeholder="eg: +261 34 00 000 00"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input
+          type="tel"
+          id="tel"
+          [(ngModel)]="member.phoneNumber"
+          name="phoneNumber"
+          placeholder="eg: +261 34 00 000 00"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
 
       <div class="w-1/3 mb-5">
         <label for="occupation" class="block mb-2 text-sm font-medium">Occupation</label>
-        <select id="occupation" [(ngModel)]="member.occupation" name="occupation"
-          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <select
+          id="occupation"
+          [(ngModel)]="member.occupation"
+          name="occupation"
+          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        >
           <option *ngFor="let item of occupations" [value]="item">{{ item }}</option>
         </select>
       </div>
@@ -54,38 +105,103 @@
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
-        <label for="organization" class="block mb-2 text-sm font-medium">Place of Work / Study</label>
-        <input type="text" id="organization" [(ngModel)]="member.studyOrWorkPlace" name="studyOrWorkPlace" placeholder="eg: IUGM" required
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <label for="organization" class="block mb-2 text-sm font-medium"
+          >Place of Work / Study</label
+        >
+        <input
+          type="text"
+          id="organization"
+          [(ngModel)]="member.studyOrWorkPlace"
+          name="studyOrWorkPlace"
+          placeholder="eg: IUGM"
+          required
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
 
       <div class="w-1/2 mb-5">
         <label for="joinDate" class="block mb-2 text-sm font-medium">Join date</label>
-        <input type="date" id="joinDate" [(ngModel)]="member.joinDate" name="joinDate" required
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+        <input
+          type="date"
+          id="joinDate"
+          [(ngModel)]="member.joinDate"
+          name="joinDate"
+          required
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
     </div>
 
-    @if(error.enabled) {<span class="text-xs font-bold text-red-500 bg-red-100">{{error.message}}</span>}
+    @if (error.enabled) {
+      <span class="text-xs font-bold text-red-500 bg-red-100">{{ error.message }}</span>
+    }
 
     <div class="flex justify-end gap-2">
-      <button type="button" (click)="cancel()" class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+      >
         Cancel
       </button>
-      @if(mode=='insert') {
-        <button *ngIf="loading" type="submit" class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
-          <svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" clip-rule="evenodd" opacity=".2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z"/></g></svg>
+      @if (mode === 'insert') {
+        <button
+          *ngIf="loading"
+          type="submit"
+          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        >
+          <svg
+            class="mr-3 size-5 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <g fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z"
+                clip-rule="evenodd"
+                opacity=".2"
+              />
+              <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
+            </g>
+          </svg>
           Creating...
         </button>
-        <button *ngIf="!loading" type="submit" class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+        <button
+          *ngIf="!loading"
+          type="submit"
+          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        >
           Add member
         </button>
       } @else {
-        <button *ngIf="loading" type="submit" class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
-          <svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" clip-rule="evenodd" opacity=".2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z"/></g></svg>
+        <button
+          *ngIf="loading"
+          type="submit"
+          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        >
+          <svg
+            class="mr-3 size-5 animate-spin"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <g fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z"
+                clip-rule="evenodd"
+                opacity=".2"
+              />
+              <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
+            </g>
+          </svg>
           Updating...
         </button>
-        <button *ngIf="!loading" type="submit" class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+        <button
+          *ngIf="!loading"
+          type="submit"
+          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        >
           Update member
         </button>
       }

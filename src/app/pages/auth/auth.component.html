@@ -1,7 +1,7 @@
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm text-center">
-    <img class="mx-auto w-auto" src="acm_logo.png" alt="logo">
-    <app-title titleText="Authentification"/>
+    <img class="mx-auto w-auto" src="acm_logo.png" alt="logo" />
+    <app-title titleText="Authentification" />
   </div>
 
   <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -9,7 +9,16 @@
       <div>
         <label for="username" class="block text-sm/6 font-medium text-gray-900">Username</label>
         <div class="mt-2">
-          <input type="text" [(ngModel)]="username" name="username" autocomplete="username" [ngModelOptions]="{standalone: true}" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-500 sm:text-sm/6" autocomplete="off">
+          <input
+            type="text"
+            [(ngModel)]="username"
+            name="username"
+            autocomplete="username"
+            [ngModelOptions]="{ standalone: true }"
+            required
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-500 sm:text-sm/6"
+            autocomplete="off"
+          />
         </div>
       </div>
 
@@ -21,19 +30,49 @@
           </div>
         </div>
         <div class="mt-2">
-          <input type="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}" required class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-500 sm:text-sm/6">
+          <input
+            type="password"
+            [(ngModel)]="password"
+            [ngModelOptions]="{ standalone: true }"
+            required
+            class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-500 sm:text-sm/6"
+          />
         </div>
-        @if(error.enabled) {<span class="text-xs font-bold text-red-500 bg-red-100">{{error.message}}</span>}
+        @if (error.enabled) {
+          <span class="text-xs font-bold text-red-500 bg-red-100">{{ error.message }}</span>
+        }
       </div>
 
       <div>
-        @if(loading) {
-          <button disabled class="flex w-full cursor-not-allowed justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400">
-            <svg class="mr-3 size-5 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z" clip-rule="evenodd" opacity=".2"/><path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z"/></g></svg>
+        @if (loading) {
+          <button
+            disabled
+            class="flex w-full cursor-not-allowed justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+          >
+            <svg
+              class="mr-3 size-5 animate-spin"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z"
+                  clip-rule="evenodd"
+                  opacity=".2"
+                />
+                <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
+              </g>
+            </svg>
             Verification...
           </button>
         } @else {
-          <button type="submit" class="flex w-full justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400">Login</button>
+          <button
+            type="submit"
+            class="flex w-full justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
+          >
+            Login
+          </button>
         }
       </div>
     </form>

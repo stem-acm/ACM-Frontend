@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './list-value.component.html',
-  styleUrl: './list-value.component.css'
+  styleUrl: './list-value.component.css',
 })
 export class ListValueComponent {
   @Input() label!: string;

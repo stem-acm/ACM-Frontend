@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './qr-code.component.html',
-  styleUrl: './qr-code.component.css'
+  styleUrl: './qr-code.component.css',
 })
 export class QrCodeComponent {
   @Input() link!: string;

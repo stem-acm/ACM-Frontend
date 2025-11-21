@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './member-description.component.html',
-  styleUrl: './member-description.component.css'
+  styleUrl: './member-description.component.css',
 })
 export class MemberDescriptionComponent {
   @Input() text!: string;

@@ -1,20 +1,22 @@
-<div class="w-md h-full flex flex-col items-center justify-between border rounded-sm shadow-xl bg-white overflow-hidden p-1 text-xs text-justify" style="font-family: 'Times New Roman', Times, serif;">
-
-    <div class="flex w-full items-center justify-around">
-        <div class="">
-            <app-qr-code [link]="getLink()"/>
-        </div>
-        <div class="w-52">
-            <app-acm-logo />
-        </div>
+<div
+  class="w-md h-full flex flex-col items-center justify-between border rounded-sm shadow-xl bg-white overflow-hidden p-1 text-xs text-justify"
+  style="font-family: 'Times New Roman', Times, serif"
+>
+  <div class="flex w-full items-center justify-around">
+    <div class="w-52">
+      <app-acm-logo />
     </div>
 
-    <div>
-        I certify that the information about me is correct and I agree to comply with all rules and policies, return materials on time, report lost or stolen materials. and update my contact information pending and charges to my address and/or phone number.
+    <div class="">
+      <app-qr-code [link]="getLink()" />
     </div>
+  </div>
 
-    <div class="pb-8">
-        Signature
-    </div>
- 
+  <div>
+    I certify that the information about me is correct and I agree to comply with all rules and
+    policies, return materials on time, report lost or stolen materials. and update my contact
+    information pending and charges to my address and/or phone number.
+  </div>
+
+  <div class="pb-8">Signature</div>
 </div>

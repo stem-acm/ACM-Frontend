@@ -8,9 +8,8 @@ describe('TextCursiveComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TextCursiveComponent]
-    })
-    .compileComponents();
+      imports: [TextCursiveComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TextCursiveComponent);
     component = fixture.componentInstance;

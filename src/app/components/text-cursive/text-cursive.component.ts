@@ -5,8 +5,8 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './text-cursive.component.html',
-  styleUrl: './text-cursive.component.css'
+  styleUrl: './text-cursive.component.css',
 })
 export class TextCursiveComponent {
-  @Input() text!: any;
+  @Input() text!: string;
 }

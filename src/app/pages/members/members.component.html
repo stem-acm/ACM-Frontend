@@ -1,38 +1,81 @@
 <div class="m-8">
+  <div class="flex justify-between items-center">
+    <h1 class="text-xl font-bold text-blue-500 my-4">List of Members</h1>
+    <button
+      type="button"
+      (click)="addMember()"
+      class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+    >
+      <svg class="w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+        <g id="SVGRepo_iconCarrier">
+          <path
+            d="M20 18L14 18M17 15V21M4 21C4 17.134 7.13401 14 11 14C11.695 14 12.3663 14.1013 13 14.2899M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z"
+            stroke="#fff"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </g>
+      </svg>
+      New Member
+    </button>
+  </div>
 
-    <div class="flex justify-between items-center">
-        <h1 class="text-xl font-bold text-blue-500 my-4">List of Members</h1>
-        <button type="button" (click)="addMember()" class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2">
-            <svg class="w-4 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <path d="M20 18L14 18M17 15V21M4 21C4 17.134 7.13401 14 11 14C11.695 14 12.3663 14.1013 13 14.2899M15 7C15 9.20914 13.2091 11 11 11C8.79086 11 7 9.20914 7 7C7 4.79086 8.79086 3 11 3C13.2091 3 15 4.79086 15 7Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                </g>
-            </svg>
-            New Member
-        </button>
+  <div
+    class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900"
+  >
+    <label for="table-search" class="sr-only">Search</label>
+    <div class="relative">
+      <div
+        class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+      >
+        <svg
+          class="w-4 h-4 text-gray-500 dark:text-gray-400"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 20 20"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+          />
+        </svg>
+      </div>
+      <input
+        type="search"
+        [(ngModel)]="searchWord"
+        (change)="search(searchWord)"
+        id="table-search-users"
+        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        placeholder="Search for members"
+      />
     </div>
-
-    <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative">
-            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-            <input type="search" [(ngModel)]="searchWord" (change)="search(searchWord)" id="table-search-users" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for members">
-        </div>
-    </div>
-    <div class="relative rounded-lg overflow-x-auto shadow-lg">
-        @if(!memberFilter) {
-            <app-table-loading [data]="{ columns: ['Name', 'Occupation', 'Place of work/study', 'Member for', 'Action'], textLoading: 'Search members...'}"/>
-        } @else {
-            <app-table-members [data]="memberFilter"/>
-        }
-    </div>
+  </div>
+  <div class="relative rounded-lg overflow-x-auto shadow-lg">
+    @if (!memberFilter) {
+      <app-table-loading
+        [data]="{
+          columns: ['Name', 'Occupation', 'Place of work/study', 'Member for', 'Action'],
+          textLoading: 'Search members...',
+        }"
+      />
+    } @else {
+      <app-table-members [data]="memberFilter" />
+    }
+  </div>
 </div>
 
-@if(showAddForm) {
-    <app-add-member mode="insert" title="New Member" (showToast)="showAlert($event)" (canceled)="cancelForm($event)"/>
+@if (showAddForm) {
+  <app-add-member
+    mode="insert"
+    title="New Member"
+    (showToast)="showAlert($event)"
+    (canceled)="cancelForm($event)"
+  />
 }

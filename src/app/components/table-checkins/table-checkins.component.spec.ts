@@ -8,9 +8,8 @@ describe('TableCheckinsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TableCheckinsComponent]
-    })
-    .compileComponents();
+      imports: [TableCheckinsComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TableCheckinsComponent);
     component = fixture.componentInstance;

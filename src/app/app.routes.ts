@@ -8,32 +8,32 @@ import { ActivityComponent } from './pages/activity/activity.component';
 import { CheckinComponent } from './pages/checkin/checkin.component';
 
 export const routes: Routes = [
-    {
-        path: 'auth',
-        component: AuthComponent
-    },
-    {
-        path: '',
-        component: HomeComponent
-    },
-        {
-        path: 'members',
-        component: MembersComponent
-    },
-    {
-        path: 'profil/:reg_number',
-        component: ProfilComponent
-    },
-    {
-        path: 'cards',
-        component: CardsComponent
-    },
-    {
-        path: 'activity',
-        component: ActivityComponent
-    },
-    {
-        path: 'checkin',
-        component: CheckinComponent
-    }
+  {
+    path: 'auth',
+    component: AuthComponent,
+  },
+  {
+    path: '',
+    component: HomeComponent,
+  },
+  {
+    path: 'members',
+    component: MembersComponent,
+  },
+  {
+    path: 'profil/:reg_number',
+    component: ProfilComponent,
+  },
+  {
+    path: 'cards',
+    component: CardsComponent,
+  },
+  {
+    path: 'activity',
+    component: ActivityComponent,
+  },
+  {
+    path: 'checkin',
+    component: CheckinComponent,
+  },
 ];

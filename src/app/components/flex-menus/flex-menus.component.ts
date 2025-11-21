@@ -6,39 +6,39 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './flex-menus.component.html',
-  styleUrl: './flex-menus.component.css'
+  styleUrl: './flex-menus.component.css',
 })
 export class FlexMenusComponent {
-  public menus: {route: string, label: string, exact: boolean}[] = [
+  public menus: { route: string; label: string; exact: boolean }[] = [
     {
       route: '/',
       label: 'Home',
-      exact: true
+      exact: true,
     },
     {
       route: '/members',
       label: 'Members',
-      exact: false
+      exact: false,
     },
     {
       route: '/cards',
       label: 'Cards',
-      exact: false
+      exact: false,
     },
     {
       route: '/volunteer',
       label: 'Volunteer',
-      exact: false
+      exact: false,
     },
     {
       route: '/activity',
       label: 'Activity',
-      exact: false
+      exact: false,
     },
     {
-      route: "/checkin",
-      label: "Checkin",
-      exact: false
-    }
+      route: '/checkin',
+      label: 'Checkin',
+      exact: false,
+    },
   ];
 }

@@ -8,9 +8,8 @@ describe('AcmLogoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AcmLogoComponent]
-    })
-    .compileComponents();
+      imports: [AcmLogoComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AcmLogoComponent);
     component = fixture.componentInstance;

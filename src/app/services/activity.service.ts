@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '@/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { HttpResult } from '../types/httpResult';
-import { Activity } from '../interfaces/activity';
+import { HttpResult } from '@/app/types/httpResult';
+import { Activity } from '@/app/interfaces/activity';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ActivityService {
   private URL: string = environment.API_URL;
-
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
 
   // Get all activities
   getAllActivity() {
@@ -28,5 +27,4 @@ export class ActivityService {
   updateActivity(activity: Activity) {
     return this.http.put<HttpResult<Activity>>(`${this.URL}/activities/${activity.id}`, activity);
   }
-
 }

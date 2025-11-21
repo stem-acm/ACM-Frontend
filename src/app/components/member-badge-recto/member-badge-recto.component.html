@@ -1,91 +1,107 @@
-<div class="w-md mx-auto border rounded-sm shadow-xl bg-white overflow-hidden p-1 text-nowrap" style="font-family: 'Times New Roman', Times, serif;">
-    <!-- Header -->
-    <div class="flex relative">
-        <!-- Photo -->
-        <div class="w-28 h-28 rounded overflow-hidden flex-shrink-0">
-            <img
-            [src]="getfileUrl(member.profileImage)"
-            alt="Member photo"
-            class="w-full h-full object-cover"
-            />
-        </div>
-
-        @if(checkData.stamp) { <img class="absolute w-48 top-1/5 opacity-50 left-1/6" [src]="getfileUrl('tapon.png')" alt="tapon image"/> }
-
-        <div class="w-full">
-            <div class="text-center pb-2 h-fit w-full text-nowrap text-sm font-bold text-gray-900 dark:text-white">
-                <h2>AMERICAN CORNER MAHAJANGA</h2>
-                <h2>MEMBERSHIP CARD</h2>
-            </div>
-            <div class="font-semibold text-xs pl-2 flex flex-col gap-2">
-                <div class="flex">
-                    <div>N° : _ACMJN_ </div>
-                    <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                        <app-text-cursive [text]="member.registrationNumber"/>
-                    </div>
-                </div>
-                <div class="flex">
-                    <div>Membership date : </div>
-                    <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                        <app-text-cursive [text]="formatDate(member.joinDate)"/>
-                    </div>
-                </div>
-                <div class="flex">
-                    <div>Phone Contact : </div>
-                    <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                        <app-text-cursive [text]="member.phoneNumber"/>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div
+  class="w-md mx-auto border rounded-sm shadow-xl bg-white overflow-hidden p-1 text-nowrap"
+  style="font-family: 'Times New Roman', Times, serif"
+>
+  <!-- Header -->
+  <div class="flex relative">
+    <!-- Photo -->
+    <div class="w-28 h-28 rounded overflow-hidden shrink-0">
+      <img
+        [src]="getfileUrl(member.profileImage)"
+        alt="Member photo"
+        class="w-full h-full object-cover"
+      />
     </div>
+
+    @if (checkData.stamp) {
+      <img
+        class="absolute w-48 top-1/5 opacity-50 left-1/6"
+        [src]="getfileUrl('tapon.png')"
+        alt="tapon image"
+      />
+    }
+
+    <div class="w-full">
+      <div
+        class="text-center pb-2 h-fit w-full text-nowrap text-sm font-bold text-gray-900 dark:text-white"
+      >
+        <h2>AMERICAN CORNER MAHAJANGA</h2>
+        <h2>MEMBERSHIP CARD</h2>
+      </div>
+      <div class="font-semibold text-xs pl-2 flex flex-col gap-2">
+        <div class="flex">
+          <div>N° : _ACMJN_</div>
+          <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+            <app-text-cursive [text]="member.registrationNumber" />
+          </div>
+        </div>
+        <div class="flex">
+          <div>Membership date :</div>
+          <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+            <app-text-cursive [text]="formatDate(member.joinDate)" />
+          </div>
+        </div>
+        <div class="flex">
+          <div>Phone Contact :</div>
+          <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+            <app-text-cursive [text]="member.phoneNumber" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Body -->
-    <div class="text-xs font-semibold">
-        <div class="flex">
-            <div>Full name: Mr. / Mrs. / Miss. </div>
-            <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                <app-text-cursive text="{{member.firstName}} {{member.lastName}}"/>
-            </div>
-        </div>
-
-        <div class="flex">
-            <div>Date and Place of birth : </div>
-            <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                <app-text-cursive [text]="formatDate(member.birthDate)"/>
-            </div>
-            <div> in </div>
-            <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                <app-text-cursive [text]="member.birthPlace"/>
-            </div>
-        </div>
-
-        <div class="flex">
-            <div>Physical Adress (in Mahajanga) : </div>
-            <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                <app-text-cursive [text]="member.address"/>
-            </div>
-        </div>
-
-        <div class="flex">
-            <div class="flex">
-                <div>Occupation : </div>
-                <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                    <app-text-cursive [text]="member.occupation"/>
-                </div>
-            </div>
-            <div class="flex-1 flex flex-nowrap">
-                <div>Place of work/study : </div>
-                <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-                    <app-text-cursive [text]="member.studyOrWorkPlace"/>
-                </div>
-            </div>
-        </div>
+  <div class="text-xs font-semibold">
+    <div class="flex">
+      <div>Full name: Mr. / Mrs. / Miss.</div>
+      <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+        <app-text-cursive text="{{ member.firstName }} {{ member.lastName }}" />
+      </div>
     </div>
 
-    <div class="text-center text-xs relative">
-        <p class="font-semibold pb-8 pt-2">The Responsible</p>
-        @if(checkData.signature) { <img class="absolute w-16 left-3/7 bottom-0" [src]="getfileUrl('signature.png')" alt="tapon image"/> }
+    <div class="flex">
+      <div>Date and Place of birth :</div>
+      <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+        <app-text-cursive [text]="formatDate(member.birthDate)" />
+      </div>
+      <div>in</div>
+      <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+        <app-text-cursive [text]="member.birthPlace" />
+      </div>
     </div>
- 
+
+    <div class="flex">
+      <div>Physical Adress (in Mahajanga) :</div>
+      <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+        <app-text-cursive [text]="member.address" />
+      </div>
+    </div>
+
+    <div class="flex">
+      <div class="flex">
+        <div>Occupation :</div>
+        <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+          <app-text-cursive [text]="member.occupation" />
+        </div>
+      </div>
+      <div class="flex-1 flex flex-nowrap">
+        <div>Place of work/study :</div>
+        <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+          <app-text-cursive [text]="member.studyOrWorkPlace" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center text-xs relative">
+    <p class="font-semibold pb-8 pt-2">The Responsible</p>
+    @if (checkData.signature) {
+      <img
+        class="absolute w-16 left-3/7 bottom-0"
+        [src]="getfileUrl('signature.png')"
+        alt="tapon image"
+      />
+    }
+  </div>
 </div>

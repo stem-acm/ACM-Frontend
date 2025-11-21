@@ -5,8 +5,9 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './acm-logo.component.html',
-  styleUrl: './acm-logo.component.css'
+  styleUrl: './acm-logo.component.css',
 })
 export class AcmLogoComponent {
-  @Input("class") public class: string = "";
+  @Input() public class = '';
+  public logoUrl = 'acm_logo.png';
 }

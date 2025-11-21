@@ -1,3 +1,3 @@
-import { OccupationEnum } from "../enums/occupation.enum";
+import { OccupationEnum } from '@/app/enums/occupation.enum';
 
 export type Occupation = keyof typeof OccupationEnum;

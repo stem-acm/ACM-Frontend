@@ -1,75 +1,70 @@
 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-    <thead class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-        <tr>
-            <th scope="col" class="px-6 py-3">
-                Name
-            </th>
-            <th scope="col" class="px-6 py-3">
-                Description
-            </th>
-            <th scope="col" class="px-6 py-3">
-                Periodicity
-            </th>
-            <th scope="col" class="px-6 py-3">
-                Day of Week
-            </th>
-            <th scope="col" class="px-6 py-3">
-                Start Date
-            </th>
-            <th scope="col" class="px-6 py-3">
-                End Date
-            </th>
-            <th scope="col" class="px-6 py-3">
-                Start Time
-            </th>
-            <th scope="col" class="px-6 py-3">
-                End Time
-            </th>
-           <!--  <th scope="col" class="px-6 py-3">
+  <thead
+    class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+  >
+    <tr>
+      <th scope="col" class="px-6 py-3">Name</th>
+      <th scope="col" class="px-6 py-3">Description</th>
+      <th scope="col" class="px-6 py-3">Periodicity</th>
+      <th scope="col" class="px-6 py-3">Day of Week</th>
+      <th scope="col" class="px-6 py-3">Start Date</th>
+      <th scope="col" class="px-6 py-3">End Date</th>
+      <th scope="col" class="px-6 py-3">Start Time</th>
+      <th scope="col" class="px-6 py-3">End Time</th>
+      <!--  <th scope="col" class="px-6 py-3">
                 Actif
             </th> -->
-            <th scope="col" class="px-6 py-3">
-                Action
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @for(item of data; track item) {
-            <tr class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <span class="text-2xl mr-2">{{ item.emoji || '😊' }}</span>
-                    <div class="text-xs font-semibold">{{ item.name }}</div>
-                </th>
-                <td class="px-6 py-4 capitalize">
-                    {{ item.description }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ item.isPeriodic ? 'Yes' : 'No' }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ item.dayOfWeek?.charAt(0)!.toUpperCase() + "" + item.dayOfWeek?.slice(1) }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ item.startDate ?? 'N/A' }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ item.endDate ?? 'N/A' }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ item.startTime }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ item.endTime }}
-                </td>
-              <!--   <td class="px-6 py-4">
+      <th scope="col" class="px-6 py-3">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of data; track item) {
+      <tr
+        class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
+      >
+        <th
+          scope="row"
+          class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+        >
+          <span class="text-2xl mr-2">{{ item.emoji || '😊' }}</span>
+          <div class="text-xs font-semibold">{{ item.name }}</div>
+        </th>
+        <td class="px-6 py-4 capitalize">
+          {{ item.description }}
+        </td>
+        <td class="px-6 py-4">
+          {{ item.isPeriodic ? 'Yes' : 'No' }}
+        </td>
+        <td class="px-6 py-4">
+          {{ item.dayOfWeek?.charAt(0)!.toUpperCase() + '' + item.dayOfWeek?.slice(1) }}
+        </td>
+        <td class="px-6 py-4">
+          {{ item.startDate ?? 'N/A' }}
+        </td>
+        <td class="px-6 py-4">
+          {{ item.endDate ?? 'N/A' }}
+        </td>
+        <td class="px-6 py-4">
+          {{ item.startTime }}
+        </td>
+        <td class="px-6 py-4">
+          {{ item.endTime }}
+        </td>
+        <!--   <td class="px-6 py-4">
                     <div class="flex items-center">
                         <div class="h-2.5 w-2.5 rounded-full me-2 {{ item.isActive ? 'bg-green-500' : 'bg-red-500' }}"></div> {{ item.isActive ? 'Active' : 'Inactive' }}
                     </div>
                 </td> -->
-                <td class="px-6 py-4">
-                    <a (click)="updateMember(item)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
-            </tr>
-        }
-    </tbody>
+        <td class="px-6 py-4">
+          <a
+            role="button"
+            tabindex="0"
+            (click)="updateMember(item)"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            >Edit</a
+          >
+        </td>
+      </tr>
+    }
+  </tbody>
 </table>

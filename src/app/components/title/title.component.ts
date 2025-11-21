@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './title.component.html',
-  styleUrl: './title.component.css'
+  styleUrl: './title.component.css',
 })
 export class TitleComponent {
   @Input() titleText!: string;

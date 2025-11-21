@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "tailwindcss";
+@import 'tailwindcss';
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @font-face {
@@ -10,7 +10,6 @@
 }
 
 @media print {
-  
   body * {
     visibility: hidden;
     -webkit-print-color-adjust: exact !important;
@@ -18,7 +17,8 @@
     color-adjust: exact !important;
   }
 
-  #badgeSectionToPrint, #badgeSectionToPrint * {
+  #badgeSectionToPrint,
+  #badgeSectionToPrint * {
     visibility: visible;
   }
 
@@ -35,5 +35,4 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-
 }

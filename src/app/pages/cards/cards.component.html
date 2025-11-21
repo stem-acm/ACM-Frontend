@@ -1,47 +1,139 @@
 <div class="m-8 p-2">
-    <div class="flex justify-between my-2">
-        <h1 class="text-xl font-bold text-blue-500">List of Members</h1>
-        <div class="flex gap-2">
-            <button type="button" (click)="selectAll(false)" class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out">
-                <svg class="h-6" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_select_all_off_24_regular</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_select_all_off_24_regular" fill="#212121" fill-rule="nonzero"> <path d="M20.4961766,5.62668182 C21.3720675,5.93447702 22,6.76890777 22,7.75 L22,17.75 C22,20.0972102 20.0972102,22 17.75,22 L7.75,22 C6.76890777,22 5.93447702,21.3720675 5.62668182,20.4961766 L7.72396188,20.4995565 L17.75,20.5 C19.2687831,20.5 20.5,19.2687831 20.5,17.75 L20.5,7.75 L20.4960194,7.69901943 L20.4961766,5.62668182 Z M17.246813,2 C18.4894537,2 19.496813,3.00735931 19.496813,4.25 L19.496813,17.246813 C19.496813,18.4894537 18.4894537,19.496813 17.246813,19.496813 L4.25,19.496813 C3.00735931,19.496813 2,18.4894537 2,17.246813 L2,4.25 C2,3.00735931 3.00735931,2 4.25,2 L17.246813,2 Z M17.246813,3.5 L4.25,3.5 C3.83578644,3.5 3.5,3.83578644 3.5,4.25 L3.5,17.246813 C3.5,17.6610266 3.83578644,17.996813 4.25,17.996813 L17.246813,17.996813 C17.6610266,17.996813 17.996813,17.6610266 17.996813,17.246813 L17.996813,4.25 C17.996813,3.83578644 17.6610266,3.5 17.246813,3.5 Z" id="🎨-Color"> </path> </g> </g> </g>
-                </svg>
-                Unselect all ({{countMembersChooseList(true)}})
-            </button>
-            <button type="button" (click)="selectAll(true)" class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out">
-                <svg class="h-6" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --> <title>ic_fluent_select_all_24_regular</title> <desc>Created with Sketch.</desc> <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic_fluent_select_all_24_regular" fill="#212121" fill-rule="nonzero"> <path d="M20.4961766,5.62668182 C21.3720675,5.93447702 22,6.76890777 22,7.75 L22,17.75 C22,20.0972102 20.0972102,22 17.75,22 L7.75,22 C6.76890777,22 5.93447702,21.3720675 5.62668182,20.4961766 L7.72396188,20.4995565 L17.75,20.5 C19.2687831,20.5 20.5,19.2687831 20.5,17.75 L20.5,7.75 L20.4960194,7.69901943 L20.4961766,5.62668182 Z M17.246813,2 C18.4894537,2 19.496813,3.00735931 19.496813,4.25 L19.496813,17.246813 C19.496813,18.4894537 18.4894537,19.496813 17.246813,19.496813 L4.25,19.496813 C3.00735931,19.496813 2,18.4894537 2,17.246813 L2,4.25 C2,3.00735931 3.00735931,2 4.25,2 L17.246813,2 Z M17.246813,3.5 L4.25,3.5 C3.83578644,3.5 3.5,3.83578644 3.5,4.25 L3.5,17.246813 C3.5,17.6610266 3.83578644,17.996813 4.25,17.996813 L17.246813,17.996813 C17.6610266,17.996813 17.996813,17.6610266 17.996813,17.246813 L17.996813,4.25 C17.996813,3.83578644 17.6610266,3.5 17.246813,3.5 Z M9.58114564,11.3581942 L13.4696699,7.46966991 C13.7625631,7.1767767 14.2374369,7.1767767 14.5303301,7.46966991 C14.7965966,7.73593648 14.8208027,8.15260016 14.6029482,8.44621165 L14.5303301,8.53033009 L10.0303301,13.0303301 C9.73449239,13.3261678 9.26134027,13.3189471 8.97360394,13.0344464 L8.9,12.95 L7.4,10.95 C7.15147186,10.6186292 7.21862915,10.1485281 7.55,9.9 C7.85124623,9.67406533 8.26714548,9.7090277 8.52699676,9.96621555 L8.6,10.05 L9.58114564,11.3581942 L13.4696699,7.46966991 L9.58114564,11.3581942 Z" id="🎨-Color"> </path> </g> </g> </g>
-                </svg>
-                Select all ({{countMembersChooseList(false)}})
-            </button>
-            <button type="button" (click)="printAllSelected()" class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out">
-                <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 17H5C3.89543 17 3 16.1046 3 15V11C3 9.34315 4.34315 8 6 8H7M7 17V14H17V17M7 17V18C7 19.1046 7.89543 20 9 20H15C16.1046 20 17 19.1046 17 18V17M17 17H19C20.1046 17 21 16.1046 21 15V11C21 9.34315 19.6569 8 18 8H17M7 8V6C7 4.89543 7.89543 4 9 4H15C16.1046 4 17 4.89543 17 6V8M7 8H17M15 11H17" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
-                </svg>
-                Print cards ({{countMembersChooseList(true)}})
-            </button>
-        </div>
+  <div class="flex justify-between my-2">
+    <h1 class="text-xl font-bold text-blue-500">List of Members</h1>
+    <div class="flex gap-2">
+      <button
+        type="button"
+        (click)="selectAll(false)"
+        class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out"
+      >
+        <svg
+          class="h-6"
+          viewBox="0 0 24 24"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          fill="#000000"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+            <title>ic_fluent_select_all_off_24_regular</title>
+            <desc>Created with Sketch.</desc>
+            <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="ic_fluent_select_all_off_24_regular" fill="#212121" fill-rule="nonzero">
+                <path
+                  d="M20.4961766,5.62668182 C21.3720675,5.93447702 22,6.76890777 22,7.75 L22,17.75 C22,20.0972102 20.0972102,22 17.75,22 L7.75,22 C6.76890777,22 5.93447702,21.3720675 5.62668182,20.4961766 L7.72396188,20.4995565 L17.75,20.5 C19.2687831,20.5 20.5,19.2687831 20.5,17.75 L20.5,7.75 L20.4960194,7.69901943 L20.4961766,5.62668182 Z M17.246813,2 C18.4894537,2 19.496813,3.00735931 19.496813,4.25 L19.496813,17.246813 C19.496813,18.4894537 18.4894537,19.496813 17.246813,19.496813 L4.25,19.496813 C3.00735931,19.496813 2,18.4894537 2,17.246813 L2,4.25 C2,3.00735931 3.00735931,2 4.25,2 L17.246813,2 Z M17.246813,3.5 L4.25,3.5 C3.83578644,3.5 3.5,3.83578644 3.5,4.25 L3.5,17.246813 C3.5,17.6610266 3.83578644,17.996813 4.25,17.996813 L17.246813,17.996813 C17.6610266,17.996813 17.996813,17.6610266 17.996813,17.246813 L17.996813,4.25 C17.996813,3.83578644 17.6610266,3.5 17.246813,3.5 Z"
+                  id="🎨-Color"
+                ></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+        Unselect all ({{ countMembersChooseList(true) }})
+      </button>
+      <button
+        type="button"
+        (click)="selectAll(true)"
+        class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out"
+      >
+        <svg
+          class="h-6"
+          viewBox="0 0 24 24"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          fill="#000000"
+        >
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+            <title>ic_fluent_select_all_24_regular</title>
+            <desc>Created with Sketch.</desc>
+            <g id="🔍-Product-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="ic_fluent_select_all_24_regular" fill="#212121" fill-rule="nonzero">
+                <path
+                  d="M20.4961766,5.62668182 C21.3720675,5.93447702 22,6.76890777 22,7.75 L22,17.75 C22,20.0972102 20.0972102,22 17.75,22 L7.75,22 C6.76890777,22 5.93447702,21.3720675 5.62668182,20.4961766 L7.72396188,20.4995565 L17.75,20.5 C19.2687831,20.5 20.5,19.2687831 20.5,17.75 L20.5,7.75 L20.4960194,7.69901943 L20.4961766,5.62668182 Z M17.246813,2 C18.4894537,2 19.496813,3.00735931 19.496813,4.25 L19.496813,17.246813 C19.496813,18.4894537 18.4894537,19.496813 17.246813,19.496813 L4.25,19.496813 C3.00735931,19.496813 2,18.4894537 2,17.246813 L2,4.25 C2,3.00735931 3.00735931,2 4.25,2 L17.246813,2 Z M17.246813,3.5 L4.25,3.5 C3.83578644,3.5 3.5,3.83578644 3.5,4.25 L3.5,17.246813 C3.5,17.6610266 3.83578644,17.996813 4.25,17.996813 L17.246813,17.996813 C17.6610266,17.996813 17.996813,17.6610266 17.996813,17.246813 L17.996813,4.25 C17.996813,3.83578644 17.6610266,3.5 17.246813,3.5 Z M9.58114564,11.3581942 L13.4696699,7.46966991 C13.7625631,7.1767767 14.2374369,7.1767767 14.5303301,7.46966991 C14.7965966,7.73593648 14.8208027,8.15260016 14.6029482,8.44621165 L14.5303301,8.53033009 L10.0303301,13.0303301 C9.73449239,13.3261678 9.26134027,13.3189471 8.97360394,13.0344464 L8.9,12.95 L7.4,10.95 C7.15147186,10.6186292 7.21862915,10.1485281 7.55,9.9 C7.85124623,9.67406533 8.26714548,9.7090277 8.52699676,9.96621555 L8.6,10.05 L9.58114564,11.3581942 L13.4696699,7.46966991 L9.58114564,11.3581942 Z"
+                  id="🎨-Color"
+                ></path>
+              </g>
+            </g>
+          </g>
+        </svg>
+        Select all ({{ countMembersChooseList(false) }})
+      </button>
+      <button
+        type="button"
+        (click)="printAllSelected()"
+        class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out"
+      >
+        <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M7 17H5C3.89543 17 3 16.1046 3 15V11C3 9.34315 4.34315 8 6 8H7M7 17V14H17V17M7 17V18C7 19.1046 7.89543 20 9 20H15C16.1046 20 17 19.1046 17 18V17M17 17H19C20.1046 17 21 16.1046 21 15V11C21 9.34315 19.6569 8 18 8H17M7 8V6C7 4.89543 7.89543 4 9 4H15C16.1046 4 17 4.89543 17 6V8M7 8H17M15 11H17"
+              stroke="#ffffff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </g>
+        </svg>
+        Print cards ({{ countMembersChooseList(true) }})
+      </button>
     </div>
+  </div>
 
-    <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-        <label for="table-search" class="sr-only">Search</label>
-        <div class="relative">
-            <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-            <input type="search" [(ngModel)]="searchWord" (change)="search(searchWord)" id="table-search-users" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search for members">
-        </div>
+  <div
+    class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900"
+  >
+    <label for="table-search" class="sr-only">Search</label>
+    <div class="relative">
+      <div
+        class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+      >
+        <svg
+          class="w-4 h-4 text-gray-500 dark:text-gray-400"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 20 20"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+          />
+        </svg>
+      </div>
+      <input
+        type="search"
+        [(ngModel)]="searchWord"
+        (change)="search(searchWord)"
+        id="table-search-users"
+        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        placeholder="Search for members"
+      />
     </div>
+  </div>
 
-    <div *ngIf="!membersChooseListFilter" class="flex gap-3 flex-wrap justify-start p-4">
-        <app-card-skeleton />
-        <app-card-skeleton />
-    </div>
-    <div *ngIf="membersChooseListFilter" class="flex gap-3 flex-wrap justify-evenly p-4">
-        <app-card *ngFor="let item of membersChooseListFilter" (setSelectedMember)="open($event)" [memberChoose]="item" (memberSelectionChange)="onMemberSelectionChange($event)"/>
-    </div>
+  <div *ngIf="!membersChooseListFilter" class="flex gap-3 flex-wrap justify-start p-4">
+    <app-card-skeleton />
+    <app-card-skeleton />
+  </div>
+  <div *ngIf="membersChooseListFilter" class="flex gap-3 flex-wrap justify-evenly p-4">
+    <app-card
+      *ngFor="let item of membersChooseListFilter"
+      (setSelectedMember)="open($event)"
+      [memberChoose]="item"
+      (memberSelectionChange)="onMemberSelectionChange($event)"
+    />
+  </div>
 </div>
 
-<app-member-card-viewer *ngIf="showCard" (closed)="close($event)" [member]="membersClicked"/>
+<app-member-card-viewer *ngIf="showCard" (closed)="close($event)" [member]="membersClicked" />

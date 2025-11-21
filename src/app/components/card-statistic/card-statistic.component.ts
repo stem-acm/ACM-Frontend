@@ -5,8 +5,8 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './card-statistic.component.html',
-  styleUrl: './card-statistic.component.css'
+  styleUrl: './card-statistic.component.css',
 })
 export class CardStatisticComponent {
-  @Input() data!: {title: string, value: number, icon: string};
+  @Input() data!: { title: string; value: number; icon: string };
 }

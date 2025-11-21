@@ -6,7 +6,7 @@ import { BadgeComponent } from '../badge/badge.component';
   standalone: true,
   imports: [BadgeComponent],
   templateUrl: './img-round.component.html',
-  styleUrl: './img-round.component.css'
+  styleUrl: './img-round.component.css',
 })
 export class ImgRoundComponent {
   @Input() imgUrl!: string;

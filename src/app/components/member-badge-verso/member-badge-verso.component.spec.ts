@@ -8,9 +8,8 @@ describe('MemberBadgeVersoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MemberBadgeVersoComponent]
-    })
-    .compileComponents();
+      imports: [MemberBadgeVersoComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MemberBadgeVersoComponent);
     component = fixture.componentInstance;

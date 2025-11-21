@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, Output, OnInit, inject, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  inject,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Occupation } from '@/app/types/occupation';
 import { MemberService } from '@/app/services/member.service';
 import { Member } from '@/app/interfaces/member';
@@ -14,7 +23,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './add-member.component.css',
 })
 export class AddMemberComponent implements OnChanges, OnInit {
-
   @Output() canceled = new EventEmitter<boolean>();
   @Output() showToast = new EventEmitter<string>();
   @Output() success = new EventEmitter<boolean>();
@@ -36,7 +44,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
     phoneNumber: '',
     studyOrWorkPlace: '',
     joinDate: '',
-    profileImage: ""
+    profileImage: '',
   };
 
   private memberService = inject(MemberService);
@@ -56,7 +64,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
         phoneNumber: '',
         studyOrWorkPlace: '',
         joinDate: '',
-        profileImage: ""
+        profileImage: '',
       };
     }
   }
@@ -69,18 +77,18 @@ export class AddMemberComponent implements OnChanges, OnInit {
     if (changes['mode']) {
       if (this.mode === 'insert') {
         this.member = {
-            registrationNumber: '',
-            firstName: '',
-            lastName: '',
-            birthDate: '',
-            birthPlace: '',
-            address: '',
-            occupation: 'unemployed',
-            phoneNumber: '',
-            studyOrWorkPlace: '',
-            joinDate: '',
-            profileImage: ""
-          };
+          registrationNumber: '',
+          firstName: '',
+          lastName: '',
+          birthDate: '',
+          birthPlace: '',
+          address: '',
+          occupation: 'unemployed',
+          phoneNumber: '',
+          studyOrWorkPlace: '',
+          joinDate: '',
+          profileImage: '',
+        };
       }
     }
 
@@ -146,7 +154,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
             phoneNumber: '',
             studyOrWorkPlace: '',
             joinDate: '',
-            profileImage: ""
+            profileImage: '',
           };
           this.success.emit(true);
         }

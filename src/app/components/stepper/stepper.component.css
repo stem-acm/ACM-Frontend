@@ -103,7 +103,7 @@
 .title {
   color: #1e4d8b;
   font-size: 32px;
-  font-weight: bold;
+  font-weight: 900;
   margin-bottom: 40px;
   letter-spacing: 1px;
 }
@@ -140,8 +140,7 @@
 }
 
 .activity-icon {
-  font-size: 48px;
-  margin-bottom: 15px;
+  font-size: 75px;
 }
 
 .activity-name {

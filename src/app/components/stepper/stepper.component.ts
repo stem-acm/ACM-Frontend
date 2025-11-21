@@ -67,7 +67,8 @@ export class StepperComponent implements OnInit {
 
       if (result.success) {
         // Then filter by current day
-        this.activities = this.filterActivitiesByCurrentDay(result.data);
+        // this.activities = this.filterActivitiesByCurrentDay(result.data);
+        this.activities = result.data;
 
         this.loading = false;
       } else {
@@ -197,7 +198,7 @@ export class StepperComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.currentStep < 4) {
+    if (this.currentStep <= 4) {
       this.currentStep++;
     }
   }
@@ -266,6 +267,9 @@ export class StepperComponent implements OnInit {
       (result: HttpResult<Checkin>) => {
         if (result.success) {
           this.nextStep();
+          setTimeout(() => {
+            this.reset();
+          }, 2000);
         } else {
           console.log(result.message);
           this.toastService.showToast(result.message || 'Check-in failed');
@@ -279,6 +283,7 @@ export class StepperComponent implements OnInit {
           alert('Member not found');
         }
 
+        this.toastService.showToast(error.message || 'Check-in failed');
         this.reset();
       },
     );

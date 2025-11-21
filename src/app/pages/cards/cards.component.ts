@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CardComponent } from '../../components/card/card.component';
-import { Member } from '../../interfaces/member';
-import { MemberService } from '../../services/member.service';
-import { HttpResult } from '../../types/httpResult';
+import { CardComponent } from '@/app/components/card/card.component';
+import { Member } from '@/app/interfaces/member';
+import { MemberService } from '@/app/services/member.service';
+import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
-import { MemberCardViewerComponent } from '../../components/member-card-viewer/member-card-viewer.component';
-import { CardSkeletonComponent } from '../../components/card-skeleton/card-skeleton.component';
+import { MemberCardViewerComponent } from '@/app/components/member-card-viewer/member-card-viewer.component';
+import { CardSkeletonComponent } from '@/app/components/card-skeleton/card-skeleton.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({

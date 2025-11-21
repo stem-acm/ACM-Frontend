@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CardStatisticComponent } from '@/app/components/card-statistic/card-statistic.component';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '@/app/services/dashboard.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { TableCheckinsComponent } from '@/app/components/table-checkins/table-checkins.component';
 import { CardStatisticSkeletonComponent } from '@/app/components/card-statistic-skeleton/card-statistic-skeleton.component';

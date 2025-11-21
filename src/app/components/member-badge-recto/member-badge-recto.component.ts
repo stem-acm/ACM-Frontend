@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { TextCursiveComponent } from '../text-cursive/text-cursive.component';
-import { Member } from '../../interfaces/member';
+import { TextCursiveComponent } from '@/app/components/text-cursive/text-cursive.component';
+import { Member } from '@/app/interfaces/member';
 import dayjs from 'dayjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'app-member-badge-recto',

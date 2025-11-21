@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
-import { AcmLogoComponent } from '../acm-logo/acm-logo.component';
-import { FlexMenusComponent } from '../flex-menus/flex-menus.component';
-import { AuthService } from '../../services/auth.service';
+import { AcmLogoComponent } from '@/app/components/acm-logo/acm-logo.component';
+import { FlexMenusComponent } from '@/app/components/flex-menus/flex-menus.component';
+import { AuthService } from '@/app/services/auth.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '@/app/interfaces/user';

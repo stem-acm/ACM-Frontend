@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { Occupation } from '@/app/types/occupation';
 import { MemberService } from '@/app/services/member.service';
 import { Member } from '@/app/interfaces/member';
@@ -13,9 +13,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.css',
 })
-export class AddMemberComponent implements OnInit {
+export class AddMemberComponent implements OnChanges, OnInit {
+
   @Output() canceled = new EventEmitter<boolean>();
   @Output() showToast = new EventEmitter<string>();
+  @Output() success = new EventEmitter<boolean>();
   @Output() updatedData = new EventEmitter<{ data: Member; message: string }>();
   public occupations: Occupation[] = ['employee', 'entrepreneur', 'student', 'unemployed'];
   public error: { enabled: boolean; message: string } = { enabled: false, message: '' };
@@ -34,6 +36,7 @@ export class AddMemberComponent implements OnInit {
     phoneNumber: '',
     studyOrWorkPlace: '',
     joinDate: '',
+    profileImage: ""
   };
 
   private memberService = inject(MemberService);
@@ -41,11 +44,49 @@ export class AddMemberComponent implements OnInit {
   ngOnInit() {
     if (this.mode == 'update') {
       this.member = { ...this.memberToUpdate };
+    } else {
+      this.member = {
+        registrationNumber: '',
+        firstName: '',
+        lastName: '',
+        birthDate: '',
+        birthPlace: '',
+        address: '',
+        occupation: 'unemployed',
+        phoneNumber: '',
+        studyOrWorkPlace: '',
+        joinDate: '',
+        profileImage: ""
+      };
     }
   }
 
   cancel() {
     this.canceled.emit(true);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['mode']) {
+      if (this.mode === 'insert') {
+        this.member = {
+            registrationNumber: '',
+            firstName: '',
+            lastName: '',
+            birthDate: '',
+            birthPlace: '',
+            address: '',
+            occupation: 'unemployed',
+            phoneNumber: '',
+            studyOrWorkPlace: '',
+            joinDate: '',
+            profileImage: ""
+          };
+      }
+    }
+
+    if (changes['memberToUpdate'] && this.mode === 'update') {
+      this.member = { ...this.memberToUpdate };
+    }
   }
 
   checkValidation(): boolean {
@@ -105,7 +146,9 @@ export class AddMemberComponent implements OnInit {
             phoneNumber: '',
             studyOrWorkPlace: '',
             joinDate: '',
+            profileImage: ""
           };
+          this.success.emit(true);
         }
         this.loading = false;
       },

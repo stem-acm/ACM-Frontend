@@ -30,6 +30,6 @@ export class MemberService {
   }
 
   updateMember(member: Member) {
-    return this.http.put<HttpResult<Member>>(`${this.URL}/members`, member);
+    return this.http.put<HttpResult<Member>>(`${this.URL}/members/${member.id}`, member);
   }
 }

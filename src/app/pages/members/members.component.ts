@@ -46,6 +46,13 @@ export class MembersComponent implements OnInit {
     this.app.showToast('Canceled form...');
   }
 
+  closeForm(event: boolean) {
+    if (event) {
+      this.showAddForm = false;
+      this.getMemberList(); // Refresh the members list
+    }
+  }
+
   showAlert(event: string) {
     this.app.showToast(event);
   }

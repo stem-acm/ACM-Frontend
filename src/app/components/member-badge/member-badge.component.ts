@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { MemberBadgeRectoComponent } from '../member-badge-recto/member-badge-recto.component';
-import { MemberBadgeVersoComponent } from '../member-badge-verso/member-badge-verso.component';
-import { Member } from '../../interfaces/member';
+import { MemberBadgeRectoComponent } from '@/app/components/member-badge-recto/member-badge-recto.component';
+import { MemberBadgeVersoComponent } from '@/app/components/member-badge-verso/member-badge-verso.component';
+import { Member } from '@/app/interfaces/member';
 
 @Component({
   selector: 'app-member-badge',

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, inject, Output, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
-import { CheckinService } from '../../services/checkin.service';
-import { HttpResult } from '../../types/httpResult';
-import { ActivityService } from '../../services/activity.service';
-import { Activity, DayOfWeek } from '../../interfaces/activity';
-import { ToastService } from '../../services/toast.service';
+import { CheckinService } from '@/app/services/checkin.service';
+import { HttpResult } from '@/app/types/httpResult';
+import { ActivityService } from '@/app/services/activity.service';
+import { Activity, DayOfWeek } from '@/app/interfaces/activity';
+import { ToastService } from '@/app/services/toast.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { Checkin } from '../../interfaces/checkin';
+import { Checkin } from '@/app/interfaces/checkin';
 
 interface ActivityToDisplay {
   id: number;

@@ -36,7 +36,7 @@
           {{ item.isPeriodic ? 'Yes' : 'No' }}
         </td>
         <td class="px-6 py-4">
-          {{ item.dayOfWeek?.charAt(0)!.toUpperCase() + '' + item.dayOfWeek?.slice(1) }}
+          {{ item.dayOfWeek ? item.dayOfWeek?.charAt(0)!.toUpperCase() + '' + item.dayOfWeek?.slice(1) : 'N/A' }}
         </td>
         <td class="px-6 py-4">
           {{ item.startDate ?? 'N/A' }}

@@ -32,12 +32,30 @@ export class ProfilComponent implements OnInit {
   getMemberInfo(registrationNumber: string) {
     this.memberService
       .getMemberByRegistrationNumber(registrationNumber)
-      .subscribe((result: HttpResult<Member>) => {
-        if (result.success && result.data) {
-          this.member = result.data;
-          this.member.birthDate = this.convertDate(this.member.birthDate);
-          this.member.joinDate = this.convertDate(this.member.joinDate);
-        } else {
+      .subscribe(
+        (result: HttpResult<Member>) => {
+          if (result.success && result.data) {
+            this.member = result.data;
+            this.member.birthDate = this.convertDate(this.member.birthDate);
+            this.member.joinDate = this.convertDate(this.member.joinDate);
+          } else {
+            this.member = {
+              registrationNumber: this.registrationNumber,
+              id: 0,
+              firstName: '404',
+              lastName: '',
+              birthDate: '',
+              birthPlace: '',
+              address: '',
+              occupation: 'unemployed',
+              phoneNumber: '',
+              studyOrWorkPlace: '',
+              joinDate: '',
+              profileImage: 'user.png',
+            };
+          }
+        },
+        (err) => {
           this.member = {
             registrationNumber: this.registrationNumber,
             id: 0,
@@ -53,6 +71,6 @@ export class ProfilComponent implements OnInit {
             profileImage: 'user.png',
           };
         }
-      });
+      );
   }
 }

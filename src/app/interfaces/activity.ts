@@ -9,9 +9,9 @@ export interface Activity {
   image?: string | null;
   emoji?: string | null;
   isPeriodic: boolean;
-  dayOfWeek?: DayOfWeek;
-  startDate?: string;
-  endDate?: string;
+  dayOfWeek?: DayOfWeek | null;
+  startDate?: string | null;
+  endDate?: string | null;
   startTime: string;
   endTime: string;
   createdBy?: number;

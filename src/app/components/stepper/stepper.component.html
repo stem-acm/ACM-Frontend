@@ -46,8 +46,14 @@
         [class.selected]="isActivitySelected(activity)"
         (click)="toggleActivity(activity)"
       >
-        <div class="block h-32 w-32 flex justify-center items-center text-8xl pb-4 rounded-2xl bg-gray-200/90 hover:bg-[#1e4d8b]">{{ activity.emoji || '😊' }}</div>
-        <div class="uppercase font-black text-center text-lg text-[#1e4d8b]">{{ activity.name }}</div>
+        <div
+          class="block h-32 w-32 flex justify-center items-center text-8xl pb-4 rounded-2xl bg-gray-200/90 hover:bg-[#1e4d8b]"
+        >
+          {{ activity.emoji || '😊' }}
+        </div>
+        <div class="uppercase font-black text-center text-lg text-[#1e4d8b]">
+          {{ activity.name }}
+        </div>
       </div>
     </div>
 

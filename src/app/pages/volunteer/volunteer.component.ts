@@ -3,7 +3,7 @@ import { TableVolunteersComponent } from '@/app/components/table-volunteers/tabl
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -11,28 +11,26 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [FormsModule, TableLoadingComponent, TableVolunteersComponent],
   templateUrl: './volunteer.component.html',
-  styleUrl: './volunteer.component.css'
+  styleUrl: './volunteer.component.css',
 })
-export class VolunteerComponent {
+export class VolunteerComponent implements OnInit {
   public volunteers!: Volunteer[];
   public volunteersFilter!: Volunteer[];
   public searchWord!: string;
 
-  constructor(private volunteerService: VolunteerService) {}
+  private volunteerService = inject(VolunteerService);
 
   ngOnInit() {
     this.getVolunteerList();
   }
 
   getVolunteerList() {
-    this.volunteerService.getAllVolunteers().subscribe(
-      (result: HttpResult<Volunteer[]>) => {
-        if (result.success && result.data) {
-          this.volunteers = result.data;
-          this.volunteersFilter = this.volunteers;
-        }
+    this.volunteerService.getAllVolunteers().subscribe((result: HttpResult<Volunteer[]>) => {
+      if (result.success && result.data) {
+        this.volunteers = result.data;
+        this.volunteersFilter = this.volunteers;
       }
-    );
+    });
   }
 
   search(keyWord: string) {

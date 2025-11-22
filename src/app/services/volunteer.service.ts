@@ -5,13 +5,11 @@ import { HttpResult } from '../types/httpResult';
 import { Volunteer } from '../interfaces/volunteer';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VolunteerService {
   private URL: string = environment.API_URL;
   private http = inject(HttpClient);
-
-  constructor() { }
 
   getAllVolunteers() {
     return this.http.get<HttpResult<Volunteer[]>>(`${this.URL}/volunteers`);

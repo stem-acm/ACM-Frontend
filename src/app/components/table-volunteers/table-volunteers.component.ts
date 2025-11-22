@@ -8,13 +8,13 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './table-volunteers.component.html',
-  styleUrl: './table-volunteers.component.css'
+  styleUrl: './table-volunteers.component.css',
 })
 export class TableVolunteersComponent {
   @Input() data!: Volunteer[];
   private URL: string = environment.FILE_URL;
 
   getfileUrl(fileName: string | undefined) {
-    return `${this.URL}/${(fileName && fileName != '' ? fileName : 'user.png')}`;
+    return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 }

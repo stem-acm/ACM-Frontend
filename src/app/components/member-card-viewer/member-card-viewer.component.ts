@@ -24,34 +24,34 @@ export class MemberCardViewerComponent {
     this.openPDF();
   }
 
-openPDF() {
-  const content = document.getElementById('badgeSectionToPrint')?.cloneNode(true);
-  if (!content) return;
+  openPDF() {
+    const content = document.getElementById('badgeSectionToPrint')?.cloneNode(true);
+    if (!content) return;
 
-  const iframe = document.createElement('iframe');
-  iframe.style.width = '0';
-  iframe.style.height = '0';
-  iframe.style.border = '0';
-  document.body.appendChild(iframe);
+    const iframe = document.createElement('iframe');
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
 
-  const iframeWin = iframe.contentWindow;
-  const iframeDoc = iframeWin?.document;
-  if (!iframeDoc) return;
+    const iframeWin = iframe.contentWindow;
+    const iframeDoc = iframeWin?.document;
+    if (!iframeDoc) return;
 
-  iframeDoc.open();
+    iframeDoc.open();
 
-  // Copier les styles Tailwind + Angular correctement
-  const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-    .map(node => {
-      if (node.tagName === 'LINK') {
-        const href = (node as HTMLLinkElement).href; // URL absolue
-        return `<link rel="stylesheet" href="${href}">`;
-      }
-      return node.outerHTML;
-    })
-    .join('\n');
+    // Copier les styles Tailwind + Angular correctement
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+      .map(node => {
+        if (node.tagName === 'LINK') {
+          const href = (node as HTMLLinkElement).href; // URL absolue
+          return `<link rel="stylesheet" href="${href}">`;
+        }
+        return node.outerHTML;
+      })
+      .join('\n');
 
-  iframeDoc.write(`
+    iframeDoc.write(`
     <html>
       <head>
         <title>Print</title>
@@ -61,39 +61,38 @@ openPDF() {
     </html>
   `);
 
-  iframeDoc.body.appendChild(content);
-  iframeDoc.close();
+    iframeDoc.body.appendChild(content);
+    iframeDoc.close();
 
-  // Attendre les images
-  const waitImagesLoaded = () => {
-    const imgs = Array.from(iframeDoc.images);
-    if (!imgs.length) return Promise.resolve();
+    // Attendre les images
+    const waitImagesLoaded = () => {
+      const imgs = Array.from(iframeDoc.images);
+      if (!imgs.length) return Promise.resolve();
 
-    let loaded = 0;
-    return new Promise<void>(resolve => {
-      for (const img of imgs) {
-        if (img.complete) {
-          loaded++;
-          if (loaded === imgs.length) resolve();
-        } else {
-          img.onload = () => {
+      let loaded = 0;
+      return new Promise<void>(resolve => {
+        for (const img of imgs) {
+          if (img.complete) {
             loaded++;
             if (loaded === imgs.length) resolve();
-          };
-          img.onerror = () => {
-            loaded++;
-            if (loaded === imgs.length) resolve();
-          };
+          } else {
+            img.onload = () => {
+              loaded++;
+              if (loaded === imgs.length) resolve();
+            };
+            img.onerror = () => {
+              loaded++;
+              if (loaded === imgs.length) resolve();
+            };
+          }
         }
-      }
+      });
+    };
+
+    waitImagesLoaded().then(() => {
+      iframeWin?.focus();
+      iframeWin?.print();
+      document.body.removeChild(iframe);
     });
-  };
-
-  waitImagesLoaded().then(() => {
-    iframeWin?.focus();
-    iframeWin?.print();
-    document.body.removeChild(iframe);
-  });
-}
-
+  }
 }

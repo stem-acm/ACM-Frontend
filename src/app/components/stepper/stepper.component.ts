@@ -67,7 +67,8 @@ export class StepperComponent implements OnInit {
 
       if (result.success) {
         // Then filter by current day
-        this.activities = this.filterActivitiesByCurrentDay(result.data);
+        // this.activities = this.filterActivitiesByCurrentDay(result.data);
+        this.activities = result.data;
 
         this.loading = false;
       } else {

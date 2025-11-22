@@ -464,13 +464,15 @@ export class AddActivityComponent implements OnChanges, OnInit {
 
     const formattedStartDate = !this.activity.isPeriodic
       ? this.formatDate(this.activity.startDate || baseDate)
-      : undefined;
+      : null;
     const formattedEndDate = !this.activity.isPeriodic
       ? this.formatDate(this.activity.endDate || baseDate)
-      : undefined;
+      : null;
+    const formattedDayOfWeek = this.activity.isPeriodic ? this.activity.dayOfWeek : null;
 
     this.activity = {
       ...this.activity,
+      dayOfWeek: formattedDayOfWeek,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       startTime: formattedStartTime,
@@ -479,6 +481,8 @@ export class AddActivityComponent implements OnChanges, OnInit {
 
     this.activityService.updateActivity(this.activity).subscribe(
       (result: HttpResult<Activity>) => {
+        console.log('result de update:', result);
+
         if (result.success) {
           this.error = {
             enabled: false,

@@ -1,0 +1,49 @@
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+  <thead
+    class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+  >
+    <tr>
+      <th scope="col" class="px-6 py-3">NAME</th>
+      <th scope="col" class="px-6 py-3">VOLUNTEER ID</th>
+      <th scope="col" class="px-6 py-3">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (volunteer of data; track volunteer) {
+      <tr
+        class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
+      >
+        <th
+          scope="row"
+          class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+        >
+          <img
+            class="w-10 h-10 rounded-full"
+            [src]="getfileUrl(volunteer.Member?.profileImage)"
+            alt="Jese image"
+          />
+          <div class="ps-3">
+            <div class="text-base font-semibold">
+              {{ volunteer.Member?.lastName + ' ' + volunteer.Member?.firstName }}
+            </div>
+            <div class="font-normal text-gray-500">
+              {{ volunteer.Member?.registrationNumber }}
+            </div>
+          </div>
+        </th>
+        <td class="px-6 py-4">
+          <div class="font-normal text-gray-500">
+            {{ volunteer.id }}
+          </div>
+        </td>
+        <td class="px-6 py-4">
+          <a
+            [routerLink]="['/profil', volunteer.Member?.registrationNumber]"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            >View profil</a
+          >
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

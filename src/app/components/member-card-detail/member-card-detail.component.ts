@@ -45,7 +45,7 @@ export class MemberCardDetailComponent {
   }
 
   getfileUrl(fileName: string | undefined) {
-    return `${this.URL}/${(fileName ??= 'user.png')}`;
+    return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
   cancelForm(event: boolean) {

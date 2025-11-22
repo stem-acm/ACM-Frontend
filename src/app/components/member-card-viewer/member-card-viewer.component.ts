@@ -40,25 +40,31 @@ export class MemberCardViewerComponent {
 
     iframeDoc.open();
 
-    // copier tous les styles du document actuel
+    // Copier les styles Tailwind + Angular correctement
     const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map(node => node.outerHTML)
+      .map(node => {
+        if (node.tagName === 'LINK') {
+          const href = (node as HTMLLinkElement).href; // URL absolue
+          return `<link rel="stylesheet" href="${href}">`;
+        }
+        return node.outerHTML;
+      })
       .join('\n');
 
     iframeDoc.write(`
-      <html>
-        <head>
-          <title>Print</title>
-          ${styles}
-        </head>
-        <body></body>
-      </html>
-    `);
+    <html>
+      <head>
+        <title>Print</title>
+        ${styles}
+      </head>
+      <body></body>
+    </html>
+  `);
 
     iframeDoc.body.appendChild(content);
     iframeDoc.close();
 
-    /** 🔥 Attendre que toutes les images (QR code) soient chargées avant impression */
+    // Attendre les images
     const waitImagesLoaded = () => {
       const imgs = Array.from(iframeDoc.images);
       if (!imgs.length) return Promise.resolve();

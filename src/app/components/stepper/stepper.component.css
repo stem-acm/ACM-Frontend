@@ -116,6 +116,11 @@
   max-width: 900px;
 }
 
+/* Selected activity should have the same style as hover */
+.activities-grid .selected > div:first-child {
+  background-color: #1e4d8b !important;
+}
+
 .activity-card {
   background: #e8f0f7;
   border-radius: 20px;
@@ -156,6 +161,37 @@
   gap: 20px;
   margin: 0;
   position: relative;
+}
+
+/* Finger pointer styles */
+.finger-pointer {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  pointer-events: none;
+}
+
+.finger-hour {
+  left: -100px;
+  animation: pulse-finger 1.5s ease-in-out infinite;
+}
+
+.finger-minute {
+  right: -100px;
+  animation: pulse-finger 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-finger {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.1);
+    opacity: 0.8;
+  }
 }
 
 .time-display {

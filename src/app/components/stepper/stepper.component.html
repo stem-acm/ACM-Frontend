@@ -68,14 +68,19 @@
   <div class="content" *ngIf="currentStep === 2">
     <h2 class="title">LEAVING TIME:</h2>
 
-    <!-- <app-clock /> -->
-
     <div class="time-picker">
+      <!-- Finger pointing to hour picker -->
+      <img class="w-16 finger-pointer finger-hour"  *ngIf="!hourSelected && !showHourPicker" src="/pointing-right-finger-svgrepo-com.svg" alt="Finger pointing to the right"/>
+
+      <!-- Finger pointing to minute picker -->
+      <img class="w-16 finger-pointer finger-minute"  *ngIf="hourSelected && !minuteSelected && !showMinutePicker" src="/pointing-left-finger-svgrepo-com.svg" alt="Finger pointing to the left"/>
+
       <div class="time-display">
         <div
           role="button"
           tabindex="0"
-          class="time-part hour animate-attention"
+          class="time-part hour"
+          [class.animate-attention]="!hourSelected"
           (click)="toggleHourPicker()"
         >
           {{ selectedTime.hour.toString().padStart(2, '0') }}
@@ -84,7 +89,8 @@
         <div
           role="button"
           tabindex="0"
-          class="time-part minute animate-attention-with-delay"
+          class="time-part minute"
+          [class.animate-attention-with-delay]="hourSelected && !minuteSelected"
           (click)="toggleMinutePicker()"
         >
           {{ selectedTime.minute.toString().padStart(2, '0') }}

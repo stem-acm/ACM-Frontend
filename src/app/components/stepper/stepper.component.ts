@@ -237,6 +237,10 @@ export class StepperComponent implements OnInit {
   toggleMinutePicker() {
     this.showMinutePicker = !this.showMinutePicker;
     this.showHourPicker = false;
+    // Mark hour as selected when user clicks on minute picker
+    if (this.showMinutePicker) {
+      this.hourSelected = true;
+    }
   }
 
   toggleHourPicker() {

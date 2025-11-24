@@ -30,6 +30,8 @@ export class ScannerComponent implements OnInit, OnDestroy {
   scanning = false;
   result: string | null = null;
   currentDeviceId: string | null = null;
+  availableDevices: MediaDeviceInfo[] = [];
+  usingFrontCamera = true;
 
   async ngOnInit() {
     await this.startScan();
@@ -42,11 +44,14 @@ export class ScannerComponent implements OnInit, OnDestroy {
         throw new Error('No camera devices found.');
       }
 
+      this.availableDevices = devices;
+
       const frontCamera =
         devices.find(
           d => d.label.toLowerCase().includes('front') || d.label.toLowerCase().includes('user'),
         ) || devices[0];
       this.currentDeviceId = frontCamera.deviceId;
+      this.usingFrontCamera = true;
 
       (this.codeReader as unknown as { timeBetweenScansMillis: number }).timeBetweenScansMillis = 0;
 
@@ -69,6 +74,36 @@ export class ScannerComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.error('Error initializing camera:', err);
     }
+  }
+
+  async toggleCamera() {
+    if (this.availableDevices.length < 2) {
+      console.log('Only one camera available');
+      return;
+    }
+
+    this.pauseScan();
+
+    // Toggle between front and back camera
+    if (this.usingFrontCamera) {
+      // Switch to back/environment camera
+      const backCamera = this.availableDevices.find(
+        d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('environment'),
+      ) || this.availableDevices[1];
+      this.currentDeviceId = backCamera.deviceId;
+      this.usingFrontCamera = false;
+      this.videoElement.nativeElement.style.transform = 'scaleX(1)';
+    } else {
+      // Switch to front/user camera
+      const frontCamera = this.availableDevices.find(
+        d => d.label.toLowerCase().includes('front') || d.label.toLowerCase().includes('user'),
+      ) || this.availableDevices[0];
+      this.currentDeviceId = frontCamera.deviceId;
+      this.usingFrontCamera = true;
+      this.videoElement.nativeElement.style.transform = 'scaleX(-1)';
+    }
+
+    await this.resumeScan();
   }
 
   pauseScan() {

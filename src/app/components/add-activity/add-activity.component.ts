@@ -479,6 +479,8 @@ export class AddActivityComponent implements OnChanges, OnInit {
       endTime: formattedEndTime,
     };
 
+    console.log('this.activity', this.activity);
+
     this.activityService.updateActivity(this.activity).subscribe(
       (result: HttpResult<Activity>) => {
         console.log('result de update:', result);

@@ -19,14 +19,22 @@
           scope="row"
           class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          <img
-            class="w-10 h-10 rounded-full"
-            [src]="getfileUrl(item?.Member?.profileImage)"
-            alt="Jese image"
-          />
+          <div class="relative">
+            <img
+              class="w-10 h-10 rounded-full"
+              [src]="getfileUrl(item?.Member?.profileImage)"
+              alt="Jese image"
+            />
+            @if (isInRoom(item)) {
+              <span class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></span>
+            }
+          </div>
           <div class="ps-3">
-            <div class="text-base font-semibold">
+            <div class="text-base font-semibold flex items-center gap-2">
               {{ item?.Member?.lastName + ' ' + item?.Member?.firstName }}
+              <!-- @if (isInRoom(item)) {
+                <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+              } -->
             </div>
             <div class="font-normal text-gray-500">{{ item?.Member?.registrationNumber }}</div>
           </div>

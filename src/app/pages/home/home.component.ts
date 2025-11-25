@@ -53,19 +53,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   subscribeToRealTimeCheckins() {
+    console.log('[Home] Subscribing to real-time check-ins');
     this.checkinSubscription = this.sseService.connectToCheckins().subscribe({
       next: (newCheckin: Checkin) => {
-        console.log('Real-time check-in received:', newCheckin);
+        console.log('[Home] Real-time check-in received:', newCheckin);
         
         if (this.statistics) {
           // Add new check-in to the beginning of the array
           this.statistics.checkins.unshift(newCheckin);
+          console.log('[Home] Added check-in to list, total:', this.statistics.checkins.length);
           // Sort to ensure proper ordering
           this.sortCheckins();
         }
       },
       error: (error) => {
-        console.error('Error receiving real-time check-in:', error);
+        console.error('[Home] Error receiving real-time check-in:', error);
       },
     });
   }
@@ -78,5 +80,24 @@ export class HomeComponent implements OnInit, OnDestroy {
         return dateB - dateA; // Descending order (newest first)
       });
     }
+  }
+
+  /**
+   * Get the count of members currently in the room
+   * (check-ins without checkout time or with checkout time in the future)
+   */
+  get membersInRoom(): number {
+    if (!this.statistics || !this.statistics.checkins) {
+      return 0;
+    }
+    
+    const now = new Date().getTime();
+    return this.statistics.checkins.filter(checkin => {
+      if (!checkin.checkOutTime) {
+        return true; // No checkout time means still in the room
+      }
+      const checkOutTime = new Date(checkin.checkOutTime).getTime();
+      return checkOutTime > now; // Checkout time in the future
+    }).length;
   }
 }

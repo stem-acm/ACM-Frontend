@@ -396,7 +396,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
 
     // Always send startDate and endDate, defaulting to baseDate if not present
     // Only send startDate and endDate if NOT periodic
-     const formattedStartDate = !this.activity.isPeriodic
+    const formattedStartDate = !this.activity.isPeriodic
       ? this.formatDate(this.activity.startDate || baseDate)
       : null;
     const formattedEndDate = !this.activity.isPeriodic
@@ -412,7 +412,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
       startTime: formattedStartTime,
       endTime: formattedEndTime,
     };
-    
+
     this.activityService.addActivity(this.activity).subscribe(
       (result: HttpResult<Activity>) => {
         if (result.success) {

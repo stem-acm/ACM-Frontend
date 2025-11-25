@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.checkinSubscription = this.sseService.connectToCheckins().subscribe({
       next: (newCheckin: Checkin) => {
         console.log('[Home] Real-time check-in received:', newCheckin);
-        
+
         if (this.statistics) {
           // Add new check-in to the beginning of the array
           this.statistics.checkins.unshift(newCheckin);
@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.sortCheckins();
         }
       },
-      error: (error) => {
+      error: error => {
         console.error('[Home] Error receiving real-time check-in:', error);
       },
     });
@@ -90,7 +90,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!this.statistics || !this.statistics.checkins) {
       return 0;
     }
-    
+
     const now = new Date().getTime();
     return this.statistics.checkins.filter(checkin => {
       if (!checkin.checkOutTime) {

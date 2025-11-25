@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '@/environments/environment';
 import { Checkin } from '@/app/interfaces/checkin';
@@ -14,8 +14,7 @@ interface SSEMessage {
 export class SseService {
   private eventSource: EventSource | null = null;
   private checkinSubject = new Subject<Checkin>();
-
-  constructor(private ngZone: NgZone) {}
+  private ngZone = inject(NgZone);
 
   /**
    * Connect to the SSE endpoint for real-time check-in updates
@@ -28,7 +27,7 @@ export class SseService {
 
     const url = `${environment.API_URL}/sse/checkins`;
     console.log('[SSE] Connecting to:', url);
-    
+
     this.eventSource = new EventSource(url);
 
     this.eventSource.onopen = () => {
@@ -37,13 +36,13 @@ export class SseService {
       });
     };
 
-    this.eventSource.onmessage = (event) => {
+    this.eventSource.onmessage = event => {
       this.ngZone.run(() => {
         console.log('[SSE] Message received:', event.data);
         try {
           const message: SSEMessage = JSON.parse(event.data);
           console.log('[SSE] Parsed message:', message);
-          
+
           if (message.type === 'new-checkin' && message.data) {
             console.log('[SSE] New check-in event received:', message.data);
             this.checkinSubject.next(message.data);
@@ -56,7 +55,7 @@ export class SseService {
       });
     };
 
-    this.eventSource.onerror = (error) => {
+    this.eventSource.onerror = error => {
       this.ngZone.run(() => {
         console.error('[SSE] Connection error:', error);
         console.error('[SSE] EventSource readyState:', this.eventSource?.readyState);

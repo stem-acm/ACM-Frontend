@@ -87,17 +87,20 @@ export class ScannerComponent implements OnInit, OnDestroy {
     // Toggle between front and back camera
     if (this.usingFrontCamera) {
       // Switch to back/environment camera
-      const backCamera = this.availableDevices.find(
-        d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('environment'),
-      ) || this.availableDevices[1];
+      const backCamera =
+        this.availableDevices.find(
+          d =>
+            d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('environment'),
+        ) || this.availableDevices[1];
       this.currentDeviceId = backCamera.deviceId;
       this.usingFrontCamera = false;
       this.videoElement.nativeElement.style.transform = 'scaleX(1)';
     } else {
       // Switch to front/user camera
-      const frontCamera = this.availableDevices.find(
-        d => d.label.toLowerCase().includes('front') || d.label.toLowerCase().includes('user'),
-      ) || this.availableDevices[0];
+      const frontCamera =
+        this.availableDevices.find(
+          d => d.label.toLowerCase().includes('front') || d.label.toLowerCase().includes('user'),
+        ) || this.availableDevices[0];
       this.currentDeviceId = frontCamera.deviceId;
       this.usingFrontCamera = true;
       this.videoElement.nativeElement.style.transform = 'scaleX(-1)';

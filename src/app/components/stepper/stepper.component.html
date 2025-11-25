@@ -70,10 +70,20 @@
 
     <div class="time-picker">
       <!-- Finger pointing to hour picker -->
-      <img class="w-16 finger-pointer finger-hour"  *ngIf="!hourSelected && !showHourPicker" src="/pointing-right-finger-svgrepo-com.svg" alt="Finger pointing to the right"/>
+      <img
+        class="w-16 finger-pointer finger-hour"
+        *ngIf="!hourSelected && !showHourPicker"
+        src="/pointing-right-finger-svgrepo-com.svg"
+        alt="Finger pointing to the right"
+      />
 
       <!-- Finger pointing to minute picker -->
-      <img class="w-16 finger-pointer finger-minute"  *ngIf="hourSelected && !minuteSelected && !showMinutePicker" src="/pointing-left-finger-svgrepo-com.svg" alt="Finger pointing to the left"/>
+      <img
+        class="w-16 finger-pointer finger-minute"
+        *ngIf="hourSelected && !minuteSelected && !showMinutePicker"
+        src="/pointing-left-finger-svgrepo-com.svg"
+        alt="Finger pointing to the left"
+      />
 
       <div class="time-display">
         <div

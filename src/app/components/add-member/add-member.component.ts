@@ -128,7 +128,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
     if (!this.checkValidation()) {
       this.error = {
         enabled: true,
-        message: 'Please fill in all required fields.',
+        message: 'Please fill in all fields.',
       };
       this.loading = false;
       return;

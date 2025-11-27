@@ -398,13 +398,15 @@ export class AddActivityComponent implements OnChanges, OnInit {
     // Only send startDate and endDate if NOT periodic
     const formattedStartDate = !this.activity.isPeriodic
       ? this.formatDate(this.activity.startDate || baseDate)
-      : undefined;
+      : null;
     const formattedEndDate = !this.activity.isPeriodic
       ? this.formatDate(this.activity.endDate || baseDate)
-      : undefined;
+      : null;
+    const formattedDayOfWeek = this.activity.isPeriodic ? this.activity.dayOfWeek : null;
 
     this.activity = {
       ...this.activity,
+      dayOfWeek: formattedDayOfWeek,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       startTime: formattedStartTime,

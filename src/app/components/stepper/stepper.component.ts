@@ -33,6 +33,8 @@ export class StepperComponent implements OnInit {
   showMinutePicker = false;
   showHourPicker = false;
   scannedBadgeId: string | null = null;
+  hourSelected = false;
+  minuteSelected = false;
 
   checkinService = inject(CheckinService);
   activityService = inject(ActivityService);
@@ -215,22 +217,30 @@ export class StepperComponent implements OnInit {
     this.showMinutePicker = false;
     this.showHourPicker = false;
     this.scannedBadgeId = null;
+    this.hourSelected = false;
+    this.minuteSelected = false;
     this.setTimeInput();
   }
 
   selectMinute(minute: number) {
     this.selectedTime.minute = minute;
     this.showMinutePicker = false;
+    this.minuteSelected = true;
   }
 
   selectHour(hour: number) {
     this.selectedTime.hour = hour;
     this.showHourPicker = false;
+    this.hourSelected = true;
   }
 
   toggleMinutePicker() {
     this.showMinutePicker = !this.showMinutePicker;
     this.showHourPicker = false;
+    // Mark hour as selected when user clicks on minute picker
+    if (this.showMinutePicker) {
+      this.hourSelected = true;
+    }
   }
 
   toggleHourPicker() {

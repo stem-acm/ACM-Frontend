@@ -11,8 +11,10 @@ export class MemberService {
   private URL: string = environment.API_URL;
   private http = inject(HttpClient);
 
-  getAllMembers() {
-    return this.http.get<HttpResult<Member[]>>(`${this.URL}/members`);
+  getAllMembers(offset = 0, limit = 10, search = '') {
+    return this.http.get<HttpResult<Member[]>>(
+      `${this.URL}/members?offset=${offset}&limit=${limit}&search=${search}`,
+    );
   }
 
   getMemberById(id: number) {

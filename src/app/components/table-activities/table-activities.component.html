@@ -11,9 +11,6 @@
       <th scope="col" class="px-6 py-3">End Date</th>
       <th scope="col" class="px-6 py-3">Start Time</th>
       <th scope="col" class="px-6 py-3">End Time</th>
-      <!--  <th scope="col" class="px-6 py-3">
-                Actif
-            </th> -->
       <th scope="col" class="px-6 py-3">Action</th>
     </tr>
   </thead>
@@ -38,7 +35,7 @@
         <td class="px-6 py-4">
           {{
             item.dayOfWeek
-              ? item.dayOfWeek?.charAt(0)!.toUpperCase() + '' + item.dayOfWeek?.slice(1)
+              ? item.dayOfWeek.charAt(0)!.toUpperCase() + '' + item.dayOfWeek.slice(1)
               : 'N/A'
           }}
         </td>
@@ -54,11 +51,6 @@
         <td class="px-6 py-4">
           {{ item.endTime }}
         </td>
-        <!--   <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <div class="h-2.5 w-2.5 rounded-full me-2 {{ item.isActive ? 'bg-green-500' : 'bg-red-500' }}"></div> {{ item.isActive ? 'Active' : 'Inactive' }}
-                    </div>
-                </td> -->
         <td class="px-6 py-4">
           <a
             role="button"

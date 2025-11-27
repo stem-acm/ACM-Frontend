@@ -1,6 +1,13 @@
 import { User } from './user';
 
-export type DayOfWeek = 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
+export type DayOfWeek =
+  | 'everyday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
 
 export interface Activity {
   id?: number;

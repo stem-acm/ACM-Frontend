@@ -1,3 +1,5 @@
+import { AppComponent } from '@/app/app.component';
+import { AddVolunteerComponent } from '@/app/components/add-volunteer/add-volunteer.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { TableVolunteersComponent } from '@/app/components/table-volunteers/table-volunteers.component';
 import { Volunteer } from '@/app/interfaces/volunteer';
@@ -9,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-volunteer',
   standalone: true,
-  imports: [FormsModule, TableLoadingComponent, TableVolunteersComponent],
+  imports: [FormsModule, TableLoadingComponent, TableVolunteersComponent, AddVolunteerComponent],
   templateUrl: './volunteer.component.html',
   styleUrl: './volunteer.component.css',
 })
@@ -17,8 +19,10 @@ export class VolunteerComponent implements OnInit {
   public volunteers!: Volunteer[];
   public volunteersFilter!: Volunteer[];
   public searchWord!: string;
+  public showAddForm = false;
 
   private volunteerService = inject(VolunteerService);
+  private app = inject(AppComponent);
 
   ngOnInit() {
     this.getVolunteerList();
@@ -31,6 +35,26 @@ export class VolunteerComponent implements OnInit {
         this.volunteersFilter = this.volunteers;
       }
     });
+  }
+
+  addVolunteer() {
+    this.showAddForm = true;
+  }
+
+  cancelForm(event: boolean) {
+    if (event) this.showAddForm = false;
+    this.app.showToast('Canceled form...');
+  }
+
+  closeForm(event: boolean) {
+    if (event) {
+      this.showAddForm = false;
+      this.getVolunteerList(); // Refresh the members list
+    }
+  }
+
+  showAlert(event: any) {
+    this.app.showToast(event);
   }
 
   search(keyWord: string) {

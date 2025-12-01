@@ -23,5 +23,4 @@ export class TableVolunteersComponent {
     if (!date) return 'no date';
     return dayjs(date).format('dddd DD MMMM YYYY');
   }
-
 }

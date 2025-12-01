@@ -13,9 +13,15 @@ import { VolunteerService } from '@/app/services/volunteer.service';
 @Component({
   selector: 'app-add-volunteer',
   standalone: true,
-  imports: [FormsModule, CommonModule, CardSkeletonComponent, CardComponent, MemberCardViewerComponent],
+  imports: [
+    FormsModule,
+    CommonModule,
+    CardSkeletonComponent,
+    CardComponent,
+    MemberCardViewerComponent,
+  ],
   templateUrl: './add-volunteer.component.html',
-  styleUrl: './add-volunteer.component.css'
+  styleUrl: './add-volunteer.component.css',
 })
 export class AddVolunteerComponent implements OnInit {
   @Output() canceled = new EventEmitter<boolean>();
@@ -47,7 +53,7 @@ export class AddVolunteerComponent implements OnInit {
     this.memberService.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
       if (result.success && result.data) {
         this.member = result.data;
-                this.member.map(e => {
+        this.member.map(e => {
           this.membersChooseList.push({
             selected: false,
             member: e,
@@ -59,10 +65,7 @@ export class AddVolunteerComponent implements OnInit {
   }
 
   checkValidation(): boolean {
-    if (
-      this.joinDate &&
-      this.expirationDate
-    ) {
+    if (this.joinDate && this.expirationDate) {
       return true;
     }
     return false;
@@ -84,17 +87,18 @@ export class AddVolunteerComponent implements OnInit {
       this.loading = false;
       return;
     }
-    
+
     const memberChoosed = this.membersChooseList.filter(e => e.selected === true);
     this.membersClicked = memberChoosed.map(e => e.member);
     const volunteerChoosed: Volunteer = {
-      memberId: this.membersClicked[0].id??=0,
+      memberId: (this.membersClicked[0].id ??= 0),
       joinDate: this.joinDate,
-      expirationDate: this.expirationDate
-    }
-    
-    this.volunteerService.addVolunteer(volunteerChoosed).subscribe(
-      (result: HttpResult<Volunteer>) => {
+      expirationDate: this.expirationDate,
+    };
+
+    this.volunteerService
+      .addVolunteer(volunteerChoosed)
+      .subscribe((result: HttpResult<Volunteer>) => {
         if (result.success && result.data) {
           this.loading = false;
           this.error = {
@@ -106,8 +110,7 @@ export class AddVolunteerComponent implements OnInit {
           );
           this.success.emit(true);
         }
-      }
-    );
+      });
   }
 
   cancel() {
@@ -142,5 +145,4 @@ export class AddVolunteerComponent implements OnInit {
         e.member.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
     );
   }
-
 }

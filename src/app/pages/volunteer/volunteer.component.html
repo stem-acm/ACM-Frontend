@@ -3,6 +3,7 @@
     <h1 class="text-xl font-bold text-blue-500 my-4">List of Volunteers</h1>
     <button
       type="button"
+      (click)="addVolunteer()"
       class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
     >
       <svg class="w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +61,7 @@
     @if (!volunteersFilter) {
       <app-table-loading
         [data]="{
-          columns: ['NAME', 'VOLUNTEER ID', 'Action'],
+          columns: ['NAME', 'VOLUNTEER ID', 'JOIN DATE', 'EXPIRATION DATE', 'Action'],
           textLoading: 'Search volunteers...',
         }"
       />
@@ -69,3 +70,13 @@
     }
   </div>
 </div>
+
+@if (showAddForm) {
+  <app-add-volunteer
+    mode="insert"
+    title="New Volunteer"
+    (showToast)="showAlert($event)"
+    (canceled)="cancelForm($event)"
+    (success)="closeForm($event)"
+  />
+}

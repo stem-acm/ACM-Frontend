@@ -4,7 +4,7 @@ export interface Volunteer {
   id?: number;
   joinDate?: Date | null;
   expirationDate?: Date | null;
-  createdBy: number;
+  createdBy?: number;
   memberId: number;
   Member?: Member;
   createdAt?: Date;

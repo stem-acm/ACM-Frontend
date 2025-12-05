@@ -27,17 +27,17 @@ export class FlexMenusComponent {
     },
     {
       route: '/volunteer',
-      label: 'Volunteer',
+      label: 'Volunteers',
       exact: false,
     },
     {
       route: '/activity',
-      label: 'Activity',
+      label: 'Activities',
       exact: false,
     },
     {
       route: '/checkin',
-      label: 'Checkin',
+      label: 'Checkins',
       exact: false,
     },
   ];

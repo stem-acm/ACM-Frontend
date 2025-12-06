@@ -421,7 +421,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
             message: '',
           };
           this.showToast.emit(`Activity ${this.activity.name} created successfully`);
-          console.log('Activity=' + JSON.stringify(this.activity));
           this.activity = {
             name: '',
             description: '',

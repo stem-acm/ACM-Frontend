@@ -7,6 +7,8 @@ import { HttpResult } from '@/app/types/httpResult';
 import { TableActivitiesComponent } from '@/app/components/table-activities/table-activities.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-activity',
@@ -23,22 +25,31 @@ export class ActivityComponent implements OnInit {
   public title = 'New Activity';
   public mode: 'insert' | 'update' = 'insert';
   public searchWord!: string;
+  private searchSubject = new Subject<string>();
+  public isLoading = false;
 
   private activityService = inject(ActivityService);
   private app = inject(AppComponent);
 
   ngOnInit() {
     this.getActivityList();
+    this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
+      this.searchWord = value;
+      this.getActivityList();
+    });
   }
 
   getActivityList() {
-    this.activityService.getAllActivity().subscribe((result: HttpResult<Activity[]>) => {
-      if (result.success && result.data) {
-        this.activity = result.data;
-        this.activityFilter = this.activity;
-        console.log('Activity from activity compnent' + JSON.stringify(this.activity));
-      }
-    });
+    this.isLoading = true;
+    this.activityService
+      .getAllActivity(this.searchWord)
+      .subscribe((result: HttpResult<Activity[]>) => {
+        if (result.success && result.data) {
+          this.activity = result.data;
+          this.activityFilter = this.activity;
+        }
+        this.isLoading = false;
+      });
   }
 
   addActivity() {
@@ -77,7 +88,7 @@ export class ActivityComponent implements OnInit {
   }
 
   search(keyWord: string) {
-    this.searchByName(keyWord);
+    this.searchSubject.next(keyWord);
   }
 
   searchByName(keyWord: string) {

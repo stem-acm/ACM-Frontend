@@ -5,6 +5,7 @@ import { AuthService } from '@/app/services/auth.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '@/app/interfaces/user';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,7 @@ import { User } from '@/app/interfaces/user';
 export class NavbarComponent {
   @Input() user!: User;
   public isShowUserMenu = false;
+  public showExperimentalFeatures = environment.SHOW_EXPERIMENTAL_FEATURES;
   public userMenu: { route: string; label: string }[] = [
     {
       route: '/setting',

@@ -47,21 +47,16 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.statistics = result.data;
         // Sort check-ins by checkInTime descending (newest first)
         this.sortCheckins();
-        console.log(result);
       }
     });
   }
 
   subscribeToRealTimeCheckins() {
-    console.log('[Home] Subscribing to real-time check-ins');
     this.checkinSubscription = this.sseService.connectToCheckins().subscribe({
       next: (newCheckin: Checkin) => {
-        console.log('[Home] Real-time check-in received:', newCheckin);
-
         if (this.statistics) {
           // Add new check-in to the beginning of the array
           this.statistics.checkins.unshift(newCheckin);
-          console.log('[Home] Added check-in to list, total:', this.statistics.checkins.length);
           // Sort to ensure proper ordering
           this.sortCheckins();
         }

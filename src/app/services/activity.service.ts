@@ -12,8 +12,8 @@ export class ActivityService {
   private http = inject(HttpClient);
 
   // Get all activities
-  getAllActivity() {
-    return this.http.get<HttpResult<Activity[]>>(`${this.URL}/activities`);
+  getAllActivity(searchWord = '') {
+    return this.http.get<HttpResult<Activity[]>>(`${this.URL}/activities?search=${searchWord}`);
   }
 
   getActivityById(id: number) {

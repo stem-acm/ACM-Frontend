@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Output, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Output,
+  HostListener,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
 import { CheckinService } from '@/app/services/checkin.service';
@@ -8,6 +16,8 @@ import { Activity, DayOfWeek } from '@/app/interfaces/activity';
 import { ToastService } from '@/app/services/toast.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { Checkin } from '@/app/interfaces/checkin';
+import { SseService } from '@/app/services/sse.service';
+import { Subscription } from 'rxjs';
 
 interface ActivityToDisplay {
   id: number;
@@ -22,7 +32,7 @@ interface ActivityToDisplay {
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css'],
 })
-export class StepperComponent implements OnInit {
+export class StepperComponent implements OnInit, OnDestroy {
   @Output() emiterToast = new EventEmitter<string>();
 
   icon = '🔎';
@@ -39,6 +49,9 @@ export class StepperComponent implements OnInit {
   checkinService = inject(CheckinService);
   activityService = inject(ActivityService);
   private toastService = inject(ToastService);
+  private sseService = inject(SseService);
+
+  private activitySubscription?: Subscription;
 
   activities: Activity[] = [];
   finalActivities: ActivityToDisplay[] = [];
@@ -59,14 +72,33 @@ export class StepperComponent implements OnInit {
   ngOnInit() {
     this.setTimeInput();
     this.getActivities();
+    this.subscribeToRealTimeActivities();
+  }
+
+  ngOnDestroy(): void {
+    if (this.activitySubscription) {
+      this.activitySubscription.unsubscribe();
+    }
+    this.sseService.disconnect();
+  }
+
+  subscribeToRealTimeActivities() {
+    this.activitySubscription = this.sseService.connectToActivities().subscribe({
+      next: (newActivity: Activity) => {
+        console.log('[Stepper] Real-time activity received:', newActivity);
+        this.activities.push(newActivity);
+        console.log('[Stepper] Updated activities list:', this.activities);
+      },
+      error: error => {
+        console.error('[Stepper] Error receiving real-time activity:', error);
+      },
+    });
   }
 
   getActivities() {
     this.loading = true;
 
     this.activityService.getAllActivity().subscribe((result: HttpResult<Activity[]>) => {
-      console.log({ result });
-
       if (result.success) {
         // Then filter by current day
         const everydayActivities = result.data.filter(
@@ -79,7 +111,7 @@ export class StepperComponent implements OnInit {
 
         this.loading = false;
       } else {
-        alert(result.message);
+        this.toastService.showToast(result.message || 'Failed to get activties');
       }
     });
   }
@@ -88,30 +120,14 @@ export class StepperComponent implements OnInit {
     const today = new Date();
     const todayDayOfWeek = this.today as DayOfWeek;
 
-    console.log('Today is:', todayDayOfWeek);
-    console.log('All activities before filtering:', activities);
-
     const filtered = activities.filter(activity => {
-      console.log(
-        'Checking activity:',
-        activity.name,
-        'isPeriodic:',
-        activity.isPeriodic,
-        'dayOfWeek:',
-        activity.dayOfWeek,
-      );
-
       if (activity.isPeriodic) {
         // For periodic activities, check if dayOfWeek matches today
         const matches = activity.dayOfWeek === todayDayOfWeek;
-        console.log(
-          `  Periodic activity "${activity.name}": dayOfWeek=${activity.dayOfWeek}, today=${todayDayOfWeek}, matches=${matches}`,
-        );
         return matches;
       } else {
         // For non-periodic activities, check if today falls within the date range
         if (!activity.startDate || !activity.endDate) {
-          console.log(`  Non-periodic activity "${activity.name}": missing dates`);
           return false;
         }
 
@@ -124,14 +140,10 @@ export class StepperComponent implements OnInit {
         endDate.setHours(0, 0, 0, 0);
 
         const inRange = today >= startDate && today <= endDate;
-        console.log(
-          `  Non-periodic activity "${activity.name}": startDate=${activity.startDate}, endDate=${activity.endDate}, inRange=${inRange}`,
-        );
         return inRange;
       }
     });
 
-    console.log('Filtered activities:', filtered);
     return filtered;
   }
 
@@ -256,20 +268,11 @@ export class StepperComponent implements OnInit {
 
   badgeScanned(badgeId: string) {
     this.scannedBadgeId = badgeId;
-    console.log('Badge scanned:', badgeId);
 
     const date = new Date();
 
     date.setHours(this.selectedTime.hour);
     date.setMinutes(this.selectedTime.minute);
-
-    // Handle the complete check-in process
-    console.log('Check-in complete:', {
-      activityId: this.selectedActivities[0].id,
-      checkInTime: new Date(Date.now()).toISOString(),
-      checkOutTime: date.toISOString(),
-      registrationNumber: this.scannedBadgeId,
-    });
 
     const payload = {
       activityId: this.selectedActivities[0].id!,
@@ -286,18 +289,11 @@ export class StepperComponent implements OnInit {
             this.reset();
           }, 2000);
         } else {
-          console.log(result.message);
           this.toastService.showToast(result.message || 'Check-in failed');
           this.reset();
         }
       },
       error => {
-        console.log(error);
-
-        if (error.status == 404) {
-          alert('Member not found');
-        }
-
         this.toastService.showToast(error.message || 'Check-in failed');
         this.reset();
       },

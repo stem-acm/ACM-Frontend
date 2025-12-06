@@ -16,12 +16,13 @@ export class TableCheckinsComponent implements OnInit, OnDestroy {
   @Input() checkins!: Checkin[];
   private updateInterval?: number;
   public currentTime = new Date().getTime();
+  private UPDATE_INTERVAL_TIME = 1 * 1000; // 1 seconds
 
   ngOnInit() {
     // Update current time every 60 seconds to refresh the green dot indicators
     this.updateInterval = window.setInterval(() => {
       this.currentTime = new Date().getTime();
-    }, 60000); // 60 seconds
+    }, this.UPDATE_INTERVAL_TIME);
   }
 
   ngOnDestroy() {
@@ -49,6 +50,6 @@ export class TableCheckinsComponent implements OnInit, OnDestroy {
       return true; // No checkout time means still in the room
     }
     const checkOutTime = new Date(checkin.checkOutTime).getTime();
-    return checkOutTime > this.currentTime; // Use currentTime which updates every 60s
+    return checkOutTime >= this.currentTime; // Use currentTime which updates every UPDATE_INTERVAL_TIME
   }
 }

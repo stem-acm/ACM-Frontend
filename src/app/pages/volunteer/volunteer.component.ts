@@ -7,6 +7,7 @@ import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-volunteer',
@@ -20,11 +21,15 @@ export class VolunteerComponent implements OnInit {
   public volunteersFilter!: Volunteer[];
   public searchWord!: string;
   public showAddForm = false;
+  private searchSubject = new Subject<string>();
 
   private volunteerService = inject(VolunteerService);
   private app = inject(AppComponent);
 
   ngOnInit() {
+    this.searchSubject.pipe(debounceTime(500)).subscribe((keyword: string) => {
+      this.searchByName(keyword);
+    });
     this.getVolunteerList();
   }
 
@@ -53,12 +58,13 @@ export class VolunteerComponent implements OnInit {
     }
   }
 
-  showAlert(event: any) {
+  showAlert(event: string) {
     this.app.showToast(event);
   }
 
   search(keyWord: string) {
-    this.searchByName(keyWord);
+    this.searchSubject.next(keyWord);
+    // this.searchByName(keyWord);
   }
 
   searchByName(keyWord: string) {

@@ -20,6 +20,11 @@ export class TableVolunteersComponent {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
+  formatDate(date?: Date | null | undefined) {
+    if (!date) return 'no date';
+    return dayjs(date).format('dddd DD MMMM YYYY');
+  }
+
   showCertificate(data: Volunteer) {
     this.showVolunteerCertificate.emit(data);
   }

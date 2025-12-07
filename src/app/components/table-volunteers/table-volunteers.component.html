@@ -38,15 +38,27 @@
             {{ volunteer.id }}
           </div>
         </td>
-        <td class="flex gap-4">
-          <a
+         <td class="px-6 py-4">
+          <div class="font-normal text-gray-500">
+            {{ formatDate(volunteer.joinDate) }}
+          </div>
+        </td>
+        <td class="px-6 py-4">
+          <div class="font-normal text-gray-500">
+            {{ formatDate(volunteer.expirationDate) }}
+          </div>
+        </td>
+        <td class="px-6 py-4">
+          <button
+            type="button"
             (click)="showCertificate(volunteer)"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            >Certificate</a
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline bg-transparent border-none cursor-pointer mr-2"
           >
+            Certificate
+          </button>
           <a
             [routerLink]="['/profil', volunteer.Member?.registrationNumber]"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline ml-2"
             >View profil</a
           >
         </td>

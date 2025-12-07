@@ -26,7 +26,9 @@ export class VolunteerComponent implements OnInit {
   public volunteersFilter!: Volunteer[];
   public volunteerChooosed!: Volunteer;
   public searchWord!: string;
-  public showCertificate: boolean = false;
+  public showCertificate = false;
+  public showAddForm = false;
+  private searchSubject = new Subject<string>();
 
   private volunteerService = inject(VolunteerService);
   private app = inject(AppComponent);
@@ -51,7 +53,7 @@ export class VolunteerComponent implements OnInit {
     this.showAddForm = true;
   }
 
-  cancelForm(event: boolean) {
+  cancelAddForm(event: boolean) {
     if (event) this.showAddForm = false;
     this.app.showToast('Canceled form...');
   }
@@ -80,12 +82,12 @@ export class VolunteerComponent implements OnInit {
     );
   }
 
-  setShowCertificate(event: any) {
+  setShowCertificate(event: Volunteer) {
     this.showCertificate = true;
     this.volunteerChooosed = event;
   }
 
-  cancelForm(event: boolean | any) {
+  cancelForm(event: boolean) {
     if (event) this.showCertificate = false;
     this.app.showToast('Canceled form...');
   }

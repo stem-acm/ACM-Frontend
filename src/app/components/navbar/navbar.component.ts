@@ -5,6 +5,7 @@ import { AuthService } from '@/app/services/auth.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '@/app/interfaces/user';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +15,7 @@ import { User } from '@/app/interfaces/user';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  private URL: string = environment.FILE_URL;
   @Input() user!: User;
   public isShowUserMenu = false;
   public userMenu: { route: string; label: string }[] = [
@@ -36,5 +38,9 @@ export class NavbarComponent {
 
   toggleUserMenu() {
     this.isShowUserMenu = !this.isShowUserMenu;
+  }
+
+  getfileUrl(fileName: string | undefined) {
+    return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 }

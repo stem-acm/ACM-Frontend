@@ -65,7 +65,11 @@
         }"
       />
     } @else {
-      <app-table-volunteers [data]="volunteersFilter" />
+      <app-table-volunteers (showVolunteerCertificate)="setShowCertificate($event)" [data]="volunteersFilter" />
     }
   </div>
 </div>
+
+@if(showCertificate) {
+  <app-volunteer-certificate-viewer (canceled)="cancelForm($event)" [data]="volunteerChooosed"/>
+}

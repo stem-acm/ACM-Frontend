@@ -36,7 +36,12 @@
             {{ volunteer.id }}
           </div>
         </td>
-        <td class="px-6 py-4">
+        <td class="flex gap-4">
+          <a
+            (click)="showCertificate(volunteer)"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            >Certificate</a
+          >
           <a
             [routerLink]="['/profil', volunteer.Member?.registrationNumber]"
             class="font-medium text-blue-600 dark:text-blue-500 hover:underline"

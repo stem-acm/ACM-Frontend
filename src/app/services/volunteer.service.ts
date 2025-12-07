@@ -14,4 +14,8 @@ export class VolunteerService {
   getAllVolunteers() {
     return this.http.get<HttpResult<Volunteer[]>>(`${this.URL}/volunteers`);
   }
+
+  addVolunteer(volunteer: Volunteer) {
+    return this.http.post<HttpResult<Volunteer>>(`${this.URL}/Volunteers`, volunteer);
+  }
 }

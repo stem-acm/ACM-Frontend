@@ -18,6 +18,7 @@ export class NavbarComponent {
   private URL: string = environment.FILE_URL;
   @Input() user!: User;
   public isShowUserMenu = false;
+  public showExperimentalFeatures = environment.SHOW_EXPERIMENTAL_FEATURES;
   public userMenu: { route: string; label: string }[] = [
     {
       route: '/setting',

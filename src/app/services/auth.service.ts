@@ -20,15 +20,15 @@ export class AuthService {
   }
 
   logout(): void {
-    sessionStorage.removeItem('token');
+    localStorage.removeItem('token');
   }
 
   saveToken(token: string): void {
-    sessionStorage.setItem('token', token);
+    localStorage.setItem('token', token);
   }
 
   getToken(): string | null {
-    return sessionStorage.getItem('token');
+    return localStorage.getItem('token');
   }
 
   isLoggedIn(): boolean {

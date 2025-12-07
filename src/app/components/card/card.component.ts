@@ -20,7 +20,7 @@ export class CardComponent {
   private URL: string = environment.FILE_URL;
 
   getfileUrl(fileName: string | undefined) {
-    return `${this.URL}/${(fileName ??= 'user.png')}`;
+    return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
   openCard(_member: Member) {

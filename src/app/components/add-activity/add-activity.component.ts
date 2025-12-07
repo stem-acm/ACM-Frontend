@@ -398,13 +398,15 @@ export class AddActivityComponent implements OnChanges, OnInit {
     // Only send startDate and endDate if NOT periodic
     const formattedStartDate = !this.activity.isPeriodic
       ? this.formatDate(this.activity.startDate || baseDate)
-      : undefined;
+      : null;
     const formattedEndDate = !this.activity.isPeriodic
       ? this.formatDate(this.activity.endDate || baseDate)
-      : undefined;
+      : null;
+    const formattedDayOfWeek = this.activity.isPeriodic ? this.activity.dayOfWeek : null;
 
     this.activity = {
       ...this.activity,
+      dayOfWeek: formattedDayOfWeek,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       startTime: formattedStartTime,
@@ -419,7 +421,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
             message: '',
           };
           this.showToast.emit(`Activity ${this.activity.name} created successfully`);
-          console.log('Activity=' + JSON.stringify(this.activity));
           this.activity = {
             name: '',
             description: '',
@@ -478,6 +479,8 @@ export class AddActivityComponent implements OnChanges, OnInit {
       startTime: formattedStartTime,
       endTime: formattedEndTime,
     };
+
+    console.log('this.activity', this.activity);
 
     this.activityService.updateActivity(this.activity).subscribe(
       (result: HttpResult<Activity>) => {

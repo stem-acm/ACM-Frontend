@@ -7,6 +7,7 @@ import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-volunteer',
@@ -31,6 +32,9 @@ export class VolunteerComponent implements OnInit {
   private app = inject(AppComponent);
 
   ngOnInit() {
+    this.searchSubject.pipe(debounceTime(500)).subscribe((keyword: string) => {
+      this.searchByName(keyword);
+    });
     this.getVolunteerList();
   }
 
@@ -43,8 +47,29 @@ export class VolunteerComponent implements OnInit {
     });
   }
 
+  addVolunteer() {
+    this.showAddForm = true;
+  }
+
+  cancelForm(event: boolean) {
+    if (event) this.showAddForm = false;
+    this.app.showToast('Canceled form...');
+  }
+
+  closeForm(event: boolean) {
+    if (event) {
+      this.showAddForm = false;
+      this.getVolunteerList(); // Refresh the members list
+    }
+  }
+
+  showAlert(event: string) {
+    this.app.showToast(event);
+  }
+
   search(keyWord: string) {
-    this.searchByName(keyWord);
+    this.searchSubject.next(keyWord);
+    // this.searchByName(keyWord);
   }
 
   searchByName(keyWord: string) {

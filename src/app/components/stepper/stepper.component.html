@@ -47,7 +47,7 @@
         (click)="toggleActivity(activity)"
       >
         <div
-          class="block h-32 w-32 flex justify-center items-center text-8xl pb-4 rounded-2xl bg-gray-200/90 hover:bg-[#1e4d8b]"
+          class="h-32 w-32 flex justify-center items-center text-8xl pb-4 rounded-2xl bg-gray-200/90 hover:bg-[#1e4d8b]"
         >
           {{ activity.emoji || '😊' }}
         </div>
@@ -68,14 +68,29 @@
   <div class="content" *ngIf="currentStep === 2">
     <h2 class="title">LEAVING TIME:</h2>
 
-    <!-- <app-clock /> -->
-
     <div class="time-picker">
+      <!-- Finger pointing to hour picker -->
+      <img
+        class="w-16 finger-pointer finger-hour"
+        *ngIf="!hourSelected && !showHourPicker"
+        src="/pointing-right-finger-svgrepo-com.svg"
+        alt="Finger pointing to the right"
+      />
+
+      <!-- Finger pointing to minute picker -->
+      <img
+        class="w-16 finger-pointer finger-minute"
+        *ngIf="hourSelected && !minuteSelected && !showMinutePicker"
+        src="/pointing-left-finger-svgrepo-com.svg"
+        alt="Finger pointing to the left"
+      />
+
       <div class="time-display">
         <div
           role="button"
           tabindex="0"
-          class="time-part hour animate-attention"
+          class="time-part hour"
+          [class.animate-attention]="!hourSelected"
           (click)="toggleHourPicker()"
         >
           {{ selectedTime.hour.toString().padStart(2, '0') }}
@@ -84,7 +99,8 @@
         <div
           role="button"
           tabindex="0"
-          class="time-part minute animate-attention-with-delay"
+          class="time-part minute"
+          [class.animate-attention-with-delay]="hourSelected && !minuteSelected"
           (click)="toggleMinutePicker()"
         >
           {{ selectedTime.minute.toString().padStart(2, '0') }}
@@ -170,22 +186,12 @@
       </div>
 
       <div class="go-section">
-        <!--  <div class="arrow-icon text-8xl">→</div> -->
         <img src="/arrow.webp" class="arrow-icon w-48" alt="Arrow" />
         <div class="go-text">GO</div>
       </div>
 
       <div class="running-icon">
         <img src="run.webp" class="h-32" alt="Running person" />
-        <!-- <svg width="200" height="200" viewBox="0 0 200 200">
-
-          <circle cx="70" cy="30" r="20" fill="#A0564E" opacity="0.7"/>
-          <path d="M70 50 L90 80 L70 110" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <path d="M70 110 L50 140" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <path d="M70 110 L95 135" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <path d="M90 80 L110 70" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <path d="M90 80 L70 90" stroke="#A0564E" stroke-width="15" fill="none" stroke-linecap="round" opacity="0.7"/>
-        </svg> -->
       </div>
     </div>
 

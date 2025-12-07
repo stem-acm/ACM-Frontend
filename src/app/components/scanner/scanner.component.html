@@ -15,11 +15,16 @@
     <button (click)="resumeScan()" [disabled]="scanning">▶ Resume</button>
   </div> -->
 
-  <img
-    class="absolute top-5 left-1/2 -translate-x-1/2 z-100 h-10 animate-bounce"
-    src="camera.webp"
-    alt="Camera Image"
-  />
+  <button
+    (click)="toggleCamera()"
+    class="absolute top-5 left-1/2 -translate-x-1/2 z-2000 bg-transparent border-none cursor-pointer"
+  >
+    <img
+      class="h-10 animate-bounce hover:scale-110 transition-transform"
+      src="camera.webp"
+      alt="Camera Toggle"
+    />
+  </button>
 
   <div class="result" *ngIf="result">
     <p>Scanned Code:</p>

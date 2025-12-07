@@ -24,24 +24,83 @@ export class MemberCardViewerComponent {
     this.openPDF();
   }
 
-  openPDF() {
-    const content = document.getElementById('badgeSectionToPrint')?.cloneNode(true);
-    if (!content) return;
+  async openPDF() {
+    const section = document.getElementById('badgeSectionToPrint');
+    if (!section) return;
+
+    // Convert all images to data URLs with proper CORS handling
+    const images = Array.from(section.querySelectorAll('img')) as HTMLImageElement[];
+    const imageConversions = images.map(async (img) => {
+      try {
+        // Create a new image with crossOrigin to avoid tainted canvas
+        const corsImage = new Image();
+        corsImage.crossOrigin = 'anonymous';
+        
+        // Wait for the image to load
+        await new Promise<void>((resolve, reject) => {
+          corsImage.onload = () => resolve();
+          corsImage.onerror = () => reject(new Error('Image load failed'));
+          corsImage.src = img.src;
+        });
+
+        // Now we can safely draw to canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = corsImage.naturalWidth || corsImage.width;
+        canvas.height = corsImage.naturalHeight || corsImage.height;
+        const ctx = canvas.getContext('2d');
+        
+        if (ctx && canvas.width > 0 && canvas.height > 0) {
+          ctx.drawImage(corsImage, 0, 0);
+          const dataUrl = canvas.toDataURL('image/png');
+          img.setAttribute('data-original-src', img.src);
+          img.src = dataUrl;
+        }
+      } catch (e) {
+        console.error('Failed to convert image:', img.src, e);
+        // Keep original src if conversion fails
+      }
+    });
+
+    await Promise.all(imageConversions);
+
+    // Now clone the content with converted images
+    const content = section.cloneNode(true);
+
+    // Restore original src attributes
+    images.forEach((img) => {
+      const originalSrc = img.getAttribute('data-original-src');
+      if (originalSrc) {
+        img.src = originalSrc;
+        img.removeAttribute('data-original-src');
+      }
+    });
 
     const iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.width = '210mm'; // Set to A4 width for correct centering calculations
-    iframe.style.height = '297mm'; // Set to A4 height
-    iframe.style.top = '-10000px';
+    iframe.style.position = 'fixed';
     iframe.style.left = '-10000px';
-    iframe.style.visibility = 'hidden'; // Use visibility hidden instead of just off-screen to be safe
+    iframe.style.top = '-10000px';
+    iframe.style.width = '1000px';
+    iframe.style.height = '1000px';
+    iframe.style.border = '0';
+    iframe.style.opacity = '0';
+    iframe.style.pointerEvents = 'none';
+
     document.body.appendChild(iframe);
 
     const iframeWin = iframe.contentWindow;
     const iframeDoc = iframeWin?.document;
     if (!iframeDoc || !iframeWin) return;
 
-    // Use standard DOM methods instead of document.write to avoid violations
+    const cleanup = () => {
+      setTimeout(() => {
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+      }, 500);
+    };
+
+    iframeWin.onafterprint = cleanup;
+
     const title = iframeDoc.createElement('title');
     title.textContent = 'Print';
     iframeDoc.head.appendChild(title);
@@ -51,8 +110,9 @@ export class MemberCardViewerComponent {
       @page { size: A4 portrait; margin: 0; }
       body { 
         margin: 0; 
-        width: 100%;
-        height: 100%;
+        width: 210mm;
+        height: 297mm;
+        overflow: hidden;
       }
       #badgeSectionToPrint {
         display: flex;
@@ -62,7 +122,7 @@ export class MemberCardViewerComponent {
         gap: 0;
         width: 100%;
         margin: 0 auto;
-        transform: scale(0.95); /* Slight scale to ensure margins and fit */
+        transform: scale(0.95);
         transform-origin: top center;
       }
       app-member-badge {
@@ -74,7 +134,6 @@ export class MemberCardViewerComponent {
     `;
     iframeDoc.head.appendChild(pageStyle);
 
-    // Copy styles from parent document
     const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'));
     styles.forEach((node) => {
       const cloned = node.cloneNode(true) as HTMLElement;
@@ -86,31 +145,15 @@ export class MemberCardViewerComponent {
 
     iframeDoc.body.appendChild(content);
 
-    // Function to wait for images
-    const waitImagesLoaded = () => {
-      const imgs = Array.from(iframeDoc.images);
-      const promises = imgs.map((img) => {
-        if (img.complete) return Promise.resolve();
-        return new Promise<void>((resolve) => {
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-        });
-      });
-      return Promise.all(promises);
-    };
-
-    waitImagesLoaded().then(() => {
-      // Small delay to ensure styles are applied and rendering is complete
-      setTimeout(() => {
+    // Images are already data URLs, no need to wait
+    setTimeout(() => {
+      try {
         iframeWin.focus();
         iframeWin.print();
-
-        // Cleanup after print dialog allows execution to resume
-        // Note: print() is blocking in many browsers, but we use a short timeout to be safe
-        setTimeout(() => {
-          document.body.removeChild(iframe);
-        }, 1000);
-      }, 500);
-    });
+      } catch (e) {
+        console.error('Print failed:', e);
+        cleanup();
+      }
+    }, 250);
   }
 }

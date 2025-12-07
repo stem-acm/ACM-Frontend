@@ -11,7 +11,12 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-volunteer',
   standalone: true,
-  imports: [FormsModule, TableLoadingComponent, TableVolunteersComponent, VolunteerCertificateViewerComponent],
+  imports: [
+    FormsModule,
+    TableLoadingComponent,
+    TableVolunteersComponent,
+    VolunteerCertificateViewerComponent,
+  ],
   templateUrl: './volunteer.component.html',
   styleUrl: './volunteer.component.css',
 })
@@ -52,7 +57,7 @@ export class VolunteerComponent implements OnInit {
 
   setShowCertificate(event: any) {
     this.showCertificate = true;
-    this.volunteerChooosed = event
+    this.volunteerChooosed = event;
   }
 
   cancelForm(event: boolean | any) {

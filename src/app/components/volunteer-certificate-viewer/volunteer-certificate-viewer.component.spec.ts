@@ -8,9 +8,8 @@ describe('VolunteerCertificateViewerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VolunteerCertificateViewerComponent]
-    })
-    .compileComponents();
+      imports: [VolunteerCertificateViewerComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(VolunteerCertificateViewerComponent);
     component = fixture.componentInstance;

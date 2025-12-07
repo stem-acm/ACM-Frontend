@@ -9,7 +9,7 @@ import { Volunteer } from '@/app/interfaces/volunteer';
   standalone: true,
   imports: [AcmLogoComponent],
   templateUrl: './volunteer-certificate-viewer.component.html',
-  styleUrl: './volunteer-certificate-viewer.component.css'
+  styleUrl: './volunteer-certificate-viewer.component.css',
 })
 export class VolunteerCertificateViewerComponent {
   private URL: string = environment.FILE_URL;
@@ -28,5 +28,4 @@ export class VolunteerCertificateViewerComponent {
   cancel() {
     this.canceled.emit(true);
   }
-
 }

@@ -29,70 +29,88 @@ export class MemberCardViewerComponent {
     if (!content) return;
 
     const iframe = document.createElement('iframe');
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = '0';
+    iframe.style.position = 'absolute';
+    iframe.style.width = '210mm'; // Set to A4 width for correct centering calculations
+    iframe.style.height = '297mm'; // Set to A4 height
+    iframe.style.top = '-10000px';
+    iframe.style.left = '-10000px';
+    iframe.style.visibility = 'hidden'; // Use visibility hidden instead of just off-screen to be safe
     document.body.appendChild(iframe);
 
     const iframeWin = iframe.contentWindow;
     const iframeDoc = iframeWin?.document;
-    if (!iframeDoc) return;
+    if (!iframeDoc || !iframeWin) return;
 
-    iframeDoc.open();
+    // Use standard DOM methods instead of document.write to avoid violations
+    const title = iframeDoc.createElement('title');
+    title.textContent = 'Print';
+    iframeDoc.head.appendChild(title);
 
-    // Copier les styles Tailwind + Angular correctement
-    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map(node => {
-        if (node.tagName === 'LINK') {
-          const href = (node as HTMLLinkElement).href; // URL absolue
-          return `<link rel="stylesheet" href="${href}">`;
-        }
-        return node.outerHTML;
-      })
-      .join('\n');
+    const pageStyle = iframeDoc.createElement('style');
+    pageStyle.textContent = `
+      @page { size: A4 portrait; margin: 0; }
+      body { 
+        margin: 0; 
+        width: 100%;
+        height: 100%;
+      }
+      #badgeSectionToPrint {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0;
+        width: 100%;
+        margin: 0 auto;
+        transform: scale(0.95); /* Slight scale to ensure margins and fit */
+        transform-origin: top center;
+      }
+      app-member-badge {
+        display: block;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-bottom: 2mm;
+      }
+    `;
+    iframeDoc.head.appendChild(pageStyle);
 
-    iframeDoc.write(`
-    <html>
-      <head>
-        <title>Print</title>
-        ${styles}
-      </head>
-      <body></body>
-    </html>
-  `);
+    // Copy styles from parent document
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'));
+    styles.forEach((node) => {
+      const cloned = node.cloneNode(true) as HTMLElement;
+      if (node.tagName === 'LINK') {
+        (cloned as HTMLLinkElement).href = (node as HTMLLinkElement).href;
+      }
+      iframeDoc.head.appendChild(cloned);
+    });
 
     iframeDoc.body.appendChild(content);
-    iframeDoc.close();
 
-    // Attendre les images
+    // Function to wait for images
     const waitImagesLoaded = () => {
       const imgs = Array.from(iframeDoc.images);
-      if (!imgs.length) return Promise.resolve();
-
-      let loaded = 0;
-      return new Promise<void>(resolve => {
-        for (const img of imgs) {
-          if (img.complete) {
-            loaded++;
-            if (loaded === imgs.length) resolve();
-          } else {
-            img.onload = () => {
-              loaded++;
-              if (loaded === imgs.length) resolve();
-            };
-            img.onerror = () => {
-              loaded++;
-              if (loaded === imgs.length) resolve();
-            };
-          }
-        }
+      const promises = imgs.map((img) => {
+        if (img.complete) return Promise.resolve();
+        return new Promise<void>((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
       });
+      return Promise.all(promises);
     };
 
     waitImagesLoaded().then(() => {
-      iframeWin?.focus();
-      iframeWin?.print();
-      document.body.removeChild(iframe);
+      // Small delay to ensure styles are applied and rendering is complete
+      setTimeout(() => {
+        iframeWin.focus();
+        iframeWin.print();
+
+        // Cleanup after print dialog allows execution to resume
+        // Note: print() is blocking in many browsers, but we use a short timeout to be safe
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      }, 500);
     });
   }
 }

@@ -35,11 +35,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private langChangeSubscription?: Subscription;
 
   ngOnInit() {
-    // Get current language from TranslateService
-    this.currentLanguage =
-      this.translateService.currentLang || this.translateService.getDefaultLang() || 'en';
+    this.currentLanguage = this.languageService.getCurrentLanguage();
 
-    // Subscribe to language changes to keep it in sync
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(event => {
       this.currentLanguage = event.lang;
     });

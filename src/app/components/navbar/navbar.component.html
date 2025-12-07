@@ -4,6 +4,18 @@
       <app-acm-logo />
     </a>
     <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+      <!-- Language Switcher -->
+      <div class="relative">
+        <select
+          [value]="currentLanguage"
+          (change)="changeLanguage($any($event.target).value)"
+          class="mr-2 text-sm bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
+        >
+          @for (lang of languages; track lang.code) {
+            <option [value]="lang.code">{{ lang.name }}</option>
+          }
+        </select>
+      </div>
       <button
         type="button"
         (click)="toggleUserMenu()"
@@ -13,7 +25,7 @@
         data-dropdown-toggle="user-dropdown"
         data-dropdown-placement="bottom"
       >
-        <span class="sr-only">Open user menu</span>
+        <span class="sr-only">{{ 'nav.openUserMenu' | translate }}</span>
         <img class="w-8 h-8 rounded-full" [src]="getfileUrl('user.png')" alt="user photo" />
       </button>
       <!-- Dropdown menu -->
@@ -37,16 +49,22 @@
         </div>
         <ul class="py-2" aria-labelledby="user-menu-button">
           @if (showExperimentalFeatures) {
-            @for (item of userMenu; track item) {
-              <li>
-                <a
-                  [routerLink]="item.route"
-                  class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                >
-                  {{ item.label }}
-                </a>
-              </li>
-            }
+            <li>
+              <a
+                routerLink="/setting"
+                class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >
+                {{ 'nav.settings' | translate }}
+              </a>
+            </li>
+            <li>
+              <a
+                routerLink="/user"
+                class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              >
+                {{ 'nav.manageIntern' | translate }}
+              </a>
+            </li>
           }
           <li>
             <a
@@ -55,7 +73,7 @@
               (keydown.enter)="logout()"
               tabindex="0"
               class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >Sign out</a
+              >{{ 'nav.signOut' | translate }}</a
             >
           </li>
         </ul>
@@ -67,7 +85,7 @@
         aria-controls="navbar-user"
         aria-expanded="false"
       >
-        <span class="sr-only">Open main menu</span>
+        <span class="sr-only">{{ 'nav.openMainMenu' | translate }}</span>
         <svg
           class="w-5 h-5"
           aria-hidden="true"

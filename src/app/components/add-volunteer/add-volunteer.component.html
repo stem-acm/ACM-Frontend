@@ -11,7 +11,9 @@
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
-        <label for="joinDate" class="block mb-2 text-sm font-medium">Join Date</label>
+        <label for="joinDate" class="block mb-2 text-sm font-medium">{{
+          'forms.joinDate' | translate
+        }}</label>
         <input
           type="date"
           id="joinDate"
@@ -22,7 +24,9 @@
         />
       </div>
       <div class="w-1/2 mb-5">
-        <label for="expirationDate" class="block mb-2 text-sm font-medium">Expiration Date</label>
+        <label for="expirationDate" class="block mb-2 text-sm font-medium">{{
+          'forms.expirationDate' | translate
+        }}</label>
         <input
           type="date"
           id="expirationDate"
@@ -36,13 +40,15 @@
 
     <div class="flex gap-4">
       <div class="w-md mb-5">
-        <label for="membername" class="block mb-2 text-sm font-medium">Search Member Name:</label>
+        <label for="membername" class="block mb-2 text-sm font-medium">{{
+          'forms.searchMemberName' | translate
+        }}</label>
         <input
           type="search"
           [(ngModel)]="searchWord"
           (change)="search(searchWord)"
           name="search-member"
-          placeholder="eg: John"
+          [placeholder]="'placeholders.searchMember' | translate"
           required
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
@@ -72,7 +78,7 @@
         (click)="cancel()"
         class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
       >
-        Cancel
+        {{ 'buttons.cancel' | translate }}
       </button>
       @if (mode === 'insert') {
         <button
@@ -95,14 +101,14 @@
               <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
             </g>
           </svg>
-          Creating...
+          {{ 'loading.creating' | translate }}
         </button>
         <button
           *ngIf="!loading"
           type="submit"
           class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
-          Add volunteer
+          {{ 'buttons.addVolunteer' | translate }}
         </button>
       } @else {
         <button
@@ -125,14 +131,14 @@
               <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
             </g>
           </svg>
-          Updating...
+          {{ 'loading.updating' | translate }}
         </button>
         <button
           *ngIf="!loading"
           type="submit"
           class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
-          Update member
+          {{ 'buttons.updateMember' | translate }}
         </button>
       }
     </div>

@@ -14,11 +14,12 @@ import { ActivityService } from '@/app/services/activity.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import dayjs from 'dayjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-activity',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, TranslateModule],
   templateUrl: './add-activity.component.html',
   styleUrl: './add-activity.component.css',
 })

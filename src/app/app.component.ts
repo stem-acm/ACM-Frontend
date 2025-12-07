@@ -8,6 +8,8 @@ import { ToastComponent } from '@/app/components/toast/toast.component';
 import { filter } from 'rxjs/operators';
 import { AcmLogoComponent } from '@/app/components/acm-logo/acm-logo.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '@/app/services/language.service';
 
 @Component({
   selector: 'app-root',
@@ -25,10 +27,20 @@ export class AppComponent implements OnInit {
 
   private authService = inject(AuthService);
   private router = inject(Router);
+  private translateService = inject(TranslateService);
+  private languageService = inject(LanguageService);
 
   ngOnInit() {
+    // Initialize translations
+    this.initializeTranslations();
     this.verifyToken();
     this.checkRoute();
+  }
+
+  private initializeTranslations() {
+    const currentLang = this.languageService.getCurrentLanguage();
+    this.translateService.setDefaultLang('en');
+    this.translateService.use(currentLang);
   }
 
   checkRoute() {

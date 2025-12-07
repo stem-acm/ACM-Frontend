@@ -5,7 +5,7 @@
     <tr>
       @for (item of data.columns; track item) {
         <th scope="col" class="px-6 py-3">
-          {{ item }}
+          {{ item | translate }}
         </th>
       }
     </tr>
@@ -26,5 +26,5 @@
       <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
     </g>
   </svg>
-  <span class="block">{{ data.textLoading }}</span>
+  <span class="block">{{ data.textLoading | translate }}</span>
 </div>

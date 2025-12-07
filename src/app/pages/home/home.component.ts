@@ -9,6 +9,7 @@ import { Statistics } from '@/app/interfaces/statistics';
 import { SseService } from '@/app/services/sse.service';
 import { Subscription } from 'rxjs';
 import { Checkin } from '@/app/interfaces/checkin';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,7 @@ import { Checkin } from '@/app/interfaces/checkin';
     TableCheckinsComponent,
     CardStatisticSkeletonComponent,
     TableLoadingComponent,
+    TranslateModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',

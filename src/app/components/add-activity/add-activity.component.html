@@ -11,13 +11,15 @@
 
     <!-- Nom -->
     <div class="mb-5">
-      <label for="name" class="block mb-2 text-sm font-medium">Activity name</label>
+      <label for="name" class="block mb-2 text-sm font-medium">{{
+        'forms.activityName' | translate
+      }}</label>
       <input
         type="text"
         id="name"
         [(ngModel)]="activity.name"
         name="name"
-        placeholder="ex: STEM Club"
+        [placeholder]="'placeholders.activityName' | translate"
         required
         class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
@@ -25,20 +27,24 @@
 
     <!-- Description -->
     <div class="mb-5">
-      <label for="description" class="block mb-2 text-sm font-medium">Description</label>
+      <label for="description" class="block mb-2 text-sm font-medium">{{
+        'forms.description' | translate
+      }}</label>
       <textarea
         id="description"
         [(ngModel)]="activity.description"
         name="description"
         rows="3"
-        placeholder="Describe the activity..."
+        [placeholder]="'placeholders.description' | translate"
         class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       ></textarea>
     </div>
 
     <!-- Emoji Picker -->
     <div class="mb-5">
-      <label for="emoji" class="block mb-2 text-sm font-medium">Activity Emoji</label>
+      <label for="emoji" class="block mb-2 text-sm font-medium">{{
+        'forms.activityEmoji' | translate
+      }}</label>
       <div class="flex items-center gap-2">
         <div class="text-4xl">{{ activity.emoji || '😊' }}</div>
         <button
@@ -46,7 +52,9 @@
           (click)="showEmojiPicker = !showEmojiPicker"
           class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
         >
-          {{ showEmojiPicker ? 'Close' : 'Choose Emoji' }}
+          {{
+            showEmojiPicker ? ('buttons.close' | translate) : ('buttons.chooseEmoji' | translate)
+          }}
         </button>
       </div>
 
@@ -80,30 +88,36 @@
         name="isPeriodic"
         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
       />
-      <label for="isPeriodic" class="ml-2 text-sm font-medium">Periodic</label>
+      <label for="isPeriodic" class="ml-2 text-sm font-medium">{{
+        'forms.periodic' | translate
+      }}</label>
     </div>
 
     @if (activity.isPeriodic) {
       <div class="mb-5">
-        <label for="dayOfWeek" class="ml-2 text-sm font-medium">Day of Week</label>
+        <label for="dayOfWeek" class="ml-2 text-sm font-medium">{{
+          'forms.dayOfWeek' | translate
+        }}</label>
         <select
           id="dayOfWeek"
           [(ngModel)]="activity.dayOfWeek"
           name="dayOfWeek"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
-          <option value="everyday">Everyday</option>
-          <option value="monday">Monday</option>
-          <option value="tuesday">Tuesday</option>
-          <option value="wednesday">Wednesday</option>
-          <option value="thursday">Thursday</option>
-          <option value="friday">Friday</option>
-          <option value="saturday">Saturday</option>
+          <option value="everyday">{{ 'days.everyday' | translate }}</option>
+          <option value="monday">{{ 'days.monday' | translate }}</option>
+          <option value="tuesday">{{ 'days.tuesday' | translate }}</option>
+          <option value="wednesday">{{ 'days.wednesday' | translate }}</option>
+          <option value="thursday">{{ 'days.thursday' | translate }}</option>
+          <option value="friday">{{ 'days.friday' | translate }}</option>
+          <option value="saturday">{{ 'days.saturday' | translate }}</option>
         </select>
       </div>
     } @else {
       <div class="mb-5">
-        <label for="startDate" class="ml-2 text-sm font-medium">Start date</label>
+        <label for="startDate" class="ml-2 text-sm font-medium">{{
+          'forms.startDate' | translate
+        }}</label>
         <input
           type="date"
           id="startDate"
@@ -113,7 +127,9 @@
         />
       </div>
       <div class="mb-5">
-        <label for="endDate" class="ml-2 text-sm font-medium">End date</label>
+        <label for="endDate" class="ml-2 text-sm font-medium">{{
+          'forms.endDate' | translate
+        }}</label>
         <input
           type="date"
           id="endDate"
@@ -125,7 +141,9 @@
     }
 
     <div class="mb-5">
-      <label for="startTime" class="ml-2 text-sm font-medium">Start Time</label>
+      <label for="startTime" class="ml-2 text-sm font-medium">{{
+        'forms.startTime' | translate
+      }}</label>
       <input
         type="time"
         id="startTime"
@@ -135,7 +153,9 @@
       />
     </div>
     <div class="mb-5">
-      <label for="endTime" class="ml-2 text-sm font-medium">End Time</label>
+      <label for="endTime" class="ml-2 text-sm font-medium">{{
+        'forms.endTime' | translate
+      }}</label>
       <input
         type="time"
         id="endTime"
@@ -155,7 +175,7 @@
         (click)="cancel()"
         class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
       >
-        Cancel
+        {{ 'buttons.cancel' | translate }}
       </button>
       @if (mode === 'insert') {
         <button
@@ -178,14 +198,14 @@
               <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
             </g>
           </svg>
-          Creating...
+          {{ 'loading.creating' | translate }}
         </button>
         <button
           *ngIf="!loading"
           type="submit"
           class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
-          Add activity
+          {{ 'buttons.addActivity' | translate }}
         </button>
       } @else {
         <button
@@ -208,14 +228,14 @@
               <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
             </g>
           </svg>
-          Updating...
+          {{ 'loading.updating' | translate }}
         </button>
         <button
           *ngIf="!loading"
           type="submit"
           class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
-          Update activity
+          {{ 'buttons.updateActivity' | translate }}
         </button>
       }
     </div>

@@ -1,0 +1,134 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "members": "Membres",
+    "cards": "Cartes",
+    "volunteer": "Bénévole",
+    "activity": "Activité",
+    "checkin": "Enregistrement",
+    "signOut": "Déconnexion",
+    "settings": "Paramètres",
+    "manageIntern": "Gérer les stagiaires",
+    "openUserMenu": "Ouvrir le menu utilisateur",
+    "openMainMenu": "Ouvrir le menu principal"
+  },
+  "pages": {
+    "overview": "Aperçu",
+    "listOfMembers": "Liste des Membres",
+    "listOfActivities": "Liste des Activités",
+    "listOfVolunteers": "Liste des Bénévoles",
+    "membersInRoom": "Membres actuellement dans la salle",
+    "authentification": "Authentification"
+  },
+  "forms": {
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "birthday": "Date de naissance",
+    "placeOfBirth": "Lieu de naissance",
+    "address": "Adresse",
+    "phoneNumber": "Numéro de téléphone",
+    "occupation": "Profession",
+    "placeOfWorkStudy": "Lieu de travail / étude",
+    "joinDate": "Date d'adhésion",
+    "activityName": "Nom de l'activité",
+    "description": "Description",
+    "activityEmoji": "Emoji de l'activité",
+    "periodic": "Périodique",
+    "dayOfWeek": "Jour de la semaine",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "startTime": "Heure de début",
+    "endTime": "Heure de fin",
+    "expirationDate": "Date d'expiration",
+    "searchMemberName": "Rechercher le nom du membre :",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe"
+  },
+  "placeholders": {
+    "firstName": "ex: Jean",
+    "lastName": "ex: Dupont",
+    "birthPlace": "ex: Mahajanga, Madagascar...",
+    "address": "ex: Mahajanga...",
+    "phoneNumber": "ex: +261 34 00 000 00",
+    "organization": "ex: IUGM",
+    "activityName": "ex: Club STEM",
+    "description": "Décrivez l'activité...",
+    "searchMembers": "Rechercher des membres",
+    "searchActivities": "Rechercher des activités",
+    "searchVolunteer": "Rechercher un bénévole",
+    "searchMember": "ex: Jean"
+  },
+  "buttons": {
+    "newMember": "Nouveau Membre",
+    "newActivity": "Nouvelle Activité",
+    "newVolunteer": "Nouveau Bénévole",
+    "addMember": "Ajouter un membre",
+    "updateMember": "Mettre à jour le membre",
+    "addActivity": "Ajouter une activité",
+    "updateActivity": "Mettre à jour l'activité",
+    "addVolunteer": "Ajouter un bénévole",
+    "cancel": "Annuler",
+    "login": "Connexion",
+    "forgotPassword": "Mot de passe oublié ?",
+    "chooseEmoji": "Choisir un emoji",
+    "close": "Fermer"
+  },
+  "loading": {
+    "creating": "Création...",
+    "updating": "Mise à jour...",
+    "verification": "Vérification...",
+    "searchMembers": "Recherche de membres...",
+    "findingActivities": "Recherche d'activités...",
+    "searchVolunteers": "Recherche de bénévoles...",
+    "lookingForMembers": "Recherche de membres dans la salle aujourd'hui..."
+  },
+  "table": {
+    "columns": {
+      "name": "Nom",
+      "occupation": "Profession",
+      "placeOfWorkStudy": "Lieu de travail/étude",
+      "memberFor": "Membre depuis",
+      "action": "Action",
+      "description": "Description",
+      "periodicity": "Périodicité",
+      "dayOfWeek": "Jour de la semaine",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "startTime": "Heure de début",
+      "endTime": "Heure de fin",
+      "volunteerId": "ID BÉNÉVOLE",
+      "joinDate": "DATE D'ADHÉSION",
+      "expirationDate": "DATE D'EXPIRATION",
+      "purposeOfVisit": "Objet de la visite",
+      "endTimeCheckin": "Heure de fin"
+    },
+    "pagination": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "showing": "Affichage",
+      "to": "à",
+      "of": "sur",
+      "results": "résultats"
+    }
+  },
+  "days": {
+    "everyday": "Tous les jours",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi"
+  },
+  "titles": {
+    "newMember": "Nouveau Membre"
+  },
+  "errors": {
+    "fillAll": "Veuillez remplir tous les champs"
+  },
+  "language": {
+    "english": "Anglais",
+    "french": "Français",
+    "malagasy": "Malgache"
+  }
+}

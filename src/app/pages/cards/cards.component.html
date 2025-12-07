@@ -1,6 +1,6 @@
 <div class="m-8 p-2">
   <div class="flex justify-between my-2">
-    <h1 class="text-xl font-bold text-blue-500">List of Members</h1>
+    <h1 class="text-xl font-bold text-blue-500">{{ 'pages.listOfMembers' | translate }}</h1>
     <div class="flex gap-2">
       <button
         type="button"
@@ -31,7 +31,7 @@
             </g>
           </g>
         </svg>
-        Unselect all ({{ countMembersChooseList(true) }})
+        {{ 'cards.unselectAll' | translate }} ({{ countMembersChooseList(true) }})
       </button>
       <button
         type="button"
@@ -62,7 +62,7 @@
             </g>
           </g>
         </svg>
-        Select all ({{ countMembersChooseList(false) }})
+        {{ 'cards.selectAll' | translate }} ({{ countMembersChooseList(false) }})
       </button>
       <button
         type="button"
@@ -82,7 +82,7 @@
             ></path>
           </g>
         </svg>
-        Print cards ({{ countMembersChooseList(true) }})
+        {{ 'cards.printCards' | translate }} ({{ countMembersChooseList(true) }})
       </button>
     </div>
   </div>
@@ -90,7 +90,7 @@
   <div
     class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900"
   >
-    <label for="table-search" class="sr-only">Search</label>
+    <label for="table-search" class="sr-only">{{ 'table.pagination.results' | translate }}</label>
     <div class="relative">
       <div
         class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
@@ -117,7 +117,7 @@
         (change)="search(searchWord)"
         id="table-search-users"
         class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-        placeholder="Search for members"
+        [placeholder]="'placeholders.searchMembers' | translate"
       />
     </div>
   </div>

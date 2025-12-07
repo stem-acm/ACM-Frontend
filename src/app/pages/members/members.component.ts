@@ -8,11 +8,18 @@ import { AddMemberComponent } from '@/app/components/add-member/add-member.compo
 import { AppComponent } from '@/app/app.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-members',
   standalone: true,
-  imports: [TableMembersComponent, AddMemberComponent, TableLoadingComponent, FormsModule],
+  imports: [
+    TableMembersComponent,
+    AddMemberComponent,
+    TableLoadingComponent,
+    FormsModule,
+    TranslateModule,
+  ],
   templateUrl: './members.component.html',
   styleUrl: './members.component.css',
 })

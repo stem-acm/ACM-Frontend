@@ -1,43 +1,44 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-flex-menus',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, TranslateModule],
   templateUrl: './flex-menus.component.html',
   styleUrl: './flex-menus.component.css',
 })
 export class FlexMenusComponent {
-  public menus: { route: string; label: string; exact: boolean }[] = [
+  public menus: { route: string; labelKey: string; exact: boolean }[] = [
     {
       route: '/',
-      label: 'Home',
+      labelKey: 'nav.home',
       exact: true,
     },
     {
       route: '/members',
-      label: 'Members',
+      labelKey: 'nav.members',
       exact: false,
     },
     {
       route: '/cards',
-      label: 'Cards',
+      labelKey: 'nav.cards',
       exact: false,
     },
     {
       route: '/volunteer',
-      label: 'Volunteer',
+      labelKey: 'nav.volunteer',
       exact: false,
     },
     {
       route: '/activity',
-      label: 'Activity',
+      labelKey: 'nav.activity',
       exact: false,
     },
     {
       route: '/checkin',
-      label: 'Checkin',
+      labelKey: 'nav.checkin',
       exact: false,
     },
   ];

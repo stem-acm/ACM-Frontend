@@ -9,6 +9,7 @@ import { CardSkeletonComponent } from '../card-skeleton/card-skeleton.component'
 import { CardComponent } from '../card/card.component';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
 import { VolunteerService } from '@/app/services/volunteer.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-volunteer',
@@ -19,6 +20,7 @@ import { VolunteerService } from '@/app/services/volunteer.service';
     CardSkeletonComponent,
     CardComponent,
     MemberCardViewerComponent,
+    TranslateModule,
   ],
   templateUrl: './add-volunteer.component.html',
   styleUrl: './add-volunteer.component.css',

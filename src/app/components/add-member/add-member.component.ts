@@ -14,11 +14,12 @@ import { Member } from '@/app/interfaces/member';
 import { HttpResult } from '@/app/types/httpResult';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-member',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, TranslateModule],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.css',
 })

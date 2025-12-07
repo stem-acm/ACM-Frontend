@@ -8,6 +8,7 @@ import { HttpResult } from '@/app/types/httpResult';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-volunteer',
@@ -17,6 +18,7 @@ import { debounceTime, Subject } from 'rxjs';
     TableLoadingComponent,
     TableVolunteersComponent,
     VolunteerCertificateViewerComponent,
+    TranslateModule,
   ],
   templateUrl: './volunteer.component.html',
   styleUrl: './volunteer.component.css',

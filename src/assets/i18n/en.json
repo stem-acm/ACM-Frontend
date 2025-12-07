@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "home": "Home",
+    "members": "Members",
+    "cards": "Cards",
+    "volunteer": "Volunteer",
+    "activity": "Activity",
+    "checkin": "Checkin",
+    "signOut": "Sign out",
+    "settings": "Settings",
+    "manageIntern": "Manage intern",
+    "openUserMenu": "Open user menu",
+    "openMainMenu": "Open main menu"
+  },
+  "pages": {
+    "overview": "Overview",
+    "listOfMembers": "List of Members",
+    "listOfActivities": "List of Activities",
+    "listOfVolunteers": "List of Volunteers",
+    "membersInRoom": "Members currently in the room",
+    "authentification": "Authentification"
+  },
+  "forms": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "birthday": "Birthday",
+    "placeOfBirth": "Place of birth",
+    "address": "Address",
+    "phoneNumber": "Phone Number",
+    "occupation": "Occupation",
+    "placeOfWorkStudy": "Place of Work / Study",
+    "joinDate": "Join date",
+    "activityName": "Activity name",
+    "description": "Description",
+    "activityEmoji": "Activity Emoji",
+    "periodic": "Periodic",
+    "dayOfWeek": "Day of Week",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "expirationDate": "Expiration Date",
+    "searchMemberName": "Search Member Name:",
+    "username": "Username",
+    "password": "Password"
+  },
+  "placeholders": {
+    "firstName": "eg: John",
+    "lastName": "eg: Doe",
+    "birthPlace": "eg: Mahajanga, Madagascar...",
+    "address": "eg: Mahajanga...",
+    "phoneNumber": "eg: +261 34 00 000 00",
+    "organization": "eg: IUGM",
+    "activityName": "ex: STEM Club",
+    "description": "Describe the activity...",
+    "searchMembers": "Search for members",
+    "searchActivities": "Search for activities",
+    "searchVolunteer": "Search for volunteer",
+    "searchMember": "eg: John"
+  },
+  "buttons": {
+    "newMember": "New Member",
+    "newActivity": "New Activity",
+    "newVolunteer": "New Volunteer",
+    "addMember": "Add member",
+    "updateMember": "Update member",
+    "addActivity": "Add activity",
+    "updateActivity": "Update activity",
+    "addVolunteer": "Add volunteer",
+    "cancel": "Cancel",
+    "login": "Login",
+    "forgotPassword": "Forgot password?",
+    "chooseEmoji": "Choose Emoji",
+    "close": "Close"
+  },
+  "loading": {
+    "creating": "Creating...",
+    "updating": "Updating...",
+    "verification": "Verification...",
+    "searchMembers": "Search members...",
+    "findingActivities": "Finding activities...",
+    "searchVolunteers": "Search volunteers...",
+    "lookingForMembers": "Looking for members in the room today..."
+  },
+  "table": {
+    "columns": {
+      "name": "Name",
+      "occupation": "Occupation",
+      "placeOfWorkStudy": "Place of work/study",
+      "memberFor": "Member for",
+      "action": "Action",
+      "description": "Description",
+      "periodicity": "Periodicity",
+      "dayOfWeek": "Day of Week",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "volunteerId": "VOLUNTEER ID",
+      "joinDate": "JOIN DATE",
+      "expirationDate": "EXPIRATION DATE",
+      "purposeOfVisit": "Purpose of visit",
+      "endTimeCheckin": "End time"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "results": "results"
+    },
+    "noTime": "No time",
+    "noDate": "No date",
+    "viewProfil": "View profil",
+    "noMembersCheckinToday": "-- No members are checking in today --",
+    "yes": "Yes",
+    "no": "No",
+    "notAvailable": "N/A",
+    "edit": "Edit",
+    "certificate": "Certificate",
+    "noVolunteersFound": "-- No volunteer founds in this year --"
+  },
+  "days": {
+    "everyday": "Everyday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
+  },
+  "titles": {
+    "newMember": "New Member"
+  },
+  "errors": {
+    "fillAll": "Please, fill all"
+  },
+  "language": {
+    "english": "English",
+    "french": "French",
+    "malagasy": "Malagasy"
+  },
+  "cards": {
+    "unselectAll": "Unselect all",
+    "selectAll": "Select all",
+    "printCards": "Print cards"
+  },
+  "checkin": {
+    "step": "Step",
+    "chooseActivities": "CHOOSE ACTIVITIES",
+    "leavingTime": "LEAVING TIME",
+    "scanBadge": "SCAN BADGE",
+    "welcome": "WELCOME",
+    "go": "GO",
+    "completeCheckIn": "Complete Check-In"
+  }
+}

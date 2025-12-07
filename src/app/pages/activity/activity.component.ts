@@ -9,11 +9,18 @@ import { TableLoadingComponent } from '@/app/components/table-loading/table-load
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-activity',
   standalone: true,
-  imports: [AddActivityComponent, TableActivitiesComponent, TableLoadingComponent, FormsModule],
+  imports: [
+    AddActivityComponent,
+    TableActivitiesComponent,
+    TableLoadingComponent,
+    FormsModule,
+    TranslateModule,
+  ],
   templateUrl: './activity.component.html',
   styleUrl: './activity.component.css',
 })

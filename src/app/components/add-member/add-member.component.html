@@ -11,26 +11,30 @@
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
-        <label for="firstName" class="block mb-2 text-sm font-medium">First Name</label>
+        <label for="firstName" class="block mb-2 text-sm font-medium">{{
+          'forms.firstName' | translate
+        }}</label>
         <input
           type="text"
           id="firstName"
           [(ngModel)]="member.firstName"
           name="firstName"
-          placeholder="eg: John"
+          [placeholder]="'placeholders.firstName' | translate"
           required
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
       </div>
 
       <div class="w-1/2 mb-5">
-        <label for="lastName" class="block mb-2 text-sm font-medium">Last Name</label>
+        <label for="lastName" class="block mb-2 text-sm font-medium">{{
+          'forms.lastName' | translate
+        }}</label>
         <input
           type="text"
           id="lastName"
           [(ngModel)]="member.lastName"
           name="lastName"
-          placeholder="eg: Doe"
+          [placeholder]="'placeholders.lastName' | translate"
           required
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
@@ -39,7 +43,9 @@
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
-        <label for="Birthday" class="block mb-2 text-sm font-medium">Birthday</label>
+        <label for="Birthday" class="block mb-2 text-sm font-medium">{{
+          'forms.birthday' | translate
+        }}</label>
         <input
           type="date"
           id="Birthday"
@@ -51,13 +57,15 @@
       </div>
 
       <div class="w-1/2 mb-5">
-        <label for="birthPlace" class="block mb-2 text-sm font-medium">Place of birth</label>
+        <label for="birthPlace" class="block mb-2 text-sm font-medium">{{
+          'forms.placeOfBirth' | translate
+        }}</label>
         <input
           type="text"
           id="birthPlace"
           [(ngModel)]="member.birthPlace"
           name="birthPlace"
-          placeholder="eg: Mahajanga, Madagascar..."
+          [placeholder]="'placeholders.birthPlace' | translate"
           required
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
@@ -66,32 +74,38 @@
 
     <div class="flex gap-4">
       <div class="w-1/3 mb-5">
-        <label for="adress" class="block mb-2 text-sm font-medium">Address</label>
+        <label for="adress" class="block mb-2 text-sm font-medium">{{
+          'forms.address' | translate
+        }}</label>
         <input
           type="text"
           id="adress"
           [(ngModel)]="member.address"
           name="address"
-          placeholder="eg: Mahajanga..."
+          [placeholder]="'placeholders.address' | translate"
           required
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
       </div>
 
       <div class="w-1/3 mb-5">
-        <label for="tel" class="block mb-2 text-sm font-medium">Phone Number</label>
+        <label for="tel" class="block mb-2 text-sm font-medium">{{
+          'forms.phoneNumber' | translate
+        }}</label>
         <input
           type="tel"
           id="tel"
           [(ngModel)]="member.phoneNumber"
           name="phoneNumber"
-          placeholder="eg: +261 34 00 000 00"
+          [placeholder]="'placeholders.phoneNumber' | translate"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
       </div>
 
       <div class="w-1/3 mb-5">
-        <label for="occupation" class="block mb-2 text-sm font-medium">Occupation</label>
+        <label for="occupation" class="block mb-2 text-sm font-medium">{{
+          'forms.occupation' | translate
+        }}</label>
         <select
           id="occupation"
           [(ngModel)]="member.occupation"
@@ -105,22 +119,24 @@
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
-        <label for="organization" class="block mb-2 text-sm font-medium"
-          >Place of Work / Study</label
-        >
+        <label for="organization" class="block mb-2 text-sm font-medium">{{
+          'forms.placeOfWorkStudy' | translate
+        }}</label>
         <input
           type="text"
           id="organization"
           [(ngModel)]="member.studyOrWorkPlace"
           name="studyOrWorkPlace"
-          placeholder="eg: IUGM"
+          [placeholder]="'placeholders.organization' | translate"
           required
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
       </div>
 
       <div class="w-1/2 mb-5">
-        <label for="joinDate" class="block mb-2 text-sm font-medium">Join date</label>
+        <label for="joinDate" class="block mb-2 text-sm font-medium">{{
+          'forms.joinDate' | translate
+        }}</label>
         <input
           type="date"
           id="joinDate"
@@ -142,7 +158,7 @@
         (click)="cancel()"
         class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
       >
-        Cancel
+        {{ 'buttons.cancel' | translate }}
       </button>
       @if (mode === 'insert') {
         <button
@@ -165,14 +181,14 @@
               <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
             </g>
           </svg>
-          Creating...
+          {{ 'loading.creating' | translate }}
         </button>
         <button
           *ngIf="!loading"
           type="submit"
           class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
-          Add member
+          {{ 'buttons.addMember' | translate }}
         </button>
       } @else {
         <button
@@ -195,14 +211,14 @@
               <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
             </g>
           </svg>
-          Updating...
+          {{ 'loading.updating' | translate }}
         </button>
         <button
           *ngIf="!loading"
           type="submit"
           class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
-          Update member
+          {{ 'buttons.updateMember' | translate }}
         </button>
       }
     </div>

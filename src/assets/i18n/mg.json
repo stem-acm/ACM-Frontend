@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "home": "Fandraisana",
+    "members": "Mpikambana",
+    "cards": "Kara",
+    "volunteer": "Mpanao an-tsitrapo",
+    "activity": "Hetsika",
+    "checkin": "Fisoratana anarana",
+    "signOut": "Fialana",
+    "settings": "Fikirana",
+    "manageIntern": "Fitantanana ny mpiofana",
+    "openUserMenu": "Sokafy ny menio mpampiasa",
+    "openMainMenu": "Sokafy ny menio lehibe"
+  },
+  "pages": {
+    "overview": "Fijery ankapobeny",
+    "listOfMembers": "Lisitry ny Mpikambana",
+    "listOfActivities": "Lisitry ny Hetsika",
+    "listOfVolunteers": "Lisitry ny Mpanao an-tsitrapo",
+    "membersInRoom": "Mpikambana ao amin'ny efitrano ankehitriny",
+    "authentification": "Fanamarinana"
+  },
+  "forms": {
+    "firstName": "Anarana",
+    "lastName": "Fanampin'anarana",
+    "birthday": "Daty nahaterahana",
+    "placeOfBirth": "Toerana nahaterahana",
+    "address": "Adiresy",
+    "phoneNumber": "Laharana finday",
+    "occupation": "Asa",
+    "placeOfWorkStudy": "Toerana iasana / fianarana",
+    "joinDate": "Daty nidirana",
+    "activityName": "Anaran'ny hetsika",
+    "description": "Famaritana",
+    "activityEmoji": "Emoji ny hetsika",
+    "periodic": "Miverimberina",
+    "dayOfWeek": "Andro amin'ny herinandro",
+    "startDate": "Daty fanombohana",
+    "endDate": "Daty farany",
+    "startTime": "Ora fanombohana",
+    "endTime": "Ora farany",
+    "expirationDate": "Daty fahataperana",
+    "searchMemberName": "Hitady anaran'ny mpikambana:",
+    "username": "Anaran'ny mpampiasa",
+    "password": "Tenimiafina"
+  },
+  "placeholders": {
+    "firstName": "oh: Jean",
+    "lastName": "oh: Dupont",
+    "birthPlace": "oh: Mahajanga, Madagasikara...",
+    "address": "oh: Mahajanga...",
+    "phoneNumber": "oh: +261 34 00 000 00",
+    "organization": "oh: IUGM",
+    "activityName": "oh: Club STEM",
+    "description": "Lazao ny hetsika...",
+    "searchMembers": "Hitady mpikambana",
+    "searchActivities": "Hitady hetsika",
+    "searchVolunteer": "Hitady mpanao an-tsitrapo",
+    "searchMember": "oh: Jean"
+  },
+  "buttons": {
+    "newMember": "Mpikambana Vaovao",
+    "newActivity": "Hetsika Vaovao",
+    "newVolunteer": "Mpanao an-tsitrapo Vaovao",
+    "addMember": "Hanampy mpikambana",
+    "updateMember": "Hanavao ny mpikambana",
+    "addActivity": "Hanampy hetsika",
+    "updateActivity": "Hanavao ny hetsika",
+    "addVolunteer": "Hanampy mpanao an-tsitrapo",
+    "cancel": "Ajanona",
+    "login": "Hiditra",
+    "forgotPassword": "Nadino ny tenimiafina?",
+    "chooseEmoji": "Mifidy emoji",
+    "close": "Akatona"
+  },
+  "loading": {
+    "creating": "Mamorona...",
+    "updating": "Manavao...",
+    "verification": "Manamarina...",
+    "searchMembers": "Mitady mpikambana...",
+    "findingActivities": "Mitady hetsika...",
+    "searchVolunteers": "Mitady mpanao an-tsitrapo...",
+    "lookingForMembers": "Mitady mpikambana ao amin'ny efitrano androany..."
+  },
+  "table": {
+    "columns": {
+      "name": "Anarana",
+      "occupation": "Asa",
+      "placeOfWorkStudy": "Toerana iasana/fianarana",
+      "memberFor": "Mpikambana hatramin'ny",
+      "action": "Asa",
+      "description": "Famaritana",
+      "periodicity": "Fiverimberenana",
+      "dayOfWeek": "Andro amin'ny herinandro",
+      "startDate": "Daty fanombohana",
+      "endDate": "Daty farany",
+      "startTime": "Ora fanombohana",
+      "endTime": "Ora farany",
+      "volunteerId": "ID MPANAO AN-TSITRAPO",
+      "joinDate": "DATY NIDIRANA",
+      "expirationDate": "DATY FAHATAPERANA",
+      "purposeOfVisit": "Tanjon'ny fitsidihana",
+      "endTimeCheckin": "Ora farany"
+    },
+    "pagination": {
+      "previous": "Teo aloha",
+      "next": "Manaraka",
+      "showing": "Aseho",
+      "to": "hatramin'ny",
+      "of": "amin'ny",
+      "results": "vokatra"
+    },
+    "noTime": "Tsy misy ora",
+    "noDate": "Tsy misy daty",
+    "viewProfil": "Hijery ny profil",
+    "noMembersCheckinToday": "-- Tsy misy mpikambana nisoratana anarana androany --",
+    "yes": "Eny",
+    "no": "Tsia",
+    "notAvailable": "Tsy misy",
+    "edit": "Hanova",
+    "certificate": "Taratasy fanamarinana",
+    "noVolunteersFound": "-- Tsy misy mpanao an-tsitrapo hita amin'ity taona ity --"
+  },
+  "days": {
+    "everyday": "Isan'andro",
+    "monday": "Alatsinainy",
+    "tuesday": "Talata",
+    "wednesday": "Alarobia",
+    "thursday": "Alakamisy",
+    "friday": "Zoma",
+    "saturday": "Sabotsy"
+  },
+  "titles": {
+    "newMember": "Mpikambana Vaovao"
+  },
+  "errors": {
+    "fillAll": "Mangataka anao mameno ny saha rehetra"
+  },
+  "language": {
+    "english": "Anglisy",
+    "french": "Frantsay",
+    "malagasy": "Malagasy"
+  },
+  "cards": {
+    "unselectAll": "Ajanona ny rehetra",
+    "selectAll": "Fidina ny rehetra",
+    "printCards": "Printy ny kara"
+  },
+  "checkin": {
+    "step": "Dingana",
+    "chooseActivities": "MIFIDY HETSIKA",
+    "leavingTime": "ORA FIALANA",
+    "scanBadge": "MANADIHADY BADGE",
+    "welcome": "TONGASOA",
+    "go": "MANDEHANA",
+    "completeCheckIn": "Famarana ny fisoratana anarana"
+  }
+}

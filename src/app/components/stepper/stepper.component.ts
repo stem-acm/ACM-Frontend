@@ -18,6 +18,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { Checkin } from '@/app/interfaces/checkin';
 import { SseService } from '@/app/services/sse.service';
 import { Subscription } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface ActivityToDisplay {
   id: number;
@@ -28,7 +29,7 @@ interface ActivityToDisplay {
 @Component({
   selector: 'app-stepper',
   standalone: true,
-  imports: [CommonModule, ScannerComponent, NgxSpinnerModule],
+  imports: [CommonModule, ScannerComponent, NgxSpinnerModule, TranslateModule],
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css'],
 })

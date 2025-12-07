@@ -1,5 +1,5 @@
 <ngx-spinner type="cube-transition" *ngIf="loading">
-  <p class="text-white">loading...</p>
+  <p class="text-white">{{ 'loading.creating' | translate }}...</p>
 </ngx-spinner>
 
 <div *ngIf="!loading" class="stepper-container">
@@ -20,22 +20,22 @@
 
   <div class="stepper">
     <h2 *ngIf="currentStep === 1" class="font-bold mb-3 underline text-lg">
-      Step {{ currentStep }}
+      {{ 'checkin.step' | translate }} {{ currentStep }}
     </h2>
     <h2 *ngIf="currentStep === 2" class="font-bold mb-3 underline text-lg">
-      Step {{ currentStep }}
+      {{ 'checkin.step' | translate }} {{ currentStep }}
     </h2>
     <h2
       *ngIf="currentStep === 3"
       class="font-bold mb-3 underline text-lg bg-white py-2 px-6 rounded-md relative z-1000"
     >
-      Step {{ currentStep }}
+      {{ 'checkin.step' | translate }} {{ currentStep }}
     </h2>
   </div>
 
   <!-- Step 1: Choose Activities -->
   <div class="content" *ngIf="currentStep === 1">
-    <h2 class="title">CHOOSE ACTIVITIES:</h2>
+    <h2 class="title">{{ 'checkin.chooseActivities' | translate }}:</h2>
 
     <div *ngIf="!loading" class="activities-grid">
       <div
@@ -66,7 +66,7 @@
 
   <!-- Step 2: Checkout Time -->
   <div class="content" *ngIf="currentStep === 2">
-    <h2 class="title">LEAVING TIME:</h2>
+    <h2 class="title">{{ 'checkin.leavingTime' | translate }}:</h2>
 
     <div class="time-picker">
       <!-- Finger pointing to hour picker -->
@@ -147,7 +147,7 @@
 
   <!-- Step 3: Scan Badge -->
   <div class="content scanner-step" *ngIf="currentStep === 3">
-    <h2 class="title scan-title">SCAN BADGE</h2>
+    <h2 class="title scan-title">{{ 'checkin.scanBadge' | translate }}</h2>
 
     <div class="scanner-wrapper">
       <app-scanner
@@ -168,7 +168,7 @@
 
   <!-- Step 4: Welcome Confirmation -->
   <div class="content welcome-step" *ngIf="currentStep === 4">
-    <h2 class="title welcome-title">WELCOME</h2>
+    <h2 class="title welcome-title">{{ 'checkin.welcome' | translate }}</h2>
 
     <div class="welcome-content">
       <div class="success-badge">
@@ -187,7 +187,7 @@
 
       <div class="go-section">
         <img src="/arrow.webp" class="arrow-icon w-48" alt="Arrow" />
-        <div class="go-text">GO</div>
+        <div class="go-text">{{ 'checkin.go' | translate }}</div>
       </div>
 
       <div class="running-icon">
@@ -195,6 +195,6 @@
       </div>
     </div>
 
-    <button class="finish-button" (click)="finishCheckIn()">Complete Check-In</button>
+    <button class="finish-button" (click)="finishCheckIn()">{{ 'checkin.completeCheckIn' | translate }}</button>
   </div>
 </div>

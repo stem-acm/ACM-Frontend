@@ -109,7 +109,17 @@
       "to": "hatramin'ny",
       "of": "amin'ny",
       "results": "vokatra"
-    }
+    },
+    "noTime": "Tsy misy ora",
+    "noDate": "Tsy misy daty",
+    "viewProfil": "Hijery ny profil",
+    "noMembersCheckinToday": "-- Tsy misy mpikambana nisoratana anarana androany --",
+    "yes": "Eny",
+    "no": "Tsia",
+    "notAvailable": "Tsy misy",
+    "edit": "Hanova",
+    "certificate": "Taratasy fanamarinana",
+    "noVolunteersFound": "-- Tsy misy mpanao an-tsitrapo hita amin'ity taona ity --"
   },
   "days": {
     "everyday": "Isan'andro",
@@ -130,5 +140,19 @@
     "english": "Anglisy",
     "french": "Frantsay",
     "malagasy": "Malagasy"
+  },
+  "cards": {
+    "unselectAll": "Ajanona ny rehetra",
+    "selectAll": "Fidina ny rehetra",
+    "printCards": "Printy ny kara"
+  },
+  "checkin": {
+    "step": "Dingana",
+    "chooseActivities": "MIFIDY HETSIKA",
+    "leavingTime": "ORA FIALANA",
+    "scanBadge": "MANADIHADY BADGE",
+    "welcome": "TONGASOA",
+    "go": "MANDEHANA",
+    "completeCheckIn": "Famarana ny fisoratana anarana"
   }
 }

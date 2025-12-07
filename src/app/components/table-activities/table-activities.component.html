@@ -3,15 +3,15 @@
     class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
   >
     <tr>
-      <th scope="col" class="px-6 py-3">Name</th>
-      <th scope="col" class="px-6 py-3">Description</th>
-      <th scope="col" class="px-6 py-3">Periodicity</th>
-      <th scope="col" class="px-6 py-3">Day of Week</th>
-      <th scope="col" class="px-6 py-3">Start Date</th>
-      <th scope="col" class="px-6 py-3">End Date</th>
-      <th scope="col" class="px-6 py-3">Start Time</th>
-      <th scope="col" class="px-6 py-3">End Time</th>
-      <th scope="col" class="px-6 py-3">Action</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.name' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.description' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.periodicity' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.dayOfWeek' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.startDate' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.endDate' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.startTime' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.endTime' | translate }}</th>
+      <th scope="col" class="px-6 py-3">{{ 'table.columns.action' | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -30,20 +30,20 @@
           {{ item.description }}
         </td>
         <td class="px-6 py-4">
-          {{ item.isPeriodic ? 'Yes' : 'No' }}
+          {{ item.isPeriodic ? ('table.yes' | translate) : ('table.no' | translate) }}
         </td>
         <td class="px-6 py-4">
           {{
             item.dayOfWeek
               ? item.dayOfWeek.charAt(0)!.toUpperCase() + '' + item.dayOfWeek.slice(1)
-              : 'N/A'
+              : ('table.notAvailable' | translate)
           }}
         </td>
         <td class="px-6 py-4">
-          {{ item.startDate ?? 'N/A' }}
+          {{ item.startDate ?? ('table.notAvailable' | translate) }}
         </td>
         <td class="px-6 py-4">
-          {{ item.endDate ?? 'N/A' }}
+          {{ item.endDate ?? ('table.notAvailable' | translate) }}
         </td>
         <td class="px-6 py-4">
           {{ item.startTime }}
@@ -57,7 +57,7 @@
             tabindex="0"
             (click)="updateMember(item)"
             class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-            >Edit</a
+            >{{ 'table.edit' | translate }}</a
           >
         </td>
       </tr>

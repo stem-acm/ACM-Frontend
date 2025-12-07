@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Activity } from '@/app/interfaces/activity';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table-activities',
   standalone: true,
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './table-activities.component.html',
   styleUrl: './table-activities.component.css',
 })

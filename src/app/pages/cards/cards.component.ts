@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MemberCardViewerComponent } from '@/app/components/member-card-viewer/member-card-viewer.component';
 import { CardSkeletonComponent } from '@/app/components/card-skeleton/card-skeleton.component';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cards',
@@ -17,6 +18,7 @@ import { FormsModule } from '@angular/forms';
     MemberCardViewerComponent,
     CardSkeletonComponent,
     FormsModule,
+    TranslateModule,
   ],
   templateUrl: './cards.component.html',
   styleUrl: './cards.component.css',

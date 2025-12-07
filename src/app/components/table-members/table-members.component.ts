@@ -1,13 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { Member } from '@/app/interfaces/member';
 import { RouterModule } from '@angular/router';
 import dayjs from 'dayjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table-members',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, TranslateModule],
   templateUrl: './table-members.component.html',
   styleUrl: './table-members.component.css',
 })
@@ -15,13 +16,14 @@ export class TableMembersComponent {
   private URL: string = environment.FILE_URL;
   public userImg = `${this.URL}/user.png`;
   @Input() data!: Member[];
+  private translateService = inject(TranslateService);
 
   getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
   formatDate(date?: Date | string): string {
-    if (!date) return 'no date';
+    if (!date) return this.translateService.instant('table.noDate');
 
     const start = dayjs(date);
     const now = dayjs();

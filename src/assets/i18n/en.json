@@ -109,7 +109,17 @@
       "to": "to",
       "of": "of",
       "results": "results"
-    }
+    },
+    "noTime": "No time",
+    "noDate": "No date",
+    "viewProfil": "View profil",
+    "noMembersCheckinToday": "-- No members are checking in today --",
+    "yes": "Yes",
+    "no": "No",
+    "notAvailable": "N/A",
+    "edit": "Edit",
+    "certificate": "Certificate",
+    "noVolunteersFound": "-- No volunteer founds in this year --"
   },
   "days": {
     "everyday": "Everyday",
@@ -130,5 +140,19 @@
     "english": "English",
     "french": "French",
     "malagasy": "Malagasy"
+  },
+  "cards": {
+    "unselectAll": "Unselect all",
+    "selectAll": "Select all",
+    "printCards": "Print cards"
+  },
+  "checkin": {
+    "step": "Step",
+    "chooseActivities": "CHOOSE ACTIVITIES",
+    "leavingTime": "LEAVING TIME",
+    "scanBadge": "SCAN BADGE",
+    "welcome": "WELCOME",
+    "go": "GO",
+    "completeCheckIn": "Complete Check-In"
   }
 }

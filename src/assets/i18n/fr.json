@@ -109,7 +109,17 @@
       "to": "à",
       "of": "sur",
       "results": "résultats"
-    }
+    },
+    "noTime": "Aucune heure",
+    "noDate": "Aucune date",
+    "viewProfil": "Voir le profil",
+    "noMembersCheckinToday": "-- Aucun membre ne s'est enregistré aujourd'hui --",
+    "yes": "Oui",
+    "no": "Non",
+    "notAvailable": "N/D",
+    "edit": "Modifier",
+    "certificate": "Certificat",
+    "noVolunteersFound": "-- Aucun bénévole trouvé cette année --"
   },
   "days": {
     "everyday": "Tous les jours",
@@ -130,5 +140,19 @@
     "english": "Anglais",
     "french": "Français",
     "malagasy": "Malgache"
+  },
+  "cards": {
+    "unselectAll": "Tout désélectionner",
+    "selectAll": "Tout sélectionner",
+    "printCards": "Imprimer les cartes"
+  },
+  "checkin": {
+    "step": "Étape",
+    "chooseActivities": "CHOISIR LES ACTIVITÉS",
+    "leavingTime": "HEURE DE DÉPART",
+    "scanBadge": "SCANNER LE BADGE",
+    "welcome": "BIENVENUE",
+    "go": "ALLER",
+    "completeCheckIn": "Terminer l'enregistrement"
   }
 }

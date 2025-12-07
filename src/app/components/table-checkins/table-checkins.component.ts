@@ -1,13 +1,14 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
 import { Checkin } from '@/app/interfaces/checkin';
 import { environment } from '@/environments/environment';
 import dayjs from 'dayjs';
 import { RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-table-checkins',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, TranslateModule],
   templateUrl: './table-checkins.component.html',
   styleUrl: './table-checkins.component.css',
 })
@@ -17,6 +18,7 @@ export class TableCheckinsComponent implements OnInit, OnDestroy {
   private updateInterval?: number;
   public currentTime = new Date().getTime();
   private UPDATE_INTERVAL_TIME = 1 * 1000; // 1 seconds
+  private translateService = inject(TranslateService);
 
   ngOnInit() {
     // Update current time every 60 seconds to refresh the green dot indicators
@@ -37,7 +39,7 @@ export class TableCheckinsComponent implements OnInit, OnDestroy {
   }
 
   formatTime(date?: Date | string): string {
-    if (!date) return 'no time';
+    if (!date) return this.translateService.instant('table.noTime');
     return dayjs(date).format('h:mm A');
   }
 

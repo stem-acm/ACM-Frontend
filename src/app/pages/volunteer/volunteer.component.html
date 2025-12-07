@@ -66,17 +66,14 @@
         }"
       />
     } @else {
-      <app-table-volunteers [data]="volunteersFilter" />
+      <app-table-volunteers
+        (showVolunteerCertificate)="setShowCertificate($event)"
+        [data]="volunteersFilter"
+      />
     }
   </div>
 </div>
 
-@if (showAddForm) {
-  <app-add-volunteer
-    mode="insert"
-    title="New Volunteer"
-    (showToast)="showAlert($event)"
-    (canceled)="cancelForm($event)"
-    (success)="closeForm($event)"
-  />
+@if (showCertificate) {
+  <app-volunteer-certificate-viewer (canceled)="cancelForm($event)" [data]="volunteerChooosed" />
 }

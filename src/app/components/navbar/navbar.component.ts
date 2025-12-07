@@ -15,6 +15,7 @@ import { environment } from '@/environments/environment';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  private URL: string = environment.FILE_URL;
   @Input() user!: User;
   public isShowUserMenu = false;
   public showExperimentalFeatures = environment.SHOW_EXPERIMENTAL_FEATURES;
@@ -38,5 +39,9 @@ export class NavbarComponent {
 
   toggleUserMenu() {
     this.isShowUserMenu = !this.isShowUserMenu;
+  }
+
+  getfileUrl(fileName: string | undefined) {
+    return `${this.URL}/${(fileName ??= 'user.png')}`;
   }
 }

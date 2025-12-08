@@ -8,6 +8,7 @@ import { MemberCardViewerComponent } from '@/app/components/member-card-viewer/m
 import { CardSkeletonComponent } from '@/app/components/card-skeleton/card-skeleton.component';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoadingService } from '@/app/services/loading.service';
 
 @Component({
   selector: 'app-cards',
@@ -30,25 +31,40 @@ export class CardsComponent implements OnInit {
   public membersChooseListFilter: { selected: boolean; member: Member }[] = [];
   public showCard = false;
   public searchWord!: string;
+  public isLoading = false;
 
   private memberService = inject(MemberService);
+  private loadingService = inject(LoadingService);
 
   ngOnInit() {
     this.getMemberList();
   }
 
   getMemberList() {
-    this.memberService.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
-      if (result.success && result.data) {
-        this.member = result.data;
-        this.member.map(e => {
-          this.membersChooseList.push({
-            selected: false,
-            member: e,
+    this.isLoading = true;
+    this.loadingService.busy();
+    this.memberService.getAllMembers().subscribe({
+      next: (result: HttpResult<Member[]>) => {
+        if (result.success && result.data) {
+          this.member = result.data;
+          this.membersChooseList = [];
+          this.member.map(e => {
+            this.membersChooseList.push({
+              selected: false,
+              member: e,
+            });
           });
-        });
-        this.membersChooseListFilter = this.membersChooseList;
-      }
+          this.membersChooseListFilter = this.membersChooseList;
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.loadingService.idle();
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.loadingService.idle();
+      },
     });
   }
 

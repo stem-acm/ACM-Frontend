@@ -122,11 +122,19 @@
     </div>
   </div>
 
-  <div *ngIf="!membersChooseListFilter" class="flex gap-3 flex-wrap justify-start p-4">
+  <div
+    *ngIf="isLoading"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4"
+  >
+    <app-card-skeleton />
+    <app-card-skeleton />
     <app-card-skeleton />
     <app-card-skeleton />
   </div>
-  <div *ngIf="membersChooseListFilter" class="flex gap-3 flex-wrap justify-evenly p-4">
+  <div
+    *ngIf="!isLoading && membersChooseListFilter"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 py-4"
+  >
     <app-card
       *ngFor="let item of membersChooseListFilter"
       (setSelectedMember)="open($event)"

@@ -5,28 +5,45 @@
       <app-title [titleText]="member.lastName + ' ' + member.firstName" />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
       <div *ngIf="member.id" class="text-left">
-        <div class="mt-6 border-t border-gray-100">
+        <div class="mt-6">
           <dl class="divide-y divide-gray-100">
             <app-list-value
-              label="Full name"
-              [value]="'Mr. / Mrs. / Miss. ' + member.firstName + ' ' + member.lastName"
+              [label]="'forms.fullName' | translate"
+              [value]="
+                ('forms.titlePrefix' | translate) + ' ' + member.firstName + ' ' + member.lastName
+              "
             />
             <app-list-value
-              label="Date and Place of birth"
-              value="{{ formatDate(member.birthDate) }}, in {{ member.birthPlace }}"
+              [label]="'forms.dateAndPlaceOfBirth' | translate"
+              [value]="
+                formatDate(member.birthDate) +
+                ', ' +
+                ('common.in' | translate) +
+                ' ' +
+                member.birthPlace
+              "
             />
-            <app-list-value label="Physical Adress (in Mahajanga)" [value]="member.address" />
-            <app-list-value label="Occupation" value="{{ member.occupation }}" />
-            <app-list-value label="Place of work/study" [value]="member.studyOrWorkPlace" />
-            <app-list-value label="Membership date" [value]="formatDate(member.joinDate)" />
-            <app-list-value label="Phone Contact" [value]="member.phoneNumber" />
+            <app-list-value
+              [label]="'forms.physicalAddress' | translate"
+              [value]="member.address"
+            />
+            <app-list-value [label]="'forms.occupation' | translate" [value]="member.occupation" />
+            <app-list-value
+              [label]="'forms.placeOfWorkStudy' | translate"
+              [value]="member.studyOrWorkPlace"
+            />
+            <app-list-value
+              [label]="'forms.membershipDate' | translate"
+              [value]="formatDate(member.joinDate)"
+            />
+            <app-list-value
+              [label]="'forms.phoneContact' | translate"
+              [value]="member.phoneNumber"
+            />
           </dl>
         </div>
       </div>
-      <app-text-description
-        *ngIf="!member.id"
-        textDescription="Member {{ member.registrationNumber }} is not found."
-      />
+      <app-text-description *ngIf="!member.id" [textDescription]="getMemberNotFoundMessage()" />
     </div>
 
     <div *ngIf="!member" class="p-12 text-center animate-pulse">
@@ -76,7 +93,7 @@
             </g>
           </g>
         </svg>
-        Generate Cards
+        {{ 'buttons.generateCards' | translate }}
       </button>
       <button
         *ngIf="member && member.id"
@@ -97,7 +114,7 @@
             ></path>
           </g>
         </svg>
-        Edit Member
+        {{ 'buttons.editMember' | translate }}
       </button>
       <button
         *ngIf="member && !member.id"
@@ -118,7 +135,7 @@
             ></path>
           </g>
         </svg>
-        Go Back to the Lists
+        {{ 'buttons.goBackToList' | translate }}
       </button>
     </div>
   </div>
@@ -127,7 +144,7 @@
 @if (showAddForm) {
   <app-add-member
     mode="update"
-    title="Update Member"
+    [title]="'titles.updateMember' | translate"
     [memberToUpdate]="member"
     (updatedData)="showToast($event)"
     (canceled)="cancelForm($event)"

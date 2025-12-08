@@ -42,7 +42,13 @@
     "expirationDate": "Expiration Date",
     "searchMemberName": "Search Member Name:",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "fullName": "Full name",
+    "dateAndPlaceOfBirth": "Date and Place of birth",
+    "physicalAddress": "Physical Address (in Mahajanga)",
+    "membershipDate": "Membership date",
+    "phoneContact": "Phone Contact",
+    "titlePrefix": "Mr. / Mrs. / Miss."
   },
   "placeholders": {
     "firstName": "eg: John",
@@ -71,7 +77,10 @@
     "login": "Login",
     "forgotPassword": "Forgot password?",
     "chooseEmoji": "Choose Emoji",
-    "close": "Close"
+    "close": "Close",
+    "generateCards": "Generate Cards",
+    "editMember": "Edit Member",
+    "goBackToList": "Go Back to the Lists"
   },
   "loading": {
     "creating": "Creating...",
@@ -131,10 +140,15 @@
     "saturday": "Saturday"
   },
   "titles": {
-    "newMember": "New Member"
+    "newMember": "New Member",
+    "updateMember": "Update Member"
   },
   "errors": {
-    "fillAll": "Please, fill all"
+    "fillAll": "Please, fill all",
+    "memberNotFound": "Member {{registrationNumber}} is not found."
+  },
+  "common": {
+    "in": "in"
   },
   "language": {
     "english": "English",

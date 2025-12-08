@@ -42,7 +42,13 @@
     "expirationDate": "Daty fahataperana",
     "searchMemberName": "Hitady anaran'ny mpikambana:",
     "username": "Anaran'ny mpampiasa",
-    "password": "Tenimiafina"
+    "password": "Tenimiafina",
+    "fullName": "Anarana feno",
+    "dateAndPlaceOfBirth": "Daty sy toerana nahaterahana",
+    "physicalAddress": "Adiresy ara-batana (ao Mahajanga)",
+    "membershipDate": "Daty nidirana",
+    "phoneContact": "Laharana finday",
+    "titlePrefix": "M. / Mme / Mlle"
   },
   "placeholders": {
     "firstName": "oh: Jean",
@@ -71,7 +77,10 @@
     "login": "Hiditra",
     "forgotPassword": "Nadino ny tenimiafina?",
     "chooseEmoji": "Mifidy emoji",
-    "close": "Akatona"
+    "close": "Akatona",
+    "generateCards": "Mamorona kara",
+    "editMember": "Hanova ny mpikambana",
+    "goBackToList": "Miverina amin'ny lisitra"
   },
   "loading": {
     "creating": "Mamorona...",
@@ -131,10 +140,15 @@
     "saturday": "Sabotsy"
   },
   "titles": {
-    "newMember": "Mpikambana Vaovao"
+    "newMember": "Mpikambana Vaovao",
+    "updateMember": "Hanavao ny mpikambana"
   },
   "errors": {
-    "fillAll": "Mangataka anao mameno ny saha rehetra"
+    "fillAll": "Mangataka anao mameno ny saha rehetra",
+    "memberNotFound": "Tsy hita ny mpikambana {{registrationNumber}}."
+  },
+  "common": {
+    "in": "ao"
   },
   "language": {
     "english": "Anglisy",

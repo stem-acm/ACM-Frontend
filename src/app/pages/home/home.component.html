@@ -7,10 +7,20 @@
   } @else {
     <div class="flex gap-4">
       <app-card-statistic
-        [data]="{ title: 'nav.members' | translate, value: statistics.members, icon: 'people' }"
+        [data]="{
+          title: 'nav.members' | translate,
+          value: statistics.members,
+          icon: 'people',
+          routerLink: '/members',
+        }"
       />
       <app-card-statistic
-        [data]="{ title: 'nav.activity' | translate, value: statistics.activities, icon: 'event' }"
+        [data]="{
+          title: 'nav.activity' | translate,
+          value: statistics.activities,
+          icon: 'event',
+          routerLink: '/activity',
+        }"
       />
     </div>
   }

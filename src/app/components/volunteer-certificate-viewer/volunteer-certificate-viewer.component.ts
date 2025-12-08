@@ -3,11 +3,13 @@ import { AcmLogoComponent } from '../acm-logo/acm-logo.component';
 import dayjs from 'dayjs';
 import { environment } from '@/environments/environment';
 import { Volunteer } from '@/app/interfaces/volunteer';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-volunteer-certificate-viewer',
   standalone: true,
-  imports: [AcmLogoComponent],
+  imports: [AcmLogoComponent, FormsModule, CommonModule],
   templateUrl: './volunteer-certificate-viewer.component.html',
   styleUrl: './volunteer-certificate-viewer.component.css',
 })
@@ -16,6 +18,7 @@ export class VolunteerCertificateViewerComponent {
   public today = dayjs().format('DD/MM/YYYY');
   @Input() data!: Volunteer;
   @Output() canceled = new EventEmitter<boolean>();
+  public checkData: { stamp: boolean; signature: boolean } = { stamp: false, signature: false };
 
   getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${(fileName ??= 'user.png')}`;
@@ -27,5 +30,81 @@ export class VolunteerCertificateViewerComponent {
 
   cancel() {
     this.canceled.emit(true);
+  }
+
+  print() {
+    this.openPDF();
+  }
+
+  openPDF() {
+    const content = document.getElementById('certificateSectionToPrint')?.cloneNode(true);
+    if (!content) return;
+
+    const iframe = document.createElement('iframe');
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const iframeWin = iframe.contentWindow;
+    const iframeDoc = iframeWin?.document;
+    if (!iframeDoc) return;
+
+    iframeDoc.open();
+
+    // Copier les styles Tailwind + Angular correctement
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+      .map(node => {
+        if (node.tagName === 'LINK') {
+          const href = (node as HTMLLinkElement).href; // URL absolue
+          return `<link rel="stylesheet" href="${href}">`;
+        }
+        return node.outerHTML;
+      })
+      .join('\n');
+
+    iframeDoc.write(`
+    <html>
+      <head>
+        <title>Print</title>
+        ${styles}
+      </head>
+      <body></body>
+    </html>
+  `);
+
+    iframeDoc.body.appendChild(content);
+    iframeDoc.close();
+
+    // Attendre les images
+    const waitImagesLoaded = () => {
+      const imgs = Array.from(iframeDoc.images);
+      if (!imgs.length) return Promise.resolve();
+
+      let loaded = 0;
+      return new Promise<void>(resolve => {
+        for (const img of imgs) {
+          if (img.complete) {
+            loaded++;
+            if (loaded === imgs.length) resolve();
+          } else {
+            img.onload = () => {
+              loaded++;
+              if (loaded === imgs.length) resolve();
+            };
+            img.onerror = () => {
+              loaded++;
+              if (loaded === imgs.length) resolve();
+            };
+          }
+        }
+      });
+    };
+
+    waitImagesLoaded().then(() => {
+      iframeWin?.focus();
+      iframeWin?.print();
+      document.body.removeChild(iframe);
+    });
   }
 }

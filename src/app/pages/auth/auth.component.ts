@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { TitleComponent } from '@/app/components/title/title.component';
 import { AppComponent } from '@/app/app.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { environment } from '@/environments/environment';
 
 @Component({
   selector: 'app-auth',
@@ -17,6 +18,7 @@ export class AuthComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private app = inject(AppComponent);
+  public showExperimentalFeatures = environment.SHOW_EXPERIMENTAL_FEATURES;
 
   public username!: string;
   public password!: string;

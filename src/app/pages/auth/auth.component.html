@@ -30,9 +30,11 @@
             'forms.password' | translate
           }}</label>
           <div class="text-sm">
-            <a class="font-semibold text-blue-500 hover:text-blue-400">{{
-              'buttons.forgotPassword' | translate
-            }}</a>
+            @if (showExperimentalFeatures) {
+              <a class="font-semibold text-blue-500 hover:text-blue-400">{{
+                'buttons.forgotPassword' | translate
+              }}</a>
+            }
           </div>
         </div>
         <div class="mt-2">

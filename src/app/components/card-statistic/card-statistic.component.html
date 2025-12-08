@@ -1,9 +1,9 @@
-<div
-  class="flex items-center p-3 h-fit w-52 shadow shadow-lg rounded-lg cursor-pointer hover:-translate-y-2 transition"
-  routerLink="/transport/compte"
+<a
+  [routerLink]="data.routerLink"
+  class="flex items-center p-3 h-fit w-52 shadow-lg rounded-lg cursor-pointer hover:-translate-y-2 transition"
 >
   <div
-    class="inline-flex flex-shrink-0 items-center justify-center h-12 w-12 text-red-600 bg-red-100 rounded-full mr-6"
+    class="inline-flex shrink-0 items-center justify-center h-12 w-12 text-red-600 bg-red-100 rounded-full mr-6"
   >
     @switch (data.icon) {
       @case ('event') {
@@ -94,4 +94,4 @@
     <span class="block text-2xl font-bold">{{ data.value }}</span>
     <span class="block text-gray-500">{{ data.title | translate }}</span>
   </div>
-</div>
+</a>

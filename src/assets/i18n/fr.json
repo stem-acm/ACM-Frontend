@@ -3,8 +3,8 @@
     "home": "Accueil",
     "members": "Membres",
     "cards": "Cartes",
-    "volunteer": "Bénévole",
-    "activity": "Activité",
+    "volunteer": "Bénévoles",
+    "activity": "Activités",
     "checkin": "Enregistrement",
     "signOut": "Déconnexion",
     "settings": "Paramètres",
@@ -42,7 +42,13 @@
     "expirationDate": "Date d'expiration",
     "searchMemberName": "Rechercher le nom du membre :",
     "username": "Nom d'utilisateur",
-    "password": "Mot de passe"
+    "password": "Mot de passe",
+    "fullName": "Nom complet",
+    "dateAndPlaceOfBirth": "Date et lieu de naissance",
+    "physicalAddress": "Adresse physique (à Mahajanga)",
+    "membershipDate": "Date d'adhésion",
+    "phoneContact": "Contact téléphonique",
+    "titlePrefix": "M. / Mme / Mlle"
   },
   "placeholders": {
     "firstName": "ex: Jean",
@@ -71,7 +77,10 @@
     "login": "Connexion",
     "forgotPassword": "Mot de passe oublié ?",
     "chooseEmoji": "Choisir un emoji",
-    "close": "Fermer"
+    "close": "Fermer",
+    "generateCards": "Générer les cartes",
+    "editMember": "Modifier le membre",
+    "goBackToList": "Retour à la liste"
   },
   "loading": {
     "creating": "Création...",
@@ -131,10 +140,15 @@
     "saturday": "Samedi"
   },
   "titles": {
-    "newMember": "Nouveau Membre"
+    "newMember": "Nouveau Membre",
+    "updateMember": "Mettre à jour le membre"
   },
   "errors": {
-    "fillAll": "Veuillez remplir tous les champs"
+    "fillAll": "Veuillez remplir tous les champs",
+    "memberNotFound": "Le membre {{registrationNumber}} est introuvable."
+  },
+  "common": {
+    "in": "à"
   },
   "language": {
     "english": "Anglais",

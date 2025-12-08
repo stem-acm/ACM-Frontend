@@ -12,6 +12,7 @@ import { AddMemberComponent } from '../add-member/add-member.component';
 import { AppComponent } from '@/app/app.component';
 import { RouterModule } from '@angular/router';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-member-card-detail',
@@ -26,6 +27,7 @@ import { MemberCardViewerComponent } from '../member-card-viewer/member-card-vie
     AddMemberComponent,
     RouterModule,
     MemberCardViewerComponent,
+    TranslateModule,
   ],
   templateUrl: './member-card-detail.component.html',
   styleUrl: './member-card-detail.component.css',
@@ -36,6 +38,7 @@ export class MemberCardDetailComponent {
   public showAddForm = false;
   public showCard = false;
   private app = inject(AppComponent);
+  private translateService = inject(TranslateService);
 
   formatDate(date?: Date | string) {
     if (!date) return 'no date';
@@ -69,5 +72,12 @@ export class MemberCardDetailComponent {
 
   open() {
     this.showCard = true;
+  }
+
+  getMemberNotFoundMessage(): string {
+    if (!this.member?.registrationNumber) return '';
+    return this.translateService.instant('errors.memberNotFound', {
+      registrationNumber: this.member.registrationNumber,
+    });
   }
 }

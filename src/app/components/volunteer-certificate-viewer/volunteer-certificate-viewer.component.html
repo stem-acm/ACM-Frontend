@@ -61,6 +61,7 @@
 
         <!-- Stamp -->
         <img
+          alt="stamp"
           *ngIf="checkData.stamp"
           class="absolute w-36 -top-1/2 opacity-50 left-2/6 -rotate-5"
           [src]="getfileUrl('tapon.png')"
@@ -69,6 +70,7 @@
         <!-- Signature -->
         <div class="relative text-center text-gray-500">
           <img
+            alt="signature"
             *ngIf="checkData.signature"
             class="absolute w-16 -top-12 left-1/2 -translate-x-1/2"
             [src]="getfileUrl('signature.png')"
@@ -82,10 +84,18 @@
 
       <!-- Decorative corners -->
       <div class="absolute inset-0 pointer-events-none -z-10">
-        <img src="img-left-top.png" class="absolute top-0 left-0 w-32 h-auto" />
-        <img src="img-right-top.png" class="absolute top-0 right-0 w-32 h-auto" />
-        <img src="img-left-bottom.png" class="absolute bottom-0 left-0 w-32 h-auto" />
-        <img src="img-right-bottom.png" class="absolute bottom-0 right-0 w-32 h-auto" />
+        <img src="img-left-top.png" class="absolute top-0 left-0 w-32 h-auto" alt="left top" />
+        <img src="img-right-top.png" class="absolute top-0 right-0 w-32 h-auto" alt="right top" />
+        <img
+          src="img-left-bottom.png"
+          class="absolute bottom-0 left-0 w-32 h-auto"
+          alt="left bottom"
+        />
+        <img
+          src="img-right-bottom.png"
+          class="absolute bottom-0 right-0 w-32 h-auto"
+          alt="right bottom"
+        />
       </div>
     </div>
 

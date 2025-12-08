@@ -1,15 +1,17 @@
 <div
   class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center items-center"
 >
-  <div class="w-full max-w-4xl border border-gray-200 shadow-xl p-10 relative rounded-md bg-white">
-    <!-- Header logo -->
+
+<div class="p-2 bg-white">
+  <div id="certificateSectionToPrint"
+     class="w-4xl border border-gray-200 shadow-xl p-10 relative rounded-md z-20">
+
+    <!-- Logo -->
     <div class="w-60 flex items-center justify-center my-2 mx-auto">
-      <app-acm-logo />
+      <app-acm-logo></app-acm-logo>
     </div>
 
-    <div
-      class="absolute left-0 right-0 w-3xl my-1 mx-auto border-t border-gray-900 pointer-events-none"
-    ></div>
+    <div class="absolute left-0 right-0 w-3xl my-1 mx-auto border-t border-gray-900 pointer-events-none"></div>
 
     <!-- Title -->
     <h1 class="volunteer-name text-4xl mt-5 font-extrabold text-gray-800 text-center tracking-wide">
@@ -27,12 +29,10 @@
       </p>
     </div>
 
-    <div
-      class="absolute left-0 right-0 w-[300px] my-1 mx-auto border-t border-gray-900 pointer-events-none"
-    ></div>
+    <div class="absolute left-0 right-0 w-[300px] my-1 mx-auto border-t border-gray-900 pointer-events-none"></div>
 
+    <!-- Description -->
     <div class="w-xl m-2 py-2 mx-auto text-sm">
-      <!-- Description -->
       <div class="text-justify text-gray-600">
         <p class="leading-relaxed">
           for contributing one full year ({{ getYearOf(data.joinDate) }}) of dedicated service as a
@@ -40,7 +40,7 @@
           passion for promoting English language, cultural exchange and community engagement.
         </p>
       </div>
-      <!-- Bullet list -->
+
       <div class="text-gray-700">
         <p class="font-medium mt-3">The recipient actively participated in:</p>
         <ul class="list-disc list-inside space-y-2 ml-4 text-gray-600">
@@ -49,35 +49,65 @@
       </div>
     </div>
 
-    <!-- Signature and date area -->
+    <!-- Signature area -->
     <div class="mt-10 relative flex items-start justify-between w-2xl mx-auto text-sm">
-      <div class="flex items-center">
-        <div class="text-gray-700">DATE {{ today }}</div>
-      </div>
+
+      <div class="text-gray-700">DATE {{ today }}</div>
+
+      <!-- Stamp -->
       <img
+        *ngIf="checkData.stamp"
         class="absolute w-36 -top-1/2 opacity-50 left-2/6 -rotate-5"
-        [src]="getfileUrl('tapon.png')"
-        alt="tapon image"
-      />
+        [src]="getfileUrl('tapon.png')" />
+
+      <!-- Signature -->
       <div class="relative text-center text-gray-500">
         <img
-          class="absolute w-16 -top-4/5 left-2/5"
-          [src]="getfileUrl('signature.png')"
-          alt="tapon image"
-        />
+          *ngIf="checkData.signature"
+          class="absolute w-16 -top-12 left-1/2 -translate-x-1/2"
+          [src]="getfileUrl('signature.png')" />
+
         <div class="w-[300px] my-1 mx-auto border-t border-gray-900 pointer-events-none"></div>
-        <div class="">ANDRY RABENJAMINA</div>
-        <div class="">PROGRAM COORDINATOR</div>
+        <div>ANDRY RABENJAMINA</div>
+        <div>PROGRAM COORDINATOR</div>
       </div>
     </div>
-  </div>
+
+    <!-- Decorative corners -->
+    <div class="absolute inset-0 pointer-events-none -z-10">
+      <img src="img-left-top.png" class="absolute top-0 left-0 w-32 h-auto"/>
+      <img src="img-right-top.png" class="absolute top-0 right-0 w-32 h-auto"/>
+      <img src="img-left-bottom.png" class="absolute bottom-0 left-0 w-32 h-auto"/>
+      <img src="img-right-bottom.png" class="absolute bottom-0 right-0 w-32 h-auto"/>
+    </div>
+</div>
+
   <div class="p-2">
+    <div class="flex items-center gap-4 m-1">
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="stamp" [(ngModel)]="checkData.stamp" />
+        <label for="stamp">View stamp</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="signature" [(ngModel)]="checkData.signature" />
+        <label for="signature">View signature</label>
+      </div>
+    </div>
     <button
       type="button"
       (click)="cancel()"
-      class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+      class="text-gray-900 mr-2 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
     >
       Cancel
     </button>
+    <button
+      type="button"
+      (click)="print()"
+      class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center cursor-pointer"
+      >
+      Print
+    </button>
   </div>
+</div>
+
 </div>

@@ -107,5 +107,4 @@ export class VolunteerCertificateViewerComponent {
       document.body.removeChild(iframe);
     });
   }
-
 }

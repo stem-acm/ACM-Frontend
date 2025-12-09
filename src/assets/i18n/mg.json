@@ -141,7 +141,9 @@
   },
   "titles": {
     "newMember": "Mpikambana Vaovao",
-    "updateMember": "Hanavao ny mpikambana"
+    "updateMember": "Hanavao ny mpikambana",
+    "newVolunteer": "Mpanao an-tsitrapo Vaovao",
+    "updateVolunteer": "Hanavao ny mpanao an-tsitrapo" 
   },
   "errors": {
     "fillAll": "Mangataka anao mameno ny saha rehetra",

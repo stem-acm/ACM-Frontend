@@ -141,7 +141,9 @@
   },
   "titles": {
     "newMember": "Nouveau Membre",
-    "updateMember": "Mettre à jour le membre"
+    "updateMember": "Mettre à jour le membre",
+    "newVolunteer": "Nouveau Bénévole",
+    "updateVolunteer": "Mettre à jour le bénévole" 
   },
   "errors": {
     "fillAll": "Veuillez remplir tous les champs",

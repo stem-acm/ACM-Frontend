@@ -141,7 +141,9 @@
   },
   "titles": {
     "newMember": "New Member",
-    "updateMember": "Update Member"
+    "updateMember": "Update Member",
+    "newVolunteer": "New Volunteer",
+    "updateVolunteer": "Update Volunteer" 
   },
   "errors": {
     "fillAll": "Please, fill all",

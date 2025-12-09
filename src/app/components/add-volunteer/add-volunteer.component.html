@@ -46,7 +46,7 @@
         <input
           type="search"
           [(ngModel)]="searchWord"
-          (change)="search(searchWord)"
+          (input)="search(searchWord)"
           name="search-member"
           [placeholder]="'placeholders.searchMember' | translate"
           required

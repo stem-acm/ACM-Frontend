@@ -10,6 +10,7 @@ import { CardComponent } from '../card/card.component';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
 import { VolunteerService } from '@/app/services/volunteer.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-add-volunteer',
@@ -46,9 +47,15 @@ export class AddVolunteerComponent implements OnInit {
   public searchWord!: string;
   public joinDate!: Date | null | undefined;
   public expirationDate!: Date | null | undefined;
+  private searchSubject = new Subject<string>();
 
   ngOnInit() {
     this.getMemberList();
+    this.searchSubject
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((searchWord: string) => {
+        this.searchByName(searchWord);
+      });
   }
 
   getMemberList() {
@@ -137,7 +144,7 @@ export class AddVolunteerComponent implements OnInit {
   }
 
   search(keyWord: string) {
-    this.searchByName(keyWord);
+    this.searchSubject.next(keyWord);
   }
 
   searchByName(keyWord: string) {

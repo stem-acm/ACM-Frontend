@@ -162,11 +162,11 @@
   },
   "checkin": {
     "step": "Dingana",
-    "chooseActivities": "MIFIDY HETSIKA",
-    "leavingTime": "ORA FIALANA",
-    "scanBadge": "MANADIHADY BADGE",
+    "chooseActivities": "SAFIDIO NY ANTON-DIANAO",
+    "leavingTime": "ORA HIVOAHANAO",
+    "scanBadge": "ASEHOY ETO NY KARATRAO",
     "welcome": "TONGASOA",
-    "go": "MANDEHANA",
-    "completeCheckIn": "Famarana ny fisoratana anarana"
+    "go": "MANDROSO",
+    "completeCheckIn": "Midira tompoko"
   }
 }

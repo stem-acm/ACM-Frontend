@@ -3,9 +3,9 @@
     "home": "Home",
     "members": "Members",
     "cards": "Cards",
-    "volunteer": "Volunteer",
-    "activity": "Activity",
-    "checkin": "Checkin",
+    "volunteer": "Volunteers",
+    "activity": "Activities",
+    "checkin": "Checkins",
     "signOut": "Sign out",
     "settings": "Settings",
     "manageIntern": "Manage intern",
@@ -161,12 +161,12 @@
     "printCards": "Print cards"
   },
   "checkin": {
-    "step": "Step",
-    "chooseActivities": "CHOOSE ACTIVITIES",
-    "leavingTime": "LEAVING TIME",
-    "scanBadge": "SCAN BADGE",
-    "welcome": "WELCOME",
-    "go": "GO",
-    "completeCheckIn": "Complete Check-In"
+    "step": "Step / Dingana",
+    "chooseActivities": "CHOOSE ACTIVITIES / SAFIDIO NY ANTON-DIANAO",
+    "leavingTime": "LEAVING TIME / ORA HIVOAHANAO",
+    "scanBadge": "SCAN BADGE / ASEHOY ETO NY KARATRAO",
+    "welcome": "WELCOME / TONGASOA",
+    "go": "GO / MANDROSO",
+    "completeCheckIn": "Complete Check-In / Midira tompoko"
   }
 }

@@ -1,7 +1,11 @@
 <div class="w-full max-w-4xl flex items-center justify-center h-auto flex-wrap mx-auto py-4">
   <div class="rounded-lg shadow-2xl bg-white dark:bg-gray-800 opacity-75 m-6">
     <div *ngIf="member" class="p-12 text-center">
-      <app-img-round [isVolunteer]="isVolunteer" [isLoadingBadge]="isLoadingVolunteers" [imgUrl]="getfileUrl(member.profileImage)" />
+      <app-img-round
+        [isVolunteer]="isVolunteer"
+        [isLoadingBadge]="isLoadingVolunteers"
+        [imgUrl]="getfileUrl(member.profileImage)"
+      />
       <app-title [titleText]="member.lastName + ' ' + member.firstName" />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
       <div *ngIf="member.id" class="text-left">
@@ -47,7 +51,11 @@
     </div>
 
     <div *ngIf="!member" class="p-12 text-center animate-pulse">
-      <app-img-round [isVolunteer]="isVolunteer" [isLoadingBadge]="isLoadingVolunteers" [imgUrl]="getfileUrl('user.png')" />
+      <app-img-round
+        [isVolunteer]="isVolunteer"
+        [isLoadingBadge]="isLoadingVolunteers"
+        [imgUrl]="getfileUrl('user.png')"
+      />
       <app-title titleText="..." />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
       <div class="w-[300px] md:w-[600px] lg:w-[700px] text-left">

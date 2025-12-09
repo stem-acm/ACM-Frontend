@@ -9,7 +9,7 @@ import { CardSkeletonComponent } from '@/app/components/card-skeleton/card-skele
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoadingService } from '@/app/services/loading.service';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cards',

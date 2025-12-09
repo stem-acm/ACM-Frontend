@@ -84,29 +84,28 @@ export class StepperComponent implements OnInit, OnDestroy {
   }
 
   subscribeToRealTimeActivities() {
-
     this.activitySubscription = this.sseService.connectToActivities().subscribe({
       next: (newActivity: Activity) => {
         console.log('[Stepper] Real-time activity received:', newActivity);
-        
+
         // Check if activity already exists in the list
         const activityExists = this.activities.some(a => a.id === newActivity.id);
-        
+
         if (activityExists) {
           console.log('[Stepper] Activity already exists, skipping:', newActivity.id);
           return;
         }
-        
+
         // Handle 'everyday' activities separately - add them directly
         if (newActivity.dayOfWeek === 'everyday') {
           this.activities = [...this.activities, newActivity];
           console.log('[Stepper] Added everyday activity:', newActivity);
           return;
         }
-        
+
         // Filter other activities by current day
         const filteredActivities = this.filterActivitiesByCurrentDay([newActivity]);
-        
+
         // Only add if the filter returned the activity
         if (filteredActivities.length > 0) {
           this.activities = [...this.activities, ...filteredActivities];
@@ -130,12 +129,12 @@ export class StepperComponent implements OnInit, OnDestroy {
         const everydayActivities = result.data.filter(
           activity => activity.dayOfWeek === 'everyday',
         );
-        
+
         // Filter activities for today (excluding everyday ones)
         const todayActivities = this.filterActivitiesByCurrentDay(
-          result.data.filter(activity => activity.dayOfWeek !== 'everyday')
+          result.data.filter(activity => activity.dayOfWeek !== 'everyday'),
         );
-        
+
         // Combine both lists
         this.activities = [...everydayActivities, ...todayActivities];
 

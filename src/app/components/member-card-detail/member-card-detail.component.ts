@@ -38,13 +38,13 @@ export class MemberCardDetailComponent implements OnInit {
   @Input() member!: Member;
   private URL: string = environment.FILE_URL;
   public showAddForm = false;
-  public showCard = false;  
+  public showCard = false;
   private app = inject(AppComponent);
   private translateService = inject(TranslateService);
   private volunteerService = inject(VolunteerService);
   private volunteers: Volunteer[] = [];
-  public isVolunteer: boolean = false;
-  public isLoadingVolunteers: boolean = true; 
+  public isVolunteer = false;
+  public isLoadingVolunteers = true;
 
   formatDate(date?: Date | string) {
     if (!date) return 'no date';
@@ -92,7 +92,7 @@ export class MemberCardDetailComponent implements OnInit {
   }
 
   getVolunteersList() {
-    this.volunteerService.getAllVolunteers().subscribe((res) => {
+    this.volunteerService.getAllVolunteers().subscribe(res => {
       this.volunteers = res.data;
       this.checkIfVolunteer();
       this.isLoadingVolunteers = false;
@@ -100,6 +100,6 @@ export class MemberCardDetailComponent implements OnInit {
   }
 
   checkIfVolunteer(): void {
-    this.isVolunteer = this.volunteers.some((volunteer) => volunteer.memberId === this.member.id);
+    this.isVolunteer = this.volunteers.some(volunteer => volunteer.memberId === this.member.id);
   }
 }

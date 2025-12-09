@@ -19,12 +19,11 @@
           scope="row"
           class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          <div class="w-10 h-10">
-            <app-img-round
-              [imgUrl]="getfileUrl(volunteer.Member?.profileImage)"
-              [isVolunteer]="true"
-            />
-          </div>
+          <img
+            class="w-10 h-10 rounded-full"
+            [src]="getfileUrl(volunteer.Member?.profileImage)"
+            alt="Profile image"
+          />
           <div class="ps-3">
             <div class="text-base font-semibold">
               {{ volunteer.Member?.lastName + ' ' + volunteer.Member?.firstName }}

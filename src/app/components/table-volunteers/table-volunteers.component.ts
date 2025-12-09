@@ -4,12 +4,11 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DateUtil } from '@/app/utils/date.util';
-import { ImgRoundComponent } from '../img-round/img-round.component';
 
 @Component({
   selector: 'app-table-volunteers',
   standalone: true,
-  imports: [RouterModule, TranslateModule, ImgRoundComponent],
+  imports: [RouterModule, TranslateModule],
   templateUrl: './table-volunteers.component.html',
   styleUrl: './table-volunteers.component.css',
 })

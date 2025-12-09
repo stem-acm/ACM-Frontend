@@ -5,12 +5,11 @@ import { Volunteer } from '@/app/interfaces/volunteer';
 import { RouterModule } from '@angular/router';
 import dayjs from 'dayjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ImgRoundComponent } from '../img-round/img-round.component';
 
 @Component({
   selector: 'app-table-members',
   standalone: true,
-  imports: [RouterModule, TranslateModule, ImgRoundComponent],
+  imports: [RouterModule, TranslateModule],
   templateUrl: './table-members.component.html',
   styleUrl: './table-members.component.css',
 })
@@ -25,7 +24,7 @@ export class TableMembersComponent {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
-  isVolunteer(memberId: string): boolean {
+  isVolunteer(memberId: number): boolean {
     return this.volunteers.some(volunteer => volunteer.memberId === memberId);
   }
 

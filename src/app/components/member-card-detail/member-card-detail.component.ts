@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Member } from '@/app/interfaces/member';
 import { ImgRoundComponent } from '../img-round/img-round.component';
 import { TitleComponent } from '../title/title.component';
@@ -13,6 +13,8 @@ import { AppComponent } from '@/app/app.component';
 import { RouterModule } from '@angular/router';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { VolunteerService } from '@/app/services/volunteer.service';
+import { Volunteer } from '@/app/interfaces/volunteer';
 
 @Component({
   selector: 'app-member-card-detail',
@@ -32,13 +34,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './member-card-detail.component.html',
   styleUrl: './member-card-detail.component.css',
 })
-export class MemberCardDetailComponent {
+export class MemberCardDetailComponent implements OnInit {
   @Input() member!: Member;
   private URL: string = environment.FILE_URL;
   public showAddForm = false;
-  public showCard = false;
+  public showCard = false;  
   private app = inject(AppComponent);
   private translateService = inject(TranslateService);
+  private volunteerService = inject(VolunteerService);
+  private volunteers: Volunteer[] = [];
+  public isVolunteer: boolean = false;
+  public isLoadingVolunteers: boolean = true; 
 
   formatDate(date?: Date | string) {
     if (!date) return 'no date';
@@ -79,5 +85,21 @@ export class MemberCardDetailComponent {
     return this.translateService.instant('errors.memberNotFound', {
       registrationNumber: this.member.registrationNumber,
     });
+  }
+
+  ngOnInit(): void {
+    this.getVolunteersList();
+  }
+
+  getVolunteersList() {
+    this.volunteerService.getAllVolunteers().subscribe((res) => {
+      this.volunteers = res.data;
+      this.checkIfVolunteer();
+      this.isLoadingVolunteers = false;
+    });
+  }
+
+  checkIfVolunteer(): void {
+    this.isVolunteer = this.volunteers.some((volunteer) => volunteer.memberId === this.member.id);
   }
 }

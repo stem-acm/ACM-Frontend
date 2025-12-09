@@ -1,14 +1,16 @@
 import { Component, Input, inject } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { Member } from '@/app/interfaces/member';
+import { Volunteer } from '@/app/interfaces/volunteer';
 import { RouterModule } from '@angular/router';
 import dayjs from 'dayjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ImgRoundComponent } from '../img-round/img-round.component';
 
 @Component({
   selector: 'app-table-members',
   standalone: true,
-  imports: [RouterModule, TranslateModule],
+  imports: [RouterModule, TranslateModule, ImgRoundComponent],
   templateUrl: './table-members.component.html',
   styleUrl: './table-members.component.css',
 })
@@ -16,10 +18,15 @@ export class TableMembersComponent {
   private URL: string = environment.FILE_URL;
   public userImg = `${this.URL}/user.png`;
   @Input() data!: Member[];
+  @Input() volunteers: Volunteer[] = [];
   private translateService = inject(TranslateService);
 
   getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
+  }
+
+  isVolunteer(memberId: string): boolean {
+    return this.volunteers.some(volunteer => volunteer.memberId === memberId);
   }
 
   formatDate(date?: Date | string): string {

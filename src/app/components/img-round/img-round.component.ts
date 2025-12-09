@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { BadgeComponent } from '../badge/badge.component';
 
 @Component({
@@ -10,4 +10,6 @@ import { BadgeComponent } from '../badge/badge.component';
 })
 export class ImgRoundComponent {
   @Input() imgUrl!: string;
+  @Input() isVolunteer!: boolean; 
+  @Input() isLoadingBadge: boolean = false;
 }

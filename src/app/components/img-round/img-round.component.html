@@ -2,5 +2,7 @@
   <div class="rounded-full overflow-hidden h-full w-full">
     <img class="w-full h-full object-cover object-center" [src]="imgUrl" alt="Profile image" />
   </div>
-  <app-badge />
+  @if (isVolunteer) {
+    <app-badge [isLoading]="isLoadingBadge" />
+  }
 </div>

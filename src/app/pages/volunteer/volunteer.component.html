@@ -83,3 +83,13 @@
 @if (showCertificate) {
   <app-volunteer-certificate-viewer (canceled)="cancelForm($event)" [data]="volunteerChooosed" />
 }
+
+@if (showAddForm) {
+  <app-add-volunteer
+    mode="insert"
+    [title]="'titles.newVolunteer' | translate"
+    (showToast)="showAlert($event)"
+    (canceled)="cancelAddForm($event)"
+    (success)="closeForm($event)"
+  />
+}

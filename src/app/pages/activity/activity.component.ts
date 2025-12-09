@@ -8,7 +8,7 @@ import { TableActivitiesComponent } from '@/app/components/table-activities/tabl
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -39,11 +39,14 @@ export class ActivityComponent implements OnInit {
   private app = inject(AppComponent);
 
   ngOnInit() {
-    this.getActivityList();
-    this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
+    /* this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
       this.searchWord = value;
       this.getActivityList();
+    }); */
+    this.searchSubject.pipe(debounceTime(500)).subscribe((keyword: string) => {
+      this.searchByName(keyword);
     });
+    this.getActivityList();
   }
 
   getActivityList() {

@@ -2,6 +2,7 @@ import { AppComponent } from '@/app/app.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { TableVolunteersComponent } from '@/app/components/table-volunteers/table-volunteers.component';
 import { VolunteerCertificateViewerComponent } from '@/app/components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
+import { AddVolunteerComponent } from '@/app/components/add-volunteer/add-volunteer.component';
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
@@ -18,6 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TableLoadingComponent,
     TableVolunteersComponent,
     VolunteerCertificateViewerComponent,
+    AddVolunteerComponent,
     TranslateModule,
   ],
   templateUrl: './volunteer.component.html',

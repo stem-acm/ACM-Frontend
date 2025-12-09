@@ -1,6 +1,16 @@
-<div class="relative rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-white dark:bg-gray-900">
+<div
+  [ngClass]="
+    'relative rounded-full shadow-xl mx-auto -mt-16 h-' +
+    height +
+    ' w-' +
+    width +
+    ' bg-white dark:bg-gray-900'
+  "
+>
   <div class="rounded-full overflow-hidden h-full w-full">
     <img class="w-full h-full object-cover object-center" [src]="imgUrl" alt="Profile image" />
   </div>
-  <app-badge />
+  @if (isVolunteer) {
+    <app-badge [isLoading]="isLoadingBadge" />
+  }
 </div>

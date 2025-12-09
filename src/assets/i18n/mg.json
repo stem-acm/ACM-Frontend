@@ -141,7 +141,9 @@
   },
   "titles": {
     "newMember": "Mpikambana Vaovao",
-    "updateMember": "Hanavao ny mpikambana"
+    "updateMember": "Hanavao ny mpikambana",
+    "newVolunteer": "Mpanao an-tsitrapo Vaovao",
+    "updateVolunteer": "Hanavao ny mpanao an-tsitrapo" 
   },
   "errors": {
     "fillAll": "Mangataka anao mameno ny saha rehetra",
@@ -162,11 +164,11 @@
   },
   "checkin": {
     "step": "Dingana",
-    "chooseActivities": "MIFIDY HETSIKA",
-    "leavingTime": "ORA FIALANA",
-    "scanBadge": "MANADIHADY BADGE",
+    "chooseActivities": "SAFIDIO NY ANTON-DIANAO",
+    "leavingTime": "ORA HIVOAHANAO",
+    "scanBadge": "ASEHOY ETO NY KARATRAO",
     "welcome": "TONGASOA",
-    "go": "MANDEHANA",
-    "completeCheckIn": "Famarana ny fisoratana anarana"
+    "go": "MANDROSO",
+    "completeCheckIn": "Midira tompoko"
   }
 }

@@ -1,7 +1,11 @@
 <div class="w-full max-w-4xl flex items-center justify-center h-auto flex-wrap mx-auto py-4">
   <div class="rounded-lg shadow-2xl bg-white dark:bg-gray-800 opacity-75 m-6">
     <div *ngIf="member" class="p-12 text-center">
-      <app-img-round [imgUrl]="getfileUrl(member.profileImage)" />
+      <app-img-round
+        [isVolunteer]="isVolunteer"
+        [isLoadingBadge]="isLoadingVolunteers"
+        [imgUrl]="getfileUrl(member.profileImage)"
+      />
       <app-title [titleText]="member.lastName + ' ' + member.firstName" />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
       <div *ngIf="member.id" class="text-left">
@@ -47,12 +51,75 @@
     </div>
 
     <div *ngIf="!member" class="p-12 text-center animate-pulse">
-      <app-img-round [imgUrl]="getfileUrl('user.png')" />
+      <app-img-round
+        [isVolunteer]="isVolunteer"
+        [isLoadingBadge]="isLoadingVolunteers"
+        [imgUrl]="getfileUrl('user.png')"
+      />
       <app-title titleText="..." />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
-      <app-member-description text="..." />
-      <app-member-description text="..." />
-      <app-text-description textDescription="..." />
+      <div class="w-[300px] md:w-[600px] lg:w-[700px] text-left">
+        <div class="mt-6">
+          <dl class="divide-y divide-gray-100">
+            <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900 text-right">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dt>
+              <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dd>
+            </div>
+            <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900 text-right">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dt>
+              <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dd>
+            </div>
+            <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900 text-right">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dt>
+              <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dd>
+            </div>
+            <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900 text-right">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dt>
+              <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dd>
+            </div>
+            <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900 text-right">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dt>
+              <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dd>
+            </div>
+            <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900 text-right">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dt>
+              <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dd>
+            </div>
+            <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt class="text-sm/6 font-medium text-gray-900 text-right">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dt>
+              <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+                <div class="h-4 bg-gray-300 rounded w-full"></div>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
     </div>
 
     <div class="flex justify-end gap-2 p-4">

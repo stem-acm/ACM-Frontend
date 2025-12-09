@@ -2,8 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { TableMembersComponent } from '@/app/components/table-members/table-members.component';
 import { MemberService } from '@/app/services/member.service';
+import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { Member } from '@/app/interfaces/member';
+import { Volunteer } from '@/app/interfaces/volunteer';
 import { AddMemberComponent } from '@/app/components/add-member/add-member.component';
 import { AppComponent } from '@/app/app.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
@@ -27,6 +29,7 @@ export class MembersComponent implements OnInit {
   protected Math = Math;
   private member!: Member[];
   public memberFilter!: Member[];
+  public volunteers: Volunteer[] = [];
   public showAddForm = false;
   public searchWord!: string;
 
@@ -37,10 +40,12 @@ export class MembersComponent implements OnInit {
   private searchSubject = new Subject<string>();
 
   private memberService = inject(MemberService);
+  private volunteerService = inject(VolunteerService);
   private app = inject(AppComponent);
 
   ngOnInit() {
     this.getMemberList();
+    this.getVolunteersList();
     this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
       this.searchWord = value;
       this.currentPage = 1;
@@ -63,6 +68,14 @@ export class MembersComponent implements OnInit {
         }
         this.isLoading = false;
       });
+  }
+
+  getVolunteersList() {
+    this.volunteerService.getAllVolunteers().subscribe((result: HttpResult<Volunteer[]>) => {
+      if (result.success && result.data) {
+        this.volunteers = result.data;
+      }
+    });
   }
 
   changePage(page: number) {

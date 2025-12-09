@@ -9,6 +9,7 @@ import { CardSkeletonComponent } from '@/app/components/card-skeleton/card-skele
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoadingService } from '@/app/services/loading.service';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cards',
@@ -32,12 +33,20 @@ export class CardsComponent implements OnInit {
   public showCard = false;
   public searchWord!: string;
   public isLoading = false;
+  private searchSubject = new Subject<string>();
+
+  public currentPage = 1;
 
   private memberService = inject(MemberService);
   private loadingService = inject(LoadingService);
 
   ngOnInit() {
     this.getMemberList();
+    this.searchSubject.pipe(debounceTime(500)).subscribe(value => {
+      this.searchWord = value;
+      this.currentPage = 1;
+      this.getMemberList();
+    });
   }
 
   getMemberList() {

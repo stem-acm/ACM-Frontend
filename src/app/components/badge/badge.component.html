@@ -1,4 +1,12 @@
-<span
-  class="absolute bottom-1 right-1 border border-red-800 bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
-  >Volunteer</span
->
+@if (isLoading) {
+  <span
+    class="absolute bottom-1 right-1 border border-gray-300 bg-gray-300 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full animate-pulse"
+  >
+    <span class="invisible">Volunteer</span>
+  </span>
+} @else {
+  <span
+    class="absolute bottom-1 right-1 border border-red-800 bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300"
+    >Volunteer</span
+  >
+}

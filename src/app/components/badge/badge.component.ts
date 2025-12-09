@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-badge',
@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './badge.component.html',
   styleUrl: './badge.component.css',
 })
-export class BadgeComponent {}
+export class BadgeComponent {
+  @Input() isLoading = false;
+}

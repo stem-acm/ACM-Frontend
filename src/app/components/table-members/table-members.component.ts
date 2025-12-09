@@ -1,6 +1,7 @@
 import { Component, Input, inject } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { Member } from '@/app/interfaces/member';
+import { Volunteer } from '@/app/interfaces/volunteer';
 import { RouterModule } from '@angular/router';
 import dayjs from 'dayjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -16,10 +17,15 @@ export class TableMembersComponent {
   private URL: string = environment.FILE_URL;
   public userImg = `${this.URL}/user.png`;
   @Input() data!: Member[];
+  @Input() volunteers: Volunteer[] = [];
   private translateService = inject(TranslateService);
 
   getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
+  }
+
+  isVolunteer(memberId: number): boolean {
+    return this.volunteers.some(volunteer => volunteer.memberId === memberId);
   }
 
   formatDate(date?: Date | string): string {

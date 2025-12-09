@@ -39,11 +39,15 @@ export class ActivityComponent implements OnInit {
   private app = inject(AppComponent);
 
   ngOnInit() {
-    this.getActivityList();
-    this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
+   
+    /* this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
       this.searchWord = value;
       this.getActivityList();
+    }); */
+    this.searchSubject.pipe(debounceTime(500)).subscribe((keyword: string) => {
+      this.searchByName(keyword);
     });
+    this.getActivityList();
   }
 
   getActivityList() {

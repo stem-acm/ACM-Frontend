@@ -97,7 +97,6 @@ export class MembersComponent implements OnInit {
 
   cancelForm(event: boolean) {
     if (event) this.showAddForm = false;
-    this.app.showToast('Canceled form...');
   }
 
   closeForm(event: boolean) {

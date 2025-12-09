@@ -59,7 +59,6 @@ export class VolunteerComponent implements OnInit {
 
   cancelAddForm(event: boolean) {
     if (event) this.showAddForm = false;
-    this.app.showToast('Canceled form...');
   }
 
   closeForm(event: boolean) {
@@ -93,6 +92,5 @@ export class VolunteerComponent implements OnInit {
 
   cancelForm(event: boolean) {
     if (event) this.showCertificate = false;
-    this.app.showToast('Canceled form...');
   }
 }

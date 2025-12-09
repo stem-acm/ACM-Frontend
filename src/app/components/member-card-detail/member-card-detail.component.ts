@@ -59,7 +59,6 @@ export class MemberCardDetailComponent implements OnInit {
 
   cancelForm(event: boolean) {
     if (event) this.showAddForm = false;
-    this.app.showToast('Canceled form...');
   }
 
   showToast(event: { message: string; data: Member }) {

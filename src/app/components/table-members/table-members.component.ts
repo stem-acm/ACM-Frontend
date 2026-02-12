@@ -26,7 +26,7 @@ export class TableMembersComponent {
   @Input() volunteersList!: Volunteer[];
 
   @Output() memberDeleted = new EventEmitter<void>();
-  
+
   private translateService = inject(TranslateService);
   private memberService = inject(MemberService);
   private toastService = inject(ToastService);
@@ -73,13 +73,14 @@ export class TableMembersComponent {
   onDeleteClick(member: Member) {
     this.memberToDeleteId = member.id!;
     this.deleteTitle = this.translateService.instant('alert.deleteTitle');
-    this.deleteMessage = this.translateService.instant('alert.deleteMessage', { 
-      name: `${member.firstName} ${member.lastName}` 
+    this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
+      name: `${member.firstName} ${member.lastName}`,
     });
     // Fallback if translation missing or not set up with params
     if (this.deleteTitle === 'alert.deleteTitle') this.deleteTitle = 'Delete Member';
-    if (this.deleteMessage === 'alert.deleteMessage') this.deleteMessage = `Are you sure you want to delete ${member.firstName} ${member.lastName}?`;
-    
+    if (this.deleteMessage === 'alert.deleteMessage')
+      this.deleteMessage = `Are you sure you want to delete ${member.firstName} ${member.lastName}?`;
+
     this.showDeleteModal = true;
   }
 
@@ -101,12 +102,12 @@ export class TableMembersComponent {
           this.showDeleteModal = false;
           this.memberToDeleteId = null;
         },
-        error: (error) => {
+        error: error => {
           const msg = error.error?.message || error.message || 'Failed to delete member';
           this.toastService.showToast(msg);
           this.showDeleteModal = false;
           this.memberToDeleteId = null;
-        }
+        },
       });
     }
   }

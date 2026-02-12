@@ -119,7 +119,7 @@ export class MemberCardDetailComponent implements OnInit {
   onDeleteClick() {
     this.deleteTitle = this.translateService.instant('alert.deleteTitle');
     this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
-      name: `${this.member.firstName} ${this.member.lastName}`
+      name: `${this.member.firstName} ${this.member.lastName}`,
     });
     // Fallback if translation missing
     if (this.deleteTitle === 'alert.deleteTitle') this.deleteTitle = 'Delete Member';
@@ -146,11 +146,11 @@ export class MemberCardDetailComponent implements OnInit {
           }
           this.showDeleteModal = false;
         },
-        error: (error) => {
+        error: error => {
           const msg = error.error?.message || error.message || 'Failed to delete member';
           this.toastService.showToast(msg);
           this.showDeleteModal = false;
-        }
+        },
       });
     }
   }

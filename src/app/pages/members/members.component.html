@@ -72,7 +72,7 @@
         }"
       />
     } @else {
-      <app-table-members [data]="memberFilter" [volunteers]="volunteers" />
+      <app-table-members [data]="memberFilter" [volunteersList]="volunteers" (memberDeleted)="getMemberList()" />
 
       <!-- Pagination Controls -->
       <div

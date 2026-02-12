@@ -40,14 +40,31 @@
         <td class="px-6 py-4 capitalize">
           {{ formatDate(member.joinDate) }}
         </td>
-        <td class="px-6 py-4">
+        <td class="px-6 py-4 flex items-center gap-4">
           <a
             [routerLink]="['/profil', member?.registrationNumber]"
             class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
             >{{ 'table.viewProfil' | translate }}</a
           >
+          <button
+            (click)="onDeleteClick(member)"
+            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+          >
+            {{ 'buttons.delete' | translate }}
+          </button>
         </td>
       </tr>
     }
   </tbody>
 </table>
+
+<app-modal-alert
+  [isVisible]="showDeleteModal"
+  [title]="deleteTitle"
+  [message]="deleteMessage"
+  [showCancel]="true"
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  (closeModal)="cancelDelete()"
+  (confirm)="confirmDelete()"
+></app-modal-alert>

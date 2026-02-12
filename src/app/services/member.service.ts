@@ -34,4 +34,8 @@ export class MemberService {
   updateMember(member: Member) {
     return this.http.put<HttpResult<Member>>(`${this.URL}/members/${member.id}`, member);
   }
+
+  deleteMember(id: number) {
+    return this.http.delete<HttpResult<null>>(`${this.URL}/members/${id}`);
+  }
 }

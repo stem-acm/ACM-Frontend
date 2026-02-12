@@ -330,11 +330,14 @@ export class StepperComponent implements OnInit, OnDestroy {
       error => {
         console.error('Checkin error:', error);
         // Extract the actual error message from the backend response object
-        // Angular wraps the response in HttpErrorResponse, where proper backend 400 errors 
+        // Angular wraps the response in HttpErrorResponse, where proper backend 400 errors
         // usually put the payload in `error.error`
         const errorMsg = error.error?.message || error.message || 'Check-in failed';
-        
-        if (errorMsg === 'Already scanned for this half day' || errorMsg.includes('Already scanned')) {
+
+        if (
+          errorMsg === 'Already scanned for this half day' ||
+          errorMsg.includes('Already scanned')
+        ) {
           this.errorTitle = 'Scan Limit Reached';
           this.errorMessage = 'You have already scanned for this half day.';
           this.showErrorModal = true;
@@ -342,7 +345,7 @@ export class StepperComponent implements OnInit, OnDestroy {
           // For other errors (like time restrictions), show toast with the specific message
           this.toastService.showToast(errorMsg);
         }
-        
+
         this.reset();
       },
     );

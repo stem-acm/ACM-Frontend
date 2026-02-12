@@ -6,15 +6,15 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './modal-alert.component.html',
-  styleUrls: ['./modal-alert.component.css']
+  styleUrls: ['./modal-alert.component.css'],
 })
 export class ModalAlertComponent {
   @Input() isVisible = false;
   @Input() title = 'Alert';
   @Input() message = '';
-  @Output() close = new EventEmitter<void>();
+  @Output() closeModal = new EventEmitter<void>();
 
   onClose() {
-    this.close.emit();
+    this.closeModal.emit();
   }
 }

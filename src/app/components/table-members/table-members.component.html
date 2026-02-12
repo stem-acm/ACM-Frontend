@@ -40,10 +40,10 @@
         <td class="px-6 py-4 capitalize">
           {{ formatDate(member.joinDate) }}
         </td>
-        <td class="px-6 py-4 flex items-center gap-4">
+        <td>
           <a
             [routerLink]="['/profil', member?.registrationNumber]"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4"
             >{{ 'table.viewProfil' | translate }}</a
           >
           <button

@@ -27,4 +27,8 @@ export class ActivityService {
   updateActivity(activity: Activity) {
     return this.http.put<HttpResult<Activity>>(`${this.URL}/activities/${activity.id}`, activity);
   }
+
+  deleteActivity(id: number) {
+    return this.http.delete<HttpResult<null>>(`${this.URL}/activities/${id}`);
+  }
 }

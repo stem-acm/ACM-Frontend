@@ -51,16 +51,33 @@
         <td class="px-6 py-4">
           {{ item.endTime }}
         </td>
-        <td class="px-6 py-4">
+        <td>
           <a
             role="button"
             tabindex="0"
             (click)="updateMember(item)"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4"
             >{{ 'table.edit' | translate }}</a
           >
+          <button
+            (click)="onDeleteClick(item)"
+            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+          >
+            {{ 'buttons.delete' | translate }}
+          </button>
         </td>
       </tr>
     }
   </tbody>
 </table>
+
+<app-modal-alert
+  [isVisible]="showDeleteModal"
+  [title]="deleteTitle"
+  [message]="deleteMessage"
+  [showCancel]="true"
+  [confirmText]="'Delete'"
+  [cancelText]="'Cancel'"
+  (closeModal)="cancelDelete()"
+  (confirm)="confirmDelete()"
+></app-modal-alert>

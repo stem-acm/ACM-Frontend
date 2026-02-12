@@ -15,6 +15,11 @@ import { MemberCardViewerComponent } from '../member-card-viewer/member-card-vie
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { VolunteerService } from '@/app/services/volunteer.service';
 import { Volunteer } from '@/app/interfaces/volunteer';
+import { ModalAlertComponent } from '../modal-alert/modal-alert.component';
+import { MemberService } from '@/app/services/member.service';
+import { ToastService } from '@/app/services/toast.service';
+import { HttpResult } from '@/app/types/httpResult';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-member-card-detail',
@@ -30,6 +35,7 @@ import { Volunteer } from '@/app/interfaces/volunteer';
     RouterModule,
     MemberCardViewerComponent,
     TranslateModule,
+    ModalAlertComponent,
   ],
   templateUrl: './member-card-detail.component.html',
   styleUrl: './member-card-detail.component.css',
@@ -45,6 +51,14 @@ export class MemberCardDetailComponent implements OnInit {
   private volunteers: Volunteer[] = [];
   public isVolunteer = false;
   public isLoadingVolunteers = true;
+
+  private memberService = inject(MemberService);
+  private toastService = inject(ToastService);
+  private router = inject(Router);
+
+  showDeleteModal = false;
+  deleteTitle = '';
+  deleteMessage = '';
 
   formatDate(date?: Date | string) {
     if (!date) return 'no date';
@@ -100,5 +114,44 @@ export class MemberCardDetailComponent implements OnInit {
 
   checkIfVolunteer(): void {
     this.isVolunteer = this.volunteers.some(volunteer => volunteer.memberId === this.member.id);
+  }
+
+  onDeleteClick() {
+    this.deleteTitle = this.translateService.instant('alert.deleteTitle');
+    this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
+      name: `${this.member.firstName} ${this.member.lastName}`
+    });
+    // Fallback if translation missing
+    if (this.deleteTitle === 'alert.deleteTitle') this.deleteTitle = 'Delete Member';
+    if (this.deleteMessage === 'alert.deleteMessage') {
+      this.deleteMessage = `Are you sure you want to delete ${this.member.firstName} ${this.member.lastName}?`;
+    }
+
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete() {
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (this.member?.id) {
+      this.memberService.deleteMember(this.member.id).subscribe({
+        next: (result: HttpResult<null>) => {
+          if (result.success) {
+            this.toastService.showToast('Member deleted successfully');
+            this.router.navigate(['/members']);
+          } else {
+            this.toastService.showToast(result.message || 'Failed to delete member');
+          }
+          this.showDeleteModal = false;
+        },
+        error: (error) => {
+          const msg = error.error?.message || error.message || 'Failed to delete member';
+          this.toastService.showToast(msg);
+          this.showDeleteModal = false;
+        }
+      });
+    }
   }
 }

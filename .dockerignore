@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build output (we build inside the container)
+dist
+
+# Git
+.git
+.gitignore
+
+# IDE and OS
+.idea
+.vscode
+*.swp
+.DS_Store
+Thumbs.db
+
+# Tests and coverage
+coverage
+.nyc_output
+*.spec.ts
+karma.conf.js
+
+# Documentation and misc
+README.md
+*.md
+.env
+.env.*
+!.env.example
+
+# Docker (avoid recursive copy)
+Dockerfile*
+docker-compose*
+.dockerignore

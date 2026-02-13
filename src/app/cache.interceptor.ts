@@ -17,6 +17,16 @@ function pathPrefix(url: string): string {
   }
 }
 
+function collectionPrefix(url: string): string {
+  try {
+    const u = new URL(url);
+    const path = u.pathname.replace(/\/[^/]+$/, '');
+    return u.origin + path;
+  } catch {
+    return url;
+  }
+}
+
 export const cacheInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
@@ -39,11 +49,11 @@ export const cacheInterceptor: HttpInterceptorFn = (
   }
 
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-    const prefix = pathPrefix(url);
     return next(req).pipe(
       tap(event => {
         if (event instanceof HttpResponse && event.ok) {
-          cache.invalidate(prefix);
+          cache.invalidate(pathPrefix(url));
+          cache.invalidate(collectionPrefix(url));
         }
       }),
     );

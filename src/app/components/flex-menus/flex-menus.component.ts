@@ -21,11 +21,11 @@ export class FlexMenusComponent {
       labelKey: 'nav.members',
       exact: false,
     },
-    {
+    /*{
       route: '/cards',
       labelKey: 'nav.cards',
       exact: false,
-    },
+    }, */
     {
       route: '/volunteer',
       labelKey: 'nav.volunteer',

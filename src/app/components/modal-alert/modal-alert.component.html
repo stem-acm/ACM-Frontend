@@ -63,12 +63,19 @@
     </div>
 
     <!-- Footer -->
-    <div class="bg-gray-50 px-6 py-4 flex justify-center">
+    <div class="bg-gray-50 px-6 py-4 flex justify-center gap-4">
       <button
+        *ngIf="showCancel"
         (click)="onClose()"
+        class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 w-full sm:w-auto"
+      >
+        {{ cancelText }}
+      </button>
+      <button
+        (click)="showCancel ? onConfirm() : onClose()"
         class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 w-full sm:w-auto"
       >
-        OK
+        {{ confirmText }}
       </button>
     </div>
   </div>

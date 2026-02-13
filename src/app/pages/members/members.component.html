@@ -158,9 +158,9 @@
       />
     } @else {
       <app-table-members
-        (memberSelectionChange)="onMemberSelectionChange($event)"
-        [data]="membersChooseList"
-        [volunteers]="volunteers"
+        [data]="memberFilter"
+        [volunteersList]="volunteers"
+        (memberDeleted)="getMemberList()"
       />
 
       <!-- Pagination Controls -->

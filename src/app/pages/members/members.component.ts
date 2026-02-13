@@ -65,9 +65,8 @@ export class MembersComponent implements OnInit {
   getMemberList() {
     this.isLoading = true;
     const offset = (this.currentPage - 1) * this.pageSize;
-    this.memberService
-      .getAllMembers(offset, this.pageSize, this.searchWord)
-      .subscribe((result: HttpResult<Member[]>) => {
+    this.memberService.getAllMembers(offset, this.pageSize, this.searchWord).subscribe({
+      next: (result: HttpResult<Member[]>) => {
         if (result.success && result.data) {
           this.member = result.data;
           this.memberFilter = this.member;
@@ -80,10 +79,22 @@ export class MembersComponent implements OnInit {
 
           if (result.pagination) {
             this.totalMembers = result.pagination.total;
+
+            // Handle edge case where current page is empty after delete
+            if (this.member.length === 0 && this.currentPage > 1) {
+              this.currentPage--;
+              this.getMemberList();
+              return;
+            }
           }
         }
         this.isLoading = false;
-      });
+      },
+      error: () => {
+        this.isLoading = false;
+        // Optionally show error toast if not already handled by interceptor
+      },
+    });
   }
 
   getVolunteersList() {
@@ -92,6 +103,12 @@ export class MembersComponent implements OnInit {
         this.volunteers = result.data;
       }
     });
+  }
+
+  onMemberDeleted() {
+    this.memberFilter = []; // Immediate visual feedback
+    this.getMemberList();
+    this.getVolunteersList();
   }
 
   changePage(page: number) {
@@ -118,7 +135,7 @@ export class MembersComponent implements OnInit {
   closeForm(event: boolean) {
     if (event) {
       this.showAddForm = false;
-      this.getMemberList(); // Refresh the members list
+      this.onMemberDeleted(); // Refresh everything
     }
   }
 

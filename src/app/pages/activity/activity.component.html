@@ -76,7 +76,11 @@
       }"
     />
   } @else {
-    <app-table-activities [data]="activityFilter" (editClicked)="clickEdit($event)" />
+    <app-table-activities
+      [data]="activityFilter"
+      (editClicked)="clickEdit($event)"
+      (activityDeleted)="getActivityList()"
+    />
   }
 </div>
 

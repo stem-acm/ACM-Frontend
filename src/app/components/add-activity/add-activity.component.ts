@@ -14,12 +14,15 @@ import { ActivityService } from '@/app/services/activity.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import dayjs from 'dayjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ModalAlertComponent } from '../modal-alert/modal-alert.component';
+import { ToastService } from '@/app/services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-activity',
   standalone: true,
-  imports: [FormsModule, CommonModule, TranslateModule],
+  imports: [FormsModule, CommonModule, TranslateModule, ModalAlertComponent],
   templateUrl: './add-activity.component.html',
   styleUrl: './add-activity.component.css',
 })
@@ -262,6 +265,13 @@ export class AddActivityComponent implements OnChanges, OnInit {
   ];
 
   private activityService = inject(ActivityService);
+  private translateService = inject(TranslateService);
+  private toastService = inject(ToastService);
+  private router = inject(Router);
+
+  showDeleteModal = false;
+  deleteTitle = '';
+  deleteMessage = '';
 
   cancel() {
     this.canceled.emit(true);
@@ -521,5 +531,44 @@ export class AddActivityComponent implements OnChanges, OnInit {
         this.loading = false;
       },
     );
+  }
+
+  onDeleteClick() {
+    this.deleteTitle = this.translateService.instant('alert.deleteTitle');
+    this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
+      name: this.activity.name,
+    });
+    // Fallback if translation missing
+    if (this.deleteTitle === 'alert.deleteTitle') this.deleteTitle = 'Delete Activity';
+    if (this.deleteMessage === 'alert.deleteMessage') {
+      this.deleteMessage = `Are you sure you want to delete ${this.activity.name}?`;
+    }
+
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete() {
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (this.activity?.id) {
+      this.activityService.deleteActivity(this.activity.id).subscribe({
+        next: (result: HttpResult<null>) => {
+          if (result.success) {
+            this.toastService.showToast('Activity deleted successfully');
+            this.success.emit(true);
+          } else {
+            this.toastService.showToast(result.message || 'Failed to delete activity');
+          }
+          this.showDeleteModal = false;
+        },
+        error: error => {
+          const msg = error.error?.message || error.message || 'Failed to delete activity';
+          this.toastService.showToast(msg);
+          this.showDeleteModal = false;
+        },
+      });
+    }
   }
 }

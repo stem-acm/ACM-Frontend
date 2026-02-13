@@ -74,7 +74,10 @@ export class ActivityComponent implements OnInit {
   }
 
   closeForm(event: boolean) {
-    if (event) this.showAddForm = false;
+    if (event) {
+      this.showAddForm = false;
+      this.getActivityList();
+    }
   }
 
   showAlert(event: string) {

@@ -11,7 +11,6 @@ import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-table-members',
   standalone: true,

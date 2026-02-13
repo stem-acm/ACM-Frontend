@@ -11,6 +11,8 @@ import { AppComponent } from '@/app/app.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { MemberCardViewerComponent } from '@/app/components/member-card-viewer/member-card-viewer.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-members',
@@ -19,8 +21,10 @@ import { TranslateModule } from '@ngx-translate/core';
     TableMembersComponent,
     AddMemberComponent,
     TableLoadingComponent,
+    MemberCardViewerComponent,
     FormsModule,
     TranslateModule,
+    CommonModule,
   ],
   templateUrl: './members.component.html',
   styleUrl: './members.component.css',
@@ -31,13 +35,18 @@ export class MembersComponent implements OnInit {
   public memberFilter!: Member[];
   public volunteers: Volunteer[] = [];
   public showAddForm = false;
-  public searchWord!: string;
+  public searchWord = '';
 
   public currentPage = 1;
   public pageSize = 10;
   public totalMembers = 0;
   public isLoading = false;
   private searchSubject = new Subject<string>();
+
+  public membersClicked!: Member[];
+  public membersChooseList: { selected: boolean; member: Member }[] = [];
+  // public membersChooseListFilter: { selected: boolean; member: Member }[] = []; // Not needed as we use membersChooseList for the current page
+  public showCard = false;
 
   private memberService = inject(MemberService);
   private volunteerService = inject(VolunteerService);
@@ -62,6 +71,13 @@ export class MembersComponent implements OnInit {
         if (result.success && result.data) {
           this.member = result.data;
           this.memberFilter = this.member;
+
+          // Initialize selection list for current page
+          this.membersChooseList = this.member.map(m => ({
+            selected: false,
+            member: m,
+          }));
+
           if (result.pagination) {
             this.totalMembers = result.pagination.total;
           }
@@ -112,5 +128,40 @@ export class MembersComponent implements OnInit {
 
   search(keyWord: string) {
     this.searchSubject.next(keyWord);
+  }
+
+  // Selection Logic
+  selectAll(select: boolean) {
+    this.membersChooseList.forEach(e => {
+      e.selected = select;
+    });
+  }
+
+  onMemberSelectionChange(event: { member: Member; selected: boolean }) {
+    const item = this.membersChooseList.find(
+      e => e.member.registrationNumber === event.member.registrationNumber,
+    );
+    if (item) {
+      item.selected = event.selected;
+    }
+  }
+
+  countMembersChooseList(select: boolean): number {
+    return this.membersChooseList.filter(e => e.selected === select).length;
+  }
+
+  printAllSelected() {
+    const memberChoosed = this.membersChooseList.filter(e => e.selected === true);
+    this.membersClicked = memberChoosed.map(e => e.member);
+    this.showCard = true;
+  }
+
+  close(_: boolean) {
+    this.showCard = false;
+  }
+
+  open(member: Member) {
+    this.membersClicked = [member];
+    this.showCard = true;
   }
 }

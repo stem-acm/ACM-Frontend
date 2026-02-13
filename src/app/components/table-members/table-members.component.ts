@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, Output, inject, EventEmitter } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { Member } from '@/app/interfaces/member';
 import { Volunteer } from '@/app/interfaces/volunteer';
@@ -35,6 +35,31 @@ export class TableMembersComponent {
   memberToDeleteId: number | null = null;
   deleteTitle = '';
   deleteMessage = '';
+
+  //public membersClicked!: Member[];
+  //public membersChooseList: { selected: boolean; member: Member }[] = [];
+  //public membersChooseListFilter: { selected: boolean; member: Member }[] = [];
+  //public showCard = false;
+  // private member!: Member;
+
+  // @Input() memberChoose!: { selected: boolean; member: Member };
+  // @Output() setSelectedMember = new EventEmitter<Member>();
+  @Output() memberSelectionChange = new EventEmitter<{
+    selected: boolean;
+    member: Member;
+  }>();
+
+  /*   openCard(_member: Member) {
+    this.setSelectedMember.emit(_member);
+  } */
+
+  onCheckboxChange(event: Event, _member: Member) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.memberSelectionChange.emit({
+      member: _member,
+      selected: isChecked,
+    });
+  }
 
   getfileUrl(fileName: string | undefined) {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;

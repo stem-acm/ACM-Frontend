@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
+import { ModalAlertComponent } from '../modal-alert/modal-alert.component';
 import { CheckinService } from '@/app/services/checkin.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { ActivityService } from '@/app/services/activity.service';
@@ -29,7 +30,7 @@ interface ActivityToDisplay {
 @Component({
   selector: 'app-stepper',
   standalone: true,
-  imports: [CommonModule, ScannerComponent, NgxSpinnerModule, TranslateModule],
+  imports: [CommonModule, ScannerComponent, NgxSpinnerModule, TranslateModule, ModalAlertComponent],
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css'],
 })
@@ -46,6 +47,10 @@ export class StepperComponent implements OnInit, OnDestroy {
   scannedBadgeId: string | null = null;
   hourSelected = false;
   minuteSelected = false;
+
+  showErrorModal = false;
+  errorTitle = '';
+  errorMessage = '';
 
   checkinService = inject(CheckinService);
   activityService = inject(ActivityService);
@@ -323,7 +328,24 @@ export class StepperComponent implements OnInit, OnDestroy {
         }
       },
       error => {
-        this.toastService.showToast(error.message || 'Check-in failed');
+        console.error('Checkin error:', error);
+        // Extract the actual error message from the backend response object
+        // Angular wraps the response in HttpErrorResponse, where proper backend 400 errors
+        // usually put the payload in `error.error`
+        const errorMsg = error.error?.message || error.message || 'Check-in failed';
+
+        if (
+          errorMsg === 'Already scanned for this half day' ||
+          errorMsg.includes('Already scanned')
+        ) {
+          this.errorTitle = 'Scan Limit Reached';
+          this.errorMessage = 'You have already scanned for this half day.';
+          this.showErrorModal = true;
+        } else {
+          // For other errors (like time restrictions), show toast with the specific message
+          this.toastService.showToast(errorMsg);
+        }
+
         this.reset();
       },
     );
@@ -341,5 +363,9 @@ export class StepperComponent implements OnInit, OnDestroy {
       this.showHourPicker = false;
       this.showMinutePicker = false;
     }
+  }
+
+  closeErrorModal() {
+    this.showErrorModal = false;
   }
 }

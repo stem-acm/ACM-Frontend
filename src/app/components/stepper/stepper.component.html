@@ -199,4 +199,10 @@
       {{ 'checkin.completeCheckIn' | translate }}
     </button>
   </div>
+  <app-modal-alert
+    [isVisible]="showErrorModal"
+    [title]="errorTitle"
+    [message]="errorMessage"
+    (close)="closeErrorModal()"
+  ></app-modal-alert>
 </div>

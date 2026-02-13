@@ -53,12 +53,12 @@
         </td>
         <td>
           <a
-            [routerLink]="['/profil', member?.registrationNumber]"
+            [routerLink]="['/profil', item.member.registrationNumber]"
             class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4"
             >{{ 'table.viewProfil' | translate }}</a
           >
           <button
-            (click)="onDeleteClick(member)"
+            (click)="onDeleteClick(item.member)"
             class="font-medium text-red-600 dark:text-red-500 hover:underline"
           >
             {{ 'buttons.delete' | translate }}

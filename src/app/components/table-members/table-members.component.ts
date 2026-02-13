@@ -10,7 +10,7 @@ import { MemberService } from '@/app/services/member.service';
 import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
-import { Output, EventEmitter } from '@angular/core';
+
 
 @Component({
   selector: 'app-table-members',
@@ -22,7 +22,7 @@ import { Output, EventEmitter } from '@angular/core';
 export class TableMembersComponent {
   private URL: string = environment.FILE_URL;
   public userImg = `${this.URL}/user.png`;
-  @Input() data!: Member[];
+  @Input() data!: { selected: boolean; member: Member }[];
   @Input() volunteersList!: Volunteer[];
 
   @Output() memberDeleted = new EventEmitter<void>();

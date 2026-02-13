@@ -67,22 +67,35 @@ export class MembersComponent implements OnInit {
     const offset = (this.currentPage - 1) * this.pageSize;
     this.memberService
       .getAllMembers(offset, this.pageSize, this.searchWord)
-      .subscribe((result: HttpResult<Member[]>) => {
-        if (result.success && result.data) {
-          this.member = result.data;
-          this.memberFilter = this.member;
+      .subscribe({
+        next: (result: HttpResult<Member[]>) => {
+          if (result.success && result.data) {
+            this.member = result.data;
+            this.memberFilter = this.member;
 
-          // Initialize selection list for current page
-          this.membersChooseList = this.member.map(m => ({
-            selected: false,
-            member: m,
-          }));
+            // Initialize selection list for current page
+            this.membersChooseList = this.member.map(m => ({
+              selected: false,
+              member: m,
+            }));
 
-          if (result.pagination) {
-            this.totalMembers = result.pagination.total;
+            if (result.pagination) {
+              this.totalMembers = result.pagination.total;
+
+              // Handle edge case where current page is empty after delete
+              if (this.member.length === 0 && this.currentPage > 1) {
+                this.currentPage--;
+                this.getMemberList();
+                return;
+              }
+            }
           }
-        }
-        this.isLoading = false;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+          // Optionally show error toast if not already handled by interceptor
+        },
       });
   }
 
@@ -92,6 +105,12 @@ export class MembersComponent implements OnInit {
         this.volunteers = result.data;
       }
     });
+  }
+
+  onMemberDeleted() {
+    this.memberFilter = []; // Immediate visual feedback
+    this.getMemberList();
+    this.getVolunteersList();
   }
 
   changePage(page: number) {
@@ -118,7 +137,7 @@ export class MembersComponent implements OnInit {
   closeForm(event: boolean) {
     if (event) {
       this.showAddForm = false;
-      this.getMemberList(); // Refresh the members list
+      this.onMemberDeleted(); // Refresh everything
     }
   }
 

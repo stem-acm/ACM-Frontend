@@ -18,5 +18,4 @@ export class CheckinService {
   getAllCheckin() {
     return this.http.get<HttpResult<Checkin[]>>(`${this.URL}/checkins`);
   }
-
 }

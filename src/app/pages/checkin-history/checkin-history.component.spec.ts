@@ -8,9 +8,8 @@ describe('CheckinHistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CheckinHistoryComponent]
-    })
-    .compileComponents();
+      imports: [CheckinHistoryComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CheckinHistoryComponent);
     component = fixture.componentInstance;

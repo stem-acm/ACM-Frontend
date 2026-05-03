@@ -2,6 +2,13 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+@font-face {
+  font-family: 'edu-cursive';
+  src: url('/EduNSWACTCursive.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* CircularStd Font Family */
 @font-face {
   font-family: 'CircularStd';
@@ -97,6 +104,10 @@ h6 {
     width: 100%;
     transform: scale(0.87);
     transform-origin: top center;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: start !important;
+    border: none !important;
   }
 
   #certificateSectionToPrint,

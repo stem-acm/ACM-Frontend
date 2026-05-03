@@ -5,13 +5,20 @@
   <!-- Header -->
   <div class="flex relative">
     <!-- Photo -->
-    <div class="w-28 h-28 rounded overflow-hidden shrink-0">
-      <img
-        [src]="getfileUrl(member.profileImage)"
-        alt="Member photo"
-        class="w-full h-full object-cover"
-      />
-    </div>
+     @if(member.profileImage && member.profileImage != '') {
+       <div class="w-28 h-28 rounded overflow-hidden shrink-0">
+         <img
+           [src]="getfileUrl(member.profileImage)"
+           alt="Member photo"
+           class="w-full h-full object-cover"
+         />
+       </div>
+     } @else {
+       <div class="w-28 h-28 rounded overflow-hidden border border-gray-900 border-dashed shrink-0 flex flex-col items-center justify-center text-xs font-bold text-gray-900">
+         <p>Photo</p>
+         <p>4x4</p>
+       </div>
+     }
 
     @if (checkData.stamp) {
       <img
@@ -30,7 +37,7 @@
       </div>
       <div class="font-semibold text-xs pl-2 flex flex-col gap-2">
         <div class="flex">
-          <div>N° : _ACMJN_</div>
+          <div>N° :</div>
           <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
             <app-text-cursive [text]="member.registrationNumber" />
           </div>
@@ -81,7 +88,7 @@
     <div class="flex">
       <div class="flex">
         <div>Occupation :</div>
-        <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+        <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1 capitalize">
           <app-text-cursive [text]="member.occupation" />
         </div>
       </div>

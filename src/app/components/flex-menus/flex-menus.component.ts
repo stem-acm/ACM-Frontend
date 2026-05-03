@@ -37,6 +37,11 @@ export class FlexMenusComponent {
       exact: false,
     },
     {
+      route: '/checkin-history',
+      labelKey: 'nav.checkin-history',
+      exact: false,
+    },
+    {
       route: '/checkin',
       labelKey: 'nav.checkin',
       exact: false,

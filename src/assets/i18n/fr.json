@@ -6,6 +6,7 @@
     "volunteer": "Bénévoles",
     "activity": "Activités",
     "checkin": "Enregistrement",
+    "checkin-history": "Historique",
     "signOut": "Déconnexion",
     "settings": "Paramètres",
     "manageIntern": "Gérer les stagiaires",
@@ -18,7 +19,8 @@
     "listOfActivities": "Liste des Activités",
     "listOfVolunteers": "Liste des Bénévoles",
     "membersInRoom": "Membres actuellement dans la salle",
-    "authentification": "Authentification"
+    "authentification": "Authentification",
+    "membersCheckedInRoom": "Membres enregistrés à l'ACM"
   },
   "forms": {
     "firstName": "Prénom",
@@ -90,7 +92,8 @@
     "searchMembers": "Recherche de membres...",
     "findingActivities": "Recherche d'activités...",
     "searchVolunteers": "Recherche de bénévoles...",
-    "lookingForMembers": "Recherche de membres dans la salle aujourd'hui..."
+    "lookingForMembers": "Recherche de membres dans la salle aujourd'hui...",
+    "lookingForMembersChecked": "Recherche de membres dans la salle..."
   },
   "table": {
     "columns": {

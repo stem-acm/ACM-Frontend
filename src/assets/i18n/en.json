@@ -6,6 +6,7 @@
     "volunteer": "Volunteers",
     "activity": "Activities",
     "checkin": "Checkins",
+    "checkin-history": "Checkin History",
     "signOut": "Sign out",
     "settings": "Settings",
     "manageIntern": "Manage intern",
@@ -18,7 +19,8 @@
     "listOfActivities": "List of Activities",
     "listOfVolunteers": "List of Volunteers",
     "membersInRoom": "Members currently in the room",
-    "authentification": "Authentification"
+    "authentification": "Authentification",
+    "membersCheckedInRoom": "Members checked in ACM"
   },
   "forms": {
     "firstName": "First Name",
@@ -90,7 +92,8 @@
     "searchMembers": "Search members...",
     "findingActivities": "Finding activities...",
     "searchVolunteers": "Search volunteers...",
-    "lookingForMembers": "Looking for members in the room today..."
+    "lookingForMembers": "Looking for members in the room today...",
+    "lookingForMembersChecked": "Looking for members in the room..."
   },
   "table": {
     "columns": {

@@ -6,6 +6,7 @@
     "volunteer": "Mpanao an-tsitrapo",
     "activity": "Hetsika",
     "checkin": "Fisoratana anarana",
+    "checkin-history": "Tahiry",
     "signOut": "Fialana",
     "settings": "Fikirana",
     "manageIntern": "Fitantanana ny mpiofana",
@@ -18,7 +19,8 @@
     "listOfActivities": "Lisitry ny Hetsika",
     "listOfVolunteers": "Lisitry ny Mpanao an-tsitrapo",
     "membersInRoom": "Mpikambana ao amin'ny efitrano ankehitriny",
-    "authentification": "Fanamarinana"
+    "authentification": "Fanamarinana",
+    "membersCheckedInRoom": "Mpikambana niditra tao amin'ny ACM"
   },
   "forms": {
     "firstName": "Anarana",
@@ -90,7 +92,8 @@
     "searchMembers": "Mitady mpikambana...",
     "findingActivities": "Mitady hetsika...",
     "searchVolunteers": "Mitady mpanao an-tsitrapo...",
-    "lookingForMembers": "Mitady mpikambana ao amin'ny efitrano androany..."
+    "lookingForMembers": "Mitady mpikambana ao amin'ny efitrano androany...",
+    "lookingForMembersChecked": "Mitady mpikambana ao amin'ny efitrano..."
   },
   "table": {
     "columns": {

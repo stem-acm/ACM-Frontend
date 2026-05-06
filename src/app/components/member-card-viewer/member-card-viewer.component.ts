@@ -40,34 +40,28 @@ export class MemberCardViewerComponent {
 
     iframeDoc.open();
 
-    // Build styles HTML
+    // Copier les styles Tailwind + Angular correctement
     const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
       .map(node => {
         if (node.tagName === 'LINK') {
-          const href = (node as HTMLLinkElement).href;
+          const href = (node as HTMLLinkElement).href; // URL absolue
           return `<link rel="stylesheet" href="${href}">`;
         }
         return node.outerHTML;
       })
       .join('\n');
 
-    // Get the content HTML
-    const contentHtml = (content as HTMLElement).outerHTML;
-
-    // Using document.write() after document.open() is the correct approach for iframes
-    // The browser warning is about using write() during page load, not when explicitly opening
     iframeDoc.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Print</title>
-          ${styles}
-        </head>
-        <body>
-          ${contentHtml}
-        </body>
-      </html>
-    `);
+    <html>
+      <head>
+        <title>Print</title>
+        ${styles}
+      </head>
+      <body></body>
+    </html>
+  `);
+
+    iframeDoc.body.appendChild(content);
     iframeDoc.close();
 
     // Attendre les images
@@ -98,9 +92,7 @@ export class MemberCardViewerComponent {
     waitImagesLoaded().then(() => {
       iframeWin?.focus();
       iframeWin?.print();
-      setTimeout(() => {
-        document.body.removeChild(iframe);
-      }, 1000);
+      document.body.removeChild(iframe);
     });
   }
 }

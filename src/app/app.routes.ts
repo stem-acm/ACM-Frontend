@@ -7,6 +7,7 @@ import { CardsComponent } from './pages/cards/cards.component';
 import { ActivityComponent } from './pages/activity/activity.component';
 import { CheckinComponent } from './pages/checkin/checkin.component';
 import { VolunteerComponent } from './pages/volunteer/volunteer.component';
+import { CheckinHistoryComponent } from './pages/checkin-history/checkin-history.component';
 
 export const routes: Routes = [
   {
@@ -40,5 +41,9 @@ export const routes: Routes = [
   {
     path: 'checkin',
     component: CheckinComponent,
+  },
+  {
+    path: 'checkin-history',
+    component: CheckinHistoryComponent,
   },
 ];

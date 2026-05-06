@@ -14,4 +14,8 @@ export class CheckinService {
   createCheckin(memberData: Checkin) {
     return this.http.post<HttpResult<Checkin>>(`${this.URL}/checkins`, memberData);
   }
+
+  getAllCheckin() {
+    return this.http.get<HttpResult<Checkin[]>>(`${this.URL}/checkins`);
+  }
 }

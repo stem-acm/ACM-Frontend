@@ -36,6 +36,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
   @Input() activityToUpdate!: Activity;
   @Input() title = 'Add Activity';
   public loading = false;
+  public submitted = false;
   public activity: Activity = {
     name: '',
     description: '',
@@ -383,6 +384,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
   }
 
   saveActivity() {
+    this.submitted = true;
     this.loading = true;
     if (this.mode == 'insert') {
       this.insertActivity();
@@ -431,6 +433,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
             enabled: false,
             message: '',
           };
+          this.submitted = false;
           this.showToast.emit(`Activity ${this.activity.name} created successfully`);
           this.activity = {
             name: '',
@@ -502,6 +505,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
             enabled: false,
             message: '',
           };
+          this.submitted = false;
           this.updatedData.emit({
             data: this.activity,
             message: `Activity ${this.activity.name} updated successfully`,

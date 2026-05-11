@@ -2,6 +2,7 @@
   class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center items-center"
 >
   <form
+    #volunteerForm="ngForm"
     (ngSubmit)="saveVolunteer()"
     class="max-w-3xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl"
   >
@@ -13,28 +14,34 @@
       <div class="w-1/2 mb-5">
         <label for="joinDate" class="block mb-2 text-sm font-medium">{{
           'forms.joinDate' | translate
-        }}</label>
+        }}<span class="text-red-500">*</span></label>
         <input
           type="date"
           id="joinDate"
           [(ngModel)]="joinDate"
           name="joinDate"
           required
+          [class.border-red-500]="(volunteerForm.controls['joinDate']?.invalid && (volunteerForm.controls['joinDate']?.touched || submitted)) || (submitted && !joinDate)"
+          [class.focus:ring-red-500]="(volunteerForm.controls['joinDate']?.invalid && (volunteerForm.controls['joinDate']?.touched || submitted)) || (submitted && !joinDate)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
+        <p *ngIf="(volunteerForm.controls['joinDate']?.invalid && (volunteerForm.controls['joinDate']?.touched || submitted)) || (submitted && !joinDate)" class="mt-1 text-xs text-red-500">This field is required.</p>
       </div>
       <div class="w-1/2 mb-5">
         <label for="expirationDate" class="block mb-2 text-sm font-medium">{{
           'forms.expirationDate' | translate
-        }}</label>
+        }}<span class="text-red-500">*</span></label>
         <input
           type="date"
           id="expirationDate"
           [(ngModel)]="expirationDate"
           name="expirationDate"
           required
+          [class.border-red-500]="(volunteerForm.controls['expirationDate']?.invalid && (volunteerForm.controls['expirationDate']?.touched || submitted)) || (submitted && !expirationDate)"
+          [class.focus:ring-red-500]="(volunteerForm.controls['expirationDate']?.invalid && (volunteerForm.controls['expirationDate']?.touched || submitted)) || (submitted && !expirationDate)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
+        <p *ngIf="(volunteerForm.controls['expirationDate']?.invalid && (volunteerForm.controls['expirationDate']?.touched || submitted)) || (submitted && !expirationDate)" class="mt-1 text-xs text-red-500">This field is required.</p>
       </div>
     </div>
 
@@ -49,7 +56,6 @@
           (input)="search(searchWord)"
           name="search-member"
           [placeholder]="'placeholders.searchMember' | translate"
-          required
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
       </div>
@@ -67,6 +73,7 @@
         (memberSelectionChange)="onMemberSelectionChange($event)"
       />
     </div>
+    <p *ngIf="selectedMemberInvalid && submitted" class="mt-1 text-xs text-red-500">Select a member to continue.</p>
 
     @if (error.enabled) {
       <span class="text-xs font-bold text-red-500 bg-red-100">{{ error.message }}</span>

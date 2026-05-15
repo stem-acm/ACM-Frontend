@@ -34,6 +34,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
   @Input() memberToUpdate!: Member;
   @Input() title!: string;
   public loading = false;
+  public submitted = false;
   public member: Member = {
     registrationNumber: '',
     firstName: '',
@@ -117,6 +118,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
   }
 
   saveMember() {
+    this.submitted = true;
     this.loading = true;
     if (this.mode == 'insert') {
       this.insertMember();
@@ -141,6 +143,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
             enabled: false,
             message: '',
           };
+          this.submitted = false;
           this.showToast.emit(
             `Member ${this.member.firstName} ${this.member.lastName} created successfully`,
           );
@@ -187,6 +190,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
             enabled: false,
             message: '',
           };
+          this.submitted = false;
           this.updatedData.emit({
             data: this.member,
             message: `Member ${this.member.firstName} ${this.member.lastName} updated successfully`,

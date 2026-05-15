@@ -36,6 +36,8 @@ export class AddVolunteerComponent implements OnInit {
   @Input() mode: 'update' | 'insert' = 'insert';
   @Input() title!: string;
   public loading = false;
+  public submitted = false;
+  public selectedMemberInvalid = false;
   private memberService = inject(MemberService);
   private volunteerService = inject(VolunteerService);
   private member!: Member[];
@@ -74,13 +76,16 @@ export class AddVolunteerComponent implements OnInit {
   }
 
   checkValidation(): boolean {
-    if (this.joinDate && this.expirationDate) {
+    const selectedMember = this.membersChooseList.some(e => e.selected);
+    if (selectedMember && this.joinDate && this.expirationDate) {
       return true;
     }
     return false;
   }
 
   saveVolunteer() {
+    this.submitted = true;
+    this.selectedMemberInvalid = !this.membersChooseList.some(e => e.selected);
     this.loading = true;
     if (this.mode == 'insert') {
       this.insertVolunteer();
@@ -89,6 +94,7 @@ export class AddVolunteerComponent implements OnInit {
 
   insertVolunteer() {
     if (!this.checkValidation()) {
+      this.selectedMemberInvalid = !this.membersChooseList.some(e => e.selected);
       this.error = {
         enabled: true,
         message: 'Please fill in all required fields.',
@@ -110,6 +116,8 @@ export class AddVolunteerComponent implements OnInit {
       .subscribe((result: HttpResult<Volunteer>) => {
         if (result.success && result.data) {
           this.loading = false;
+          this.submitted = false;
+          this.selectedMemberInvalid = false;
           this.error = {
             enabled: false,
             message: '',
@@ -132,6 +140,9 @@ export class AddVolunteerComponent implements OnInit {
         e.selected = event.selected;
       }
     });
+    if (this.membersChooseList.some(e => e.selected)) {
+      this.selectedMemberInvalid = false;
+    }
   }
 
   open(event: Member) {

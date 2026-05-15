@@ -12,36 +12,70 @@
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
-        <label for="joinDate" class="block mb-2 text-sm font-medium">{{
-          'forms.joinDate' | translate
-        }}<span class="text-red-500">*</span></label>
+        <label for="joinDate" class="block mb-2 text-sm font-medium"
+          >{{ 'forms.joinDate' | translate }}<span class="text-red-500">*</span></label
+        >
         <input
           type="date"
           id="joinDate"
           [(ngModel)]="joinDate"
           name="joinDate"
           required
-          [class.border-red-500]="(volunteerForm.controls['joinDate']?.invalid && (volunteerForm.controls['joinDate']?.touched || submitted)) || (submitted && !joinDate)"
-          [class.focus:ring-red-500]="(volunteerForm.controls['joinDate']?.invalid && (volunteerForm.controls['joinDate']?.touched || submitted)) || (submitted && !joinDate)"
+          [class.border-red-500]="
+            (volunteerForm.controls['joinDate']?.invalid &&
+              (volunteerForm.controls['joinDate']?.touched || submitted)) ||
+            (submitted && !joinDate)
+          "
+          [class.focus:ring-red-500]="
+            (volunteerForm.controls['joinDate']?.invalid &&
+              (volunteerForm.controls['joinDate']?.touched || submitted)) ||
+            (submitted && !joinDate)
+          "
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
-        <p *ngIf="(volunteerForm.controls['joinDate']?.invalid && (volunteerForm.controls['joinDate']?.touched || submitted)) || (submitted && !joinDate)" class="mt-1 text-xs text-red-500">This field is required.</p>
+        <p
+          *ngIf="
+            (volunteerForm.controls['joinDate']?.invalid &&
+              (volunteerForm.controls['joinDate']?.touched || submitted)) ||
+            (submitted && !joinDate)
+          "
+          class="mt-1 text-xs text-red-500"
+        >
+          This field is required.
+        </p>
       </div>
       <div class="w-1/2 mb-5">
-        <label for="expirationDate" class="block mb-2 text-sm font-medium">{{
-          'forms.expirationDate' | translate
-        }}<span class="text-red-500">*</span></label>
+        <label for="expirationDate" class="block mb-2 text-sm font-medium"
+          >{{ 'forms.expirationDate' | translate }}<span class="text-red-500">*</span></label
+        >
         <input
           type="date"
           id="expirationDate"
           [(ngModel)]="expirationDate"
           name="expirationDate"
           required
-          [class.border-red-500]="(volunteerForm.controls['expirationDate']?.invalid && (volunteerForm.controls['expirationDate']?.touched || submitted)) || (submitted && !expirationDate)"
-          [class.focus:ring-red-500]="(volunteerForm.controls['expirationDate']?.invalid && (volunteerForm.controls['expirationDate']?.touched || submitted)) || (submitted && !expirationDate)"
+          [class.border-red-500]="
+            (volunteerForm.controls['expirationDate']?.invalid &&
+              (volunteerForm.controls['expirationDate']?.touched || submitted)) ||
+            (submitted && !expirationDate)
+          "
+          [class.focus:ring-red-500]="
+            (volunteerForm.controls['expirationDate']?.invalid &&
+              (volunteerForm.controls['expirationDate']?.touched || submitted)) ||
+            (submitted && !expirationDate)
+          "
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
-        <p *ngIf="(volunteerForm.controls['expirationDate']?.invalid && (volunteerForm.controls['expirationDate']?.touched || submitted)) || (submitted && !expirationDate)" class="mt-1 text-xs text-red-500">This field is required.</p>
+        <p
+          *ngIf="
+            (volunteerForm.controls['expirationDate']?.invalid &&
+              (volunteerForm.controls['expirationDate']?.touched || submitted)) ||
+            (submitted && !expirationDate)
+          "
+          class="mt-1 text-xs text-red-500"
+        >
+          This field is required.
+        </p>
       </div>
     </div>
 
@@ -73,7 +107,9 @@
         (memberSelectionChange)="onMemberSelectionChange($event)"
       />
     </div>
-    <p *ngIf="selectedMemberInvalid && submitted" class="mt-1 text-xs text-red-500">Select a member to continue.</p>
+    <p *ngIf="selectedMemberInvalid && submitted" class="mt-1 text-xs text-red-500">
+      Select a member to continue.
+    </p>
 
     @if (error.enabled) {
       <span class="text-xs font-bold text-red-500 bg-red-100">{{ error.message }}</span>

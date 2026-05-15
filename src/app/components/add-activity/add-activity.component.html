@@ -12,9 +12,9 @@
 
     <!-- Nom -->
     <div class="mb-5">
-      <label for="name" class="block mb-2 text-sm font-medium">{{
-        'forms.activityName' | translate
-      }}<span class="text-red-500">*</span></label>
+      <label for="name" class="block mb-2 text-sm font-medium"
+        >{{ 'forms.activityName' | translate }}<span class="text-red-500">*</span></label
+      >
       <input
         type="text"
         id="name"
@@ -27,14 +27,19 @@
         [class.focus:ring-red-500]="activityName.invalid && (activityName.touched || submitted)"
         class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
-      <p *ngIf="activityName.invalid && (activityName.touched || submitted)" class="mt-1 text-xs text-red-500">This field is required.</p>
+      <p
+        *ngIf="activityName.invalid && (activityName.touched || submitted)"
+        class="mt-1 text-xs text-red-500"
+      >
+        This field is required.
+      </p>
     </div>
 
     <!-- Description -->
     <div class="mb-5">
-      <label for="description" class="block mb-2 text-sm font-medium">{{
-        'forms.description' | translate
-      }}<span class="text-red-500">*</span></label>
+      <label for="description" class="block mb-2 text-sm font-medium"
+        >{{ 'forms.description' | translate }}<span class="text-red-500">*</span></label
+      >
       <textarea
         id="description"
         [(ngModel)]="activity.description"
@@ -47,7 +52,12 @@
         [class.focus:ring-red-500]="description.invalid && (description.touched || submitted)"
         class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       ></textarea>
-      <p *ngIf="description.invalid && (description.touched || submitted)" class="mt-1 text-xs text-red-500">This field is required.</p>
+      <p
+        *ngIf="description.invalid && (description.touched || submitted)"
+        class="mt-1 text-xs text-red-500"
+      >
+        This field is required.
+      </p>
     </div>
 
     <!-- Emoji Picker -->
@@ -105,9 +115,9 @@
 
     @if (activity.isPeriodic) {
       <div class="mb-5">
-        <label for="dayOfWeek" class="ml-2 text-sm font-medium">{{
-          'forms.dayOfWeek' | translate
-        }}<span class="text-red-500">*</span></label>
+        <label for="dayOfWeek" class="ml-2 text-sm font-medium"
+          >{{ 'forms.dayOfWeek' | translate }}<span class="text-red-500">*</span></label
+        >
         <select
           id="dayOfWeek"
           [(ngModel)]="activity.dayOfWeek"
@@ -126,13 +136,18 @@
           <option value="friday">{{ 'days.friday' | translate }}</option>
           <option value="saturday">{{ 'days.saturday' | translate }}</option>
         </select>
-        <p *ngIf="dayOfWeek.invalid && (dayOfWeek.touched || submitted)" class="mt-1 text-xs text-red-500">This field is required.</p>
+        <p
+          *ngIf="dayOfWeek.invalid && (dayOfWeek.touched || submitted)"
+          class="mt-1 text-xs text-red-500"
+        >
+          This field is required.
+        </p>
       </div>
     } @else {
       <div class="mb-5">
-        <label for="startDate" class="ml-2 text-sm font-medium">{{
-          'forms.startDate' | translate
-        }}<span class="text-red-500">*</span></label>
+        <label for="startDate" class="ml-2 text-sm font-medium"
+          >{{ 'forms.startDate' | translate }}<span class="text-red-500">*</span></label
+        >
         <input
           type="date"
           id="startDate"
@@ -144,12 +159,17 @@
           [class.focus:ring-red-500]="startDate.invalid && (startDate.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
-        <p *ngIf="startDate.invalid && (startDate.touched || submitted)" class="mt-1 text-xs text-red-500">This field is required.</p>
+        <p
+          *ngIf="startDate.invalid && (startDate.touched || submitted)"
+          class="mt-1 text-xs text-red-500"
+        >
+          This field is required.
+        </p>
       </div>
       <div class="mb-5">
-        <label for="endDate" class="ml-2 text-sm font-medium">{{
-          'forms.endDate' | translate
-        }}<span class="text-red-500">*</span></label>
+        <label for="endDate" class="ml-2 text-sm font-medium"
+          >{{ 'forms.endDate' | translate }}<span class="text-red-500">*</span></label
+        >
         <input
           type="date"
           id="endDate"
@@ -161,14 +181,19 @@
           [class.focus:ring-red-500]="endDate.invalid && (endDate.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
-        <p *ngIf="endDate.invalid && (endDate.touched || submitted)" class="mt-1 text-xs text-red-500">This field is required.</p>
+        <p
+          *ngIf="endDate.invalid && (endDate.touched || submitted)"
+          class="mt-1 text-xs text-red-500"
+        >
+          This field is required.
+        </p>
       </div>
     }
 
     <div class="mb-5">
-      <label for="startTime" class="ml-2 text-sm font-medium">{{
-        'forms.startTime' | translate
-      }}<span class="text-red-500">*</span></label>
+      <label for="startTime" class="ml-2 text-sm font-medium"
+        >{{ 'forms.startTime' | translate }}<span class="text-red-500">*</span></label
+      >
       <input
         type="time"
         id="startTime"
@@ -180,12 +205,17 @@
         [class.focus:ring-red-500]="startTime.invalid && (startTime.touched || submitted)"
         class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
-      <p *ngIf="startTime.invalid && (startTime.touched || submitted)" class="mt-1 text-xs text-red-500">This field is required.</p>
+      <p
+        *ngIf="startTime.invalid && (startTime.touched || submitted)"
+        class="mt-1 text-xs text-red-500"
+      >
+        This field is required.
+      </p>
     </div>
     <div class="mb-5">
-      <label for="endTime" class="ml-2 text-sm font-medium">{{
-        'forms.endTime' | translate
-      }}<span class="text-red-500">*</span></label>
+      <label for="endTime" class="ml-2 text-sm font-medium"
+        >{{ 'forms.endTime' | translate }}<span class="text-red-500">*</span></label
+      >
       <input
         type="time"
         id="endTime"
@@ -197,7 +227,12 @@
         [class.focus:ring-red-500]="endTime.invalid && (endTime.touched || submitted)"
         class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
-      <p *ngIf="endTime.invalid && (endTime.touched || submitted)" class="mt-1 text-xs text-red-500">This field is required.</p>
+      <p
+        *ngIf="endTime.invalid && (endTime.touched || submitted)"
+        class="mt-1 text-xs text-red-500"
+      >
+        This field is required.
+      </p>
     </div>
 
     @if (error.enabled) {

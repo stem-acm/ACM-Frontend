@@ -36,7 +36,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
   public loading = false;
   public submitted = false;
   public member: Member = {
-    registrationNumber: '',
+    registrationNumber: null,
     firstName: '',
     lastName: '',
     birthDate: '',
@@ -56,7 +56,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
       this.member = { ...this.memberToUpdate };
     } else {
       this.member = {
-        registrationNumber: '',
+        registrationNumber: null,
         firstName: '',
         lastName: '',
         birthDate: '',
@@ -79,7 +79,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
     if (changes['mode']) {
       if (this.mode === 'insert') {
         this.member = {
-          registrationNumber: '',
+          registrationNumber: null,
           firstName: '',
           lastName: '',
           birthDate: '',
@@ -148,7 +148,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
             `Member ${this.member.firstName} ${this.member.lastName} created successfully`,
           );
           this.member = {
-            registrationNumber: '',
+            registrationNumber: null,
             firstName: '',
             lastName: '',
             birthDate: '',

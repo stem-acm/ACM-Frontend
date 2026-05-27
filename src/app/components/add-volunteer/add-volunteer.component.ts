@@ -106,7 +106,7 @@ export class AddVolunteerComponent implements OnInit {
     const memberChoosed = this.membersChooseList.filter(e => e.selected === true);
     this.membersClicked = memberChoosed.map(e => e.member);
     const volunteerChoosed: Volunteer = {
-      memberId: (this.membersClicked[0].id ??= 0),
+      registrationNumber: this.membersClicked[0].registrationNumber,
       joinDate: this.joinDate,
       expirationDate: this.expirationDate,
     };

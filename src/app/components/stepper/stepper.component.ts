@@ -312,7 +312,7 @@ export class StepperComponent implements OnInit, OnDestroy {
       activityId: this.selectedActivities[0].id!,
       checkInTime: new Date(Date.now()),
       checkOutTime: date,
-      registrationNumber: this.scannedBadgeId!.split('reg=')[1],
+      registrationNumber: parseInt(this.scannedBadgeId!.split('reg=')[1]),
     };
 
     this.checkinService.createCheckin(payload).subscribe(

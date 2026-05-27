@@ -3,7 +3,7 @@ import { Member } from './member';
 
 export interface Checkin {
   id?: number;
-  registrationNumber: string;
+  registrationNumber: number;
   activityId: number;
   checkInTime: Date;
   checkOutTime?: Date;

@@ -1,8 +1,7 @@
 import { Occupation } from '@/app/types/occupation';
 
 export interface Member {
-  id?: number;
-  registrationNumber: string;
+  registrationNumber?: number | null;
   firstName: string;
   lastName: string;
   birthDate: Date | string;

@@ -38,8 +38,7 @@ export class ProfilComponent implements OnInit {
           this.member.joinDate = this.convertDate(this.member.joinDate);
         } else {
           this.member = {
-            registrationNumber: this.registrationNumber,
-            id: 0,
+            registrationNumber: parseInt(this.registrationNumber),
             firstName: '404',
             lastName: '',
             birthDate: '',
@@ -57,8 +56,7 @@ export class ProfilComponent implements OnInit {
         console.log(err);
 
         this.member = {
-          registrationNumber: this.registrationNumber,
-          id: 0,
+          registrationNumber: parseInt(this.registrationNumber),
           firstName: '404',
           lastName: '',
           birthDate: '',

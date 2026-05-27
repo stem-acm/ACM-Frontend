@@ -110,7 +110,7 @@ export class CheckinHistoryComponent implements OnInit {
         return true;
       }
 
-      return checkin.registrationNumber.toLowerCase().includes(name.toLowerCase());
+      return checkin.registrationNumber.toString().toLowerCase().includes(name.toLowerCase());
     });
   }
 }

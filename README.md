@@ -344,7 +344,6 @@ docker-compose.dev.yml
 - Angular 18
 - Docker
 - Docker Compose
-- Nginx
 - Node.js 20 Alpine
 
 ---

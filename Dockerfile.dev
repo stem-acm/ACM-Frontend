@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies required by Angular
+RUN apk add --no-cache git
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy source
+COPY . .
+
+EXPOSE 4200
+
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0", "--poll=2000"]

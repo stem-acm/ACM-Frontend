@@ -1,0 +1,18 @@
+services:
+  acm-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - '4200:4200'
+
+    restart: unless-stopped
+
+    # Optional: limit resources in production
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M

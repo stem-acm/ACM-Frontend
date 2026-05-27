@@ -15,7 +15,3 @@
 #           memory: 256M
 #         reservations:
 #           memory: 128M
-
-services:
-  acm-frontend:
-    container_name: acm-frontend

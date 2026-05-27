@@ -1,5 +1,7 @@
 services:
-  acm-frontend:
+  acm-frontend-prod:
+    container_name: acm-frontend-prod
+
     build:
       context: .
       dockerfile: Dockerfile

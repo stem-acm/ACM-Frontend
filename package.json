@@ -2,6 +2,10 @@
   "name": "acm-frontend",
   "version": "0.0.0",
   "scripts": {
+    "docker-dev:start": "docker compose -f docker-compose.dev.yml up -d",
+    "docker-dev:stop": "docker compose -f docker-compose.dev.yml stop",
+    "docker-prod:start": "docker compose -f docker-compose.prod.yml up -d",
+    "docker-prod:stop": "docker compose -f docker-compose.prod.yml stop",
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --poll 2000 --configuration development",
     "build": "ng build",

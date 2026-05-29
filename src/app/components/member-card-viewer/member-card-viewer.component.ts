@@ -51,17 +51,20 @@ export class MemberCardViewerComponent {
       })
       .join('\n');
 
-    iframeDoc.write(`
-    <html>
-      <head>
-        <title>Print</title>
-        ${styles}
-      </head>
-      <body></body>
-    </html>
-  `);
+    const contentHtml = (content as HTMLElement).outerHTML;
 
-    iframeDoc.body.appendChild(content);
+    iframeDoc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Print</title>
+          ${styles}
+        </head>
+        <body>
+          ${contentHtml}
+        </body>
+      </html>
+    `);
     iframeDoc.close();
 
     // Attendre les images

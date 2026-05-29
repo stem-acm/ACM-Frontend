@@ -92,7 +92,7 @@
           name="gender"
           #gender="ngModel"
           [class.border-red-500]="gender.invalid && (gender.touched || submitted)"
-          [class.focus:ring-red-500]="occupation.invalid && (occupation.touched || submitted)"
+          [class.focus:ring-red-500]="gender.invalid && (gender.touched || submitted)"
           class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
           <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
@@ -109,8 +109,8 @@
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
         <label for="Birthday" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.birthday' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.birthday' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="date"
           id="Birthday"
@@ -131,8 +131,8 @@
 
       <div class="w-1/2 mb-5">
         <label for="birthPlace" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.placeOfBirth' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.placeOfBirth' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="text"
           id="birthPlace"
@@ -156,8 +156,8 @@
     <div class="flex gap-4">
       <div class="w-1/3 mb-5">
         <label for="adress" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.address' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.address' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="text"
           id="adress"
@@ -179,8 +179,8 @@
 
       <div class="w-1/3 mb-5">
         <label for="tel" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.phoneNumber' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.phoneNumber' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="tel"
           id="tel"
@@ -202,8 +202,8 @@
 
       <div class="w-1/3 mb-5">
         <label for="occupation" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.occupation' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.occupation' | translate }}<span class="text-red-500"></span
+        ></label>
         <select
           id="occupation"
           [(ngModel)]="member.occupation"
@@ -227,8 +227,8 @@
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
         <label for="organization" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.placeOfWorkStudy' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.placeOfWorkStudy' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="text"
           id="organization"
@@ -254,8 +254,8 @@
 
       <div class="w-1/2 mb-5">
         <label for="joinDate" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.joinDate' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.joinDate' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="date"
           id="joinDate"

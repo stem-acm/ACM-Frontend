@@ -51,7 +51,8 @@
     "physicalAddress": "Physical Address (in Mahajanga)",
     "membershipDate": "Membership date",
     "phoneContact": "Phone Contact",
-    "titlePrefix": "Mr. / Mrs. / Miss."
+    "titlePrefix": "Mr. / Mrs. / Miss.",
+    "role": "Role"
   },
   "placeholders": {
     "firstName": "eg: John",

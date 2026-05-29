@@ -52,6 +52,7 @@ export class AddVolunteerComponent implements OnInit {
   public searchWord!: string;
   public joinDate!: Date | null | undefined;
   public expirationDate!: Date | null | undefined;
+  public role!: string;
   private searchSubject = new Subject<string>();
 
   ngOnInit() {
@@ -132,7 +133,7 @@ export class AddVolunteerComponent implements OnInit {
     this.membersClicked = memberChoosed.map(e => e.member);
     const volunteerChoosed: Volunteer = {
       registrationNumber: this.membersClicked[0].registrationNumber,
-      role: null,
+      role: this.role,
       joinDate: this.joinDate,
       expirationDate: this.expirationDate,
     };

@@ -23,15 +23,20 @@
           #joinDateCtrl="ngModel"
           required
           [class.border-red-500]="
-            (joinDateCtrl.invalid && (joinDateCtrl.touched || submitted)) || (submitted && !joinDate)
+            (joinDateCtrl.invalid && (joinDateCtrl.touched || submitted)) ||
+            (submitted && !joinDate)
           "
           [class.focus:ring-red-500]="
-            (joinDateCtrl.invalid && (joinDateCtrl.touched || submitted)) || (submitted && !joinDate)
+            (joinDateCtrl.invalid && (joinDateCtrl.touched || submitted)) ||
+            (submitted && !joinDate)
           "
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
-          *ngIf="(joinDateCtrl.invalid && (joinDateCtrl.touched || submitted)) || (submitted && !joinDate)"
+          *ngIf="
+            (joinDateCtrl.invalid && (joinDateCtrl.touched || submitted)) ||
+            (submitted && !joinDate)
+          "
           class="mt-1 text-xs text-red-500"
         >
           This field is required.
@@ -70,6 +75,33 @@
       </div>
     </div>
 
+    <div class="w-full mb-5">
+      <label for="role" class="block mb-2 text-sm font-medium"
+        >{{ 'forms.role' | translate }}<span class="text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="role"
+        [(ngModel)]="role"
+        name="role"
+        #roleCtrl="ngModel"
+        required
+        [class.border-red-500]="
+          (roleCtrl.invalid && (roleCtrl.touched || submitted)) || (submitted && !role)
+        "
+        [class.focus:ring-red-500]="
+          (roleCtrl.invalid && (roleCtrl.touched || submitted)) || (submitted && !role)
+        "
+        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+      />
+      <p
+        *ngIf="(roleCtrl.invalid && (roleCtrl.touched || submitted)) || (submitted && !role)"
+        class="mt-1 text-xs text-red-500"
+      >
+        This field is required.
+      </p>
+    </div>
+
     <div class="mb-5">
       <label class="inline-flex items-center gap-2 cursor-pointer">
         <input
@@ -85,7 +117,7 @@
 
     <ng-container *ngIf="isMemberAlready; else notMember">
       <div class="flex gap-4">
-        <div class="w-md mb-5">
+        <div class="w-full mb-5">
           <label for="membername" class="block mb-2 text-sm font-medium">
             {{ 'forms.searchMemberName' | translate }}
           </label>

@@ -51,7 +51,8 @@
     "physicalAddress": "Adresse physique (à Mahajanga)",
     "membershipDate": "Date d'adhésion",
     "phoneContact": "Contact téléphonique",
-    "titlePrefix": "M. / Mme / Mlle"
+    "titlePrefix": "M. / Mme / Mlle",
+    "role": "Rôle"
   },
   "placeholders": {
     "firstName": "ex: Jean",

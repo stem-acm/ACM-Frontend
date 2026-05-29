@@ -15,6 +15,8 @@ import { HttpResult } from '@/app/types/httpResult';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { Title } from '@/app/types/title';
+import { Gender } from '@/app/types/gender';
 
 @Component({
   selector: 'app-add-member',
@@ -29,16 +31,20 @@ export class AddMemberComponent implements OnChanges, OnInit {
   @Output() success = new EventEmitter<boolean>();
   @Output() updatedData = new EventEmitter<{ data: Member; message: string }>();
   public occupations: Occupation[] = ['employee', 'entrepreneur', 'student', 'unemployed'];
+  public titles: Title[] = ['Miss', 'Mr', 'Mrs'];
+  public genders: Gender[] = ['male', 'female'];
   public error: { enabled: boolean; message: string } = { enabled: false, message: '' };
   @Input() mode: 'update' | 'insert' = 'insert';
   @Input() memberToUpdate!: Member;
-  @Input() title!: string;
+  @Input() pageTitle!: string;
   public loading = false;
   public submitted = false;
   public member: Member = {
     registrationNumber: null,
     firstName: '',
     lastName: '',
+    title: 'Mr',
+    gender: 'male',
     birthDate: '',
     birthPlace: '',
     address: '',
@@ -59,6 +65,8 @@ export class AddMemberComponent implements OnChanges, OnInit {
         registrationNumber: null,
         firstName: '',
         lastName: '',
+        title: '',
+        gender: '',
         birthDate: '',
         birthPlace: '',
         address: '',
@@ -82,6 +90,8 @@ export class AddMemberComponent implements OnChanges, OnInit {
           registrationNumber: null,
           firstName: '',
           lastName: '',
+          title: '',
+          gender: '',
           birthDate: '',
           birthPlace: '',
           address: '',
@@ -102,7 +112,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
   checkValidation(): boolean {
     const m = this.member;
     if (
-      m.firstName?.trim() &&
+      m.firstName?.trim() /* &&
       m.lastName?.trim() &&
       m.birthDate &&
       m.birthPlace?.trim() &&
@@ -110,7 +120,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
       m.occupation &&
       m.studyOrWorkPlace?.trim() &&
       m.phoneNumber?.trim() &&
-      m.joinDate
+      m.joinDate */
     ) {
       return true;
     }
@@ -151,6 +161,8 @@ export class AddMemberComponent implements OnChanges, OnInit {
             registrationNumber: null,
             firstName: '',
             lastName: '',
+            title: '',
+            gender: '',
             birthDate: '',
             birthPlace: '',
             address: '',
@@ -167,7 +179,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
       error => {
         this.error = {
           enabled: true,
-          message: error.error.message,
+          message: error.error?.message || 'An error occurred',
         };
         this.loading = false;
       },
@@ -201,7 +213,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
       error => {
         this.error = {
           enabled: true,
-          message: error.error.message,
+          message: error.error?.message || 'An error occurred',
         };
         this.loading = false;
       },

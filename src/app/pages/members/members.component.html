@@ -254,7 +254,7 @@
 @if (showAddForm) {
   <app-add-member
     mode="insert"
-    [title]="'titles.newMember' | translate"
+    [pageTitle]="'titles.newMember' | translate"
     (showToast)="showAlert($event)"
     (canceled)="cancelForm($event)"
     (success)="closeForm($event)"

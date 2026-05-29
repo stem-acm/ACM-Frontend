@@ -5,6 +5,7 @@ import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CardSkeletonComponent } from '../card-skeleton/card-skeleton.component';
 import { CardComponent } from '../card/card.component';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
@@ -18,6 +19,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   imports: [
     FormsModule,
     CommonModule,
+    RouterLink,
     CardSkeletonComponent,
     CardComponent,
     MemberCardViewerComponent,
@@ -38,6 +40,7 @@ export class AddVolunteerComponent implements OnInit {
   public loading = false;
   public submitted = false;
   public selectedMemberInvalid = false;
+  public isMemberAlready = true;
   private memberService = inject(MemberService);
   private volunteerService = inject(VolunteerService);
   private member!: Member[];
@@ -64,18 +67,32 @@ export class AddVolunteerComponent implements OnInit {
     this.memberService.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
       if (result.success && result.data) {
         this.member = result.data;
-        this.member.map(e => {
+        this.member.forEach(e => {
           this.membersChooseList.push({
             selected: false,
             member: e,
           });
         });
-        this.membersChooseListFilter = this.membersChooseList.slice(0, 10);
       }
+      this.membersChooseListFilter = this.membersChooseList.slice(0, 10);
     });
   }
 
+  onIsMemberAlreadyChange(checked: boolean) {
+    this.isMemberAlready = checked;
+    if (!checked) {
+      this.membersChooseList.forEach(e => (e.selected = false));
+      this.membersChooseListFilter = [];
+      this.selectedMemberInvalid = false;
+    } else {
+      this.membersChooseListFilter = this.membersChooseList.slice(0, 10);
+    }
+  }
+
   checkValidation(): boolean {
+    if (!this.isMemberAlready) {
+      return false;
+    }
     const selectedMember = this.membersChooseList.some(e => e.selected);
     if (selectedMember && this.joinDate && this.expirationDate) {
       return true;
@@ -95,9 +112,17 @@ export class AddVolunteerComponent implements OnInit {
   insertVolunteer() {
     if (!this.checkValidation()) {
       this.selectedMemberInvalid = !this.membersChooseList.some(e => e.selected);
+      let message = '';
+      if (!this.isMemberAlready) {
+        message = 'Check "IsMemberAlready" to search for a member.';
+      } else if (!this.membersChooseList.some(e => e.selected)) {
+        message = 'Please select a member.';
+      } else {
+        message = 'Please fill in both Join Date and Expiration Date.';
+      }
       this.error = {
         enabled: true,
-        message: 'Please fill in all required fields.',
+        message,
       };
       this.loading = false;
       return;
@@ -107,6 +132,7 @@ export class AddVolunteerComponent implements OnInit {
     this.membersClicked = memberChoosed.map(e => e.member);
     const volunteerChoosed: Volunteer = {
       registrationNumber: this.membersClicked[0].registrationNumber,
+      role: null,
       joinDate: this.joinDate,
       expirationDate: this.expirationDate,
     };
@@ -135,11 +161,25 @@ export class AddVolunteerComponent implements OnInit {
   }
 
   onMemberSelectionChange(event: { member: Member; selected: boolean }) {
-    this.membersChooseList.map(e => {
-      if (e.member.registrationNumber === event.member.registrationNumber) {
+    let found = false;
+    this.membersChooseList.some(e => {
+      if (e.member === event.member) {
         e.selected = event.selected;
+        found = true;
+        return true;
       }
+      return false;
     });
+    if (!found && this.membersChooseListFilter) {
+      this.membersChooseListFilter.some(e => {
+        if (e.member === event.member) {
+          e.selected = event.selected;
+          found = true;
+          return true;
+        }
+        return false;
+      });
+    }
     if (this.membersChooseList.some(e => e.selected)) {
       this.selectedMemberInvalid = false;
     }

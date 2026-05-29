@@ -43,6 +43,7 @@
     "endTime": "Heure de fin",
     "expirationDate": "Date d'expiration",
     "searchMemberName": "Rechercher le nom du membre :",
+    "isMemberAlready": "Déjà membre",
     "username": "Nom d'utilisateur",
     "password": "Mot de passe",
     "fullName": "Nom complet",

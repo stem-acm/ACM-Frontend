@@ -43,6 +43,7 @@
     "endTime": "End Time",
     "expirationDate": "Expiration Date",
     "searchMemberName": "Search Member Name:",
+    "isMemberAlready": "IsMemberAlready",
     "username": "Username",
     "password": "Password",
     "fullName": "Full name",

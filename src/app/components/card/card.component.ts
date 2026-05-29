@@ -27,11 +27,10 @@ export class CardComponent {
     this.setSelectedMember.emit(_member);
   }
 
-  onCheckboxChange(event: Event) {
-    const isChecked = (event.target as HTMLInputElement).checked;
+  onCheckboxChange() {
     this.memberSelectionChange.emit({
       member: this.memberChoose.member,
-      selected: isChecked,
+      selected: !this.memberChoose.selected,
     });
   }
 }

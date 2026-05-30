@@ -123,7 +123,14 @@ export class CheckinHistoryComponent implements OnInit {
         return true;
       }
 
-      return checkin.registrationNumber.toString().toLowerCase().includes(name.toLowerCase());
+      const lower = name.toLowerCase();
+      return (
+        checkin.registrationNumber.toString().toLowerCase().includes(lower) ||
+        checkin.Member?.firstName?.toLowerCase().includes(lower) ||
+        checkin.Member?.lastName?.toLowerCase().includes(lower) ||
+        checkin.Activity?.name?.toLowerCase().includes(lower) ||
+        checkin.visitReason?.toLowerCase().includes(lower)
+      );
     });
   }
 }

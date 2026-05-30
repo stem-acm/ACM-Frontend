@@ -166,7 +166,7 @@
 
       <!-- Pagination Controls -->
       <div
-        class="sticky bottom-0 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
+        class="sticky bottom-0 overflow-x-auto flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
       >
         <div class="flex flex-1 justify-between sm:hidden">
           <button
@@ -184,7 +184,7 @@
             {{ 'table.pagination.next' | translate }}
           </button>
         </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+        <div class="hidden sm:flex-col sm:flex sm:flex-1 sm:items-start gap-2 sm:justify-between">
           <div>
             <p class="text-sm text-gray-700 dark:text-gray-400">
               {{ 'table.pagination.showing' | translate }}

@@ -32,7 +32,10 @@ export class MemberService {
   }
 
   updateMember(member: Member) {
-    return this.http.put<HttpResult<Member>>(`${this.URL}/members/${member.registrationNumber}`, member);
+    return this.http.put<HttpResult<Member>>(
+      `${this.URL}/members/${member.registrationNumber}`,
+      member,
+    );
   }
 
   deleteMember(registrationNumber: number) {

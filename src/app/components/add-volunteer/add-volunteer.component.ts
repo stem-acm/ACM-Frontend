@@ -1,17 +1,17 @@
 import { Member } from '@/app/interfaces/member';
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { MemberService } from '@/app/services/member.service';
+import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import { CardSkeletonComponent } from '../card-skeleton/card-skeleton.component';
 import { CardComponent } from '../card/card.component';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
-import { VolunteerService } from '@/app/services/volunteer.service';
-import { TranslateModule } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-add-volunteer',
@@ -55,28 +55,48 @@ export class AddVolunteerComponent implements OnInit {
   public role!: string;
   private searchSubject = new Subject<string>();
 
+  public currentPage = 1;
+  public pageSize = 200;
+  public totalMembers = 0;
+  public isLoading = false;
+
   ngOnInit() {
     this.getMemberList();
     this.searchSubject
-      .pipe(debounceTime(1000), distinctUntilChanged())
-      .subscribe((searchWord: string) => {
-        this.searchByName(searchWord);
+      .pipe(
+        /*  tap(value => {
+          console.log(value);
+        }), */
+        debounceTime(1000),
+        distinctUntilChanged(),
+        switchMap(value => {
+          return this.memberService.getAllMembers(0, this.pageSize, value);
+        }),
+      )
+      .subscribe((result: HttpResult<Member[]>) => {
+        console.log(result);
+        this.membersChooseListFilter = result.data.map(member => {
+          return { selected: false, member };
+        });
+        //this.searchByName(searchWord);
       });
   }
 
   getMemberList() {
-    this.memberService.getAllMembers().subscribe((result: HttpResult<Member[]>) => {
-      if (result.success && result.data) {
-        this.member = result.data;
-        this.member.forEach(e => {
-          this.membersChooseList.push({
-            selected: false,
-            member: e,
+    this.memberService
+      .getAllMembers(0, this.pageSize, this.searchWord)
+      .subscribe((result: HttpResult<Member[]>) => {
+        if (result.success && result.data) {
+          this.member = result.data;
+          this.member.forEach(e => {
+            this.membersChooseList.push({
+              selected: false,
+              member: e,
+            });
           });
-        });
-      }
-      this.membersChooseListFilter = this.membersChooseList.slice(0, 10);
-    });
+        }
+        this.membersChooseListFilter = this.membersChooseList;
+      });
   }
 
   onIsMemberAlreadyChange(checked: boolean) {
@@ -94,7 +114,7 @@ export class AddVolunteerComponent implements OnInit {
     if (!this.isMemberAlready) {
       return false;
     }
-    const selectedMember = this.membersChooseList.some(e => e.selected);
+    const selectedMember = this.membersChooseListFilter.some(e => e.selected);
     if (selectedMember && this.joinDate && this.expirationDate) {
       return true;
     }
@@ -103,7 +123,7 @@ export class AddVolunteerComponent implements OnInit {
 
   saveVolunteer() {
     this.submitted = true;
-    this.selectedMemberInvalid = !this.membersChooseList.some(e => e.selected);
+    this.selectedMemberInvalid = !this.membersChooseListFilter.some(e => e.selected);
     this.loading = true;
     if (this.mode == 'insert') {
       this.insertVolunteer();
@@ -112,11 +132,11 @@ export class AddVolunteerComponent implements OnInit {
 
   insertVolunteer() {
     if (!this.checkValidation()) {
-      this.selectedMemberInvalid = !this.membersChooseList.some(e => e.selected);
+      this.selectedMemberInvalid = !this.membersChooseListFilter.some(e => e.selected);
       let message = '';
       if (!this.isMemberAlready) {
         message = 'Check "IsMemberAlready" to search for a member.';
-      } else if (!this.membersChooseList.some(e => e.selected)) {
+      } else if (!this.membersChooseListFilter.some(e => e.selected)) {
         message = 'Please select a member.';
       } else {
         message = 'Please fill in both Join Date and Expiration Date.';
@@ -129,7 +149,7 @@ export class AddVolunteerComponent implements OnInit {
       return;
     }
 
-    const memberChoosed = this.membersChooseList.filter(e => e.selected === true);
+    const memberChoosed = this.membersChooseListFilter.filter(e => e.selected === true);
     this.membersClicked = memberChoosed.map(e => e.member);
     const volunteerChoosed: Volunteer = {
       registrationNumber: this.membersClicked[0].registrationNumber,
@@ -196,10 +216,12 @@ export class AddVolunteerComponent implements OnInit {
   }
 
   search(keyWord: string) {
+    console.log(keyWord);
     this.searchSubject.next(keyWord);
   }
 
   searchByName(keyWord: string) {
+    console.log(this.membersChooseList.length);
     this.membersChooseListFilter = this.membersChooseList.filter(
       e =>
         e.member.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||

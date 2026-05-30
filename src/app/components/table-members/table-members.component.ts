@@ -65,7 +65,9 @@ export class TableMembersComponent {
   }
 
   isVolunteer(registrationNumber: number): boolean {
-    return this.volunteersList.some(volunteer => volunteer.registrationNumber === registrationNumber);
+    return this.volunteersList.some(
+      volunteer => volunteer.registrationNumber === registrationNumber,
+    );
   }
 
   formatDate(date?: Date | string): string {

@@ -38,7 +38,7 @@ export class MembersComponent implements OnInit {
   public searchWord = '';
 
   public currentPage = 1;
-  public pageSize = 10;
+  public pageSize = 200;
   public totalMembers = 0;
   public isLoading = false;
   private searchSubject = new Subject<string>();

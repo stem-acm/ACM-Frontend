@@ -142,7 +142,7 @@
       />
     </div>
   </div>
-  <div class="relative rounded-lg overflow-x-auto shadow-lg">
+  <div class="relative max-h-[70vh] rounded-lg overflow-x-auto shadow-lg">
     @if (isLoading || !memberFilter) {
       <app-table-loading
         [data]="{
@@ -166,7 +166,7 @@
 
       <!-- Pagination Controls -->
       <div
-        class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
+        class="sticky bottom-0 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
       >
         <div class="flex flex-1 justify-between sm:hidden">
           <button

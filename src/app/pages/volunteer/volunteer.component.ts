@@ -29,7 +29,8 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class VolunteerComponent implements OnInit {
   protected Math = Math;
-  public volunteers!: Volunteer[];
+  private allVolunteers: Volunteer[] = [];
+  public displayedVolunteers: Volunteer[] = [];
   public volunteerChooosed!: Volunteer;
   public searchWord = '';
   public showCertificate = false;
@@ -50,29 +51,19 @@ export class VolunteerComponent implements OnInit {
     this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
       this.searchWord = value;
       this.currentPage = 1;
-      this.getVolunteerList();
+      this.updateDisplayedVolunteers();
     });
   }
 
   getVolunteerList() {
     this.isLoading = true;
-    const offset = (this.currentPage - 1) * this.pageSize;
-    this.volunteerService.getAllVolunteers(offset, this.pageSize, this.searchWord).subscribe({
+    this.volunteerService.getAllVolunteers(0, 1000).subscribe({
       next: (result: HttpResult<Volunteer[]>) => {
         if (result.success && result.data) {
-          this.volunteers = result.data;
-
-          if (result.pagination) {
-            this.totalVolunteers = result.pagination.total;
-
-            if (this.volunteers.length === 0 && this.currentPage > 1) {
-              this.currentPage--;
-              this.getVolunteerList();
-              return;
-            }
-          }
+          this.allVolunteers = result.data;
+          this.currentPage = 1;
+          this.updateDisplayedVolunteers();
         }
-        this.pageInput = this.currentPage;
         this.isLoading = false;
       },
       error: () => {
@@ -82,13 +73,13 @@ export class VolunteerComponent implements OnInit {
   }
 
   get totalPages(): number {
-    return Math.ceil(this.totalVolunteers / this.pageSize);
+    return Math.max(1, Math.ceil(this.totalVolunteers / this.pageSize));
   }
 
   changePage(page: number) {
     this.currentPage = Math.max(1, Math.min(page, this.totalPages));
     this.pageInput = this.currentPage;
-    this.getVolunteerList();
+    this.updateDisplayedVolunteers();
   }
 
   goToPage() {
@@ -99,6 +90,30 @@ export class VolunteerComponent implements OnInit {
       this.pageInput = this.totalPages;
     }
     this.changePage(this.pageInput);
+  }
+
+  private updateDisplayedVolunteers() {
+    const filtered = this.filterVolunteers(this.searchWord);
+    this.totalVolunteers = filtered.length;
+
+    if (this.totalVolunteers > 0 && this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedVolunteers = filtered.slice(start, end);
+    this.pageInput = this.currentPage;
+  }
+
+  private filterVolunteers(keyword: string): Volunteer[] {
+    if (!keyword) return this.allVolunteers;
+    const lower = keyword.toLowerCase();
+    return this.allVolunteers.filter(
+      e =>
+        e.Member?.firstName?.toLowerCase().includes(lower) ||
+        e.Member?.lastName?.toLowerCase().includes(lower),
+    );
   }
 
   addVolunteer() {

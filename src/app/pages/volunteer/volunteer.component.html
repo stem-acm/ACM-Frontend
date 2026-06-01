@@ -58,7 +58,7 @@
     </div>
   </div>
   <div class="relative max-h-[70vh] rounded-lg overflow-x-auto shadow-lg">
-    @if (isLoading || !volunteers) {
+    @if (isLoading || !displayedVolunteers) {
       <app-table-loading
         [data]="{
           columns: [
@@ -74,7 +74,7 @@
     } @else {
       <app-table-volunteers
         (showVolunteerCertificate)="setShowCertificate($event)"
-        [data]="volunteers"
+        [data]="displayedVolunteers"
       />
 
       <!-- Pagination Controls -->

@@ -85,23 +85,31 @@
     <div
       class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
     >
-      <div class="flex flex-1 justify-between sm:hidden">
-        <button
-          [disabled]="currentPage === 1"
-          (click)="changePage(currentPage - 1)"
-          class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
-        >
-          {{ 'table.pagination.previous' | translate }}
-        </button>
-        <button
-          [disabled]="currentPage === totalPages"
-          (click)="changePage(currentPage + 1)"
-          class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
-        >
-          {{ 'table.pagination.next' | translate }}
-        </button>
+      <div class="flex flex-1 flex-col sm:hidden gap-2 items-center">
+        <p class="text-sm text-gray-700 dark:text-gray-400">
+          {{ 'table.pagination.page' | translate }}
+          <span class="font-medium">{{ currentPage }}</span>
+          {{ 'table.pagination.of' | translate }}
+          <span class="font-medium">{{ totalPages }}</span>
+        </p>
+        <div class="flex gap-2">
+          <button
+            [disabled]="currentPage === 1"
+            (click)="changePage(currentPage - 1)"
+            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+          >
+            {{ 'table.pagination.previous' | translate }}
+          </button>
+          <button
+            [disabled]="currentPage === totalPages"
+            (click)="changePage(currentPage + 1)"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+          >
+            {{ 'table.pagination.next' | translate }}
+          </button>
+        </div>
       </div>
-      <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+      <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between gap-4">
         <div>
           <p class="text-sm text-gray-700 dark:text-gray-400">
             {{ 'table.pagination.showing' | translate }}
@@ -113,8 +121,35 @@
             {{ 'table.pagination.results' | translate }}
           </p>
         </div>
-        <div>
-          <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+        <div class="flex items-center gap-3">
+          <p class="text-sm text-gray-700 dark:text-gray-400 whitespace-nowrap">
+            {{ 'table.pagination.page' | translate }}
+            <span class="font-medium">{{ currentPage }}</span>
+            {{ 'table.pagination.of' | translate }}
+            <span class="font-medium">{{ totalPages }}</span>
+          </p>
+          <div class="flex items-center gap-1">
+            <label for="page-input" class="sr-only">{{ 'table.pagination.goToPage' | translate }}</label>
+            <input
+              id="page-input"
+              type="number"
+              min="1"
+              [max]="totalPages"
+              [(ngModel)]="pageInput"
+              (keydown.enter)="goToPage()"
+              class="w-16 text-center text-sm text-gray-900 border border-gray-300 rounded-md py-1.5 px-2 bg-gray-50 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+            <button
+              (click)="goToPage()"
+              class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+            >
+              Go
+            </button>
+          </div>
+          <nav
+            class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+            aria-label="Pagination"
+          >
             <button
               [disabled]="currentPage === 1"
               (click)="changePage(currentPage - 1)"
@@ -129,20 +164,6 @@
                 />
               </svg>
             </button>
-
-            @for (page of pages; track page) {
-              <button
-                (click)="changePage(page)"
-                [class.bg-blue-600]="currentPage === page"
-                [class.text-white]="currentPage === page"
-                [class.text-gray-900]="currentPage !== page"
-                [class.dark:text-white]="currentPage !== page && currentPage !== page"
-                class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:ring-gray-600 dark:hover:bg-gray-700"
-              >
-                {{ page }}
-              </button>
-            }
-
             <button
               [disabled]="currentPage === totalPages"
               (click)="changePage(currentPage + 1)"

@@ -37,6 +37,7 @@ export class CheckinHistoryComponent implements OnInit {
   public pageSize = 10;
   public totalCheckins = 0;
   public isLoading = true;
+  public pageInput = 1;
 
   ngOnInit() {
     this.getCheckins();
@@ -49,10 +50,6 @@ export class CheckinHistoryComponent implements OnInit {
 
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.totalCheckins / this.pageSize));
-  }
-
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   getCheckins() {
@@ -74,17 +71,33 @@ export class CheckinHistoryComponent implements OnInit {
   }
 
   changePage(page: number) {
-    this.currentPage = page;
+    this.currentPage = Math.max(1, Math.min(page, this.totalPages));
+    this.pageInput = this.currentPage;
     this.updateDisplayedCheckins();
+  }
+
+  goToPage() {
+    const page = Number(this.pageInput);
+    if (!Number.isInteger(page) || page < 1) {
+      this.pageInput = 1;
+    } else if (page > this.totalPages) {
+      this.pageInput = this.totalPages;
+    }
+    this.changePage(this.pageInput);
   }
 
   private updateDisplayedCheckins() {
     const filtered = this.filterCheckins(this.searchWord, this.startDate, this.endDate);
     this.totalCheckins = filtered.length;
 
+    if (this.totalCheckins > 0 && this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
     this.displayedCheckins = filtered.slice(start, end);
+    this.pageInput = this.currentPage;
   }
 
   private filterCheckins(name: string, startDate: string, endDate: string): Checkin[] {

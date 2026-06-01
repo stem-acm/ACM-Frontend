@@ -100,7 +100,7 @@ export class MembersComponent implements OnInit {
   }
 
   getVolunteersList() {
-    this.volunteerService.getAllVolunteers().subscribe((result: HttpResult<Volunteer[]>) => {
+    this.volunteerService.getAllVolunteers(0, 1000).subscribe((result: HttpResult<Volunteer[]>) => {
       if (result.success && result.data) {
         this.volunteers = result.data;
       }

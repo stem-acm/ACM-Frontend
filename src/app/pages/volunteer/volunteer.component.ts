@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { AppComponent } from '@/app/app.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { TableVolunteersComponent } from '@/app/components/table-volunteers/table-volunteers.component';
@@ -8,13 +9,14 @@ import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-volunteer',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     TableLoadingComponent,
     TableVolunteersComponent,
@@ -26,31 +28,77 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './volunteer.component.css',
 })
 export class VolunteerComponent implements OnInit {
+  protected Math = Math;
   public volunteers!: Volunteer[];
-  public volunteersFilter!: Volunteer[];
   public volunteerChooosed!: Volunteer;
-  public searchWord!: string;
+  public searchWord = '';
   public showCertificate = false;
   public showAddForm = false;
+
+  public currentPage = 1;
+  public pageSize = 100;
+  public totalVolunteers = 0;
+  public isLoading = false;
+  public pageInput = 1;
   private searchSubject = new Subject<string>();
 
   private volunteerService = inject(VolunteerService);
   private app = inject(AppComponent);
 
   ngOnInit() {
-    this.searchSubject.pipe(debounceTime(500)).subscribe((keyword: string) => {
-      this.searchByName(keyword);
-    });
     this.getVolunteerList();
+    this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
+      this.searchWord = value;
+      this.currentPage = 1;
+      this.getVolunteerList();
+    });
   }
 
   getVolunteerList() {
-    this.volunteerService.getAllVolunteers().subscribe((result: HttpResult<Volunteer[]>) => {
-      if (result.success && result.data) {
-        this.volunteers = result.data;
-        this.volunteersFilter = this.volunteers;
-      }
+    this.isLoading = true;
+    const offset = (this.currentPage - 1) * this.pageSize;
+    this.volunteerService.getAllVolunteers(offset, this.pageSize, this.searchWord).subscribe({
+      next: (result: HttpResult<Volunteer[]>) => {
+        if (result.success && result.data) {
+          this.volunteers = result.data;
+
+          if (result.pagination) {
+            this.totalVolunteers = result.pagination.total;
+
+            if (this.volunteers.length === 0 && this.currentPage > 1) {
+              this.currentPage--;
+              this.getVolunteerList();
+              return;
+            }
+          }
+        }
+        this.pageInput = this.currentPage;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
     });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalVolunteers / this.pageSize);
+  }
+
+  changePage(page: number) {
+    this.currentPage = Math.max(1, Math.min(page, this.totalPages));
+    this.pageInput = this.currentPage;
+    this.getVolunteerList();
+  }
+
+  goToPage() {
+    const page = Number(this.pageInput);
+    if (!Number.isInteger(page) || page < 1) {
+      this.pageInput = 1;
+    } else if (page > this.totalPages) {
+      this.pageInput = this.totalPages;
+    }
+    this.changePage(this.pageInput);
   }
 
   addVolunteer() {
@@ -64,7 +112,7 @@ export class VolunteerComponent implements OnInit {
   closeForm(event: boolean) {
     if (event) {
       this.showAddForm = false;
-      this.getVolunteerList(); // Refresh the members list
+      this.getVolunteerList();
     }
   }
 
@@ -74,15 +122,6 @@ export class VolunteerComponent implements OnInit {
 
   search(keyWord: string) {
     this.searchSubject.next(keyWord);
-    // this.searchByName(keyWord);
-  }
-
-  searchByName(keyWord: string) {
-    this.volunteersFilter = this.volunteers.filter(
-      e =>
-        e.Member?.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
-        e.Member?.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
-    );
   }
 
   setShowCertificate(event: Volunteer) {

@@ -111,6 +111,7 @@ export class VolunteerComponent implements OnInit {
     const lower = keyword.toLowerCase();
     return this.allVolunteers.filter(
       e =>
+        e.registrationNumber?.toString().includes(lower) ||
         e.Member?.firstName?.toLowerCase().includes(lower) ||
         e.Member?.lastName?.toLowerCase().includes(lower),
     );

@@ -123,7 +123,9 @@
       "showing": "Aseho",
       "to": "hatramin'ny",
       "of": "amin'ny",
-      "results": "vokatra"
+      "results": "vokatra",
+      "page": "Pejy",
+      "goToPage": "Hankanesa amin'ny pejy"
     },
     "noTime": "Tsy misy ora",
     "noDate": "Tsy misy daty",

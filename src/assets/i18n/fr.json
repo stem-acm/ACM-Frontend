@@ -123,7 +123,9 @@
       "showing": "Affichage",
       "to": "à",
       "of": "sur",
-      "results": "résultats"
+      "results": "résultats",
+      "page": "Page",
+      "goToPage": "Aller à la page"
     },
     "noTime": "Aucune heure",
     "noDate": "Aucune date",

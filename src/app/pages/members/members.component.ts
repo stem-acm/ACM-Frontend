@@ -41,6 +41,7 @@ export class MembersComponent implements OnInit {
   public pageSize = 100;
   public totalMembers = 0;
   public isLoading = false;
+  public pageInput = 1;
   private searchSubject = new Subject<string>();
 
   public membersClicked!: Member[];
@@ -88,6 +89,7 @@ export class MembersComponent implements OnInit {
             }
           }
         }
+        this.pageInput = this.currentPage;
         this.isLoading = false;
       },
       error: () => {
@@ -112,16 +114,23 @@ export class MembersComponent implements OnInit {
   }
 
   changePage(page: number) {
-    this.currentPage = page;
+    this.currentPage = Math.max(1, Math.min(page, this.totalPages));
+    this.pageInput = this.currentPage;
     this.getMemberList();
+  }
+
+  goToPage() {
+    const page = Number(this.pageInput);
+    if (!Number.isInteger(page) || page < 1) {
+      this.pageInput = 1;
+    } else if (page > this.totalPages) {
+      this.pageInput = this.totalPages;
+    }
+    this.changePage(this.pageInput);
   }
 
   get totalPages(): number {
     return Math.ceil(this.totalMembers / this.pageSize);
-  }
-
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   addMember() {

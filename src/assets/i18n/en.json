@@ -114,6 +114,7 @@
       "volunteerId": "VOLUNTEER ID",
       "joinDate": "JOIN DATE",
       "expirationDate": "EXPIRATION DATE",
+      "checkinDate": "Date",
       "purposeOfVisit": "Purpose of visit",
       "endTimeCheckin": "End time"
     },

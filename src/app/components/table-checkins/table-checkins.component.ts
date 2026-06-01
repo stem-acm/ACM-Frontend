@@ -15,6 +15,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class TableCheckinsComponent implements OnInit, OnDestroy {
   private URL: string = environment.FILE_URL;
   @Input() checkins!: Checkin[];
+  @Input() showDate = false;
   private updateInterval?: number;
   public currentTime = new Date().getTime();
   private UPDATE_INTERVAL_TIME = 1 * 1000; // 1 seconds
@@ -41,6 +42,11 @@ export class TableCheckinsComponent implements OnInit, OnDestroy {
   formatTime(date?: Date | string): string {
     if (!date) return this.translateService.instant('table.noTime');
     return dayjs(date).format('h:mm A');
+  }
+
+  formatDate(date?: Date | string): string {
+    if (!date) return this.translateService.instant('table.noDate');
+    return dayjs(date).format('MMM D, YYYY');
   }
 
   /**

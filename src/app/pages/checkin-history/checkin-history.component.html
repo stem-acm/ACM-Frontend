@@ -70,6 +70,7 @@
       [data]="{
         columns: [
           'table.columns.name',
+          'table.columns.checkinDate',
           'table.columns.startTime',
           'table.columns.purposeOfVisit',
           'table.columns.endTimeCheckin',
@@ -79,7 +80,7 @@
       }"
     />
   } @else {
-    <app-table-checkins [checkins]="displayedCheckins" />
+    <app-table-checkins [checkins]="displayedCheckins" [showDate]="true" />
 
     <!-- Pagination Controls -->
     <div
@@ -129,7 +130,9 @@
             <span class="font-medium">{{ totalPages }}</span>
           </p>
           <div class="flex items-center gap-1">
-            <label for="page-input" class="sr-only">{{ 'table.pagination.goToPage' | translate }}</label>
+            <label for="page-input" class="sr-only">{{
+              'table.pagination.goToPage' | translate
+            }}</label>
             <input
               id="page-input"
               type="number"
@@ -146,10 +149,7 @@
               Go
             </button>
           </div>
-          <nav
-            class="isolate inline-flex -space-x-px rounded-md shadow-sm"
-            aria-label="Pagination"
-          >
+          <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
             <button
               [disabled]="currentPage === 1"
               (click)="changePage(currentPage - 1)"

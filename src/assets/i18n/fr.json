@@ -114,6 +114,7 @@
       "volunteerId": "ID BÉNÉVOLE",
       "joinDate": "DATE D'ADHÉSION",
       "expirationDate": "DATE D'EXPIRATION",
+      "checkinDate": "Date",
       "purposeOfVisit": "Objet de la visite",
       "endTimeCheckin": "Heure de fin"
     },

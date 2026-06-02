@@ -49,6 +49,17 @@ export class MembersComponent implements OnInit {
   // public membersChooseListFilter: { selected: boolean; member: Member }[] = []; // Not needed as we use membersChooseList for the current page
   public showCard = false;
 
+  public studyPlaces: string[] = [];
+  public selectedStudyPlaces: string[] = [];
+  public studyPlacesDropdownOpen = false;
+  public studyPlacesSearch = '';
+
+  get filteredStudyPlaces(): string[] {
+    if (!this.studyPlacesSearch) return this.studyPlaces;
+    const search = this.studyPlacesSearch.toLowerCase();
+    return this.studyPlaces.filter(place => place.toLowerCase().includes(search));
+  }
+
   private memberService = inject(MemberService);
   private volunteerService = inject(VolunteerService);
   private app = inject(AppComponent);
@@ -56,6 +67,7 @@ export class MembersComponent implements OnInit {
   ngOnInit() {
     this.getMemberList();
     this.getVolunteersList();
+    this.getStudyPlacesList();
     this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
       this.searchWord = value;
       this.currentPage = 1;
@@ -63,10 +75,34 @@ export class MembersComponent implements OnInit {
     });
   }
 
+  getStudyPlacesList() {
+    this.memberService.getStudyPlaces().subscribe((result: HttpResult<string[]>) => {
+      if (result.success && result.data) {
+        this.studyPlaces = result.data;
+      }
+    });
+  }
+
+  toggleStudyPlace(place: string) {
+    const idx = this.selectedStudyPlaces.indexOf(place);
+    if (idx >= 0) {
+      this.selectedStudyPlaces.splice(idx, 1);
+    } else {
+      this.selectedStudyPlaces.push(place);
+    }
+    this.currentPage = 1;
+    this.getMemberList();
+  }
+
+  isStudyPlaceSelected(place: string): boolean {
+    return this.selectedStudyPlaces.includes(place);
+  }
+
   getMemberList() {
     this.isLoading = true;
     const offset = (this.currentPage - 1) * this.pageSize;
-    this.memberService.getAllMembers(offset, this.pageSize, this.searchWord).subscribe({
+    const studyPlacesStr = this.selectedStudyPlaces.join(',');
+    this.memberService.getAllMembers(offset, this.pageSize, this.searchWord, studyPlacesStr).subscribe({
       next: (result: HttpResult<Member[]>) => {
         if (result.success && result.data) {
           this.member = result.data;

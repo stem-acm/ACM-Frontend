@@ -4,6 +4,11 @@ import { environment } from '@/environments/environment';
 import { HttpResult } from '@/app/types/httpResult';
 import { Member } from '@/app/interfaces/member';
 
+export interface QRCodeData {
+  registrationNumber: number;
+  signature: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -30,6 +35,12 @@ export class MemberService {
   getMemberByRegistrationNumber(registrationNumber: string) {
     return this.http.get<HttpResult<Member>>(
       `${this.URL}/members/registration/${registrationNumber}`,
+    );
+  }
+
+  getQRCodeData(registrationNumber: number) {
+    return this.http.get<HttpResult<QRCodeData>>(
+      `${this.URL}/members/registration/${registrationNumber}/qr-code`,
     );
   }
 

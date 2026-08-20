@@ -111,7 +111,9 @@
               {{ 'table.pagination.showing' | translate }}
               <span class="font-medium">{{ (currentPage - 1) * pageSize + 1 }}</span>
               {{ 'table.pagination.to' | translate }}
-              <span class="font-medium">{{ Math.min(currentPage * pageSize, totalVolunteers) }}</span>
+              <span class="font-medium">{{
+                Math.min(currentPage * pageSize, totalVolunteers)
+              }}</span>
               {{ 'table.pagination.of' | translate }}
               <span class="font-medium">{{ totalVolunteers }}</span>
               {{ 'table.pagination.results' | translate }}
@@ -125,7 +127,9 @@
               <span class="font-medium">{{ totalPages }}</span>
             </p>
             <div class="flex items-center gap-1">
-              <label for="page-input" class="sr-only">{{ 'table.pagination.goToPage' | translate }}</label>
+              <label for="page-input" class="sr-only">{{
+                'table.pagination.goToPage' | translate
+              }}</label>
               <input
                 id="page-input"
                 type="number"

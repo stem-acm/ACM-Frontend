@@ -57,30 +57,28 @@ export class ActivityComponent implements OnInit {
   getActivityList() {
     this.isLoading = true;
     const offset = (this.currentPage - 1) * this.pageSize;
-    this.activityService
-      .getAllActivity(offset, this.pageSize, this.searchWord)
-      .subscribe({
-        next: (result: HttpResult<Activity[]>) => {
-          if (result.success && result.data) {
-            this.activity = result.data;
+    this.activityService.getAllActivity(offset, this.pageSize, this.searchWord).subscribe({
+      next: (result: HttpResult<Activity[]>) => {
+        if (result.success && result.data) {
+          this.activity = result.data;
 
-            if (result.pagination) {
-              this.totalActivities = result.pagination.total;
+          if (result.pagination) {
+            this.totalActivities = result.pagination.total;
 
-              if (this.activity.length === 0 && this.currentPage > 1) {
-                this.currentPage--;
-                this.getActivityList();
-                return;
-              }
+            if (this.activity.length === 0 && this.currentPage > 1) {
+              this.currentPage--;
+              this.getActivityList();
+              return;
             }
           }
-          this.pageInput = this.currentPage;
-          this.isLoading = false;
-        },
-        error: () => {
-          this.isLoading = false;
-        },
-      });
+        }
+        this.pageInput = this.currentPage;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
   }
 
   get totalPages(): number {

@@ -13,7 +13,7 @@ import { MemberService } from '@/app/services/member.service';
 export class MemberBadgeVersoComponent implements OnInit {
   @Input() registrationNumber!: string | null | undefined;
 
-  qrData: string = '';
+  qrData = '';
 
   private memberService = inject(MemberService);
 

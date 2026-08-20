@@ -102,37 +102,39 @@ export class MembersComponent implements OnInit {
     this.isLoading = true;
     const offset = (this.currentPage - 1) * this.pageSize;
     const studyPlacesStr = this.selectedStudyPlaces.join(',');
-    this.memberService.getAllMembers(offset, this.pageSize, this.searchWord, studyPlacesStr).subscribe({
-      next: (result: HttpResult<Member[]>) => {
-        if (result.success && result.data) {
-          this.member = result.data;
-          this.memberFilter = this.member;
+    this.memberService
+      .getAllMembers(offset, this.pageSize, this.searchWord, studyPlacesStr)
+      .subscribe({
+        next: (result: HttpResult<Member[]>) => {
+          if (result.success && result.data) {
+            this.member = result.data;
+            this.memberFilter = this.member;
 
-          // Initialize selection list for current page
-          this.membersChooseList = this.member.map(m => ({
-            selected: false,
-            member: m,
-          }));
+            // Initialize selection list for current page
+            this.membersChooseList = this.member.map(m => ({
+              selected: false,
+              member: m,
+            }));
 
-          if (result.pagination) {
-            this.totalMembers = result.pagination.total;
+            if (result.pagination) {
+              this.totalMembers = result.pagination.total;
 
-            // Handle edge case where current page is empty after delete
-            if (this.member.length === 0 && this.currentPage > 1) {
-              this.currentPage--;
-              this.getMemberList();
-              return;
+              // Handle edge case where current page is empty after delete
+              if (this.member.length === 0 && this.currentPage > 1) {
+                this.currentPage--;
+                this.getMemberList();
+                return;
+              }
             }
           }
-        }
-        this.pageInput = this.currentPage;
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-        // Optionally show error toast if not already handled by interceptor
-      },
-    });
+          this.pageInput = this.currentPage;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+          // Optionally show error toast if not already handled by interceptor
+        },
+      });
   }
 
   getVolunteersList() {

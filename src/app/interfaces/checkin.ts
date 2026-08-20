@@ -4,6 +4,7 @@ import { Member } from './member';
 export interface Checkin {
   id?: number;
   registrationNumber: number;
+  signature: string;
   activityId: number;
   checkInTime: Date;
   checkOutTime?: Date;

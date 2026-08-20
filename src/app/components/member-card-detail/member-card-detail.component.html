@@ -6,7 +6,14 @@
         [isLoadingBadge]="isLoadingVolunteers"
         [imgUrl]="getfileUrl(member.profileImage)"
       />
-      <app-title [titleText]="member.lastName + ' ' + member.firstName" />
+      <app-title
+        [titleText]="
+          member.lastName.charAt(0).toUpperCase() +
+          member.lastName.slice(1) +
+          ' ' +
+          member.firstName
+        "
+      />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
       <div *ngIf="member.registrationNumber" class="text-left">
         <div class="mt-6">
@@ -14,7 +21,12 @@
             <app-list-value
               [label]="'forms.fullName' | translate"
               [value]="
-                ('forms.titlePrefix' | translate) + ' ' + member.firstName + ' ' + member.lastName
+                ('forms.titlePrefix' | translate) +
+                ' ' +
+                member.firstName +
+                ' ' +
+                member.lastName.charAt(0).toUpperCase() +
+                member.lastName.slice(1)
               "
             />
             <app-list-value

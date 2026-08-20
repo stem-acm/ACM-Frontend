@@ -301,14 +301,25 @@ export class StepperComponent implements OnInit, OnDestroy {
     this.showHourPicker = !this.showHourPicker;
     this.showMinutePicker = false;
   }
-  getRegistrationNumberFromBadge(badgeId: string): number | null {
-    const parsedRegistrationNumber = parseInt(badgeId.split('reg=')[1], 10);
-
-    if (Number.isNaN(parsedRegistrationNumber)) {
-      return null;
+  private parseQRData(badgeId: string): { registrationNumber: number; signature: string } | null {
+    try {
+      const data = JSON.parse(badgeId);
+      if (
+        typeof data.registrationNumber === 'number' &&
+        typeof data.signature === 'string' &&
+        data.signature.length > 0
+      ) {
+        return { registrationNumber: data.registrationNumber, signature: data.signature };
+      }
+    } catch {
+      // Not JSON format - fallback to old URL format for backwards compatibility
+      const parsedRegistrationNumber = parseInt(badgeId.split('reg=')[1], 10);
+      if (!Number.isNaN(parsedRegistrationNumber)) {
+        console.warn('Scanning legacy QR code without signature');
+        return { registrationNumber: parsedRegistrationNumber, signature: '' };
+      }
     }
-
-    return parsedRegistrationNumber;
+    return null;
   }
 
   badgeScanned(badgeId: string) {
@@ -322,9 +333,12 @@ export class StepperComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const registrationNumber = this.getRegistrationNumberFromBadge(badgeId);
-    if (registrationNumber === null) {
-      this.toastService.showToast('Invalid badge QR code.');
+    const parsed = this.parseQRData(badgeId);
+    if (parsed === null) {
+      this.errorTitle = 'Invalid QR Code';
+      this.errorMessage = 'The scanned QR code is not a valid member badge.';
+      this.showErrorModal = true;
+      this.reset();
       return;
     }
 
@@ -332,7 +346,6 @@ export class StepperComponent implements OnInit, OnDestroy {
     this.scannedBadgeId = badgeId;
 
     const date = new Date();
-
     date.setHours(this.selectedTime.hour);
     date.setMinutes(this.selectedTime.minute);
 
@@ -340,7 +353,8 @@ export class StepperComponent implements OnInit, OnDestroy {
       activityId: selectedActivity.id,
       checkInTime: new Date(Date.now()),
       checkOutTime: date,
-      registrationNumber,
+      registrationNumber: parsed.registrationNumber,
+      signature: parsed.signature,
     };
 
     this.checkinService.createCheckin(payload).subscribe(
@@ -370,6 +384,10 @@ export class StepperComponent implements OnInit, OnDestroy {
         ) {
           this.errorTitle = 'Scan Limit Reached';
           this.errorMessage = 'You have already scanned for this half day.';
+          this.showErrorModal = true;
+        } else if (errorMsg === 'Invalid QR code signature') {
+          this.errorTitle = 'Invalid QR Code';
+          this.errorMessage = 'The scanned QR code is not a valid member badge.';
           this.showErrorModal = true;
         } else {
           // For other errors (like time restrictions), show toast with the specific message

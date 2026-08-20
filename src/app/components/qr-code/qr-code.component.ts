@@ -8,5 +8,12 @@ import { Component, Input } from '@angular/core';
   styleUrl: './qr-code.component.css',
 })
 export class QrCodeComponent {
-  @Input() link!: string;
+  @Input() data!: string;
+
+  get qrUrl(): string {
+    if (!this.data) {
+      return '';
+    }
+    return `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(this.data)}`;
+  }
 }

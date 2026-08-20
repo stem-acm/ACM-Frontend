@@ -48,11 +48,11 @@
 
           <div class="absolute right-2.5 top-1.5 z-100">
             @if (!showPassword) {
-              <button (click)="togglePassword()" class="cursor-pointer">
+              <button type="button" (click)="togglePassword()" class="cursor-pointer">
                 <img src="/eye-show-svgrepo-com.svg" alt="Show password" class="w-6 h-6" />
               </button>
             } @else {
-              <button (click)="togglePassword()" class="cursor-pointer">
+              <button type="button" (click)="togglePassword()" class="cursor-pointer">
                 <img src="/eye-off-svgrepo-com.svg" alt="Hide password" class="w-6 h-6" />
               </button>
             }

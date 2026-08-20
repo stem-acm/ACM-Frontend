@@ -3,7 +3,6 @@ import { Member } from '@/app/interfaces/member';
 import { ImgRoundComponent } from '../img-round/img-round.component';
 import { TitleComponent } from '../title/title.component';
 import { TextDescriptionComponent } from '../text-description/text-description.component';
-import { MemberDescriptionComponent } from '../member-description/member-description.component';
 import { CommonModule } from '@angular/common';
 import { environment } from '@/environments/environment';
 import dayjs from 'dayjs';
@@ -28,7 +27,6 @@ import { Router } from '@angular/router';
     ImgRoundComponent,
     TitleComponent,
     TextDescriptionComponent,
-    MemberDescriptionComponent,
     CommonModule,
     ListValueComponent,
     AddMemberComponent,

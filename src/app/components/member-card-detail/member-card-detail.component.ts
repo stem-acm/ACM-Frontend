@@ -113,7 +113,9 @@ export class MemberCardDetailComponent implements OnInit {
   }
 
   checkIfVolunteer(): void {
-    this.isVolunteer = this.volunteers.some(volunteer => volunteer.registrationNumber === this.member.registrationNumber);
+    this.isVolunteer = this.volunteers.some(
+      volunteer => volunteer.registrationNumber === this.member.registrationNumber,
+    );
   }
 
   onDeleteClick() {

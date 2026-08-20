@@ -47,7 +47,10 @@
           </dl>
         </div>
       </div>
-      <app-text-description *ngIf="!member.registrationNumber" [textDescription]="getMemberNotFoundMessage()" />
+      <app-text-description
+        *ngIf="!member.registrationNumber"
+        [textDescription]="getMemberNotFoundMessage()"
+      />
     </div>
 
     <div *ngIf="!member" class="p-12 text-center animate-pulse">

@@ -12,8 +12,10 @@ export class ActivityService {
   private http = inject(HttpClient);
 
   // Get all activities
-  getAllActivity(searchWord = '') {
-    return this.http.get<HttpResult<Activity[]>>(`${this.URL}/activities?search=${searchWord}`);
+  getAllActivity(offset = 0, limit = 10, search = '') {
+    return this.http.get<HttpResult<Activity[]>>(
+      `${this.URL}/activities?offset=${offset}&limit=${limit}&search=${search}`,
+    );
   }
 
   getActivityById(id: number) {

@@ -43,6 +43,7 @@
     "endTime": "End Time",
     "expirationDate": "Expiration Date",
     "searchMemberName": "Search Member Name:",
+    "isMemberAlready": "IsMemberAlready",
     "username": "Username",
     "password": "Password",
     "fullName": "Full name",
@@ -50,7 +51,8 @@
     "physicalAddress": "Physical Address (in Mahajanga)",
     "membershipDate": "Membership date",
     "phoneContact": "Phone Contact",
-    "titlePrefix": "Mr. / Mrs. / Miss."
+    "titlePrefix": "Mr. / Mrs. / Miss.",
+    "role": "Role"
   },
   "placeholders": {
     "firstName": "eg: John",
@@ -64,7 +66,8 @@
     "searchMembers": "Search for members",
     "searchActivities": "Search for activities",
     "searchVolunteer": "Search for volunteer",
-    "searchMember": "eg: John"
+    "searchMember": "eg: John",
+    "searchStudyPlaces": "Search study/workplace..."
   },
   "buttons": {
     "newMember": "New Member",
@@ -112,6 +115,7 @@
       "volunteerId": "VOLUNTEER ID",
       "joinDate": "JOIN DATE",
       "expirationDate": "EXPIRATION DATE",
+      "checkinDate": "Date",
       "purposeOfVisit": "Purpose of visit",
       "endTimeCheckin": "End time"
     },
@@ -121,7 +125,9 @@
       "showing": "Showing",
       "to": "to",
       "of": "of",
-      "results": "results"
+      "results": "results",
+      "page": "Page",
+      "goToPage": "Go to page"
     },
     "noTime": "No time",
     "noDate": "No date",

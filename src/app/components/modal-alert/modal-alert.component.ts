@@ -16,10 +16,12 @@ export class ModalAlertComponent {
   @Input() confirmText = 'OK';
   @Input() cancelText = 'Cancel';
   @Output() closeModal = new EventEmitter<void>();
+  @Output('close') close = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<void>();
 
   onClose() {
     this.closeModal.emit();
+    this.close.emit();
   }
 
   onConfirm() {

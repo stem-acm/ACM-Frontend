@@ -11,10 +11,16 @@ export class MemberService {
   private URL: string = environment.API_URL;
   private http = inject(HttpClient);
 
-  getAllMembers(offset = 0, limit = 10, search = '') {
-    return this.http.get<HttpResult<Member[]>>(
-      `${this.URL}/members?offset=${offset}&limit=${limit}&search=${search}`,
-    );
+  getAllMembers(offset = 0, limit = 10, search = '', studyPlaces = '') {
+    let url = `${this.URL}/members?offset=${offset}&limit=${limit}&search=${search}`;
+    if (studyPlaces) {
+      url += `&studyPlaces=${encodeURIComponent(studyPlaces)}`;
+    }
+    return this.http.get<HttpResult<Member[]>>(url);
+  }
+
+  getStudyPlaces() {
+    return this.http.get<HttpResult<string[]>>(`${this.URL}/members/study-places`);
   }
 
   getMemberById(id: number) {
@@ -32,10 +38,13 @@ export class MemberService {
   }
 
   updateMember(member: Member) {
-    return this.http.put<HttpResult<Member>>(`${this.URL}/members/${member.id}`, member);
+    return this.http.put<HttpResult<Member>>(
+      `${this.URL}/members/${member.registrationNumber}`,
+      member,
+    );
   }
 
-  deleteMember(id: number) {
-    return this.http.delete<HttpResult<null>>(`${this.URL}/members/${id}`);
+  deleteMember(registrationNumber: number) {
+    return this.http.delete<HttpResult<null>>(`${this.URL}/members/${registrationNumber}`);
   }
 }

@@ -38,10 +38,11 @@ export class ProfilComponent implements OnInit {
           this.member.joinDate = this.convertDate(this.member.joinDate);
         } else {
           this.member = {
-            registrationNumber: this.registrationNumber,
-            id: 0,
+            registrationNumber: parseInt(this.registrationNumber),
             firstName: '404',
             lastName: '',
+            title: '',
+            gender: '',
             birthDate: '',
             birthPlace: '',
             address: '',
@@ -57,10 +58,11 @@ export class ProfilComponent implements OnInit {
         console.log(err);
 
         this.member = {
-          registrationNumber: this.registrationNumber,
-          id: 0,
+          registrationNumber: parseInt(this.registrationNumber),
           firstName: '404',
           lastName: '',
+          title: '',
+          gender: '',
           birthDate: '',
           birthPlace: '',
           address: '',

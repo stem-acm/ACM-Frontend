@@ -1,9 +1,12 @@
 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
   <thead
-    class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+    class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
   >
     <tr>
       <th scope="col" class="px-6 py-3">{{ 'table.columns.name' | translate }}</th>
+      @if (showDate) {
+        <th scope="col" class="px-6 py-3">{{ 'table.columns.checkinDate' | translate }}</th>
+      }
       <th scope="col" class="px-6 py-3">{{ 'table.columns.startTime' | translate }}</th>
       <th scope="col" class="px-6 py-3">{{ 'table.columns.purposeOfVisit' | translate }}</th>
       <th scope="col" class="px-6 py-3">{{ 'table.columns.endTimeCheckin' | translate }}</th>
@@ -33,7 +36,7 @@
           </div>
           <div class="ps-3">
             <div class="text-base font-semibold flex items-center gap-2">
-              {{ item?.Member?.lastName + ' ' + item?.Member?.firstName }}
+              {{ item?.Member?.lastName?.toUpperCase() + ' ' + item?.Member?.firstName }}
               <!-- @if (isInRoom(item)) {
                 <span class="w-2 h-2 bg-green-500 rounded-full"></span>
               } -->
@@ -41,6 +44,12 @@
             <div class="font-normal text-gray-500">{{ item?.Member?.registrationNumber }}</div>
           </div>
         </th>
+
+        @if (showDate) {
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ formatDate(item.checkInTime) }}
+          </td>
+        }
         <td class="px-6 py-4 capitalize">
           {{ formatTime(item.checkInTime) }}
         </td>
@@ -64,7 +73,7 @@
       <tr
         class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
       >
-        <td colspan="5" class="px-6 py-4 capitalize italic text-center">
+        <td [attr.colspan]="showDate ? 6 : 5" class="px-6 py-4 capitalize italic text-center">
           {{ 'table.noMembersCheckinToday' | translate }}
         </td>
       </tr>

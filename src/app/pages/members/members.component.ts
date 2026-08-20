@@ -38,15 +38,27 @@ export class MembersComponent implements OnInit {
   public searchWord = '';
 
   public currentPage = 1;
-  public pageSize = 10;
+  public pageSize = 100;
   public totalMembers = 0;
   public isLoading = false;
+  public pageInput = 1;
   private searchSubject = new Subject<string>();
 
   public membersClicked!: Member[];
   public membersChooseList: { selected: boolean; member: Member }[] = [];
   // public membersChooseListFilter: { selected: boolean; member: Member }[] = []; // Not needed as we use membersChooseList for the current page
   public showCard = false;
+
+  public studyPlaces: string[] = [];
+  public selectedStudyPlaces: string[] = [];
+  public studyPlacesDropdownOpen = false;
+  public studyPlacesSearch = '';
+
+  get filteredStudyPlaces(): string[] {
+    if (!this.studyPlacesSearch) return this.studyPlaces;
+    const search = this.studyPlacesSearch.toLowerCase();
+    return this.studyPlaces.filter(place => place.toLowerCase().includes(search));
+  }
 
   private memberService = inject(MemberService);
   private volunteerService = inject(VolunteerService);
@@ -55,6 +67,7 @@ export class MembersComponent implements OnInit {
   ngOnInit() {
     this.getMemberList();
     this.getVolunteersList();
+    this.getStudyPlacesList();
     this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
       this.searchWord = value;
       this.currentPage = 1;
@@ -62,10 +75,34 @@ export class MembersComponent implements OnInit {
     });
   }
 
+  getStudyPlacesList() {
+    this.memberService.getStudyPlaces().subscribe((result: HttpResult<string[]>) => {
+      if (result.success && result.data) {
+        this.studyPlaces = result.data;
+      }
+    });
+  }
+
+  toggleStudyPlace(place: string) {
+    const idx = this.selectedStudyPlaces.indexOf(place);
+    if (idx >= 0) {
+      this.selectedStudyPlaces.splice(idx, 1);
+    } else {
+      this.selectedStudyPlaces.push(place);
+    }
+    this.currentPage = 1;
+    this.getMemberList();
+  }
+
+  isStudyPlaceSelected(place: string): boolean {
+    return this.selectedStudyPlaces.includes(place);
+  }
+
   getMemberList() {
     this.isLoading = true;
     const offset = (this.currentPage - 1) * this.pageSize;
-    this.memberService.getAllMembers(offset, this.pageSize, this.searchWord).subscribe({
+    const studyPlacesStr = this.selectedStudyPlaces.join(',');
+    this.memberService.getAllMembers(offset, this.pageSize, this.searchWord, studyPlacesStr).subscribe({
       next: (result: HttpResult<Member[]>) => {
         if (result.success && result.data) {
           this.member = result.data;
@@ -88,6 +125,7 @@ export class MembersComponent implements OnInit {
             }
           }
         }
+        this.pageInput = this.currentPage;
         this.isLoading = false;
       },
       error: () => {
@@ -98,7 +136,7 @@ export class MembersComponent implements OnInit {
   }
 
   getVolunteersList() {
-    this.volunteerService.getAllVolunteers().subscribe((result: HttpResult<Volunteer[]>) => {
+    this.volunteerService.getAllVolunteers(0, 1000).subscribe((result: HttpResult<Volunteer[]>) => {
       if (result.success && result.data) {
         this.volunteers = result.data;
       }
@@ -112,16 +150,23 @@ export class MembersComponent implements OnInit {
   }
 
   changePage(page: number) {
-    this.currentPage = page;
+    this.currentPage = Math.max(1, Math.min(page, this.totalPages));
+    this.pageInput = this.currentPage;
     this.getMemberList();
+  }
+
+  goToPage() {
+    const page = Number(this.pageInput);
+    if (!Number.isInteger(page) || page < 1) {
+      this.pageInput = 1;
+    } else if (page > this.totalPages) {
+      this.pageInput = this.totalPages;
+    }
+    this.changePage(this.pageInput);
   }
 
   get totalPages(): number {
     return Math.ceil(this.totalMembers / this.pageSize);
-  }
-
-  get pages(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
   addMember() {

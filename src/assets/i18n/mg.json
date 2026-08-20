@@ -43,6 +43,7 @@
     "endTime": "Ora farany",
     "expirationDate": "Daty fahataperana",
     "searchMemberName": "Hitady anaran'ny mpikambana:",
+    "isMemberAlready": "Mpikambana ve",
     "username": "Anaran'ny mpampiasa",
     "password": "Tenimiafina",
     "fullName": "Anarana feno",
@@ -50,7 +51,8 @@
     "physicalAddress": "Adiresy ara-batana (ao Mahajanga)",
     "membershipDate": "Daty nidirana",
     "phoneContact": "Laharana finday",
-    "titlePrefix": "M. / Mme / Mlle"
+    "titlePrefix": "Ramose / Madama / Madamozely",
+    "role": "Andraikitra"
   },
   "placeholders": {
     "firstName": "oh: Jean",
@@ -64,7 +66,8 @@
     "searchMembers": "Hitady mpikambana",
     "searchActivities": "Hitady hetsika",
     "searchVolunteer": "Hitady mpanao an-tsitrapo",
-    "searchMember": "oh: Jean"
+    "searchMember": "oh: Jean",
+    "searchStudyPlaces": "Hitady toerana fianarana/asa..."
   },
   "buttons": {
     "newMember": "Mpikambana Vaovao",
@@ -112,6 +115,7 @@
       "volunteerId": "ID MPANAO AN-TSITRAPO",
       "joinDate": "DATY NIDIRANA",
       "expirationDate": "DATY FAHATAPERANA",
+      "checkinDate": "Daty",
       "purposeOfVisit": "Tanjon'ny fitsidihana",
       "endTimeCheckin": "Ora farany"
     },
@@ -121,7 +125,9 @@
       "showing": "Aseho",
       "to": "hatramin'ny",
       "of": "amin'ny",
-      "results": "vokatra"
+      "results": "vokatra",
+      "page": "Pejy",
+      "goToPage": "Hankanesa amin'ny pejy"
     },
     "noTime": "Tsy misy ora",
     "noDate": "Tsy misy daty",

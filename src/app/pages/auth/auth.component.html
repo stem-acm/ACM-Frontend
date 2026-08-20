@@ -37,14 +37,26 @@
             }
           </div>
         </div>
-        <div class="mt-2">
+        <div class="mt-2 relative">
           <input
-            type="password"
+            type="{{ showPassword ? 'text' : 'password' }}"
             [(ngModel)]="password"
             [ngModelOptions]="{ standalone: true }"
             required
             class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-500 sm:text-sm/6"
           />
+
+          <div class="absolute right-2.5 top-1.5 z-100">
+            @if (!showPassword) {
+              <button (click)="togglePassword()" class="cursor-pointer">
+                <img src="/eye-show-svgrepo-com.svg" alt="Show password" class="w-6 h-6" />
+              </button>
+            } @else {
+              <button (click)="togglePassword()" class="cursor-pointer">
+                <img src="/eye-off-svgrepo-com.svg" alt="Hide password" class="w-6 h-6" />
+              </button>
+            }
+          </div>
         </div>
         @if (error.enabled) {
           <span class="text-xs font-bold text-red-500 bg-red-100">{{ error.message }}</span>

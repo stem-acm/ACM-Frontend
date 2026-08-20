@@ -45,6 +45,7 @@ export class StepperComponent implements OnInit, OnDestroy {
   showMinutePicker = false;
   showHourPicker = false;
   scannedBadgeId: string | null = null;
+  isSubmittingCheckin = false;
   hourSelected = false;
   minuteSelected = false;
 
@@ -269,6 +270,7 @@ export class StepperComponent implements OnInit, OnDestroy {
     this.showMinutePicker = false;
     this.showHourPicker = false;
     this.scannedBadgeId = null;
+    this.isSubmittingCheckin = false;
     this.hourSelected = false;
     this.minuteSelected = false;
     this.setTimeInput();
@@ -299,8 +301,34 @@ export class StepperComponent implements OnInit, OnDestroy {
     this.showHourPicker = !this.showHourPicker;
     this.showMinutePicker = false;
   }
+  getRegistrationNumberFromBadge(badgeId: string): number | null {
+    const parsedRegistrationNumber = parseInt(badgeId.split('reg=')[1], 10);
+
+    if (Number.isNaN(parsedRegistrationNumber)) {
+      return null;
+    }
+
+    return parsedRegistrationNumber;
+  }
 
   badgeScanned(badgeId: string) {
+    if (this.isSubmittingCheckin || this.scannedBadgeId) {
+      return;
+    }
+
+    const selectedActivity = this.selectedActivities[0];
+    if (!selectedActivity?.id) {
+      this.toastService.showToast('Please select an activity before scanning.');
+      return;
+    }
+
+    const registrationNumber = this.getRegistrationNumberFromBadge(badgeId);
+    if (registrationNumber === null) {
+      this.toastService.showToast('Invalid badge QR code.');
+      return;
+    }
+
+    this.isSubmittingCheckin = true;
     this.scannedBadgeId = badgeId;
 
     const date = new Date();
@@ -309,14 +337,15 @@ export class StepperComponent implements OnInit, OnDestroy {
     date.setMinutes(this.selectedTime.minute);
 
     const payload = {
-      activityId: this.selectedActivities[0].id!,
+      activityId: selectedActivity.id,
       checkInTime: new Date(Date.now()),
       checkOutTime: date,
-      registrationNumber: this.scannedBadgeId!.split('reg=')[1],
+      registrationNumber,
     };
 
     this.checkinService.createCheckin(payload).subscribe(
       (result: HttpResult<Checkin>) => {
+        this.isSubmittingCheckin = false;
         if (result.success) {
           this.nextStep();
           setTimeout(() => {
@@ -328,6 +357,7 @@ export class StepperComponent implements OnInit, OnDestroy {
         }
       },
       error => {
+        this.isSubmittingCheckin = false;
         console.error('Checkin error:', error);
         // Extract the actual error message from the backend response object
         // Angular wraps the response in HttpErrorResponse, where proper backend 400 errors
@@ -367,5 +397,7 @@ export class StepperComponent implements OnInit, OnDestroy {
 
   closeErrorModal() {
     this.showErrorModal = false;
+    this.errorTitle = '';
+    this.errorMessage = '';
   }
 }

@@ -11,10 +11,13 @@ import { environment } from '@/environments/environment';
   styleUrl: './member-badge-verso.component.css',
 })
 export class MemberBadgeVersoComponent {
-  @Input() registrationNumber!: string;
+  @Input() registrationNumber!: string | null | undefined;
   private URL: string = environment.STATIC_WEB_URL;
 
   getLink(): string {
+    if (!this.registrationNumber) {
+      return '';
+    }
     return `${this.URL}/member?reg=${this.registrationNumber}`;
   }
 }

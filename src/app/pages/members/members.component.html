@@ -141,8 +141,56 @@
         [placeholder]="'placeholders.searchMembers' | translate"
       />
     </div>
+
+    <div class="relative">
+      <button
+        type="button"
+        (click)="studyPlacesDropdownOpen = !studyPlacesDropdownOpen"
+        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+      >
+        {{ 'forms.placeOfWorkStudy' | translate }}
+        @if (selectedStudyPlaces.length > 0) {
+          <span class="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-blue-500 rounded-full">
+            {{ selectedStudyPlaces.length }}
+          </span>
+        }
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
+      </button>
+      @if (studyPlacesDropdownOpen) {
+        <div
+          class="absolute right-0 z-50 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600"
+        >
+          <div class="p-2 border-b border-gray-200 dark:border-gray-600">
+            <input
+              type="text"
+              [(ngModel)]="studyPlacesSearch"
+              placeholder="{{ 'placeholders.searchStudyPlaces' | translate }}"
+              class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:placeholder-gray-400"
+            />
+          </div>
+          <div class="max-h-48 overflow-y-auto">
+            @for (place of filteredStudyPlaces; track place) {
+              <label class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
+                <input
+                  type="checkbox"
+                  [checked]="isStudyPlaceSelected(place)"
+                  (change)="toggleStudyPlace(place)"
+                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-600 dark:border-gray-500"
+                />
+                <span class="text-sm text-gray-900 dark:text-white uppercase">{{ place }}</span>
+              </label>
+            }
+            @if (filteredStudyPlaces.length === 0) {
+              <p class="px-4 py-2 text-sm text-gray-500">{{ 'table.notAvailable' | translate }}</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
   </div>
-  <div class="relative rounded-lg overflow-x-auto shadow-lg">
+  <div class="relative max-h-[70vh] rounded-lg overflow-x-auto shadow-lg">
     @if (isLoading || !memberFilter) {
       <app-table-loading
         [data]="{
@@ -166,25 +214,33 @@
 
       <!-- Pagination Controls -->
       <div
-        class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
+        class="sticky bottom-0 overflow-x-auto flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
       >
-        <div class="flex flex-1 justify-between sm:hidden">
-          <button
-            [disabled]="currentPage === 1"
-            (click)="changePage(currentPage - 1)"
-            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
-          >
-            {{ 'table.pagination.previous' | translate }}
-          </button>
-          <button
-            [disabled]="currentPage === totalPages"
-            (click)="changePage(currentPage + 1)"
-            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
-          >
-            {{ 'table.pagination.next' | translate }}
-          </button>
+        <div class="flex flex-1 flex-col sm:hidden gap-2 items-center">
+          <p class="text-sm text-gray-700 dark:text-gray-400">
+            {{ 'table.pagination.page' | translate }}
+            <span class="font-medium">{{ currentPage }}</span>
+            {{ 'table.pagination.of' | translate }}
+            <span class="font-medium">{{ totalPages }}</span>
+          </p>
+          <div class="flex gap-2">
+            <button
+              [disabled]="currentPage === 1"
+              (click)="changePage(currentPage - 1)"
+              class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+            >
+              {{ 'table.pagination.previous' | translate }}
+            </button>
+            <button
+              [disabled]="currentPage === totalPages"
+              (click)="changePage(currentPage + 1)"
+              class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+            >
+              {{ 'table.pagination.next' | translate }}
+            </button>
+          </div>
         </div>
-        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between gap-4">
           <div>
             <p class="text-sm text-gray-700 dark:text-gray-400">
               {{ 'table.pagination.showing' | translate }}
@@ -196,7 +252,31 @@
               {{ 'table.pagination.results' | translate }}
             </p>
           </div>
-          <div>
+          <div class="flex items-center gap-3">
+            <p class="text-sm text-gray-700 dark:text-gray-400 whitespace-nowrap">
+              {{ 'table.pagination.page' | translate }}
+              <span class="font-medium">{{ currentPage }}</span>
+              {{ 'table.pagination.of' | translate }}
+              <span class="font-medium">{{ totalPages }}</span>
+            </p>
+            <div class="flex items-center gap-1">
+              <label for="page-input" class="sr-only">{{ 'table.pagination.goToPage' | translate }}</label>
+              <input
+                id="page-input"
+                type="number"
+                min="1"
+                [max]="totalPages"
+                [(ngModel)]="pageInput"
+                (keydown.enter)="goToPage()"
+                class="w-16 text-center text-sm text-gray-900 border border-gray-300 rounded-md py-1.5 px-2 bg-gray-50 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
+              <button
+                (click)="goToPage()"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+              >
+                Go
+              </button>
+            </div>
             <nav
               class="isolate inline-flex -space-x-px rounded-md shadow-sm"
               aria-label="Pagination"
@@ -215,20 +295,6 @@
                   />
                 </svg>
               </button>
-
-              @for (page of pages; track page) {
-                <button
-                  (click)="changePage(page)"
-                  [class.bg-blue-600]="currentPage === page"
-                  [class.text-white]="currentPage === page"
-                  [class.text-gray-900]="currentPage !== page"
-                  [class.dark:text-white]="currentPage !== page && currentPage !== page"
-                  class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:ring-gray-600 dark:hover:bg-gray-700"
-                >
-                  {{ page }}
-                </button>
-              }
-
               <button
                 [disabled]="currentPage === totalPages"
                 (click)="changePage(currentPage + 1)"
@@ -254,7 +320,7 @@
 @if (showAddForm) {
   <app-add-member
     mode="insert"
-    [title]="'titles.newMember' | translate"
+    [pageTitle]="'titles.newMember' | translate"
     (showToast)="showAlert($event)"
     (canceled)="cancelForm($event)"
     (success)="closeForm($event)"

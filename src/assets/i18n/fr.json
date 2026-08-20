@@ -43,6 +43,7 @@
     "endTime": "Heure de fin",
     "expirationDate": "Date d'expiration",
     "searchMemberName": "Rechercher le nom du membre :",
+    "isMemberAlready": "Déjà membre",
     "username": "Nom d'utilisateur",
     "password": "Mot de passe",
     "fullName": "Nom complet",
@@ -50,7 +51,8 @@
     "physicalAddress": "Adresse physique (à Mahajanga)",
     "membershipDate": "Date d'adhésion",
     "phoneContact": "Contact téléphonique",
-    "titlePrefix": "M. / Mme / Mlle"
+    "titlePrefix": "M. / Mme / Mlle",
+    "role": "Rôle"
   },
   "placeholders": {
     "firstName": "ex: Jean",
@@ -64,7 +66,8 @@
     "searchMembers": "Rechercher des membres",
     "searchActivities": "Rechercher des activités",
     "searchVolunteer": "Rechercher un bénévole",
-    "searchMember": "ex: Jean"
+    "searchMember": "ex: Jean",
+    "searchStudyPlaces": "Rechercher un lieu d'étude/travail..."
   },
   "buttons": {
     "newMember": "Nouveau Membre",
@@ -112,6 +115,7 @@
       "volunteerId": "ID BÉNÉVOLE",
       "joinDate": "DATE D'ADHÉSION",
       "expirationDate": "DATE D'EXPIRATION",
+      "checkinDate": "Date",
       "purposeOfVisit": "Objet de la visite",
       "endTimeCheckin": "Heure de fin"
     },
@@ -121,7 +125,9 @@
       "showing": "Affichage",
       "to": "à",
       "of": "sur",
-      "results": "résultats"
+      "results": "résultats",
+      "page": "Page",
+      "goToPage": "Aller à la page"
     },
     "noTime": "Aucune heure",
     "noDate": "Aucune date",

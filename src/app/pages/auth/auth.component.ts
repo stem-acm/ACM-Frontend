@@ -24,6 +24,7 @@ export class AuthComponent {
   public password!: string;
   public loading = false;
   public error: { enabled: boolean; message: string } = { enabled: false, message: '' };
+  public showPassword = false;
 
   private translateService = inject(TranslateService);
 
@@ -59,5 +60,9 @@ export class AuthComponent {
         this.loading = false;
       },
     );
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 }

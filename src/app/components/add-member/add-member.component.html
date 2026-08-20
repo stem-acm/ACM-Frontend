@@ -7,7 +7,7 @@
     class="max-w-2xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl"
   >
     <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">
-      {{ title }}
+      {{ pageTitle }}
     </h1>
 
     <div class="flex gap-4">
@@ -37,8 +37,8 @@
 
       <div class="w-1/2 mb-5">
         <label for="lastName" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.lastName' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.lastName' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="text"
           id="lastName"
@@ -46,7 +46,6 @@
           name="lastName"
           #lastName="ngModel"
           [placeholder]="'placeholders.lastName' | translate"
-          required
           [class.border-red-500]="lastName.invalid && (lastName.touched || submitted)"
           [class.focus:ring-red-500]="lastName.invalid && (lastName.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -62,16 +61,62 @@
 
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
-        <label for="Birthday" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.birthday' | translate }}<span class="text-red-500">*</span></label
+        <label for="title" class="block mb-2 text-sm font-medium"
+          ><!--{{ 'forms.occupation' | translate }}-->
+          Title<span class="text-red-500"></span
+        ></label>
+        <select
+          id="title"
+          [(ngModel)]="member.title"
+          name="title"
+          #title="ngModel"
+          [class.border-red-500]="title.invalid && (title.touched || submitted)"
+          [class.focus:ring-red-500]="occupation.invalid && (occupation.touched || submitted)"
+          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
+          <option *ngFor="let item of titles" [value]="item">{{ item }}</option>
+        </select>
+        <p *ngIf="title.invalid && (title.touched || submitted)" class="mt-1 text-xs text-red-500">
+          This field is required.
+        </p>
+      </div>
+
+      <div class="w-1/2 mb-5">
+        <label for="gender" class="block mb-2 text-sm font-medium"
+          ><!--{{ 'forms.occupation' | translate }}-->
+          Gender<span class="text-red-500"></span
+        ></label>
+        <select
+          id="gender"
+          [(ngModel)]="member.gender"
+          name="gender"
+          #gender="ngModel"
+          [class.border-red-500]="gender.invalid && (gender.touched || submitted)"
+          [class.focus:ring-red-500]="gender.invalid && (gender.touched || submitted)"
+          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        >
+          <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
+        </select>
+        <p
+          *ngIf="gender.invalid && (gender.touched || submitted)"
+          class="mt-1 text-xs text-red-500"
+        >
+          This field is required.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="w-1/2 mb-5">
+        <label for="Birthday" class="block mb-2 text-sm font-medium"
+          >{{ 'forms.birthday' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="date"
           id="Birthday"
           [(ngModel)]="member.birthDate"
           name="birthDate"
           #birthDate="ngModel"
-          required
           [class.border-red-500]="birthDate.invalid && (birthDate.touched || submitted)"
           [class.focus:ring-red-500]="birthDate.invalid && (birthDate.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -86,8 +131,8 @@
 
       <div class="w-1/2 mb-5">
         <label for="birthPlace" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.placeOfBirth' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.placeOfBirth' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="text"
           id="birthPlace"
@@ -95,7 +140,6 @@
           name="birthPlace"
           #birthPlace="ngModel"
           [placeholder]="'placeholders.birthPlace' | translate"
-          required
           [class.border-red-500]="birthPlace.invalid && (birthPlace.touched || submitted)"
           [class.focus:ring-red-500]="birthPlace.invalid && (birthPlace.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -112,8 +156,8 @@
     <div class="flex gap-4">
       <div class="w-1/3 mb-5">
         <label for="adress" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.address' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.address' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="text"
           id="adress"
@@ -121,7 +165,6 @@
           name="address"
           #address="ngModel"
           [placeholder]="'placeholders.address' | translate"
-          required
           [class.border-red-500]="address.invalid && (address.touched || submitted)"
           [class.focus:ring-red-500]="address.invalid && (address.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -136,8 +179,8 @@
 
       <div class="w-1/3 mb-5">
         <label for="tel" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.phoneNumber' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.phoneNumber' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="tel"
           id="tel"
@@ -145,7 +188,6 @@
           name="phoneNumber"
           #phoneNumber="ngModel"
           [placeholder]="'placeholders.phoneNumber' | translate"
-          required
           [class.border-red-500]="phoneNumber.invalid && (phoneNumber.touched || submitted)"
           [class.focus:ring-red-500]="phoneNumber.invalid && (phoneNumber.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -160,14 +202,13 @@
 
       <div class="w-1/3 mb-5">
         <label for="occupation" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.occupation' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.occupation' | translate }}<span class="text-red-500"></span
+        ></label>
         <select
           id="occupation"
           [(ngModel)]="member.occupation"
           name="occupation"
           #occupation="ngModel"
-          required
           [class.border-red-500]="occupation.invalid && (occupation.touched || submitted)"
           [class.focus:ring-red-500]="occupation.invalid && (occupation.touched || submitted)"
           class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -186,8 +227,8 @@
     <div class="flex gap-4">
       <div class="w-1/2 mb-5">
         <label for="organization" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.placeOfWorkStudy' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.placeOfWorkStudy' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="text"
           id="organization"
@@ -195,7 +236,6 @@
           name="studyOrWorkPlace"
           #studyOrWorkPlace="ngModel"
           [placeholder]="'placeholders.organization' | translate"
-          required
           [class.border-red-500]="
             studyOrWorkPlace.invalid && (studyOrWorkPlace.touched || submitted)
           "
@@ -214,15 +254,14 @@
 
       <div class="w-1/2 mb-5">
         <label for="joinDate" class="block mb-2 text-sm font-medium"
-          >{{ 'forms.joinDate' | translate }}<span class="text-red-500">*</span></label
-        >
+          >{{ 'forms.joinDate' | translate }}<span class="text-red-500"></span
+        ></label>
         <input
           type="date"
           id="joinDate"
           [(ngModel)]="member.joinDate"
           name="joinDate"
           #joinDate="ngModel"
-          required
           [class.border-red-500]="joinDate.invalid && (joinDate.touched || submitted)"
           [class.focus:ring-red-500]="joinDate.invalid && (joinDate.touched || submitted)"
           class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"

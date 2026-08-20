@@ -105,7 +105,7 @@ export class MemberCardDetailComponent implements OnInit {
   }
 
   getVolunteersList() {
-    this.volunteerService.getAllVolunteers().subscribe(res => {
+    this.volunteerService.getAllVolunteers(0, 1000).subscribe(res => {
       this.volunteers = res.data;
       this.checkIfVolunteer();
       this.isLoadingVolunteers = false;
@@ -113,7 +113,7 @@ export class MemberCardDetailComponent implements OnInit {
   }
 
   checkIfVolunteer(): void {
-    this.isVolunteer = this.volunteers.some(volunteer => volunteer.memberId === this.member.id);
+    this.isVolunteer = this.volunteers.some(volunteer => volunteer.registrationNumber === this.member.registrationNumber);
   }
 
   onDeleteClick() {
@@ -135,8 +135,8 @@ export class MemberCardDetailComponent implements OnInit {
   }
 
   confirmDelete() {
-    if (this.member?.id) {
-      this.memberService.deleteMember(this.member.id).subscribe({
+    if (this.member?.registrationNumber) {
+      this.memberService.deleteMember(this.member.registrationNumber).subscribe({
         next: (result: HttpResult<null>) => {
           if (result.success) {
             this.toastService.showToast('Member deleted successfully');

@@ -58,30 +58,134 @@
     </div>
   </div>
 
-  @if (isLoading || !activityFilter) {
-    <app-table-loading
-      [data]="{
-        columns: [
-          'table.columns.name',
-          'table.columns.description',
-          'table.columns.periodicity',
-          'table.columns.dayOfWeek',
-          'table.columns.startDate',
-          'table.columns.endDate',
-          'table.columns.startTime',
-          'table.columns.endTime',
-          'table.columns.action',
-        ],
-        textLoading: 'loading.findingActivities',
-      }"
-    />
-  } @else {
-    <app-table-activities
-      [data]="activityFilter"
-      (editClicked)="clickEdit($event)"
-      (activityDeleted)="getActivityList()"
-    />
-  }
+  <div class="relative max-h-[70vh] rounded-lg overflow-x-auto shadow-lg">
+    @if (isLoading || !activity) {
+      <app-table-loading
+        [data]="{
+          columns: [
+            'table.columns.name',
+            'table.columns.description',
+            'table.columns.periodicity',
+            'table.columns.dayOfWeek',
+            'table.columns.startDate',
+            'table.columns.endDate',
+            'table.columns.startTime',
+            'table.columns.endTime',
+            'table.columns.action',
+          ],
+          textLoading: 'loading.findingActivities',
+        }"
+      />
+    } @else {
+      <app-table-activities
+        [data]="activity"
+        (editClicked)="clickEdit($event)"
+        (activityDeleted)="getActivityList()"
+      />
+
+      <!-- Pagination Controls -->
+      <div
+        class="sticky bottom-0 overflow-x-auto flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:bg-gray-800 dark:border-gray-700"
+      >
+        <div class="flex flex-1 flex-col sm:hidden gap-2 items-center">
+          <p class="text-sm text-gray-700 dark:text-gray-400">
+            {{ 'table.pagination.page' | translate }}
+            <span class="font-medium">{{ currentPage }}</span>
+            {{ 'table.pagination.of' | translate }}
+            <span class="font-medium">{{ totalPages }}</span>
+          </p>
+          <div class="flex gap-2">
+            <button
+              [disabled]="currentPage === 1"
+              (click)="changePage(currentPage - 1)"
+              class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+            >
+              {{ 'table.pagination.previous' | translate }}
+            </button>
+            <button
+              [disabled]="currentPage === totalPages"
+              (click)="changePage(currentPage + 1)"
+              class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+            >
+              {{ 'table.pagination.next' | translate }}
+            </button>
+          </div>
+        </div>
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between gap-4">
+          <div>
+            <p class="text-sm text-gray-700 dark:text-gray-400">
+              {{ 'table.pagination.showing' | translate }}
+              <span class="font-medium">{{ (currentPage - 1) * pageSize + 1 }}</span>
+              {{ 'table.pagination.to' | translate }}
+              <span class="font-medium">{{ Math.min(currentPage * pageSize, totalActivities) }}</span>
+              {{ 'table.pagination.of' | translate }}
+              <span class="font-medium">{{ totalActivities }}</span>
+              {{ 'table.pagination.results' | translate }}
+            </p>
+          </div>
+          <div class="flex items-center gap-3">
+            <p class="text-sm text-gray-700 dark:text-gray-400 whitespace-nowrap">
+              {{ 'table.pagination.page' | translate }}
+              <span class="font-medium">{{ currentPage }}</span>
+              {{ 'table.pagination.of' | translate }}
+              <span class="font-medium">{{ totalPages }}</span>
+            </p>
+            <div class="flex items-center gap-1">
+              <label for="page-input" class="sr-only">{{ 'table.pagination.goToPage' | translate }}</label>
+              <input
+                id="page-input"
+                type="number"
+                min="1"
+                [max]="totalPages"
+                [(ngModel)]="pageInput"
+                (keydown.enter)="goToPage()"
+                class="w-16 text-center text-sm text-gray-900 border border-gray-300 rounded-md py-1.5 px-2 bg-gray-50 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              />
+              <button
+                (click)="goToPage()"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+              >
+                Go
+              </button>
+            </div>
+            <nav
+              class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+              aria-label="Pagination"
+            >
+              <button
+                [disabled]="currentPage === 1"
+                (click)="changePage(currentPage - 1)"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed dark:ring-gray-600 dark:hover:bg-gray-700"
+              >
+                <span class="sr-only">{{ 'table.pagination.previous' | translate }}</span>
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+              <button
+                [disabled]="currentPage === totalPages"
+                (click)="changePage(currentPage + 1)"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed dark:ring-gray-600 dark:hover:bg-gray-700"
+              >
+                <span class="sr-only">{{ 'table.pagination.next' | translate }}</span>
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
 </div>
 
 @if (showAddForm) {

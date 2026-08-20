@@ -64,8 +64,10 @@ export class TableMembersComponent {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
-  isVolunteer(memberId: number): boolean {
-    return this.volunteersList.some(volunteer => volunteer.memberId === memberId);
+  isVolunteer(registrationNumber: number): boolean {
+    return this.volunteersList.some(
+      volunteer => volunteer.registrationNumber === registrationNumber,
+    );
   }
 
   formatDate(date?: Date | string): string {
@@ -95,7 +97,7 @@ export class TableMembersComponent {
   }
 
   onDeleteClick(member: Member) {
-    this.memberToDeleteId = member.id!;
+    this.memberToDeleteId = member.registrationNumber!;
     this.deleteTitle = this.translateService.instant('alert.deleteTitle');
     this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
       name: `${member.firstName} ${member.lastName}`,

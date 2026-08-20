@@ -247,7 +247,7 @@
 @if (showAddForm) {
   <app-add-member
     mode="update"
-    [title]="'titles.updateMember' | translate"
+    [pageTitle]="'titles.updateMember' | translate"
     [memberToUpdate]="member"
     (updatedData)="showToast($event)"
     (canceled)="cancelForm($event)"

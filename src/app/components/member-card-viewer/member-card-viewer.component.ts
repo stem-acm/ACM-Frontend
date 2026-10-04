@@ -37,7 +37,10 @@ export class MemberCardViewerComponent {
 
     const iframeWin = iframe.contentWindow;
     const iframeDoc = iframeWin?.document;
-    if (!iframeDoc) return;
+    if (!iframeDoc) {
+      iframe.remove();
+      return;
+    }
 
     iframeDoc.open();
 
@@ -94,9 +97,16 @@ export class MemberCardViewerComponent {
     };
 
     waitImagesLoaded().then(() => {
+      const cleanup = () => {
+        clearTimeout(cleanupTimer);
+        iframeWin?.removeEventListener('afterprint', cleanup);
+        iframe.remove();
+      };
+
+      iframeWin?.addEventListener('afterprint', cleanup, { once: true });
+      const cleanupTimer = setTimeout(cleanup, 120_000);
       iframeWin?.focus();
       iframeWin?.print();
-      document.body.removeChild(iframe);
     });
   }
 }

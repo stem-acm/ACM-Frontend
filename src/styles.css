@@ -313,7 +313,7 @@ h6 {
   object-fit: cover;
   border-radius: 50%;
 }
-.acm-mobile-toggle {
+button.acm-btn.acm-mobile-toggle {
   display: none;
 }
 .acm-user-menu {
@@ -1032,7 +1032,7 @@ input[type='radio'] {
   .acm-brand {
     width: 175px;
   }
-  .acm-mobile-toggle {
+  button.acm-btn.acm-mobile-toggle {
     display: inline-flex;
   }
   .acm-nav-links {

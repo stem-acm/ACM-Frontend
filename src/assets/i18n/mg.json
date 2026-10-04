@@ -1,4 +1,43 @@
 {
+  "access": {
+    "title": "Fikirana fidirana",
+    "description": "Farito izay azon'ny andraikitra tsirairay jerena sy atao ao amin'ny rindranasa.",
+    "rolesTitle": "Fahazoan-dalana isaky ny andraikitra",
+    "rolesDescription": "Farito ny fidirana amin'ny asa rehetra.",
+    "accountsTitle": "Kaonty",
+    "accountsDescription": "Omeo andraikitra ary alefaso na ajanony ny kaonty tsirairay.",
+    "roleStateHelp": "Alefaso na ajanony ity andraikitra ity ho an'ny kaontiny rehetra.",
+    "adminLock": "Mijanona ho mavitrika ny admin mba ho azo idirana ny fikirana.",
+    "active": "Mavitrika",
+    "inactive": "Tsy mavitrika",
+    "status": "Toetra",
+    "action": "Asa",
+    "save": "Tehirizo",
+    "saveRole": "Tehirizo ny fahazoan-dalana",
+    "saved": "Nohavaozina ny fidirana",
+    "created": "Vita ny kaonty",
+    "addAccount": "Ampio kaonty",
+    "createAccount": "Mamorona kaonty",
+    "roles": { "admin": "Admin", "intern": "Mpiofana", "volunteer": "Mpilatsaka an-tsitrapo" },
+    "groups": {
+      "dashboard": "Topy maso",
+      "members": "Mpikambana",
+      "volunteers": "Mpilatsaka an-tsitrapo",
+      "activities": "Hetsika",
+      "checkins": "Fisoratana anarana",
+      "settings": "Fikirana sy kaonty"
+    },
+    "actions": {
+      "view": "Hijery",
+      "create": "Hamorona",
+      "update": "Hanova",
+      "delete": "Hamafa",
+      "cards": "Karatra sy kaody QR",
+      "certificate": "Taratasy fanamarinana",
+      "history": "Tantara sy fanavaozana",
+      "manage": "Hitantana fidirana"
+    }
+  },
   "nav": {
     "home": "Fandraisana",
     "members": "Mpikambana",

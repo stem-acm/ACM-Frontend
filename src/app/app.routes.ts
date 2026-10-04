@@ -9,6 +9,8 @@ import { CheckinComponent } from './pages/checkin/checkin.component';
 import { VolunteerComponent } from './pages/volunteer/volunteer.component';
 import { CheckinHistoryComponent } from './pages/checkin-history/checkin-history.component';
 import { VolunteerCertificateViewerComponent } from './components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
+import { permissionGuard } from './permission.guard';
+import { SettingsComponent } from './pages/settings/settings.component';
 
 export const routes: Routes = [
   {
@@ -18,37 +20,61 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'dashboard.view' },
   },
   {
     path: 'members',
     component: MembersComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'members.view' },
   },
   {
     path: 'volunteer',
     component: VolunteerComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'volunteers.view' },
   },
   {
     path: 'volunteer/:id/certificate',
     component: VolunteerCertificateViewerComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'volunteers.certificate' },
   },
   {
     path: 'profil/:reg_number',
     component: ProfilComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'members.view' },
   },
   {
     path: 'cards',
     component: CardsComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'members.cards' },
   },
   {
     path: 'activity',
     component: ActivityComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'activities.view' },
   },
   {
     path: 'checkin',
     component: CheckinComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'checkins.create' },
   },
   {
     path: 'checkin-history',
     component: CheckinHistoryComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'checkins.view' },
+  },
+  {
+    path: 'setting',
+    component: SettingsComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'settings.manage' },
   },
 ];

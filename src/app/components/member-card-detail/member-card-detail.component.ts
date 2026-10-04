@@ -20,6 +20,7 @@ import { MemberService } from '@/app/services/member.service';
 import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { Router } from '@angular/router';
+import { AuthService } from '@/app/services/auth.service';
 
 @Component({
   selector: 'app-member-card-detail',
@@ -41,6 +42,7 @@ import { Router } from '@angular/router';
   styleUrl: './member-card-detail.component.css',
 })
 export class MemberCardDetailComponent implements OnInit {
+  public auth = inject(AuthService);
   @Input() member!: Member;
   private URL: string = environment.FILE_URL;
   public showAddForm = false;

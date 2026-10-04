@@ -63,12 +63,9 @@
             ><span>{{ user.email }}</span>
           }
         </div>
-        @if (showExperimentalFeatures) {
+        @if (auth.can('settings.manage')) {
           <a routerLink="/setting" (click)="isShowUserMenu = false">{{
             'nav.settings' | translate
-          }}</a>
-          <a routerLink="/user" (click)="isShowUserMenu = false">{{
-            'nav.manageIntern' | translate
           }}</a>
         }
         <button

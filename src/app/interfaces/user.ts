@@ -4,4 +4,7 @@ export interface User {
   id: number;
   updatedAt: string;
   username: string;
+  role: 'admin' | 'intern' | 'volunteer';
+  active: boolean;
+  permissions: Record<string, boolean>;
 }

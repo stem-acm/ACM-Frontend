@@ -1,4 +1,43 @@
 {
+  "access": {
+    "title": "Paramètres d'accès",
+    "description": "Choisissez ce que chaque rôle peut voir et faire dans l'application.",
+    "rolesTitle": "Autorisations par rôle",
+    "rolesDescription": "Définissez l'accès à chaque fonction.",
+    "accountsTitle": "Comptes",
+    "accountsDescription": "Attribuez un rôle et activez ou désactivez chaque compte.",
+    "roleStateHelp": "Activez ou désactivez ce rôle pour tous ses comptes.",
+    "adminLock": "Le rôle admin reste actif pour garder l'accès aux paramètres.",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "status": "Statut",
+    "action": "Action",
+    "save": "Enregistrer",
+    "saveRole": "Enregistrer les autorisations",
+    "saved": "Accès mis à jour",
+    "created": "Compte créé",
+    "addAccount": "Ajouter un compte",
+    "createAccount": "Créer le compte",
+    "roles": { "admin": "Admin", "intern": "Stagiaire", "volunteer": "Bénévole" },
+    "groups": {
+      "dashboard": "Tableau de bord",
+      "members": "Membres",
+      "volunteers": "Bénévoles",
+      "activities": "Activités",
+      "checkins": "Présences",
+      "settings": "Paramètres et comptes"
+    },
+    "actions": {
+      "view": "Voir",
+      "create": "Créer",
+      "update": "Modifier",
+      "delete": "Supprimer",
+      "cards": "Cartes et codes QR",
+      "certificate": "Certificats",
+      "history": "Historique et mises à jour",
+      "manage": "Gérer les accès"
+    }
+  },
   "nav": {
     "home": "Accueil",
     "members": "Membres",

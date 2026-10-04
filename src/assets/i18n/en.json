@@ -1,4 +1,43 @@
 {
+  "access": {
+    "title": "Access settings",
+    "description": "Choose what each role can see and do across the app.",
+    "rolesTitle": "Role permissions",
+    "rolesDescription": "Set access for every app feature.",
+    "accountsTitle": "Accounts",
+    "accountsDescription": "Assign a role and activate or deactivate each account.",
+    "roleStateHelp": "Turn this role on or off for all its accounts.",
+    "adminLock": "Admin stays active so Settings remains accessible.",
+    "active": "Active",
+    "inactive": "Inactive",
+    "status": "Status",
+    "action": "Action",
+    "save": "Save",
+    "saveRole": "Save permissions",
+    "saved": "Access updated",
+    "created": "Account created",
+    "addAccount": "Add account",
+    "createAccount": "Create account",
+    "roles": { "admin": "Admin", "intern": "Intern", "volunteer": "Volunteer" },
+    "groups": {
+      "dashboard": "Dashboard",
+      "members": "Members",
+      "volunteers": "Volunteers",
+      "activities": "Activities",
+      "checkins": "Check-ins",
+      "settings": "Settings and accounts"
+    },
+    "actions": {
+      "view": "View",
+      "create": "Create",
+      "update": "Edit",
+      "delete": "Delete",
+      "cards": "Cards and QR codes",
+      "certificate": "Certificates",
+      "history": "History and live updates",
+      "manage": "Manage access"
+    }
+  },
   "nav": {
     "home": "Home",
     "members": "Members",

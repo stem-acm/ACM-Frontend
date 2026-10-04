@@ -12,6 +12,7 @@ import { MemberService } from '@/app/services/member.service';
 import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '@/app/services/auth.service';
 
 @Component({
   selector: 'app-table-members',
@@ -28,6 +29,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './table-members.component.css',
 })
 export class TableMembersComponent {
+  public auth = inject(AuthService);
   private URL: string = environment.FILE_URL;
   public userImg = `${this.URL}/user.png`;
   @Input() data!: { selected: boolean; member: Member }[];

@@ -1,0 +1,161 @@
+<div class="acm-page access-page">
+  <header class="access-hero">
+    <span class="access-eyebrow">AMERICAN CORNER MAHAJANGA</span>
+    <h1>{{ 'access.title' | translate }}</h1>
+    <p>{{ 'access.description' | translate }}</p>
+  </header>
+
+  @if (message) {
+    <div class="access-notice" role="status">{{ message | translate }}</div>
+  }
+  @if (error) {
+    <div class="access-error" role="alert">{{ error }}</div>
+  }
+
+  <section class="access-card">
+    <div class="access-section-head">
+      <div>
+        <h2>{{ 'access.rolesTitle' | translate }}</h2>
+        <p>{{ 'access.rolesDescription' | translate }}</p>
+      </div>
+    </div>
+    <div class="access-tabs" role="tablist">
+      @for (role of roles; track role) {
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="selectedRole === role"
+          [class.selected]="selectedRole === role"
+          (click)="selectedRole = role"
+        >
+          {{ 'access.roles.' + role | translate }}
+        </button>
+      }
+    </div>
+    @if (selectedPolicy; as policy) {
+      <div class="access-role-state">
+        <div>
+          <strong>{{ 'access.roles.' + policy.role | translate }}</strong>
+          <span>{{ 'access.roleStateHelp' | translate }}</span>
+        </div>
+        <label class="access-switch">
+          <input type="checkbox" [(ngModel)]="policy.active" [disabled]="policy.role === 'admin'" />
+          <span>{{ (policy.active ? 'access.active' : 'access.inactive') | translate }}</span>
+        </label>
+      </div>
+      @if (policy.role === 'admin') {
+        <p class="access-hint">{{ 'access.adminLock' | translate }}</p>
+      }
+      <div class="access-groups">
+        @for (group of groups; track group.label) {
+          <div class="access-group">
+            <h3>{{ group.label | translate }}</h3>
+            <div class="access-options">
+              @for (feature of group.features; track feature[0]) {
+                <label class="access-option">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="policy.permissions[feature[0]]"
+                    (ngModelChange)="featureChanged(policy, feature[0])"
+                    [disabled]="feature[0] === 'settings.manage'"
+                  />
+                  <span>{{ feature[1] | translate }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+      </div>
+      <button class="access-primary" type="button" [disabled]="saving" (click)="savePolicy()">
+        {{ 'access.saveRole' | translate }}
+      </button>
+    }
+  </section>
+
+  <section class="access-card">
+    <div class="access-section-head">
+      <div>
+        <h2>{{ 'access.accountsTitle' | translate }}</h2>
+        <p>{{ 'access.accountsDescription' | translate }}</p>
+      </div>
+    </div>
+    <div class="access-table-wrap">
+      <table class="access-table">
+        <thead>
+          <tr>
+            <th>{{ 'forms.username' | translate }}</th>
+            <th>Email</th>
+            <th>{{ 'forms.role' | translate }}</th>
+            <th>{{ 'access.status' | translate }}</th>
+            <th>{{ 'access.action' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (account of accounts; track account.id) {
+            <tr>
+              <td>
+                <strong>{{ account.username }}</strong>
+              </td>
+              <td>{{ account.email }}</td>
+              <td>
+                <select [(ngModel)]="account.role" [disabled]="account.id === auth.user?.id">
+                  @for (role of roles; track role) {
+                    <option [value]="role">{{ 'access.roles.' + role | translate }}</option>
+                  }
+                </select>
+              </td>
+              <td>
+                <label class="access-switch"
+                  ><input
+                    type="checkbox"
+                    [(ngModel)]="account.active"
+                    [disabled]="account.id === auth.user?.id"
+                  /><span>{{
+                    (account.active ? 'access.active' : 'access.inactive') | translate
+                  }}</span></label
+                >
+              </td>
+              <td>
+                <button class="access-small" type="button" (click)="saveAccount(account)">
+                  {{ 'access.save' | translate }}
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <form class="access-create" (ngSubmit)="createAccount()" #accountForm="ngForm">
+      <h3>{{ 'access.addAccount' | translate }}</h3>
+      <div class="access-fields">
+        <label
+          >{{ 'forms.username' | translate
+          }}<input name="username" required minlength="3" [(ngModel)]="newAccount.username"
+        /></label>
+        <label
+          >Email<input name="email" type="email" required email [(ngModel)]="newAccount.email"
+        /></label>
+        <label
+          >{{ 'forms.password' | translate
+          }}<input
+            name="password"
+            type="password"
+            required
+            minlength="8"
+            [(ngModel)]="newAccount.password"
+        /></label>
+        <label
+          >{{ 'forms.role' | translate
+          }}<select name="role" [(ngModel)]="newAccount.role">
+            @for (role of roles; track role) {
+              <option [value]="role">{{ 'access.roles.' + role | translate }}</option>
+            }
+          </select></label
+        >
+      </div>
+      <button class="access-primary" type="submit" [disabled]="accountForm.invalid || creating">
+        {{ 'access.createAccount' | translate }}
+      </button>
+    </form>
+  </section>
+</div>

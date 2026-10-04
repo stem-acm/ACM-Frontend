@@ -11,42 +11,48 @@
     <app-card-statistic-skeleton />
   } @else {
     <div class="acm-stat-grid">
-      <app-card-statistic
-        [data]="{
-          title: 'nav.members' | translate,
-          value: statistics.members,
-          icon: 'people',
-          routerLink: '/members',
-        }"
-      />
-      <app-card-statistic
-        [data]="{
-          title: 'nav.activity' | translate,
-          value: statistics.activities,
-          icon: 'event',
-          routerLink: '/activity',
-        }"
-      />
+      @if (auth.can('members.view')) {
+        <app-card-statistic
+          [data]="{
+            title: 'nav.members' | translate,
+            value: statistics.members,
+            icon: 'people',
+            routerLink: '/members',
+          }"
+        />
+      }
+      @if (auth.can('activities.view')) {
+        <app-card-statistic
+          [data]="{
+            title: 'nav.activity' | translate,
+            value: statistics.activities,
+            icon: 'event',
+            routerLink: '/activity',
+          }"
+        />
+      }
     </div>
   }
 
-  <div class="acm-section-heading">
-    <h2>{{ 'pages.membersInRoom' | translate }} ({{ membersInRoom }})</h2>
-  </div>
-  @if (!statistics) {
-    <app-table-loading
-      [data]="{
-        columns: [
-          'table.columns.name',
-          'table.columns.startTime',
-          'table.columns.purposeOfVisit',
-          'table.columns.endTimeCheckin',
-          'table.columns.action',
-        ],
-        textLoading: 'loading.lookingForMembers',
-      }"
-    />
-  } @else {
-    <app-table-checkins [checkins]="statistics.checkins" />
+  @if (auth.can('checkins.view')) {
+    <div class="acm-section-heading">
+      <h2>{{ 'pages.membersInRoom' | translate }} ({{ membersInRoom }})</h2>
+    </div>
+    @if (!statistics) {
+      <app-table-loading
+        [data]="{
+          columns: [
+            'table.columns.name',
+            'table.columns.startTime',
+            'table.columns.purposeOfVisit',
+            'table.columns.endTimeCheckin',
+            'table.columns.action',
+          ],
+          textLoading: 'loading.lookingForMembers',
+        }"
+      />
+    } @else {
+      <app-table-checkins [checkins]="statistics.checkins" />
+    }
   }
 </div>

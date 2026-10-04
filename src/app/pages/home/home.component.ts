@@ -10,6 +10,7 @@ import { SseService } from '@/app/services/sse.service';
 import { Subscription } from 'rxjs';
 import { Checkin } from '@/app/interfaces/checkin';
 import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '@/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  auth = inject(AuthService);
   public statistics!: Statistics;
   private dashboard = inject(DashboardService);
   private sseService = inject(SseService);
@@ -32,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getStatistic();
-    this.subscribeToRealTimeCheckins();
+    if (this.auth.can('checkins.view')) this.subscribeToRealTimeCheckins();
   }
 
   ngOnDestroy() {

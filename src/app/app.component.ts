@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
           this.user = result.data;
           this.userConnected = true;
           if (this.router.url.startsWith('/auth')) {
-            this.router.navigate(['/']); // rediriger vers home
+            this.router.navigateByUrl(this.authService.firstAllowedRoute());
           }
         } else {
           this.router.navigate(['/auth']);

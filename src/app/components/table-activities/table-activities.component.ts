@@ -8,6 +8,7 @@ import { ActivityService } from '@/app/services/activity.service';
 import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '@/app/services/auth.service';
 
 @Component({
   selector: 'app-table-activities',
@@ -23,6 +24,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './table-activities.component.css',
 })
 export class TableActivitiesComponent {
+  public auth = inject(AuthService);
   @Input() data!: Activity[];
   @Output() editClicked = new EventEmitter<Activity>();
   @Output() activityDeleted = new EventEmitter<void>();

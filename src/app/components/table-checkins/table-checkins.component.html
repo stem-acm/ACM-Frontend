@@ -1,27 +1,20 @@
-<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-  <thead
-    class="text-xs border border-gray-200 text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
-  >
-    <tr>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.name' | translate }}</th>
+<table z-table zSize="comfortable" class="acm-data-table">
+  <thead z-table-header>
+    <tr z-table-row>
+      <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>
       @if (showDate) {
-        <th scope="col" class="px-6 py-3">{{ 'table.columns.checkinDate' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.checkinDate' | translate }}</th>
       }
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.startTime' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.purposeOfVisit' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.endTimeCheckin' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.action' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.startTime' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.purposeOfVisit' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.endTimeCheckin' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody z-table-body>
     @for (item of checkins; track item) {
-      <tr
-        class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <th
-          scope="row"
-          class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-        >
+      <tr z-table-row>
+        <th z-table-cell scope="row" class="acm-person-cell">
           <div class="relative">
             <img
               class="w-10 h-10 rounded-full"
@@ -46,23 +39,23 @@
         </th>
 
         @if (showDate) {
-          <td class="px-6 py-4 whitespace-nowrap">
+          <td z-table-cell class="whitespace-nowrap">
             {{ formatDate(item.checkInTime) }}
           </td>
         }
-        <td class="px-6 py-4 capitalize">
+        <td z-table-cell class="capitalize">
           {{ formatTime(item.checkInTime) }}
         </td>
-        <td class="px-6 py-4 capitalize">
+        <td z-table-cell class="capitalize">
           {{ item.Activity?.name }}
         </td>
-        <td class="px-6 py-4 capitalize">
+        <td z-table-cell class="capitalize">
           {{ formatTime(item.checkOutTime) }}
         </td>
-        <td class="px-6 py-4">
+        <td z-table-cell>
           <a
             [routerLink]="['/profil', item?.Member?.registrationNumber]"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            class="font-medium text-primary dark:text-primary hover:underline"
             >{{ 'table.viewProfil' | translate }}</a
           >
         </td>
@@ -70,10 +63,12 @@
     }
 
     @if (checkins.length === 0) {
-      <tr
-        class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <td [attr.colspan]="showDate ? 6 : 5" class="px-6 py-4 capitalize italic text-center">
+      <tr z-table-row>
+        <td
+          z-table-cell
+          [attr.colspan]="showDate ? 6 : 5"
+          class="capitalize italic text-center acm-empty-cell"
+        >
           {{ 'table.noMembersCheckinToday' | translate }}
         </td>
       </tr>

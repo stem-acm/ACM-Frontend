@@ -1,3 +1,5 @@
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Activity } from '@/app/interfaces/activity';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -10,7 +12,13 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-table-activities',
   standalone: true,
-  imports: [TranslateModule, ModalAlertComponent, CommonModule],
+  imports: [
+    ZardButtonComponent,
+    ZardTableImports,
+    TranslateModule,
+    ModalAlertComponent,
+    CommonModule,
+  ],
   templateUrl: './table-activities.component.html',
   styleUrl: './table-activities.component.css',
 })

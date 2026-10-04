@@ -1,3 +1,5 @@
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { Component, Input, Output, inject, EventEmitter } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { Member } from '@/app/interfaces/member';
@@ -14,7 +16,14 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-table-members',
   standalone: true,
-  imports: [RouterModule, TranslateModule, ModalAlertComponent, CommonModule],
+  imports: [
+    ZardButtonComponent,
+    ZardTableImports,
+    RouterModule,
+    TranslateModule,
+    ModalAlertComponent,
+    CommonModule,
+  ],
   templateUrl: './table-members.component.html',
   styleUrl: './table-members.component.css',
 })

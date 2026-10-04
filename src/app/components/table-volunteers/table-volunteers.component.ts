@@ -1,3 +1,5 @@
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { environment } from '@/environments/environment';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
@@ -8,7 +10,7 @@ import { DateUtil } from '@/app/utils/date.util';
 @Component({
   selector: 'app-table-volunteers',
   standalone: true,
-  imports: [RouterModule, TranslateModule],
+  imports: [ZardButtonComponent, ZardTableImports, RouterModule, TranslateModule],
   templateUrl: './table-volunteers.component.html',
   styleUrl: './table-volunteers.component.css',
 })

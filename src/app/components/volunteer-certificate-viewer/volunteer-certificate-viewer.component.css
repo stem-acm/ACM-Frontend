@@ -126,6 +126,23 @@
 .print-button:hover {
   background: #1b447f;
 }
+.print-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.certificate-actions {
+  display: grid;
+  gap: 0.65rem;
+}
+.print-button-secondary {
+  color: #2458a4;
+  background: #fff;
+  border: 1px solid #2458a4;
+}
+.print-button-secondary:hover {
+  color: #173e76;
+  background: #f1f6fd;
+}
 .preview-panel {
   padding: 1.25rem;
   min-width: 0;

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '@/environments/environment';
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { VolunteerService } from '@/app/services/volunteer.service';
@@ -10,7 +11,7 @@ import { AcmLogoComponent } from '../acm-logo/acm-logo.component';
 @Component({
   selector: 'app-volunteer-certificate-viewer',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, AcmLogoComponent],
+  imports: [CommonModule, FormsModule, RouterLink, AcmLogoComponent, TranslateModule],
   templateUrl: './volunteer-certificate-viewer.component.html',
   styleUrl: './volunteer-certificate-viewer.component.css',
 })
@@ -23,6 +24,8 @@ export class VolunteerCertificateViewerComponent implements OnInit {
   loading = true;
   errorKey = '';
   submitted = false;
+  isDownloading = false;
+  downloadError = false;
   private today = new Date();
   certificate = {
     title: 'VOLUNTEERING CERTIFICATE',
@@ -44,10 +47,11 @@ export class VolunteerCertificateViewerComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!Number.isInteger(id) || id < 1) {
-      this.errorKey = 'Invalid volunteer ID.';
+      this.errorKey = 'certificateEditor.invalidId';
       this.loading = false;
       return;
     }
+
     this.volunteerService.getVolunteerById(id).subscribe({
       next: result => {
         if (
@@ -57,19 +61,19 @@ export class VolunteerCertificateViewerComponent implements OnInit {
         ) {
           this.data = result.data;
           this.certificate.reference = `ACM-M${result.data.Member.registrationNumber}-V${result.data.id}`;
-          this.certificate.recipient = [result.data.Member.lastName, result.data.Member.firstName]
+          this.certificate.recipient = [result.data.Member.firstName, result.data.Member.lastName]
             .filter(Boolean)
             .join(' ');
           this.certificate.role = result.data.role || 'Volunteer';
           this.certificate.startDate = this.dateInput(result.data.joinDate);
           this.certificate.endDate = this.dateInput(result.data.expirationDate);
         } else {
-          this.errorKey = 'Volunteer or linked member could not be found.';
+          this.errorKey = 'certificateEditor.notFound';
         }
         this.loading = false;
       },
       error: () => {
-        this.errorKey = 'Could not load this volunteer. Please try again.';
+        this.errorKey = 'certificateEditor.loadError';
         this.loading = false;
       },
     });
@@ -98,6 +102,55 @@ export class VolunteerCertificateViewerComponent implements OnInit {
 
   asset(name: string): string {
     return `${this.fileUrl}/${name}`;
+  }
+
+  async downloadPdf(form: NgForm): Promise<void> {
+    this.submitted = true;
+    this.downloadError = false;
+    if (!this.valid(form) || this.isDownloading) return;
+
+    const content = document.getElementById('certificateSectionToPrint');
+    if (!content) return;
+
+    this.isDownloading = true;
+    try {
+      const [{ toPng }, { jsPDF }] = await Promise.all([import('html-to-image'), import('jspdf')]);
+      await document.fonts.ready;
+      const certificateHeight = Math.max(637, content.scrollHeight);
+      const image = await toPng(content, {
+        backgroundColor: '#ffffff',
+        pixelRatio: 2,
+        cacheBust: true,
+        width: 900,
+        height: certificateHeight,
+        style: {
+          width: '900px',
+          height: `${certificateHeight}px`,
+          minHeight: `${certificateHeight}px`,
+          boxShadow: 'none',
+          border: 'none',
+        },
+      });
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const scale = Math.min(pageWidth / 900, pageHeight / certificateHeight);
+      const imageWidth = 900 * scale;
+      const imageHeight = certificateHeight * scale;
+      pdf.addImage(
+        image,
+        'PNG',
+        (pageWidth - imageWidth) / 2,
+        (pageHeight - imageHeight) / 2,
+        imageWidth,
+        imageHeight,
+      );
+      pdf.save(this.pdfFilename());
+    } catch {
+      this.downloadError = true;
+    } finally {
+      this.isDownloading = false;
+    }
   }
 
   print(form: NgForm): void {
@@ -182,6 +235,7 @@ export class VolunteerCertificateViewerComponent implements OnInit {
   private dateInput(value: Date | string | null | undefined): string {
     return value ? String(value).slice(0, 10) : '';
   }
+
   private valid(form: NgForm): boolean {
     return (
       !form.invalid &&

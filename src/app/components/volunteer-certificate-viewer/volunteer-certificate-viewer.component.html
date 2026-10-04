@@ -1,25 +1,31 @@
 <main class="certificate-page acm-page">
-  <a routerLink="/volunteer" class="back-link">← Back to volunteers</a>
+  <a routerLink="/volunteer" class="back-link">← {{ 'certificateEditor.back' | translate }}</a>
   <header class="page-heading">
     <div>
-      <h1>Volunteer certificate</h1>
-      <p>Complete the details, review the certificate, then print or save it as a PDF.</p>
+      <h1>{{ 'certificateEditor.title' | translate }}</h1>
+      <p>{{ 'certificateEditor.intro' | translate }}</p>
     </div>
   </header>
 
   @if (loading) {
-    <p role="status">Loading volunteer…</p>
+    <p role="status">{{ 'certificateEditor.loading' | translate }}</p>
   } @else if (errorKey) {
-    <div class="error-panel" role="alert">{{ errorKey }}</div>
+    <div class="error-panel" role="alert">{{ errorKey | translate }}</div>
   } @else {
-    <form #certificateForm="ngForm" (ngSubmit)="print(certificateForm)" class="certificate-layout">
+    <form
+      #certificateForm="ngForm"
+      (ngSubmit)="downloadPdf(certificateForm)"
+      class="certificate-layout"
+    >
       <section class="editor-panel" aria-labelledby="details-heading">
-        <h2 id="details-heading">Certificate details</h2>
+        <h2 id="details-heading">{{ 'certificateEditor.details' | translate }}</h2>
         <p class="section-note">
-          The volunteer's details are prefilled and can be adjusted for this certificate.
+          {{ 'certificateEditor.prefilled' | translate }}
         </p>
 
-        <label for="recipient">Recipient name <span aria-hidden="true">*</span></label>
+        <label for="recipient"
+          >{{ 'certificateEditor.recipient' | translate }} <span aria-hidden="true">*</span></label
+        >
         <input
           id="recipient"
           name="recipient"
@@ -30,7 +36,10 @@
 
         <div class="form-row">
           <div>
-            <label for="title">Certificate title <span aria-hidden="true">*</span></label>
+            <label for="title"
+              >{{ 'certificateEditor.certificateTitle' | translate }}
+              <span aria-hidden="true">*</span></label
+            >
             <input
               id="title"
               name="title"
@@ -40,7 +49,10 @@
             />
           </div>
           <div>
-            <label for="reference">Reference number <span aria-hidden="true">*</span></label>
+            <label for="reference"
+              >{{ 'certificateEditor.reference' | translate }}
+              <span aria-hidden="true">*</span></label
+            >
             <input
               id="reference"
               name="reference"
@@ -51,17 +63,22 @@
               aria-describedby="reference-help"
             />
             <p id="reference-help" class="field-hint">
-              Generated from the member and volunteer IDs.
+              {{ 'certificateEditor.referenceHelp' | translate }}
             </p>
           </div>
         </div>
 
-        <label for="role">Volunteer role <span aria-hidden="true">*</span></label>
+        <label for="role"
+          >{{ 'certificateEditor.role' | translate }} <span aria-hidden="true">*</span></label
+        >
         <input id="role" name="role" [(ngModel)]="certificate.role" required maxlength="100" />
 
         <div class="form-row">
           <div>
-            <label for="start-date">Service start <span aria-hidden="true">*</span></label>
+            <label for="start-date"
+              >{{ 'certificateEditor.serviceStart' | translate }}
+              <span aria-hidden="true">*</span></label
+            >
             <input
               id="start-date"
               type="date"
@@ -71,7 +88,10 @@
             />
           </div>
           <div>
-            <label for="end-date">Service end <span aria-hidden="true">*</span></label>
+            <label for="end-date"
+              >{{ 'certificateEditor.serviceEnd' | translate }}
+              <span aria-hidden="true">*</span></label
+            >
             <input
               id="end-date"
               type="date"
@@ -83,10 +103,13 @@
           </div>
         </div>
         @if (datesInvalid) {
-          <p class="field-error" role="alert">Service end must be on or after service start.</p>
+          <p class="field-error" role="alert">{{ 'certificateEditor.dateError' | translate }}</p>
         }
 
-        <label for="description">Recognition text <span aria-hidden="true">*</span></label>
+        <label for="description"
+          >{{ 'certificateEditor.description' | translate }}
+          <span aria-hidden="true">*</span></label
+        >
         <textarea
           id="description"
           name="description"
@@ -97,7 +120,7 @@
         ></textarea>
 
         <label for="activities"
-          >Activities and contributions <span aria-hidden="true">*</span></label
+          >{{ 'certificateEditor.activities' | translate }} <span aria-hidden="true">*</span></label
         >
         <textarea
           id="activities"
@@ -108,11 +131,16 @@
           maxlength="1500"
           aria-describedby="activities-help"
         ></textarea>
-        <p id="activities-help" class="field-hint">Enter one activity per line.</p>
+        <p id="activities-help" class="field-hint">
+          {{ 'certificateEditor.activitiesHelp' | translate }}
+        </p>
 
         <div class="form-row">
           <div>
-            <label for="issue-date">Issue date <span aria-hidden="true">*</span></label>
+            <label for="issue-date"
+              >{{ 'certificateEditor.issueDate' | translate }}
+              <span aria-hidden="true">*</span></label
+            >
             <input
               id="issue-date"
               type="date"
@@ -122,7 +150,10 @@
             />
           </div>
           <div>
-            <label for="signatory">Signatory name <span aria-hidden="true">*</span></label>
+            <label for="signatory"
+              >{{ 'certificateEditor.signatory' | translate }}
+              <span aria-hidden="true">*</span></label
+            >
             <input
               id="signatory"
               name="signatory"
@@ -132,7 +163,10 @@
             />
           </div>
         </div>
-        <label for="signatory-title">Signatory title <span aria-hidden="true">*</span></label>
+        <label for="signatory-title"
+          >{{ 'certificateEditor.signatoryTitle' | translate }}
+          <span aria-hidden="true">*</span></label
+        >
         <input
           id="signatory-title"
           name="signatoryTitle"
@@ -143,12 +177,12 @@
 
         <div class="checks">
           <label
-            ><input type="checkbox" name="stamp" [(ngModel)]="certificate.stamp" /> Show
-            stamp</label
+            ><input type="checkbox" name="stamp" [(ngModel)]="certificate.stamp" />
+            {{ 'certificateEditor.stamp' | translate }}</label
           >
           <label
-            ><input type="checkbox" name="signature" [(ngModel)]="certificate.signature" /> Show
-            signature</label
+            ><input type="checkbox" name="signature" [(ngModel)]="certificate.signature" />
+            {{ 'certificateEditor.signature' | translate }}</label
           >
         </div>
         @if (
@@ -156,16 +190,35 @@
           (certificateForm.invalid || !certificate.reference || datesInvalid || !activities.length)
         ) {
           <p class="field-error" role="alert">
-            Complete all required fields before exporting or printing.
+            {{ 'certificateEditor.requiredError' | translate }}
           </p>
         }
-        <button type="submit" class="print-button">Print certificate</button>
+        @if (downloadError) {
+          <p class="field-error" role="alert">
+            {{ 'certificateEditor.downloadError' | translate }}
+          </p>
+        }
+        <div class="certificate-actions">
+          <button type="submit" class="print-button" [disabled]="isDownloading">
+            {{
+              (isDownloading ? 'certificateEditor.downloading' : 'certificateEditor.download')
+                | translate
+            }}
+          </button>
+          <button
+            type="button"
+            class="print-button print-button-secondary"
+            (click)="print(certificateForm)"
+          >
+            {{ 'certificateEditor.print' | translate }}
+          </button>
+        </div>
       </section>
 
       <section class="preview-panel" aria-labelledby="preview-heading">
         <div class="preview-heading">
-          <h2 id="preview-heading">Live preview</h2>
-          <span>Landscape A4</span>
+          <h2 id="preview-heading">{{ 'certificateEditor.preview' | translate }}</h2>
+          <span>{{ 'certificateEditor.paper' | translate }}</span>
         </div>
         <div class="preview-scroll">
           <div id="certificateSectionToPrint" class="certificate-sheet" lang="en">

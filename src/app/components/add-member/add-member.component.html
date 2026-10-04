@@ -1,16 +1,17 @@
-<div
-  class="bg-gray-700/50 fixed top-0 w-screen h-screen border z-20 flex justify-center items-center"
->
+<div class="acm-entry-modal">
   <form
     #memberForm="ngForm"
     (ngSubmit)="saveMember()"
-    class="max-w-2xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl"
+    class="acm-entry-modal__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="member-modal-title"
   >
-    <h1 class="text-2xl font-bold text-center mb-6 text-primary dark:text-primary">
+    <h1 id="member-modal-title" class="acm-entry-modal__title">
       {{ pageTitle }}
     </h1>
 
-    <div class="flex gap-4">
+    <div class="acm-entry-modal__row">
       <div class="w-1/2 mb-5">
         <label for="firstName" class="block mb-2 text-sm font-medium"
           >{{ 'forms.firstName' | translate }}<span class="text-red-500">*</span></label
@@ -59,7 +60,7 @@
       </div>
     </div>
 
-    <div class="flex gap-4">
+    <div class="acm-entry-modal__row">
       <div class="w-1/2 mb-5">
         <label for="title" class="block mb-2 text-sm font-medium"
           ><!--{{ 'forms.occupation' | translate }}-->
@@ -97,7 +98,7 @@
       </div>
     </div>
 
-    <div class="flex gap-4">
+    <div class="acm-entry-modal__row">
       <div class="w-1/2 mb-5">
         <label for="Birthday" class="block mb-2 text-sm font-medium"
           >{{ 'forms.birthday' | translate }}<span class="text-red-500"></span
@@ -144,7 +145,7 @@
       </div>
     </div>
 
-    <div class="flex gap-4">
+    <div class="acm-entry-modal__row">
       <div class="w-1/3 mb-5">
         <label for="adress" class="block mb-2 text-sm font-medium"
           >{{ 'forms.address' | translate }}<span class="text-red-500"></span
@@ -215,7 +216,7 @@
       </div>
     </div>
 
-    <div class="flex gap-4">
+    <div class="acm-entry-modal__row">
       <div class="w-1/2 mb-5">
         <label for="organization" class="block mb-2 text-sm font-medium"
           >{{ 'forms.placeOfWorkStudy' | translate }}<span class="text-red-500"></span
@@ -270,27 +271,23 @@
       <span class="text-xs font-bold text-red-500 bg-red-100">{{ error.message }}</span>
     }
 
-    <div class="flex justify-end gap-2">
+    <div class="acm-entry-modal__actions">
       <button
         z-button
         zType="outline"
         type="button"
         (click)="cancel()"
-        class="acm-btn acm-btn--outline text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        class="acm-btn acm-btn--outline"
       >
         {{ 'buttons.cancel' | translate }}
       </button>
-      @if (mode === 'insert') {
-        <button
-          z-button
-          *ngIf="loading"
-          type="submit"
-          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
-        >
+      <button z-button type="submit" [disabled]="loading" class="acm-btn acm-btn--primary">
+        @if (loading) {
           <svg
-            class="mr-3 size-5 animate-spin"
+            class="size-5 animate-spin"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <g fill="currentColor">
               <path
@@ -302,49 +299,11 @@
               <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
             </g>
           </svg>
-          {{ 'loading.creating' | translate }}
-        </button>
-        <button
-          z-button
-          *ngIf="!loading"
-          type="submit"
-          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
-        >
-          {{ 'buttons.addMember' | translate }}
-        </button>
-      } @else {
-        <button
-          z-button
-          *ngIf="loading"
-          type="submit"
-          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
-        >
-          <svg
-            class="mr-3 size-5 animate-spin"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g fill="currentColor">
-              <path
-                fill-rule="evenodd"
-                d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z"
-                clip-rule="evenodd"
-                opacity=".2"
-              />
-              <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
-            </g>
-          </svg>
-          {{ 'loading.updating' | translate }}
-        </button>
-        <button
-          z-button
-          *ngIf="!loading"
-          type="submit"
-          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
-        >
-          {{ 'buttons.updateMember' | translate }}
-        </button>
-      }
+          {{ (mode === 'insert' ? 'loading.creating' : 'loading.updating') | translate }}
+        } @else {
+          {{ (mode === 'insert' ? 'buttons.addMember' : 'buttons.updateMember') | translate }}
+        }
+      </button>
     </div>
   </form>
 </div>

@@ -463,6 +463,71 @@ button.acm-btn--danger:hover:not(:disabled) {
   background: #bd2535;
   border-color: #bd2535;
 }
+.acm-entry-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 1rem;
+  background: rgb(15 23 42 / 60%);
+}
+.acm-entry-modal__panel {
+  box-sizing: border-box;
+  width: min(100%, 42rem);
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--card);
+  color: var(--foreground);
+  box-shadow: 0 24px 64px rgb(15 23 42 / 25%);
+}
+.acm-entry-modal__panel--activity {
+  width: min(100%, 30rem);
+}
+.acm-entry-modal__row {
+  display: flex;
+  gap: 1rem;
+}
+.acm-entry-modal__row > div {
+  flex: 1;
+  min-width: 0;
+}
+.acm-entry-modal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.acm-entry-modal__delete {
+  margin-right: auto;
+}
+@media (max-width: 640px) {
+  .acm-entry-modal {
+    align-items: flex-start;
+    padding: 0.75rem;
+  }
+  .acm-entry-modal__panel {
+    max-height: calc(100dvh - 1.5rem);
+    padding: 1rem;
+  }
+  .acm-entry-modal__row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .acm-entry-modal__row > div {
+    width: 100%;
+  }
+}
 button.acm-btn--ghost {
   color: #244575;
   background: transparent;

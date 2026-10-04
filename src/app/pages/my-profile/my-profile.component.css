@@ -29,10 +29,13 @@
   font-weight: 800;
   letter-spacing: 0.18em;
 }
-.profile-hero h1 {
+.acm-page .profile-hero h1 {
+  color: #fff;
   font-size: clamp(1.8rem, 4vw, 2.7rem);
   font-weight: 800;
   margin: 0.45rem 0;
+  position: relative;
+  z-index: 1;
 }
 .profile-hero p {
   color: #d9eeee;

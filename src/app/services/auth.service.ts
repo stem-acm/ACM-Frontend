@@ -32,6 +32,7 @@ export class AuthService {
       ['checkins.view', '/checkin-history'],
       ['checkins.create', '/checkin'],
       ['settings.manage', '/setting'],
+      ['profile.edit', '/my-profile'],
     ];
     return routes.find(([feature]) => this.can(feature))?.[1] ?? '/auth';
   }
@@ -67,6 +68,17 @@ export class AuthService {
 
     return this.http
       .get<HttpResult<User>>(`${this.URL}/auth/token`)
+      .pipe(tap(result => this.setUser(result.data)));
+  }
+
+  updateProfile(changes: {
+    username?: string;
+    email?: string;
+    currentPassword: string;
+    newPassword?: string;
+  }) {
+    return this.http
+      .put<HttpResult<User>>(`${this.URL}/auth/profile`, changes)
       .pipe(tap(result => this.setUser(result.data)));
   }
 }

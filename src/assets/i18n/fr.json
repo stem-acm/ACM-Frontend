@@ -25,6 +25,7 @@
       "volunteers": "Bénévoles",
       "activities": "Activités",
       "checkins": "Présences",
+      "profile": "Mon profil",
       "settings": "Paramètres et comptes"
     },
     "actions": {
@@ -35,7 +36,8 @@
       "cards": "Cartes et codes QR",
       "certificate": "Certificats",
       "history": "Historique et mises à jour",
-      "manage": "Gérer les accès"
+      "manage": "Gérer les accès",
+      "editOwnProfile": "Modifier son profil"
     }
   },
   "nav": {
@@ -48,10 +50,30 @@
     "checkin-history": "Historique",
     "signOut": "Déconnexion",
     "settings": "Paramètres",
+    "myProfile": "Mon profil",
     "manageIntern": "Gérer les stagiaires",
     "openUserMenu": "Ouvrir le menu utilisateur",
     "openMainMenu": "Ouvrir le menu principal",
     "language": "Langue"
+  },
+  "profile": {
+    "title": "Mon profil",
+    "description": "Mettez à jour vos informations et votre mot de passe.",
+    "accountDetails": "Informations du compte",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le nouveau mot de passe",
+    "changePassword": "Changer le mot de passe",
+    "saveDetails": "Enregistrer",
+    "savePassword": "Changer le mot de passe",
+    "passwordHint": "Utilisez au moins 8 caractères, dont une lettre et un chiffre.",
+    "detailsSaved": "Informations du compte mises à jour.",
+    "passwordSaved": "Mot de passe mis à jour.",
+    "passwordMismatch": "Les nouveaux mots de passe ne correspondent pas.",
+    "alreadyUsed": "Ce nom d'utilisateur ou cet e-mail est déjà utilisé.",
+    "wrongPassword": "Le mot de passe actuel est incorrect.",
+    "invalidDetails": "Vérifiez les informations saisies.",
+    "saveError": "Impossible de mettre à jour votre profil."
   },
   "pages": {
     "overview": "Aperçu",

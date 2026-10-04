@@ -25,6 +25,7 @@
       "volunteers": "Volunteers",
       "activities": "Activities",
       "checkins": "Check-ins",
+      "profile": "My profile",
       "settings": "Settings and accounts"
     },
     "actions": {
@@ -35,7 +36,8 @@
       "cards": "Cards and QR codes",
       "certificate": "Certificates",
       "history": "History and live updates",
-      "manage": "Manage access"
+      "manage": "Manage access",
+      "editOwnProfile": "Edit own profile"
     }
   },
   "nav": {
@@ -48,10 +50,30 @@
     "checkin-history": "Checkin History",
     "signOut": "Sign out",
     "settings": "Settings",
+    "myProfile": "My profile",
     "manageIntern": "Manage intern",
     "openUserMenu": "Open user menu",
     "openMainMenu": "Open main menu",
     "language": "Language"
+  },
+  "profile": {
+    "title": "My profile",
+    "description": "Keep your account details and password up to date.",
+    "accountDetails": "Account details",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "changePassword": "Change password",
+    "saveDetails": "Save details",
+    "savePassword": "Change password",
+    "passwordHint": "Use at least 8 characters, including a letter and a number.",
+    "detailsSaved": "Account details updated.",
+    "passwordSaved": "Password updated.",
+    "passwordMismatch": "The new passwords do not match.",
+    "alreadyUsed": "Username or email is already in use.",
+    "wrongPassword": "Current password is incorrect.",
+    "invalidDetails": "Check the details you entered.",
+    "saveError": "Unable to update your profile."
   },
   "pages": {
     "overview": "Overview",

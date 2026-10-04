@@ -39,6 +39,10 @@ export class SettingsComponent implements OnInit {
   };
 
   groups = [
+    {
+      label: 'access.groups.profile',
+      features: [['profile.edit', 'access.actions.editOwnProfile']],
+    },
     { label: 'access.groups.dashboard', features: [['dashboard.view', 'access.actions.view']] },
     {
       label: 'access.groups.members',

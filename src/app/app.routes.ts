@@ -11,6 +11,7 @@ import { CheckinHistoryComponent } from './pages/checkin-history/checkin-history
 import { VolunteerCertificateViewerComponent } from './components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
 import { permissionGuard } from './permission.guard';
 import { SettingsComponent } from './pages/settings/settings.component';
+import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 
 export const routes: Routes = [
   {
@@ -76,5 +77,11 @@ export const routes: Routes = [
     component: SettingsComponent,
     canActivate: [permissionGuard],
     data: { permission: 'settings.manage' },
+  },
+  {
+    path: 'my-profile',
+    component: MyProfileComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'profile.edit' },
   },
 ];

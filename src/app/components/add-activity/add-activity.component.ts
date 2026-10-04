@@ -19,6 +19,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ModalAlertComponent } from '../modal-alert/modal-alert.component';
 import { ToastService } from '@/app/services/toast.service';
 import { Router } from '@angular/router';
+import { AuthService } from '@/app/services/auth.service';
 
 @Component({
   selector: 'app-add-activity',
@@ -270,6 +271,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
   private translateService = inject(TranslateService);
   private toastService = inject(ToastService);
   private router = inject(Router);
+  public auth = inject(AuthService);
 
   showDeleteModal = false;
   deleteTitle = '';
@@ -539,6 +541,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
   }
 
   onDeleteClick() {
+    if (!this.auth.can('activities.delete')) return;
     this.deleteTitle = this.translateService.instant('alert.deleteTitle');
     this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
       name: this.activity.name,
@@ -557,6 +560,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
   }
 
   confirmDelete() {
+    if (!this.auth.can('activities.delete')) return;
     if (this.activity?.id) {
       this.activityService.deleteActivity(this.activity.id).subscribe({
         next: (result: HttpResult<null>) => {

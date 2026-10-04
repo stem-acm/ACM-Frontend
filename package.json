@@ -2,7 +2,7 @@
   "name": "acm-frontend",
   "version": "0.0.0",
   "scripts": {
-    "docker-dev:build": "docker compose -f docker-compose.dev.yml up -d --build",
+    "docker-dev:build": "docker compose -f docker-compose.dev.yml up -d --build --renew-anon-volumes",
     "docker-dev:start": "docker compose -f docker-compose.dev.yml up -d",
     "docker-dev:stop": "docker compose -f docker-compose.dev.yml stop",
     "docker-prod:start": "docker compose -f docker-compose.prod.yml up -d",
@@ -45,7 +45,9 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
+    "html-to-image": "^1.11.13",
     "html5-qrcode": "^2.3.8",
+    "jspdf": "^4.2.1",
     "ngx-spinner": "^19.0.0",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.0",

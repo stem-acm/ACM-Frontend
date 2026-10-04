@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { AppComponent } from '@/app/app.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
 import { TableVolunteersComponent } from '@/app/components/table-volunteers/table-volunteers.component';
-import { VolunteerCertificateViewerComponent } from '@/app/components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
 import { AddVolunteerComponent } from '@/app/components/add-volunteer/add-volunteer.component';
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { VolunteerService } from '@/app/services/volunteer.service';
@@ -24,7 +23,6 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     TableLoadingComponent,
     TableVolunteersComponent,
-    VolunteerCertificateViewerComponent,
     AddVolunteerComponent,
     TranslateModule,
   ],
@@ -35,9 +33,7 @@ export class VolunteerComponent implements OnInit {
   protected Math = Math;
   private allVolunteers: Volunteer[] = [];
   public displayedVolunteers: Volunteer[] = [];
-  public volunteerChooosed!: Volunteer;
   public searchWord = '';
-  public showCertificate = false;
   public showAddForm = false;
 
   public currentPage = 1;
@@ -142,14 +138,5 @@ export class VolunteerComponent implements OnInit {
 
   search(keyWord: string) {
     this.searchSubject.next(keyWord);
-  }
-
-  setShowCertificate(event: Volunteer) {
-    this.showCertificate = true;
-    this.volunteerChooosed = event;
-  }
-
-  cancelForm(event: boolean) {
-    if (event) this.showCertificate = false;
   }
 }

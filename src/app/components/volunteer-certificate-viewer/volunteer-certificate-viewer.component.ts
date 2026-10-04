@@ -102,12 +102,17 @@ export class VolunteerCertificateViewerComponent implements OnInit {
 
   print(form: NgForm): void {
     this.submitted = true;
-    if (form.invalid || !this.certificate.reference || this.datesInvalid || !this.activities.length)
-      return;
+    if (!this.valid(form)) return;
+
     const content = document.getElementById('certificateSectionToPrint');
     if (!content) return;
+    const printName = this.pdfFilename().slice(0, -4);
+    const certificateHeight = Math.max(637, content.scrollHeight);
+    const scale = Math.min((297 * 96) / 25.4 / 900, (210 * 96) / 25.4 / certificateHeight);
+    const left = ((297 * 96) / 25.4 - 900 * scale) / 2;
+    const top = ((210 * 96) / 25.4 - certificateHeight * scale) / 2;
     const iframe = document.createElement('iframe');
-    iframe.setAttribute('title', 'Certificate print');
+    iframe.setAttribute('title', printName);
     iframe.style.cssText = 'position:fixed;width:0;height:0;border:0;';
     document.body.appendChild(iframe);
     const printWindow = iframe.contentWindow;
@@ -116,34 +121,84 @@ export class VolunteerCertificateViewerComponent implements OnInit {
       iframe.remove();
       return;
     }
+
     const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
       .map(node => node.outerHTML)
       .join('\n');
     printDocument.open();
-    printDocument.write(`<!doctype html><html><head><title>Volunteer certificate</title>${styles}<style>
-      @page { size: A4 landscape; margin: 10mm; }
-      @media print { body { margin: 0; } #certificateSectionToPrint { width: 100%; max-width: none; min-height: 180mm; box-shadow: none; transform: none !important; } }
-    </style></head><body>${content.outerHTML}</body></html>`);
+    printDocument.write(`<!doctype html><html lang="en"><head><title>Certificate</title>${styles}<style>
+      @page { size: 297mm 210mm; margin: 0; }
+      html, body { margin: 0 !important; padding: 0 !important; }
+      .print-page { position: relative; width: 297mm; height: 210mm; overflow: hidden; }
+      #certificateSectionToPrint {
+        position: absolute !important;
+        left: ${left}px !important;
+        top: ${top}px !important;
+        width: 900px !important;
+        height: ${certificateHeight}px !important;
+        min-height: 0 !important;
+        max-width: none !important;
+        margin: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        transform: scale(${scale}) !important;
+        transform-origin: top left !important;
+        break-inside: avoid;
+      }
+    </style></head><body><div class="print-page">${content.outerHTML}</div></body></html>`);
     printDocument.close();
+    printDocument.title = printName;
+
+    const stylesheets = Array.from(
+      printDocument.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'),
+    );
+    const stylesheetLoads = stylesheets.map(link =>
+      link.sheet
+        ? Promise.resolve()
+        : new Promise<void>(resolve => {
+            link.onload = () => resolve();
+            link.onerror = () => resolve();
+          }),
+    );
     const images = Array.from(printDocument.images);
-    Promise.all(
-      images.map(image =>
-        image.complete
-          ? Promise.resolve()
-          : new Promise<void>(resolve => {
-              image.onload = () => resolve();
-              image.onerror = () => resolve();
-            }),
-      ),
-    ).then(() => {
-      printWindow.addEventListener('afterprint', () => iframe.remove(), { once: true });
-      printWindow.focus();
-      printWindow.print();
-      setTimeout(() => iframe.remove(), 60000);
-    });
+    const imageLoads = images.map(image =>
+      image.complete
+        ? Promise.resolve()
+        : new Promise<void>(resolve => {
+            image.onload = () => resolve();
+            image.onerror = () => resolve();
+          }),
+    );
+    Promise.all([...stylesheetLoads, ...imageLoads])
+      .then(() => printDocument.fonts.ready)
+      .then(() => {
+        printWindow.addEventListener('afterprint', () => iframe.remove(), { once: true });
+        printWindow.focus();
+        printWindow.print();
+        setTimeout(() => iframe.remove(), 60000);
+      });
   }
 
   private dateInput(value: Date | string | null | undefined): string {
     return value ? String(value).slice(0, 10) : '';
+  }
+  private valid(form: NgForm): boolean {
+    return (
+      !form.invalid &&
+      !!this.certificate.reference &&
+      !this.datesInvalid &&
+      !!this.activities.length
+    );
+  }
+
+  private pdfFilename(): string {
+    const name =
+      this.certificate.recipient
+        .trim()
+        .replace(/[\\/:*?"<>|\x00-\x1f]/g, '')
+        .replace(/\s+/g, ' ')
+        .replace(/[. ]+$/, '')
+        .slice(0, 120) || `Volunteer-${this.data?.id}`;
+    return `CERT-${name}.pdf`;
   }
 }

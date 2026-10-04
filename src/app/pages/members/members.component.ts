@@ -1,3 +1,5 @@
+import { ZardInputComponent } from '@/shared/components/input';
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, inject, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { TableMembersComponent } from '@/app/components/table-members/table-members.component';
@@ -18,6 +20,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-members',
   standalone: true,
   imports: [
+    ZardInputComponent,
+    ZardButtonComponent,
     TableMembersComponent,
     AddMemberComponent,
     TableLoadingComponent,

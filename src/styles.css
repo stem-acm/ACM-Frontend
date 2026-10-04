@@ -916,9 +916,19 @@ app-add-volunteer form .acm-entry-modal__title::before {
   padding: 0.25rem;
   transform: translateY(-50%);
 }
+.acm-password-field .acm-password-toggle,
+.acm-password-field .acm-password-toggle:hover,
+.acm-password-field .acm-password-toggle:active {
+  transform: translateY(-50%);
+  translate: none;
+  transition: none;
+  animation: none;
+}
 .acm-password-field img {
   width: 1.25rem;
   height: 1.25rem;
+  transition: none;
+  animation: none;
 }
 .acm-form-error {
   padding: 0.7rem 0.85rem;

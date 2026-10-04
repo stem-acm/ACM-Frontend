@@ -658,7 +658,8 @@ button.acm-btn--ghost.text-white:hover {
   margin-bottom: 1.5rem;
 }
 .acm-page h1,
-.acm-entry-modal .acm-entry-modal__title {
+.acm-entry-modal .acm-entry-modal__title,
+app-add-volunteer form .acm-entry-modal__title {
   margin: 0;
   font-size: clamp(1.55rem, 2.1vw, 2.1rem);
   line-height: 1.2;
@@ -666,12 +667,14 @@ button.acm-btn--ghost.text-white:hover {
   font-weight: 700;
   color: #143a7b;
 }
-.acm-entry-modal .acm-entry-modal__title {
+.acm-entry-modal .acm-entry-modal__title,
+app-add-volunteer form .acm-entry-modal__title {
   margin-bottom: 1.5rem;
   text-align: center;
 }
 .acm-page h1::before,
-.acm-entry-modal .acm-entry-modal__title::before {
+.acm-entry-modal .acm-entry-modal__title::before,
+app-add-volunteer form .acm-entry-modal__title::before {
   content: '';
   display: inline-block;
   width: 0.32rem;

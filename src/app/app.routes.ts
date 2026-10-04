@@ -8,6 +8,7 @@ import { ActivityComponent } from './pages/activity/activity.component';
 import { CheckinComponent } from './pages/checkin/checkin.component';
 import { VolunteerComponent } from './pages/volunteer/volunteer.component';
 import { CheckinHistoryComponent } from './pages/checkin-history/checkin-history.component';
+import { VolunteerCertificateViewerComponent } from './components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
   {
     path: 'volunteer',
     component: VolunteerComponent,
+  },
+  {
+    path: 'volunteer/:id/certificate',
+    component: VolunteerCertificateViewerComponent,
   },
   {
     path: 'profil/:reg_number',

@@ -17,6 +17,10 @@ export class VolunteerService {
     );
   }
 
+  getVolunteerById(id: number) {
+    return this.http.get<HttpResult<Volunteer>>(`${this.URL}/volunteers/${id}`);
+  }
+
   addVolunteer(volunteer: Volunteer) {
     return this.http.post<HttpResult<Volunteer>>(`${this.URL}/Volunteers`, volunteer);
   }

@@ -74,10 +74,7 @@
         }"
       />
     } @else {
-      <app-table-volunteers
-        (showVolunteerCertificate)="setShowCertificate($event)"
-        [data]="displayedVolunteers"
-      />
+      <app-table-volunteers [data]="displayedVolunteers" />
 
       <!-- Pagination Controls -->
       <div
@@ -202,10 +199,6 @@
     }
   </div>
 </div>
-
-@if (showCertificate) {
-  <app-volunteer-certificate-viewer (canceled)="cancelForm($event)" [data]="volunteerChooosed" />
-}
 
 @if (showAddForm) {
   <app-add-volunteer

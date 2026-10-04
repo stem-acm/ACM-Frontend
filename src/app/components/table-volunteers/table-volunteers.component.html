@@ -42,16 +42,15 @@
           </div>
         </td>
         <td z-table-cell>
-          <button
+          <a
             z-button
             zSize="sm"
             zType="link"
-            type="button"
-            (click)="showCertificate(volunteer)"
+            [routerLink]="['/volunteer', volunteer.id, 'certificate']"
             class="acm-btn acm-btn--link acm-btn--sm font-medium text-primary dark:text-primary hover:underline bg-transparent border-none cursor-pointer mr-2"
           >
             {{ 'table.certificate' | translate }}
-          </button>
+          </a>
           <a
             [routerLink]="['/profil', volunteer.Member?.registrationNumber]"
             class="font-medium text-primary dark:text-primary hover:underline ml-2"

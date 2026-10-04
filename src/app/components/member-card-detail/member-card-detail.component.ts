@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { Member } from '@/app/interfaces/member';
 import { ImgRoundComponent } from '../img-round/img-round.component';
@@ -24,6 +25,7 @@ import { Router } from '@angular/router';
   selector: 'app-member-card-detail',
   standalone: true,
   imports: [
+    ZardButtonComponent,
     ImgRoundComponent,
     TitleComponent,
     TextDescriptionComponent,

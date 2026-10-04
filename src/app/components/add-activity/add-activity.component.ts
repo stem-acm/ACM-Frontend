@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import {
   Component,
   EventEmitter,
@@ -22,7 +23,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-add-activity',
   standalone: true,
-  imports: [FormsModule, CommonModule, TranslateModule, ModalAlertComponent],
+  imports: [ZardButtonComponent, FormsModule, CommonModule, TranslateModule, ModalAlertComponent],
   templateUrl: './add-activity.component.html',
   styleUrl: './add-activity.component.css',
 })

@@ -1,67 +1,63 @@
-<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-  <thead
-    class="sticky top-0 text-xs border border-gray-200 text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400"
-  >
-    <tr>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.name' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.description' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.periodicity' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.dayOfWeek' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.startDate' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.endDate' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.startTime' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.endTime' | translate }}</th>
-      <th scope="col" class="px-6 py-3">{{ 'table.columns.action' | translate }}</th>
+<table z-table zSize="comfortable" class="acm-data-table">
+  <thead z-table-header>
+    <tr z-table-row>
+      <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.description' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.periodicity' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.dayOfWeek' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.startDate' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.endDate' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.startTime' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.endTime' | translate }}</th>
+      <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody z-table-body>
     @for (item of data; track item.name) {
-      <tr
-        class="bg-white hover:border-y border-gray-200 cursor-pointer dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <th
-          scope="row"
-          class="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-        >
+      <tr z-table-row>
+        <th z-table-cell scope="row" class="acm-person-cell">
           <span class="text-2xl mr-2">{{ item.emoji || '😊' }}</span>
           <div class="text-xs font-semibold">{{ item.name }}</div>
         </th>
-        <td class="px-6 py-4 capitalize">
+        <td z-table-cell class="capitalize">
           {{ item.description }}
         </td>
-        <td class="px-6 py-4">
+        <td z-table-cell>
           {{ item.isPeriodic ? ('table.yes' | translate) : ('table.no' | translate) }}
         </td>
-        <td class="px-6 py-4">
+        <td z-table-cell>
           {{
             item.dayOfWeek
               ? item.dayOfWeek.charAt(0)!.toUpperCase() + '' + item.dayOfWeek.slice(1)
               : ('table.notAvailable' | translate)
           }}
         </td>
-        <td class="px-6 py-4">
+        <td z-table-cell>
           {{ item.startDate ?? ('table.notAvailable' | translate) }}
         </td>
-        <td class="px-6 py-4">
+        <td z-table-cell>
           {{ item.endDate ?? ('table.notAvailable' | translate) }}
         </td>
-        <td class="px-6 py-4">
+        <td z-table-cell>
           {{ item.startTime }}
         </td>
-        <td class="px-6 py-4">
+        <td z-table-cell>
           {{ item.endTime }}
         </td>
-        <td>
+        <td z-table-cell>
           <a
             role="button"
             tabindex="0"
             (click)="updateMember(item)"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-4"
+            class="font-medium text-primary dark:text-primary hover:underline mr-4"
             >{{ 'table.edit' | translate }}</a
           >
           <button
+            z-button
+            zSize="sm"
+            zType="link"
             (click)="onDeleteClick(item)"
-            class="font-medium text-red-600 dark:text-red-500 hover:underline"
+            class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
           >
             {{ 'buttons.delete' | translate }}
           </button>

@@ -1,10 +1,11 @@
-<div class="m-8">
+<div class="acm-page">
   <div class="flex justify-between items-center">
-    <h1 class="text-xl font-bold text-blue-500 my-4">{{ 'pages.listOfVolunteers' | translate }}</h1>
+    <h1 class="text-xl font-bold text-primary my-4">{{ 'pages.listOfVolunteers' | translate }}</h1>
     <button
+      z-button
       type="button"
       (click)="addVolunteer()"
-      class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+      class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
     >
       <svg class="w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -48,11 +49,12 @@
         </svg>
       </div>
       <input
+        z-input
         type="search"
         [(ngModel)]="searchWord"
         (input)="search(searchWord)"
         id="table-search-users"
-        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-primary/20 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
         [placeholder]="'placeholders.searchVolunteer' | translate"
       />
     </div>
@@ -90,16 +92,22 @@
           </p>
           <div class="flex gap-2">
             <button
+              z-button
+              zSize="sm"
+              zType="outline"
               [disabled]="currentPage === 1"
               (click)="changePage(currentPage - 1)"
-              class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+              class="acm-btn acm-btn--outline acm-btn--sm relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
             >
               {{ 'table.pagination.previous' | translate }}
             </button>
             <button
+              z-button
+              zSize="sm"
+              zType="outline"
               [disabled]="currentPage === totalPages"
               (click)="changePage(currentPage + 1)"
-              class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+              class="acm-btn acm-btn--outline acm-btn--sm relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
             >
               {{ 'table.pagination.next' | translate }}
             </button>
@@ -137,11 +145,14 @@
                 [max]="totalPages"
                 [(ngModel)]="pageInput"
                 (keydown.enter)="goToPage()"
-                class="w-16 text-center text-sm text-gray-900 border border-gray-300 rounded-md py-1.5 px-2 bg-gray-50 focus:ring-2 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                class="w-16 text-center text-sm text-gray-900 border border-gray-300 rounded-md py-1.5 px-2 bg-gray-50 focus:ring-2 focus:outline-none focus:ring-primary/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               />
               <button
+                z-button
+                zSize="sm"
+                zType="outline"
                 (click)="goToPage()"
-                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+                class="acm-btn acm-btn--outline acm-btn--sm inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
               >
                 Go
               </button>
@@ -151,9 +162,12 @@
               aria-label="Pagination"
             >
               <button
+                z-button
+                zSize="icon"
+                zType="outline"
                 [disabled]="currentPage === 1"
                 (click)="changePage(currentPage - 1)"
-                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed dark:ring-gray-600 dark:hover:bg-gray-700"
+                class="acm-btn acm-btn--outline acm-btn--icon relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed dark:ring-gray-600 dark:hover:bg-gray-700"
               >
                 <span class="sr-only">{{ 'table.pagination.previous' | translate }}</span>
                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -165,9 +179,12 @@
                 </svg>
               </button>
               <button
+                z-button
+                zSize="icon"
+                zType="outline"
                 [disabled]="currentPage === totalPages"
                 (click)="changePage(currentPage + 1)"
-                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed dark:ring-gray-600 dark:hover:bg-gray-700"
+                class="acm-btn acm-btn--outline acm-btn--icon relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed dark:ring-gray-600 dark:hover:bg-gray-700"
               >
                 <span class="sr-only">{{ 'table.pagination.next' | translate }}</span>
                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

@@ -9,7 +9,7 @@
         value=""
         (change)="onCheckboxChange()"
         name="bordered-checkbox"
-        class="w-4 h-4 text-blue-500 bg-blue-500 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        class="w-4 h-4 text-primary bg-primary border-gray-300 rounded-sm focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
         [checked]="memberChoose.selected"
       />
       <label
@@ -32,10 +32,12 @@
     </div>
   </div>
   <button
+    z-button
+    zType="secondary"
     type="button"
     (click)="openCard(memberChoose.member)"
     title="View {{ memberChoose.member.lastName }}'s badge"
-    class="text-gray-900 bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 rounded-lg text-sm p-2 text-center"
+    class="acm-btn acm-btn--secondary text-gray-900 bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 rounded-lg text-sm p-2 text-center"
   >
     <svg
       class="h-6"

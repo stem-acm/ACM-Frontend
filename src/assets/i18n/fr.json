@@ -11,7 +11,8 @@
     "settings": "Paramètres",
     "manageIntern": "Gérer les stagiaires",
     "openUserMenu": "Ouvrir le menu utilisateur",
-    "openMainMenu": "Ouvrir le menu principal"
+    "openMainMenu": "Ouvrir le menu principal",
+    "language": "Langue"
   },
   "pages": {
     "overview": "Aperçu",
@@ -20,7 +21,9 @@
     "listOfVolunteers": "Liste des Bénévoles",
     "membersInRoom": "Membres actuellement dans la salle",
     "authentification": "Authentification",
-    "membersCheckedInRoom": "Membres enregistrés à l'ACM"
+    "membersCheckedInRoom": "Membres enregistrés à l'ACM",
+    "welcomeWorkspace": "Bienvenue dans votre espace communautaire.",
+    "brandTagline": "Apprendre · Échanger · Créer"
   },
   "forms": {
     "firstName": "Prénom",

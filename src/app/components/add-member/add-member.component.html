@@ -6,7 +6,7 @@
     (ngSubmit)="saveMember()"
     class="max-w-2xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl"
   >
-    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">
+    <h1 class="text-2xl font-bold text-center mb-6 text-primary dark:text-primary">
       {{ pageTitle }}
     </h1>
 
@@ -25,7 +25,7 @@
           required
           [class.border-red-500]="firstName.invalid && (firstName.touched || submitted)"
           [class.focus:ring-red-500]="firstName.invalid && (firstName.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="firstName.invalid && (firstName.touched || submitted)"
@@ -48,7 +48,7 @@
           [placeholder]="'placeholders.lastName' | translate"
           [class.border-red-500]="lastName.invalid && (lastName.touched || submitted)"
           [class.focus:ring-red-500]="lastName.invalid && (lastName.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="lastName.invalid && (lastName.touched || submitted)"
@@ -67,12 +67,13 @@
         ></label>
         <select
           id="title"
-          [(ngModel)]="member.title"
+          [ngModel]="member.title"
+          (ngModelChange)="setTitle($event)"
           name="title"
           #title="ngModel"
           [class.border-red-500]="title.invalid && (title.touched || submitted)"
           [class.focus:ring-red-500]="occupation.invalid && (occupation.touched || submitted)"
-          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
           <option *ngFor="let item of titles" [value]="item">{{ item }}</option>
         </select>
@@ -86,23 +87,13 @@
           ><!--{{ 'forms.occupation' | translate }}-->
           Gender<span class="text-red-500"></span
         ></label>
-        <select
+        <input
           id="gender"
-          [(ngModel)]="member.gender"
-          name="gender"
-          #gender="ngModel"
-          [class.border-red-500]="gender.invalid && (gender.touched || submitted)"
-          [class.focus:ring-red-500]="gender.invalid && (gender.touched || submitted)"
-          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        >
-          <option *ngFor="let item of genders" [value]="item">{{ item }}</option>
-        </select>
-        <p
-          *ngIf="gender.invalid && (gender.touched || submitted)"
-          class="mt-1 text-xs text-red-500"
-        >
-          This field is required.
-        </p>
+          type="text"
+          [value]="member.gender === 'male' ? 'Male' : member.gender === 'female' ? 'Female' : ''"
+          readonly
+          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </div>
     </div>
 
@@ -119,7 +110,7 @@
           #birthDate="ngModel"
           [class.border-red-500]="birthDate.invalid && (birthDate.touched || submitted)"
           [class.focus:ring-red-500]="birthDate.invalid && (birthDate.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="birthDate.invalid && (birthDate.touched || submitted)"
@@ -142,7 +133,7 @@
           [placeholder]="'placeholders.birthPlace' | translate"
           [class.border-red-500]="birthPlace.invalid && (birthPlace.touched || submitted)"
           [class.focus:ring-red-500]="birthPlace.invalid && (birthPlace.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="birthPlace.invalid && (birthPlace.touched || submitted)"
@@ -167,7 +158,7 @@
           [placeholder]="'placeholders.address' | translate"
           [class.border-red-500]="address.invalid && (address.touched || submitted)"
           [class.focus:ring-red-500]="address.invalid && (address.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="address.invalid && (address.touched || submitted)"
@@ -190,7 +181,7 @@
           [placeholder]="'placeholders.phoneNumber' | translate"
           [class.border-red-500]="phoneNumber.invalid && (phoneNumber.touched || submitted)"
           [class.focus:ring-red-500]="phoneNumber.invalid && (phoneNumber.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="phoneNumber.invalid && (phoneNumber.touched || submitted)"
@@ -211,7 +202,7 @@
           #occupation="ngModel"
           [class.border-red-500]="occupation.invalid && (occupation.touched || submitted)"
           [class.focus:ring-red-500]="occupation.invalid && (occupation.touched || submitted)"
-          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="capitalize w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
           <option *ngFor="let item of occupations" [value]="item">{{ item }}</option>
         </select>
@@ -242,7 +233,7 @@
           [class.focus:ring-red-500]="
             studyOrWorkPlace.invalid && (studyOrWorkPlace.touched || submitted)
           "
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="studyOrWorkPlace.invalid && (studyOrWorkPlace.touched || submitted)"
@@ -264,7 +255,7 @@
           #joinDate="ngModel"
           [class.border-red-500]="joinDate.invalid && (joinDate.touched || submitted)"
           [class.focus:ring-red-500]="joinDate.invalid && (joinDate.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="joinDate.invalid && (joinDate.touched || submitted)"
@@ -281,17 +272,20 @@
 
     <div class="flex justify-end gap-2">
       <button
+        z-button
+        zType="outline"
         type="button"
         (click)="cancel()"
-        class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        class="acm-btn acm-btn--outline text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
       >
         {{ 'buttons.cancel' | translate }}
       </button>
       @if (mode === 'insert') {
         <button
+          z-button
           *ngIf="loading"
           type="submit"
-          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           <svg
             class="mr-3 size-5 animate-spin"
@@ -311,17 +305,19 @@
           {{ 'loading.creating' | translate }}
         </button>
         <button
+          z-button
           *ngIf="!loading"
           type="submit"
-          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           {{ 'buttons.addMember' | translate }}
         </button>
       } @else {
         <button
+          z-button
           *ngIf="loading"
           type="submit"
-          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           <svg
             class="mr-3 size-5 animate-spin"
@@ -341,9 +337,10 @@
           {{ 'loading.updating' | translate }}
         </button>
         <button
+          z-button
           *ngIf="!loading"
           type="submit"
-          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           {{ 'buttons.updateMember' | translate }}
         </button>

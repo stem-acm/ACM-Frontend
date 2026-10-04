@@ -19,4 +19,37 @@ describe('MemberCardViewerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('keeps the print frame until Chrome finishes printing', async () => {
+    const content = document.createElement('div');
+    content.id = 'badgeSectionToPrint';
+    document.body.appendChild(content);
+
+    const appendChild = document.body.appendChild.bind(document.body);
+    let frame: HTMLIFrameElement | undefined;
+    let printSpy: jasmine.Spy | undefined;
+    spyOn(document.body, 'appendChild').and.callFake(node => {
+      const appended = appendChild(node);
+      if (node instanceof HTMLIFrameElement) {
+        frame = node;
+        printSpy = spyOn(node.contentWindow!, 'print').and.stub();
+        spyOn(node.contentWindow!, 'focus').and.stub();
+      }
+      return appended;
+    });
+
+    try {
+      component.print();
+      await Promise.resolve();
+
+      expect(printSpy).toHaveBeenCalled();
+      expect(frame?.isConnected).toBeTrue();
+
+      frame?.contentWindow?.dispatchEvent(new Event('afterprint'));
+      expect(frame?.isConnected).toBeFalse();
+    } finally {
+      frame?.remove();
+      content.remove();
+    }
+  });
 });

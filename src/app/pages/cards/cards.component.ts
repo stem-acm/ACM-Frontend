@@ -1,3 +1,5 @@
+import { ZardInputComponent } from '@/shared/components/input';
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, inject, OnInit } from '@angular/core';
 import { CardComponent } from '@/app/components/card/card.component';
 import { Member } from '@/app/interfaces/member';
@@ -15,6 +17,8 @@ import { debounceTime, Subject } from 'rxjs';
   selector: 'app-cards',
   standalone: true,
   imports: [
+    ZardInputComponent,
+    ZardButtonComponent,
     CardComponent,
     CommonModule,
     MemberCardViewerComponent,

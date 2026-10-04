@@ -3,17 +3,23 @@ import { AcmLogoComponent } from '@/app/components/acm-logo/acm-logo.component';
 import { FlexMenusComponent } from '@/app/components/flex-menus/flex-menus.component';
 import { AuthService } from '@/app/services/auth.service';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { User } from '@/app/interfaces/user';
 import { environment } from '@/environments/environment';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '@/app/services/language.service';
 import { Subscription } from 'rxjs';
+import { ZardButtonComponent } from '@/shared/components/button';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [AcmLogoComponent, FlexMenusComponent, CommonModule, RouterModule, TranslateModule],
+  imports: [
+    AcmLogoComponent,
+    FlexMenusComponent,
+    RouterModule,
+    TranslateModule,
+    ZardButtonComponent,
+  ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
@@ -21,6 +27,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private URL: string = environment.FILE_URL;
   @Input() user!: User;
   public isShowUserMenu = false;
+  public mobileMenuOpen = false;
   public showExperimentalFeatures = environment.SHOW_EXPERIMENTAL_FEATURES;
   public currentLanguage = 'en';
   public languages = [

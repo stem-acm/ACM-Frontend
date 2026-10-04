@@ -2,15 +2,23 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '@/app/services/auth.service';
 import { Router } from '@angular/router';
-import { TitleComponent } from '@/app/components/title/title.component';
 import { AppComponent } from '@/app/app.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from '@/environments/environment';
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardInputComponent } from '@/shared/components/input';
+import { ZardCardComponent } from '@/shared/components/card';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [FormsModule, TitleComponent, TranslateModule],
+  imports: [
+    FormsModule,
+    TranslateModule,
+    ZardButtonComponent,
+    ZardInputComponent,
+    ZardCardComponent,
+  ],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })

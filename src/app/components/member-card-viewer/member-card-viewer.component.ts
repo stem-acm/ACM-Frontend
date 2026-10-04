@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Member } from '@/app/interfaces/member';
 import { MemberBadgeComponent } from '@/app/components/member-badge/member-badge.component';
@@ -6,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-member-card-viewer',
   standalone: true,
-  imports: [MemberBadgeComponent, FormsModule],
+  imports: [ZardButtonComponent, MemberBadgeComponent, FormsModule],
   templateUrl: './member-card-viewer.component.html',
   styleUrl: './member-card-viewer.component.css',
 })
@@ -36,7 +37,10 @@ export class MemberCardViewerComponent {
 
     const iframeWin = iframe.contentWindow;
     const iframeDoc = iframeWin?.document;
-    if (!iframeDoc) return;
+    if (!iframeDoc) {
+      iframe.remove();
+      return;
+    }
 
     iframeDoc.open();
 
@@ -93,9 +97,16 @@ export class MemberCardViewerComponent {
     };
 
     waitImagesLoaded().then(() => {
+      const cleanup = () => {
+        clearTimeout(cleanupTimer);
+        iframeWin?.removeEventListener('afterprint', cleanup);
+        iframe.remove();
+      };
+
+      iframeWin?.addEventListener('afterprint', cleanup, { once: true });
+      const cleanupTimer = setTimeout(cleanup, 120_000);
       iframeWin?.focus();
       iframeWin?.print();
-      document.body.removeChild(iframe);
     });
   }
 }

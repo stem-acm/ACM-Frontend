@@ -1,5 +1,5 @@
 <div class="w-full max-w-4xl flex items-center justify-center h-auto flex-wrap mx-auto py-4">
-  <div class="rounded-lg shadow-2xl bg-white dark:bg-gray-800 opacity-75 m-6">
+  <div class="rounded-xl border border-border shadow-xl bg-white dark:bg-gray-800 m-6">
     <div *ngIf="member" class="p-12 text-center">
       <app-img-round
         [isVolunteer]="isVolunteer"
@@ -14,7 +14,7 @@
           member.firstName
         "
       />
-      <div class="mx-auto w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
+      <div class="mx-auto w-4/5 pt-3 border-b-2 border-destructive/60"></div>
       <div *ngIf="member.registrationNumber" class="text-left">
         <div class="mt-6">
           <dl class="divide-y divide-gray-100">
@@ -139,10 +139,12 @@
 
     <div class="flex justify-end gap-2 p-4">
       <button
+        z-button
+        zType="secondary"
         *ngIf="member && member.registrationNumber"
         (click)="open()"
         type="button"
-        class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+        class="acm-btn acm-btn--secondary text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
       >
         <svg
           class="h-6"
@@ -178,10 +180,12 @@
         {{ 'buttons.generateCards' | translate }}
       </button>
       <button
+        z-button
+        zType="destructive"
         *ngIf="member && member.registrationNumber"
         type="button"
         (click)="onDeleteClick()"
-        class="text-white text-nowrap bg-red-600 h-fit cursor-pointer hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+        class="acm-btn acm-btn--danger text-white text-nowrap bg-red-600 h-fit cursor-pointer hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
       >
         <svg class="w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -199,10 +203,11 @@
         {{ 'buttons.delete' | translate }}
       </button>
       <button
+        z-button
         *ngIf="member && member.registrationNumber"
         type="button"
         (click)="updateMember()"
-        class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+        class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
       >
         <svg class="w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -220,10 +225,11 @@
         {{ 'buttons.editMember' | translate }}
       </button>
       <button
+        z-button
         *ngIf="member && !member.registrationNumber"
         type="button"
         routerLink="/members"
-        class="text-white w-full text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2"
+        class="acm-btn acm-btn--primary text-white w-full text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2"
       >
         <svg class="w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -247,7 +253,7 @@
 @if (showAddForm) {
   <app-add-member
     mode="update"
-    [title]="'titles.updateMember' | translate"
+    [pageTitle]="'titles.updateMember' | translate"
     [memberToUpdate]="member"
     (updatedData)="showToast($event)"
     (canceled)="cancelForm($event)"

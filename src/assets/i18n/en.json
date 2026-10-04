@@ -11,7 +11,8 @@
     "settings": "Settings",
     "manageIntern": "Manage intern",
     "openUserMenu": "Open user menu",
-    "openMainMenu": "Open main menu"
+    "openMainMenu": "Open main menu",
+    "language": "Language"
   },
   "pages": {
     "overview": "Overview",
@@ -20,7 +21,9 @@
     "listOfVolunteers": "List of Volunteers",
     "membersInRoom": "Members currently in the room",
     "authentification": "Authentification",
-    "membersCheckedInRoom": "Members checked in ACM"
+    "membersCheckedInRoom": "Members checked in ACM",
+    "welcomeWorkspace": "Welcome to your community workspace.",
+    "brandTagline": "Learn · Connect · Create"
   },
   "forms": {
     "firstName": "First Name",

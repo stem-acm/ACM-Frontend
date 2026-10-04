@@ -1,3 +1,5 @@
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardInputComponent } from '@/shared/components/input';
 import { CardStatisticSkeletonComponent } from '@/app/components/card-statistic-skeleton/card-statistic-skeleton.component';
 import { TableCheckinsComponent } from '@/app/components/table-checkins/table-checkins.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
@@ -14,6 +16,8 @@ import { Subject } from 'rxjs/internal/Subject';
   selector: 'app-checkin-history',
   standalone: true,
   imports: [
+    ZardButtonComponent,
+    ZardInputComponent,
     TableCheckinsComponent,
     CardStatisticSkeletonComponent,
     TableLoadingComponent,

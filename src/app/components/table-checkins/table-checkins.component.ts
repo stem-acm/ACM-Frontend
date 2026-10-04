@@ -1,3 +1,4 @@
+import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
 import { Checkin } from '@/app/interfaces/checkin';
 import { environment } from '@/environments/environment';
@@ -8,7 +9,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-table-checkins',
   standalone: true,
-  imports: [RouterModule, TranslateModule],
+  imports: [ZardTableImports, RouterModule, TranslateModule],
   templateUrl: './table-checkins.component.html',
   styleUrl: './table-checkins.component.css',
 })

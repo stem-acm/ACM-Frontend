@@ -1,9 +1,10 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-toast',
   standalone: true,
-  imports: [],
+  imports: [ZardButtonComponent],
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.css',
 })

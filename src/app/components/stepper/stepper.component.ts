@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import {
   Component,
   EventEmitter,
@@ -30,7 +31,14 @@ interface ActivityToDisplay {
 @Component({
   selector: 'app-stepper',
   standalone: true,
-  imports: [CommonModule, ScannerComponent, NgxSpinnerModule, TranslateModule, ModalAlertComponent],
+  imports: [
+    ZardButtonComponent,
+    CommonModule,
+    ScannerComponent,
+    NgxSpinnerModule,
+    TranslateModule,
+    ModalAlertComponent,
+  ],
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css'],
 })

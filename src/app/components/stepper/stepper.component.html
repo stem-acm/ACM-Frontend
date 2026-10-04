@@ -47,11 +47,11 @@
         (click)="toggleActivity(activity)"
       >
         <div
-          class="h-32 w-32 flex justify-center items-center text-8xl pb-4 rounded-2xl bg-gray-200/90 hover:bg-[#1e4d8b]"
+          class="h-32 w-32 flex justify-center items-center text-8xl pb-4 rounded-2xl bg-gray-200/90 hover:bg-[#173f87]"
         >
           {{ activity.emoji || '😊' }}
         </div>
-        <div class="uppercase font-black text-center text-lg text-[#1e4d8b]">
+        <div class="uppercase font-black text-center text-lg text-[#173f87]">
           {{ activity.name }}
         </div>
       </div>
@@ -134,11 +134,23 @@
     </div>
 
     <div class="navigation">
-      <button class="nav-button back" (click)="previousStep()">
+      <button
+        z-button
+        zSize="icon-lg"
+        zType="secondary"
+        class="acm-btn acm-btn--secondary acm-btn--icon-lg nav-button back"
+        (click)="previousStep()"
+      >
         <!-- <span class="arrow">←</span> -->
         <img src="/back.webp" class="arrow" alt="Back Arrow" />
       </button>
-      <button class="nav-button next" (click)="nextStep()">
+      <button
+        z-button
+        zSize="icon-lg"
+        zType="secondary"
+        class="acm-btn acm-btn--secondary acm-btn--icon-lg nav-button next"
+        (click)="nextStep()"
+      >
         <!-- <span class="arrow">→</span> -->
         <img src="/next.webp" class="arrow" alt="Next Arrow" />
       </button>
@@ -195,7 +207,12 @@
       </div>
     </div>
 
-    <button class="finish-button" (click)="finishCheckIn()">
+    <button
+      z-button
+      zType="default"
+      class="acm-btn acm-btn--primary finish-button"
+      (click)="finishCheckIn()"
+    >
       {{ 'checkin.completeCheckIn' | translate }}
     </button>
   </div>

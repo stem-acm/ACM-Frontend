@@ -6,7 +6,7 @@
     (ngSubmit)="saveVolunteer()"
     class="min-w-xl max-w-xl mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl"
   >
-    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">
+    <h1 class="text-2xl font-bold text-center mb-6 text-primary dark:text-primary">
       {{ 'titles.newVolunteer' | translate }}
     </h1>
 
@@ -30,7 +30,7 @@
             (joinDateCtrl.invalid && (joinDateCtrl.touched || submitted)) ||
             (submitted && !joinDate)
           "
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="
@@ -61,7 +61,7 @@
             (expirationDateCtrl.invalid && (expirationDateCtrl.touched || submitted)) ||
             (submitted && !expirationDate)
           "
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="
@@ -92,7 +92,7 @@
         [class.focus:ring-red-500]="
           (roleCtrl.invalid && (roleCtrl.touched || submitted)) || (submitted && !role)
         "
-        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
       <p
         *ngIf="(roleCtrl.invalid && (roleCtrl.touched || submitted)) || (submitted && !role)"
@@ -109,7 +109,7 @@
           [checked]="isMemberAlready"
           (change)="onIsMemberAlreadyChange(cb.checked)"
           #cb
-          class="w-4 h-4 text-blue-600 bg-gray-50 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:bg-gray-700 dark:border-gray-600"
+          class="w-4 h-4 text-primary bg-gray-50 border-gray-300 rounded focus:ring-primary/30 dark:focus:ring-primary/40 dark:bg-gray-700 dark:border-gray-600"
         />
         <span class="text-sm font-medium">Is Member Already</span>
       </label>
@@ -122,12 +122,13 @@
             {{ 'forms.searchMemberName' | translate }}
           </label>
           <input
+            z-input
             type="search"
             [(ngModel)]="searchWord"
             (input)="search(searchWord)"
             name="search-member"
             [placeholder]="'placeholders.searchMember' | translate"
-            class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           />
         </div>
       </div>
@@ -155,7 +156,7 @@
         </p>
         <a
           routerLink="/members"
-          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           Go to Members page
         </a>
@@ -168,17 +169,20 @@
 
     <div class="flex justify-end gap-2">
       <button
+        z-button
+        zType="outline"
         type="button"
         (click)="cancel()"
-        class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        class="acm-btn acm-btn--outline text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
       >
         {{ 'buttons.cancel' | translate }}
       </button>
       @if (mode === 'insert') {
         <button
+          z-button
           *ngIf="loading"
           type="submit"
-          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           <svg
             class="mr-3 size-5 animate-spin"
@@ -198,10 +202,11 @@
           {{ 'loading.creating' | translate }}
         </button>
         <button
+          z-button
           *ngIf="!loading"
           type="submit"
           [disabled]="!isMemberAlready"
-          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
           [class.opacity-50]="!isMemberAlready"
           [class.cursor-not-allowed]="!isMemberAlready"
         >
@@ -209,9 +214,10 @@
         </button>
       } @else {
         <button
+          z-button
           *ngIf="loading"
           type="submit"
-          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           <svg
             class="mr-3 size-5 animate-spin"
@@ -231,9 +237,10 @@
           {{ 'loading.updating' | translate }}
         </button>
         <button
+          z-button
           *ngIf="!loading"
           type="submit"
-          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           {{ 'buttons.updateMember' | translate }}
         </button>

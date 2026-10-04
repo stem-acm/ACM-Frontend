@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -15,7 +16,7 @@ import { BrowserMultiFormatReader, Result } from '@zxing/library';
   selector: 'app-scanner',
   templateUrl: './scanner.component.html',
   styleUrls: ['./scanner.component.css'],
-  imports: [CommonModule],
+  imports: [ZardButtonComponent, CommonModule],
   standalone: true,
 })
 export class ScannerComponent implements OnInit, OnDestroy {

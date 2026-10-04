@@ -1,3 +1,5 @@
+import { ZardInputComponent } from '@/shared/components/input';
+import { ZardButtonComponent } from '@/shared/components/button';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { AddActivityComponent } from '@/app/components/add-activity/add-activity.component';
@@ -16,6 +18,8 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-activity',
   standalone: true,
   imports: [
+    ZardInputComponent,
+    ZardButtonComponent,
     CommonModule,
     AddActivityComponent,
     TableActivitiesComponent,

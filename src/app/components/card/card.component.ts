@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Member } from '@/app/interfaces/member';
 import { environment } from '@/environments/environment';
@@ -5,7 +6,7 @@ import { environment } from '@/environments/environment';
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [],
+  imports: [ZardButtonComponent],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })

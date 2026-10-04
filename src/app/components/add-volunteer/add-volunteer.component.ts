@@ -1,3 +1,5 @@
+import { ZardInputComponent } from '@/shared/components/input';
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Member } from '@/app/interfaces/member';
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { MemberService } from '@/app/services/member.service';
@@ -17,6 +19,8 @@ import { MemberCardViewerComponent } from '../member-card-viewer/member-card-vie
   selector: 'app-add-volunteer',
   standalone: true,
   imports: [
+    ZardInputComponent,
+    ZardButtonComponent,
     FormsModule,
     CommonModule,
     RouterLink,

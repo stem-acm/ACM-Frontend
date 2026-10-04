@@ -12,11 +12,12 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/.angular
 
     environment:
       CHOKIDAR_USEPOLLING: 'true'
 
-    command: npm run start -- --host 0.0.0.0 --poll=2000
+    command: npm run start
 
     stdin_open: true
     tty: true

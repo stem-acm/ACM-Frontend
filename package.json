@@ -27,7 +27,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^18.2.14",
-    "@angular/cdk": "^20.2.11",
+    "@angular/cdk": "^18.2.14",
     "@angular/common": "^18.2.0",
     "@angular/compiler": "^18.2.0",
     "@angular/core": "^18.2.0",
@@ -35,16 +35,21 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "@ng-icons/core": "^29.10.0",
+    "@ng-icons/lucide": "^29.10.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@tailwindcss/postcss": "^4.1.16",
     "@zxing/library": "^0.21.3",
     "@zxing/ngx-scanner": "^20.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
     "html5-qrcode": "^2.3.8",
     "ngx-spinner": "^19.0.0",
     "postcss": "^8.5.6",
     "rxjs": "~7.8.0",
+    "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.1.16",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"
@@ -69,6 +74,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^16.2.7",
     "prettier": "^3.6.2",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "~5.5.2",
     "typescript-eslint": "8.46.3"
   }

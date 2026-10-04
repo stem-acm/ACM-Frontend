@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import {
   Component,
   EventEmitter,
@@ -16,12 +17,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { Title } from '@/app/types/title';
-import { Gender } from '@/app/types/gender';
 
 @Component({
   selector: 'app-add-member',
   standalone: true,
-  imports: [FormsModule, CommonModule, TranslateModule],
+  imports: [ZardButtonComponent, FormsModule, CommonModule, TranslateModule],
   templateUrl: './add-member.component.html',
   styleUrl: './add-member.component.css',
 })
@@ -32,7 +32,6 @@ export class AddMemberComponent implements OnChanges, OnInit {
   @Output() updatedData = new EventEmitter<{ data: Member; message: string }>();
   public occupations: Occupation[] = ['employee', 'entrepreneur', 'student', 'unemployed'];
   public titles: Title[] = ['Miss', 'Mr', 'Mrs'];
-  public genders: Gender[] = ['male', 'female'];
   public error: { enabled: boolean; message: string } = { enabled: false, message: '' };
   @Input() mode: 'update' | 'insert' = 'insert';
   @Input() memberToUpdate!: Member;
@@ -60,6 +59,7 @@ export class AddMemberComponent implements OnChanges, OnInit {
   ngOnInit() {
     if (this.mode == 'update') {
       this.member = { ...this.memberToUpdate };
+      this.setTitle(this.member.title);
     } else {
       this.member = {
         registrationNumber: null,
@@ -106,7 +106,14 @@ export class AddMemberComponent implements OnChanges, OnInit {
 
     if (changes['memberToUpdate'] && this.mode === 'update') {
       this.member = { ...this.memberToUpdate };
+      this.setTitle(this.member.title);
     }
+  }
+
+  setTitle(title: string) {
+    this.member.title = title;
+    this.member.gender =
+      title === 'Mr' ? 'male' : title === 'Miss' || title === 'Mrs' ? 'female' : '';
   }
 
   checkValidation(): boolean {

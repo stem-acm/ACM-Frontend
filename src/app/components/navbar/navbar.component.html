@@ -1,108 +1,87 @@
-<nav class="bg-white border-gray-200 dark:bg-gray-900 shadow-md sticky top-0 z-10">
-  <div class="flex flex-wrap items-center justify-between mx-auto px-4 py-2">
-    <a href="/" class="max-w-48">
-      <app-acm-logo />
-    </a>
-    <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-      <!-- Language Switcher -->
-      <div class="relative">
-        <select
-          [value]="currentLanguage"
-          (change)="changeLanguage($any($event.target).value)"
-          class="mr-2 text-sm bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
-        >
-          @for (lang of languages; track lang.code) {
-            <option [value]="lang.code">{{ lang.name }}</option>
-          }
-        </select>
-      </div>
+<nav class="acm-navbar" aria-label="Main navigation">
+  <div class="acm-navbar-inner">
+    <a routerLink="/" class="acm-brand" aria-label="American Corner Mahajanga home"
+      ><app-acm-logo
+    /></a>
+    <app-flex-menus
+      class="acm-nav-links"
+      [mobileOpen]="mobileMenuOpen"
+      (click)="mobileMenuOpen = false"
+    />
+    <div class="acm-navbar-actions">
+      <label class="sr-only" for="language-select">{{ 'nav.language' | translate }}</label>
+      <select
+        id="language-select"
+        [value]="currentLanguage"
+        (change)="changeLanguage($any($event.target).value)"
+        class="acm-language"
+      >
+        @for (lang of languages; track lang.code) {
+          <option [value]="lang.code">{{ lang.name }}</option>
+        }
+      </select>
       <button
+        z-button
+        zType="ghost"
+        zSize="icon"
         type="button"
         (click)="toggleUserMenu()"
-        class="flex cursor-pointer text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+        class="acm-btn acm-btn--ghost acm-btn--icon acm-user-trigger"
         id="user-menu-button"
-        aria-expanded="false"
-        data-dropdown-toggle="user-dropdown"
-        data-dropdown-placement="bottom"
+        [attr.aria-expanded]="isShowUserMenu"
+        aria-controls="user-dropdown"
       >
         <span class="sr-only">{{ 'nav.openUserMenu' | translate }}</span>
-        <img class="w-8 h-8 rounded-full" [src]="getfileUrl('user.png')" alt="user photo" />
+        <img [src]="getfileUrl('user.png')" alt="" />
       </button>
-      <!-- Dropdown menu -->
-      <div
-        *ngIf="isShowUserMenu"
-        class="z-50 absolute top-full right-1 border border-gray-200 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600"
-        id="user-dropdown"
-      >
-        <div class="px-4 py-3">
-          @if (user) {
-            <span class="block text-sm text-gray-900 dark:text-white capitalize">{{
-              user.username
-            }}</span>
-            <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{
-              user.email
-            }}</span>
-          } @else {
-            <span class="block h-4 bg-gray-200 w-18 rounded-full animate-pulse"></span>
-            <span class="block h-4 bg-gray-200 w-24 rounded-full animate-pulse"></span>
-          }
-        </div>
-        <ul class="py-2" aria-labelledby="user-menu-button">
-          @if (showExperimentalFeatures) {
-            <li>
-              <a
-                routerLink="/setting"
-                class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >
-                {{ 'nav.settings' | translate }}
-              </a>
-            </li>
-            <li>
-              <a
-                routerLink="/user"
-                class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >
-                {{ 'nav.manageIntern' | translate }}
-              </a>
-            </li>
-          }
-          <li>
-            <a
-              (click)="logout()"
-              (keyup.enter)="logout()"
-              (keydown.enter)="logout()"
-              tabindex="0"
-              class="block cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-              >{{ 'nav.signOut' | translate }}</a
-            >
-          </li>
-        </ul>
-      </div>
       <button
-        data-collapse-toggle="navbar-user"
+        z-button
+        zType="outline"
+        zSize="icon"
         type="button"
-        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-        aria-controls="navbar-user"
-        aria-expanded="false"
+        class="acm-btn acm-btn--outline acm-btn--icon acm-mobile-toggle"
+        (click)="mobileMenuOpen = !mobileMenuOpen"
+        [attr.aria-expanded]="mobileMenuOpen"
+        aria-controls="main-menu"
       >
         <span class="sr-only">{{ 'nav.openMainMenu' | translate }}</span>
-        <svg
-          class="w-5 h-5"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 17 14"
-        >
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
+            d="M4 7h16M4 12h16M4 17h16"
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
             stroke-width="2"
-            d="M1 1h15M1 7h15M1 13h15"
+            stroke-linecap="round"
           />
         </svg>
       </button>
     </div>
-    <app-flex-menus />
+    @if (isShowUserMenu) {
+      <div class="acm-user-menu" id="user-dropdown">
+        <div class="acm-user-details">
+          @if (user) {
+            <strong>{{ user.username }}</strong
+            ><span>{{ user.email }}</span>
+          }
+        </div>
+        @if (showExperimentalFeatures) {
+          <a routerLink="/setting" (click)="isShowUserMenu = false">{{
+            'nav.settings' | translate
+          }}</a>
+          <a routerLink="/user" (click)="isShowUserMenu = false">{{
+            'nav.manageIntern' | translate
+          }}</a>
+        }
+        <button
+          z-button
+          zSize="sm"
+          zType="link"
+          type="button"
+          (click)="logout()"
+          class="acm-btn acm-btn--link-danger acm-btn--sm"
+        >
+          {{ 'nav.signOut' | translate }}
+        </button>
+      </div>
+    }
   </div>
 </nav>

@@ -1,3 +1,5 @@
+import { ZardInputComponent } from '@/shared/components/input';
+import { ZardButtonComponent } from '@/shared/components/button';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from '@/app/app.component';
 import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
@@ -16,6 +18,8 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-volunteer',
   standalone: true,
   imports: [
+    ZardInputComponent,
+    ZardButtonComponent,
     CommonModule,
     FormsModule,
     TableLoadingComponent,

@@ -979,6 +979,7 @@ input[type='radio'] {
 .acm-data-table .acm-person-cell {
   color: #172a4a;
   font-weight: 600;
+  text-align: left;
   white-space: nowrap;
 }
 .acm-data-table .acm-person-cell > img,

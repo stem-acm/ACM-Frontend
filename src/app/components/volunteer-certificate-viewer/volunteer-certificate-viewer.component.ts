@@ -50,8 +50,13 @@ export class VolunteerCertificateViewerComponent implements OnInit {
     }
     this.volunteerService.getVolunteerById(id).subscribe({
       next: result => {
-        if (result.success && result.data?.Member) {
+        if (
+          result.success &&
+          result.data?.Member?.registrationNumber != null &&
+          result.data.id != null
+        ) {
           this.data = result.data;
+          this.certificate.reference = `ACM-M${result.data.Member.registrationNumber}-V${result.data.id}`;
           this.certificate.recipient = [result.data.Member.lastName, result.data.Member.firstName]
             .filter(Boolean)
             .join(' ');
@@ -97,7 +102,8 @@ export class VolunteerCertificateViewerComponent implements OnInit {
 
   print(form: NgForm): void {
     this.submitted = true;
-    if (form.invalid || this.datesInvalid || !this.activities.length) return;
+    if (form.invalid || !this.certificate.reference || this.datesInvalid || !this.activities.length)
+      return;
     const content = document.getElementById('certificateSectionToPrint');
     if (!content) return;
     const iframe = document.createElement('iframe');

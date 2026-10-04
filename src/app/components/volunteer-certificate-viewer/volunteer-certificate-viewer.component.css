@@ -285,30 +285,26 @@
 }
 .certificate-corner {
   position: absolute;
-  width: 100px;
-  height: 100px;
-  border-color: #b8cde5;
-  border-style: solid;
+  width: 128px;
+  height: auto;
+  z-index: 0;
+  pointer-events: none;
 }
 .corner-tl {
-  top: 18px;
-  left: 18px;
-  border-width: 3px 0 0 3px;
+  top: 0;
+  left: 0;
 }
 .corner-tr {
-  top: 18px;
-  right: 18px;
-  border-width: 3px 3px 0 0;
+  top: 0;
+  right: 0;
 }
 .corner-bl {
-  bottom: 18px;
-  left: 18px;
-  border-width: 0 0 3px 3px;
+  bottom: 0;
+  left: 0;
 }
 .corner-br {
-  bottom: 18px;
-  right: 18px;
-  border-width: 0 3px 3px 0;
+  bottom: 0;
+  right: 0;
 }
 .error-panel {
   color: #b42318;

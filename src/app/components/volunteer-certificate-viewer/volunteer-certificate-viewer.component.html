@@ -40,14 +40,19 @@
             />
           </div>
           <div>
-            <label for="reference">Reference number</label>
+            <label for="reference">Reference number <span aria-hidden="true">*</span></label>
             <input
               id="reference"
               name="reference"
               [(ngModel)]="certificate.reference"
+              readonly
+              required
               maxlength="60"
-              placeholder="Optional"
+              aria-describedby="reference-help"
             />
+            <p id="reference-help" class="field-hint">
+              Generated from the member and volunteer IDs.
+            </p>
           </div>
         </div>
 
@@ -146,7 +151,10 @@
             signature</label
           >
         </div>
-        @if (submitted && (certificateForm.invalid || datesInvalid || !activities.length)) {
+        @if (
+          submitted &&
+          (certificateForm.invalid || !certificate.reference || datesInvalid || !activities.length)
+        ) {
           <p class="field-error" role="alert">
             Complete all required fields before exporting or printing.
           </p>
@@ -161,17 +169,35 @@
         </div>
         <div class="preview-scroll">
           <div id="certificateSectionToPrint" class="certificate-sheet" lang="en">
-            <div class="certificate-corner corner-tl"></div>
-            <div class="certificate-corner corner-tr"></div>
-            <div class="certificate-corner corner-bl"></div>
-            <div class="certificate-corner corner-br"></div>
+            <img
+              src="/img-left-top.png"
+              class="certificate-corner corner-tl"
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              src="/img-right-top.png"
+              class="certificate-corner corner-tr"
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              src="/img-left-bottom.png"
+              class="certificate-corner corner-bl"
+              alt=""
+              aria-hidden="true"
+            />
+            <img
+              src="/img-right-bottom.png"
+              class="certificate-corner corner-br"
+              alt=""
+              aria-hidden="true"
+            />
             <div class="certificate-content">
               <div class="certificate-logo"><app-acm-logo /></div>
               <div class="certificate-rule"></div>
               <h2>{{ certificate.title || 'VOLUNTEERING CERTIFICATE' }}</h2>
-              @if (certificate.reference) {
-                <p class="reference">REF: {{ certificate.reference }}</p>
-              }
+              <p class="reference">REF: {{ certificate.reference }}</p>
               <p class="eyebrow">Proudly presented to</p>
               <h3>{{ certificate.recipient || 'Volunteer name' }}</h3>
               <div class="recipient-rule"></div>

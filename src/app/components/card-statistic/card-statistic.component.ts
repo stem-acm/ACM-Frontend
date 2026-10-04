@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
+import { ZardCardComponent } from '@/shared/components/card';
 
 @Component({
   selector: 'app-card-statistic',
   standalone: true,
-  imports: [TranslateModule, RouterLink],
+  imports: [TranslateModule, RouterLink, ZardCardComponent],
   templateUrl: './card-statistic.component.html',
   styleUrl: './card-statistic.component.css',
 })

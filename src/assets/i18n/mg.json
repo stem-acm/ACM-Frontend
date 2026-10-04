@@ -11,7 +11,8 @@
     "settings": "Fikirana",
     "manageIntern": "Fitantanana ny mpiofana",
     "openUserMenu": "Sokafy ny menio mpampiasa",
-    "openMainMenu": "Sokafy ny menio lehibe"
+    "openMainMenu": "Sokafy ny menio lehibe",
+    "language": "Fiteny"
   },
   "pages": {
     "overview": "Fijery ankapobeny",
@@ -20,7 +21,9 @@
     "listOfVolunteers": "Lisitry ny Mpanao an-tsitrapo",
     "membersInRoom": "Mpikambana ao amin'ny efitrano ankehitriny",
     "authentification": "Fanamarinana",
-    "membersCheckedInRoom": "Mpikambana niditra tao amin'ny ACM"
+    "membersCheckedInRoom": "Mpikambana niditra tao amin'ny ACM",
+    "welcomeWorkspace": "Tongasoa eto amin'ny sehatra fiarahamoninao.",
+    "brandTagline": "Mianara · Mifandraisa · Mamoròna"
   },
   "forms": {
     "firstName": "Anarana",

@@ -1,11 +1,16 @@
-<div class="m-8">
-  <div class="flex justify-between items-center">
-    <h1 class="text-xl font-bold text-blue-500 my-4">{{ 'pages.overview' | translate }}</h1>
-  </div>
+<div class="acm-page acm-dashboard">
+  <section class="acm-dashboard-hero">
+    <div>
+      <span class="acm-hero-eyebrow">American Corner Mahajanga</span>
+      <h1>{{ 'pages.overview' | translate }}</h1>
+      <p>{{ 'pages.brandTagline' | translate }}</p>
+    </div>
+    <div class="acm-hero-mark" aria-hidden="true">★</div>
+  </section>
   @if (!statistics) {
     <app-card-statistic-skeleton />
   } @else {
-    <div class="flex gap-4">
+    <div class="acm-stat-grid">
       <app-card-statistic
         [data]="{
           title: 'nav.members' | translate,
@@ -25,10 +30,8 @@
     </div>
   }
 
-  <div class="flex justify-between items-center">
-    <h1 class="text-xl font-bold text-blue-500 my-4">
-      {{ 'pages.membersInRoom' | translate }} ({{ membersInRoom }})
-    </h1>
+  <div class="acm-section-heading">
+    <h2>{{ 'pages.membersInRoom' | translate }} ({{ membersInRoom }})</h2>
   </div>
   @if (!statistics) {
     <app-table-loading

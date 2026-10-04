@@ -2,6 +2,7 @@ import { ZardInputComponent } from '@/shared/components/input';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from '@/app/services/auth.service';
 import { AddActivityComponent } from '@/app/components/add-activity/add-activity.component';
 import { Activity } from '@/app/interfaces/activity';
 import { ActivityService } from '@/app/services/activity.service';
@@ -31,6 +32,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './activity.component.css',
 })
 export class ActivityComponent implements OnInit {
+  public auth = inject(AuthService);
   protected Math = Math;
   public activity!: Activity[];
   public activityToUpdate!: Activity;

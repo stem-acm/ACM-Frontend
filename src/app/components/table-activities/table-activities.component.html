@@ -45,22 +45,26 @@
           {{ item.endTime }}
         </td>
         <td z-table-cell>
-          <a
-            role="button"
-            tabindex="0"
-            (click)="updateMember(item)"
-            class="font-medium text-primary dark:text-primary hover:underline mr-4"
-            >{{ 'table.edit' | translate }}</a
-          >
-          <button
-            z-button
-            zSize="sm"
-            zType="link"
-            (click)="onDeleteClick(item)"
-            class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
-          >
-            {{ 'buttons.delete' | translate }}
-          </button>
+          @if (auth.can('activities.update')) {
+            <a
+              role="button"
+              tabindex="0"
+              (click)="updateMember(item)"
+              class="font-medium text-primary dark:text-primary hover:underline mr-4"
+              >{{ 'table.edit' | translate }}</a
+            >
+          }
+          @if (auth.can('activities.delete')) {
+            <button
+              z-button
+              zSize="sm"
+              zType="link"
+              (click)="onDeleteClick(item)"
+              class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
+            >
+              {{ 'buttons.delete' | translate }}
+            </button>
+          }
         </td>
       </tr>
     }

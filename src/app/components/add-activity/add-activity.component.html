@@ -246,7 +246,7 @@
     }
 
     <div class="acm-entry-modal__actions">
-      @if (mode === 'update' && !loading) {
+      @if (mode === 'update' && !loading && auth.can('activities.delete')) {
         <button
           z-button
           zType="destructive"
@@ -294,7 +294,7 @@
 </div>
 
 <app-modal-alert
-  [isVisible]="showDeleteModal"
+  [isVisible]="showDeleteModal && auth.can('activities.delete')"
   [title]="deleteTitle"
   [message]="deleteMessage"
   [showCancel]="true"

@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from '@/environments/environment';
 import { Checkin } from '@/app/interfaces/checkin';
 import { Activity } from '@/app/interfaces/activity';
+import { AuthService } from '@/app/services/auth.service';
 
 interface SSEMessage {
   type: string;
@@ -17,6 +18,7 @@ export class SseService {
   private checkinSubject = new Subject<Checkin>();
   private activitySubject = new Subject<Activity>();
   private ngZone = inject(NgZone);
+  private auth = inject(AuthService);
 
   /**
    * Connect to the SSE endpoint for real-time check-in updates
@@ -27,8 +29,8 @@ export class SseService {
       return this.checkinSubject.asObservable();
     }
 
-    const url = `${environment.API_URL}/sse/checkins`;
-    console.log('[SSE] Connecting to:', url);
+    const url = `${environment.API_URL}/sse/checkins?auth=${encodeURIComponent(this.auth.getToken() || '')}`;
+    console.log('[SSE] Connecting to check-ins');
 
     this.eventSource = new EventSource(url);
 
@@ -78,8 +80,8 @@ export class SseService {
       return this.activitySubject.asObservable();
     }
 
-    const url = `${environment.API_URL}/sse/activities`;
-    console.log('[SSE] Connecting to:', url);
+    const url = `${environment.API_URL}/sse/activities?auth=${encodeURIComponent(this.auth.getToken() || '')}`;
+    console.log('[SSE] Connecting to activities');
 
     this.eventSource = new EventSource(url);
 

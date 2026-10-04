@@ -1,0 +1,134 @@
+.profile-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+.profile-hero {
+  margin: 1.5rem 0;
+  padding: 2rem 2.3rem;
+  border-radius: 24px;
+  color: white;
+  background: linear-gradient(125deg, #082e42, #075f78 65%, #10959b);
+  position: relative;
+  overflow: hidden;
+}
+.profile-hero::after {
+  content: '';
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  right: -30px;
+  top: -85px;
+  border: 34px solid #ffffff1f;
+  border-radius: 40px;
+  transform: rotate(32deg);
+}
+.profile-eyebrow {
+  color: #a9e4e2;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+.acm-page .profile-hero h1 {
+  color: #fff;
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  font-weight: 800;
+  margin: 0.45rem 0;
+  position: relative;
+  z-index: 1;
+}
+.profile-hero p {
+  color: #d9eeee;
+  max-width: 650px;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.3rem;
+}
+.profile-card {
+  background: white;
+  border: 1px solid #dce9e9;
+  border-radius: 20px;
+  padding: 1.7rem;
+  box-shadow: 0 12px 35px #143b4d0b;
+}
+.profile-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+}
+.profile-card h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #123c4e;
+}
+.profile-role {
+  background: #e6f5f3;
+  color: #087b86;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.35rem 0.75rem;
+  white-space: nowrap;
+}
+.profile-card form {
+  display: grid;
+  gap: 1rem;
+}
+.profile-card label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  color: #355969;
+  font-weight: 700;
+}
+.profile-card input {
+  width: 100%;
+  border: 1px solid #cbdede;
+  border-radius: 10px;
+  padding: 0.72rem 0.8rem;
+  color: #123c4e;
+  background: white;
+}
+.profile-card input:focus {
+  outline: 2px solid #9ad6d4;
+  outline-offset: 1px;
+}
+.profile-card button {
+  justify-self: start;
+  border-radius: 10px;
+  background: #087b86;
+  color: white;
+  padding: 0.72rem 1.25rem;
+  font-weight: 750;
+}
+.profile-card button:hover {
+  background: #066471;
+}
+.profile-card button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.profile-hint {
+  font-size: 0.8rem;
+  color: #66818d;
+}
+.profile-error {
+  color: #a33030;
+  font-size: 0.86rem;
+}
+.profile-success {
+  color: #087449;
+  font-size: 0.86rem;
+}
+@media (max-width: 640px) {
+  .profile-card {
+    padding: 1.2rem;
+  }
+  .profile-hero {
+    padding: 1.5rem;
+  }
+}

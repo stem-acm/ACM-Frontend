@@ -141,7 +141,7 @@
       <button
         z-button
         zType="secondary"
-        *ngIf="member && member.registrationNumber"
+        *ngIf="member && member.registrationNumber && auth.can('members.cards')"
         (click)="open()"
         type="button"
         class="acm-btn acm-btn--secondary text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
@@ -182,7 +182,7 @@
       <button
         z-button
         zType="destructive"
-        *ngIf="member && member.registrationNumber"
+        *ngIf="member && member.registrationNumber && auth.can('members.delete')"
         type="button"
         (click)="onDeleteClick()"
         class="acm-btn acm-btn--danger text-white text-nowrap bg-red-600 h-fit cursor-pointer hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
@@ -204,7 +204,7 @@
       </button>
       <button
         z-button
-        *ngIf="member && member.registrationNumber"
+        *ngIf="member && member.registrationNumber && auth.can('members.update')"
         type="button"
         (click)="updateMember()"
         class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
@@ -250,7 +250,7 @@
   </div>
 </div>
 
-@if (showAddForm) {
+@if (showAddForm && auth.can('members.update')) {
   <app-add-member
     mode="update"
     [pageTitle]="'titles.updateMember' | translate"

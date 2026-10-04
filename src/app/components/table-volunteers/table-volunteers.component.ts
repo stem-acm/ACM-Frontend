@@ -6,6 +6,7 @@ import { Component, Input, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DateUtil } from '@/app/utils/date.util';
+import { AuthService } from '@/app/services/auth.service';
 
 @Component({
   selector: 'app-table-volunteers',
@@ -15,6 +16,7 @@ import { DateUtil } from '@/app/utils/date.util';
   styleUrl: './table-volunteers.component.css',
 })
 export class TableVolunteersComponent {
+  public auth = inject(AuthService);
   @Input() data!: Volunteer[];
   private URL: string = environment.FILE_URL;
   private dateUtil = inject(DateUtil);

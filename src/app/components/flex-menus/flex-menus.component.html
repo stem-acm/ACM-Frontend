@@ -1,12 +1,14 @@
 <div class="acm-menu" id="main-menu" [class.is-open]="mobileOpen">
   @for (item of menus; track item.route) {
-    <a
-      z-button
-      zType="ghost"
-      [routerLink]="[item.route]"
-      routerLinkActive="is-active"
-      [routerLinkActiveOptions]="{ exact: item.exact }"
-      >{{ item.labelKey | translate }}</a
-    >
+    @if (auth.can(item.permission)) {
+      <a
+        z-button
+        zType="ghost"
+        [routerLink]="[item.route]"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: item.exact }"
+        >{{ item.labelKey | translate }}</a
+      >
+    }
   }
 </div>

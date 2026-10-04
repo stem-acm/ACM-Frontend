@@ -59,16 +59,18 @@
       <div class="acm-user-menu" id="user-dropdown">
         <div class="acm-user-details">
           @if (user) {
-            <strong>{{ user.username }}</strong
-            ><span>{{ user.email }}</span>
+            <strong>{{ auth.user?.username }}</strong
+            ><span>{{ auth.user?.email }}</span>
           }
         </div>
-        @if (showExperimentalFeatures) {
+        @if (auth.can('profile.edit')) {
+          <a routerLink="/my-profile" (click)="isShowUserMenu = false">{{
+            'nav.myProfile' | translate
+          }}</a>
+        }
+        @if (auth.can('settings.manage')) {
           <a routerLink="/setting" (click)="isShowUserMenu = false">{{
             'nav.settings' | translate
-          }}</a>
-          <a routerLink="/user" (click)="isShowUserMenu = false">{{
-            'nav.manageIntern' | translate
           }}</a>
         }
         <button

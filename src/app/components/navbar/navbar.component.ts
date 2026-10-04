@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     { code: 'mg', name: 'Malagasy' },
   ];
 
-  private auth = inject(AuthService);
+  auth = inject(AuthService);
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private langChangeSubscription?: Subscription;

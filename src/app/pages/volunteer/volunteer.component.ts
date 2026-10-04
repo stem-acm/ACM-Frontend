@@ -9,6 +9,7 @@ import { Volunteer } from '@/app/interfaces/volunteer';
 import { VolunteerService } from '@/app/services/volunteer.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from '@/app/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
@@ -30,6 +31,7 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './volunteer.component.css',
 })
 export class VolunteerComponent implements OnInit {
+  public auth = inject(AuthService);
   protected Math = Math;
   private allVolunteers: Volunteer[] = [];
   public displayedVolunteers: Volunteer[] = [];

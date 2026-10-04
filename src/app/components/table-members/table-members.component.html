@@ -13,14 +13,16 @@
     @for (item of data; track item.member.registrationNumber) {
       <tr z-table-row>
         <td z-table-cell class="capitalize">
-          <input
-            [id]="item.member.registrationNumber"
-            type="checkbox"
-            [checked]="item.selected"
-            (change)="onCheckboxChange($event, item.member)"
-            name="bordered-checkbox"
-            class="w-4 h-4 text-primary bg-primary border-gray-300 rounded-sm focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
+          @if (auth.can('members.cards')) {
+            <input
+              [id]="item.member.registrationNumber"
+              type="checkbox"
+              [checked]="item.selected"
+              (change)="onCheckboxChange($event, item.member)"
+              name="bordered-checkbox"
+              class="w-4 h-4 text-primary bg-primary border-gray-300 rounded-sm focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            />
+          }
         </td>
         <th z-table-cell scope="row" class="acm-person-cell">
           <img
@@ -50,15 +52,17 @@
             class="font-medium text-primary dark:text-primary hover:underline mr-4"
             >{{ 'table.viewProfil' | translate }}</a
           >
-          <button
-            z-button
-            zSize="sm"
-            zType="link"
-            (click)="onDeleteClick(item.member)"
-            class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
-          >
-            {{ 'buttons.delete' | translate }}
-          </button>
+          @if (auth.can('members.delete')) {
+            <button
+              z-button
+              zSize="sm"
+              zType="link"
+              (click)="onDeleteClick(item.member)"
+              class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
+            >
+              {{ 'buttons.delete' | translate }}
+            </button>
+          }
         </td>
       </tr>
     }

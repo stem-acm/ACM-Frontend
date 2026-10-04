@@ -1,0 +1,241 @@
+.access-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+.access-hero {
+  padding: 2rem 2.3rem;
+  margin: 1.5rem 0;
+  border-radius: 24px;
+  color: white;
+  background: linear-gradient(125deg, #082e42, #075f78 65%, #10959b);
+  position: relative;
+  overflow: hidden;
+}
+.access-hero::after {
+  content: '';
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  right: -40px;
+  top: -80px;
+  border: 35px solid #ffffff1f;
+  border-radius: 40px;
+  transform: rotate(32deg);
+}
+.access-eyebrow {
+  color: #a9e4e2;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+.acm-page .access-hero h1 {
+  color: #fff;
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  font-weight: 800;
+  margin: 0.45rem 0;
+  position: relative;
+  z-index: 1;
+}
+.access-hero p {
+  color: #d9eeee;
+  max-width: 650px;
+}
+.access-card {
+  background: white;
+  border: 1px solid #dce9e9;
+  border-radius: 20px;
+  padding: 1.6rem;
+  box-shadow: 0 12px 35px #143b4d0b;
+  margin: 1.3rem 0;
+}
+.access-section-head h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #123c4e;
+}
+.access-section-head p {
+  color: #66818d;
+  margin-top: 0.25rem;
+}
+.access-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  border-bottom: 1px solid #dce9e9;
+}
+.access-tabs button {
+  padding: 0.7rem 1.2rem;
+  color: #5c7580;
+  font-weight: 700;
+  border-bottom: 3px solid transparent;
+}
+.access-tabs button.selected {
+  color: #087b86;
+  border-color: #087b86;
+}
+.access-role-state {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  background: #eff8f8;
+  gap: 1rem;
+}
+.access-role-state strong {
+  display: block;
+  color: #123c4e;
+}
+.access-role-state span {
+  color: #5c7580;
+  font-size: 0.9rem;
+}
+.access-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-size: 0.88rem;
+}
+.access-switch input,
+.access-option input {
+  accent-color: #087b86;
+  width: 18px;
+  height: 18px;
+}
+.access-hint {
+  font-size: 0.83rem;
+  color: #66818d;
+  margin: 0.6rem 0 0;
+}
+.access-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+.access-group {
+  border: 1px solid #dce9e9;
+  border-radius: 14px;
+  padding: 1rem;
+}
+.access-group h3 {
+  color: #123c4e;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+}
+.access-options {
+  display: grid;
+  gap: 0.65rem;
+}
+.access-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #355969;
+}
+.access-primary {
+  background: #087b86;
+  color: white;
+  border-radius: 10px;
+  padding: 0.72rem 1.25rem;
+  font-weight: 750;
+}
+.access-primary:hover {
+  background: #066471;
+}
+.access-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.access-table-wrap {
+  overflow-x: auto;
+  margin: 1.3rem 0;
+}
+.access-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.access-table th {
+  color: #69838d;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.access-table th,
+.access-table td {
+  padding: 0.85rem;
+  border-bottom: 1px solid #e6eeee;
+}
+.access-table td {
+  color: #355969;
+}
+.access-table strong {
+  color: #123c4e;
+}
+.access-table select,
+.access-fields input,
+.access-fields select {
+  border: 1px solid #cbdede;
+  border-radius: 9px;
+  padding: 0.6rem 0.7rem;
+  background: white;
+  color: #123c4e;
+  width: 100%;
+}
+.access-small {
+  color: #087b86;
+  font-weight: 750;
+}
+.access-small:hover {
+  text-decoration: underline;
+}
+.access-create {
+  border-top: 1px solid #e6eeee;
+  padding-top: 1.2rem;
+}
+.access-create h3 {
+  font-weight: 800;
+  color: #123c4e;
+  margin-bottom: 1rem;
+}
+.access-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+.access-fields label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #355969;
+}
+.access-notice,
+.access-error {
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+}
+.access-notice {
+  color: #075b47;
+  background: #e4f8ed;
+}
+.access-error {
+  color: #92302f;
+  background: #fff0ed;
+}
+@media (max-width: 640px) {
+  .access-card {
+    padding: 1rem;
+  }
+  .access-hero {
+    padding: 1.5rem;
+  }
+  .access-tabs button {
+    padding: 0.65rem 0.8rem;
+  }
+}

@@ -1,0 +1,108 @@
+<main class="acm-page profile-page">
+  <header class="profile-hero">
+    <span class="profile-eyebrow">AMERICAN CORNER MAHAJANGA</span>
+    <h1>{{ 'profile.title' | translate }}</h1>
+    <p>{{ 'profile.description' | translate }}</p>
+  </header>
+
+  <div class="profile-grid">
+    <section class="profile-card">
+      <div class="profile-card-head">
+        <h2>{{ 'profile.accountDetails' | translate }}</h2>
+        <span class="profile-role">{{ 'access.roles.' + auth.user?.role | translate }}</span>
+      </div>
+      <form (ngSubmit)="saveIdentity()" #identityForm="ngForm">
+        <label
+          >{{ 'forms.username' | translate }}
+          <input
+            name="username"
+            required
+            minlength="3"
+            pattern="[A-Za-z0-9]+"
+            [(ngModel)]="username"
+            autocomplete="username"
+          />
+        </label>
+        <label
+          >Email
+          <input
+            name="email"
+            type="email"
+            required
+            email
+            [(ngModel)]="email"
+            autocomplete="email"
+          />
+        </label>
+        <label
+          >{{ 'profile.currentPassword' | translate }}
+          <input
+            name="identityPassword"
+            type="password"
+            required
+            [(ngModel)]="identityPassword"
+            autocomplete="current-password"
+          />
+        </label>
+        @if (identityError) {
+          <p class="profile-error" role="alert">{{ identityError | translate }}</p>
+        }
+        @if (identityMessage) {
+          <p class="profile-success" role="status">{{ identityMessage | translate }}</p>
+        }
+        <button type="submit" [disabled]="identityForm.invalid || savingIdentity">
+          {{ 'profile.saveDetails' | translate }}
+        </button>
+      </form>
+    </section>
+
+    <section class="profile-card">
+      <div class="profile-card-head">
+        <h2>{{ 'profile.changePassword' | translate }}</h2>
+      </div>
+      <form (ngSubmit)="savePassword()" #passwordForm="ngForm">
+        <label
+          >{{ 'profile.currentPassword' | translate }}
+          <input
+            name="currentPassword"
+            type="password"
+            required
+            [(ngModel)]="currentPassword"
+            autocomplete="current-password"
+          />
+        </label>
+        <label
+          >{{ 'profile.newPassword' | translate }}
+          <input
+            name="newPassword"
+            type="password"
+            required
+            minlength="8"
+            [(ngModel)]="newPassword"
+            autocomplete="new-password"
+          />
+        </label>
+        <label
+          >{{ 'profile.confirmPassword' | translate }}
+          <input
+            name="confirmPassword"
+            type="password"
+            required
+            [(ngModel)]="confirmPassword"
+            autocomplete="new-password"
+          />
+        </label>
+        <p class="profile-hint">{{ 'profile.passwordHint' | translate }}</p>
+        @if (passwordError) {
+          <p class="profile-error" role="alert">{{ passwordError | translate }}</p>
+        }
+        @if (passwordMessage) {
+          <p class="profile-success" role="status">{{ passwordMessage | translate }}</p>
+        }
+        <button type="submit" [disabled]="passwordForm.invalid || savingPassword">
+          {{ 'profile.savePassword' | translate }}
+        </button>
+      </form>
+    </section>
+  </div>
+</main>

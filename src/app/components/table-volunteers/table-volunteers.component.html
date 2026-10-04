@@ -42,15 +42,17 @@
           </div>
         </td>
         <td z-table-cell>
-          <a
-            z-button
-            zSize="sm"
-            zType="link"
-            [routerLink]="['/volunteer', volunteer.id, 'certificate']"
-            class="acm-btn acm-btn--link acm-btn--sm font-medium text-primary dark:text-primary hover:underline bg-transparent border-none cursor-pointer mr-2"
-          >
-            {{ 'table.certificate' | translate }}
-          </a>
+          @if (auth.can('volunteers.certificate')) {
+            <a
+              z-button
+              zSize="sm"
+              zType="link"
+              [routerLink]="['/volunteer', volunteer.id, 'certificate']"
+              class="acm-btn acm-btn--link acm-btn--sm font-medium text-primary dark:text-primary hover:underline bg-transparent border-none cursor-pointer mr-2"
+            >
+              {{ 'table.certificate' | translate }}
+            </a>
+          }
           <a
             [routerLink]="['/profil', volunteer.Member?.registrationNumber]"
             class="font-medium text-primary dark:text-primary hover:underline ml-2"

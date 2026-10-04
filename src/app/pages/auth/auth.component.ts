@@ -58,7 +58,7 @@ export class AuthComponent {
         this.loading = false;
         this.app.userConnected = true;
         this.app.user = res.data.user;
-        this.router.navigate(['/']);
+        this.router.navigateByUrl(this.authService.firstAllowedRoute());
       },
       err => {
         this.error = {

@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { MemberCardViewerComponent } from '@/app/components/member-card-viewer/member-card-viewer.component';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '@/app/services/auth.service';
 
 @Component({
   selector: 'app-members',
@@ -34,6 +35,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './members.component.css',
 })
 export class MembersComponent implements OnInit {
+  public auth = inject(AuthService);
   protected Math = Math;
   private member!: Member[];
   public memberFilter!: Member[];

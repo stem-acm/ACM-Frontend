@@ -1,11 +1,13 @@
-<div class="m-8 p-2">
+<div class="acm-page">
   <div class="flex justify-between my-2">
-    <h1 class="text-xl font-bold text-blue-500">{{ 'pages.listOfMembers' | translate }}</h1>
+    <h1 class="text-xl font-bold text-primary">{{ 'pages.listOfMembers' | translate }}</h1>
     <div class="flex gap-2">
       <button
+        z-button
+        zType="secondary"
         type="button"
         (click)="selectAll(false)"
-        class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out"
+        class="acm-btn acm-btn--secondary text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 transition duration-300 ease-in-out"
       >
         <svg
           class="h-6"
@@ -34,9 +36,11 @@
         {{ 'cards.unselectAll' | translate }} ({{ countMembersChooseList(true) }})
       </button>
       <button
+        z-button
+        zType="secondary"
         type="button"
         (click)="selectAll(true)"
-        class="text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out"
+        class="acm-btn acm-btn--secondary text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 transition duration-300 ease-in-out"
       >
         <svg
           class="h-6"
@@ -65,9 +69,10 @@
         {{ 'cards.selectAll' | translate }} ({{ countMembersChooseList(false) }})
       </button>
       <button
+        z-button
         type="button"
         (click)="printAllSelected()"
-        class="text-white text-nowrap bg-blue-500 h-fit cursor-pointer hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 hover:-translate-y-1 transition duration-300 ease-in-out"
+        class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 transition duration-300 ease-in-out"
       >
         <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -112,11 +117,12 @@
         </svg>
       </div>
       <input
+        z-input
         type="search"
         [(ngModel)]="searchWord"
         (input)="search(searchWord)"
         id="table-search-users"
-        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-primary/20 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
         [placeholder]="'placeholders.searchMembers' | translate"
       />
     </div>

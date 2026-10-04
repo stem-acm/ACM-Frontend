@@ -1,10 +1,11 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-alert',
   standalone: true,
-  imports: [CommonModule],
+  imports: [ZardButtonComponent, CommonModule],
   templateUrl: './modal-alert.component.html',
   styleUrls: ['./modal-alert.component.css'],
 })

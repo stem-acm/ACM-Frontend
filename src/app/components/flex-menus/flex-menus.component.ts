@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { ZardButtonComponent } from '@/shared/components/button';
 
 @Component({
   selector: 'app-flex-menus',
   standalone: true,
-  imports: [RouterModule, TranslateModule],
+  imports: [RouterModule, TranslateModule, ZardButtonComponent],
   templateUrl: './flex-menus.component.html',
   styleUrl: './flex-menus.component.css',
 })
 export class FlexMenusComponent {
+  @Input() mobileOpen = false;
   public menus: { route: string; labelKey: string; exact: boolean }[] = [
     {
       route: '/',

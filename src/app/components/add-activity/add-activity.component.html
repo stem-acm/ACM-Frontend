@@ -6,7 +6,7 @@
     (ngSubmit)="saveActivity()"
     class="max-w-md w-1/2 mx-auto p-6 text-gray-700 dark:text-gray-400 rounded-2xl bg-white dark:bg-gray-900 shadow-xl h-fit"
   >
-    <h1 class="text-2xl font-bold text-center mb-6 text-blue-600 dark:text-blue-400">
+    <h1 class="text-2xl font-bold text-center mb-6 text-primary dark:text-primary">
       {{ title }}
     </h1>
 
@@ -25,7 +25,7 @@
         required
         [class.border-red-500]="activityName.invalid && (activityName.touched || submitted)"
         [class.focus:ring-red-500]="activityName.invalid && (activityName.touched || submitted)"
-        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
       <p
         *ngIf="activityName.invalid && (activityName.touched || submitted)"
@@ -50,7 +50,7 @@
         required
         [class.border-red-500]="description.invalid && (description.touched || submitted)"
         [class.focus:ring-red-500]="description.invalid && (description.touched || submitted)"
-        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       ></textarea>
       <p
         *ngIf="description.invalid && (description.touched || submitted)"
@@ -68,9 +68,11 @@
       <div class="flex items-center gap-2">
         <div class="text-4xl">{{ activity.emoji || '😊' }}</div>
         <button
+          z-button
+          zType="outline"
           type="button"
           (click)="showEmojiPicker = !showEmojiPicker"
-          class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+          class="acm-btn acm-btn--outline px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
         >
           {{
             showEmojiPicker ? ('buttons.close' | translate) : ('buttons.chooseEmoji' | translate)
@@ -85,11 +87,14 @@
           <div class="grid grid-cols-8 gap-1">
             @for (emoji of commonEmojis; track emoji) {
               <button
+                z-button
+                zSize="icon"
+                zType="ghost"
                 type="button"
                 (click)="selectEmoji(emoji)"
-                class="text-2xl w-12 h-12 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
-                [class.bg-blue-100]="activity.emoji === emoji"
-                [class.dark:bg-blue-900]="activity.emoji === emoji"
+                class="acm-btn acm-btn--ghost acm-btn--icon text-2xl w-12 h-12 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                [class.bg-secondary]="activity.emoji === emoji"
+                [class.dark:bg-secondary]="activity.emoji === emoji"
               >
                 {{ emoji }}
               </button>
@@ -106,7 +111,7 @@
         id="isPeriodic"
         [(ngModel)]="activity.isPeriodic"
         name="isPeriodic"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        class="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
       />
       <label for="isPeriodic" class="ml-2 text-sm font-medium">{{
         'forms.periodic' | translate
@@ -126,7 +131,7 @@
           required
           [class.border-red-500]="dayOfWeek.invalid && (dayOfWeek.touched || submitted)"
           [class.focus:ring-red-500]="dayOfWeek.invalid && (dayOfWeek.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         >
           <option value="everyday">{{ 'days.everyday' | translate }}</option>
           <option value="monday">{{ 'days.monday' | translate }}</option>
@@ -157,7 +162,7 @@
           required
           [class.border-red-500]="startDate.invalid && (startDate.touched || submitted)"
           [class.focus:ring-red-500]="startDate.invalid && (startDate.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="startDate.invalid && (startDate.touched || submitted)"
@@ -179,7 +184,7 @@
           required
           [class.border-red-500]="endDate.invalid && (endDate.touched || submitted)"
           [class.focus:ring-red-500]="endDate.invalid && (endDate.touched || submitted)"
-          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <p
           *ngIf="endDate.invalid && (endDate.touched || submitted)"
@@ -203,7 +208,7 @@
         required
         [class.border-red-500]="startTime.invalid && (startTime.touched || submitted)"
         [class.focus:ring-red-500]="startTime.invalid && (startTime.touched || submitted)"
-        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
       <p
         *ngIf="startTime.invalid && (startTime.touched || submitted)"
@@ -225,7 +230,7 @@
         required
         [class.border-red-500]="endTime.invalid && (endTime.touched || submitted)"
         [class.focus:ring-red-500]="endTime.invalid && (endTime.touched || submitted)"
-        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
       <p
         *ngIf="endTime.invalid && (endTime.touched || submitted)"
@@ -241,17 +246,20 @@
 
     <div class="flex justify-end gap-2">
       <button
+        z-button
+        zType="outline"
         type="button"
         (click)="cancel()"
-        class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+        class="acm-btn acm-btn--outline text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
       >
         {{ 'buttons.cancel' | translate }}
       </button>
       @if (mode === 'insert') {
         <button
+          z-button
           *ngIf="loading"
           type="submit"
-          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           <svg
             class="mr-3 size-5 animate-spin"
@@ -271,17 +279,19 @@
           {{ 'loading.creating' | translate }}
         </button>
         <button
+          z-button
           *ngIf="!loading"
           type="submit"
-          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           {{ 'buttons.addActivity' | translate }}
         </button>
       } @else {
         <button
+          z-button
           *ngIf="loading"
           type="submit"
-          class="text-white cursor-not-allowed bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white cursor-not-allowed bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           <svg
             class="mr-3 size-5 animate-spin"
@@ -301,17 +311,20 @@
           {{ 'loading.updating' | translate }}
         </button>
         <button
+          z-button
+          zType="destructive"
           *ngIf="!loading"
           type="button"
           (click)="onDeleteClick()"
-          class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--danger text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           {{ 'buttons.delete' | translate }}
         </button>
         <button
+          z-button
           *ngIf="!loading"
           type="submit"
-          class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
+          class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center"
         >
           {{ 'buttons.updateActivity' | translate }}
         </button>

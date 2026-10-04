@@ -24,16 +24,19 @@
 
     <div class="flex gap-2 justify-end pt-3">
       <button
+        z-button
+        zType="outline"
         type="button"
         (click)="close()"
-        class="text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center cursor-pointer"
+        class="acm-btn acm-btn--outline text-gray-900 bg-gray-300 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center cursor-pointer"
       >
         Close
       </button>
       <button
+        z-button
         type="button"
         (click)="print()"
-        class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center cursor-pointer"
+        class="acm-btn acm-btn--primary text-white bg-primary hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center cursor-pointer"
       >
         Print
       </button>

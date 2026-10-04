@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AcmLogoComponent } from '../acm-logo/acm-logo.component';
 import dayjs from 'dayjs';
@@ -9,7 +10,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-volunteer-certificate-viewer',
   standalone: true,
-  imports: [AcmLogoComponent, FormsModule, CommonModule],
+  imports: [ZardButtonComponent, AcmLogoComponent, FormsModule, CommonModule],
   templateUrl: './volunteer-certificate-viewer.component.html',
   styleUrl: './volunteer-certificate-viewer.component.css',
 })

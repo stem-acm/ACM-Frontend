@@ -1,3 +1,4 @@
+import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Member } from '@/app/interfaces/member';
 import { MemberBadgeComponent } from '@/app/components/member-badge/member-badge.component';
@@ -6,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-member-card-viewer',
   standalone: true,
-  imports: [MemberBadgeComponent, FormsModule],
+  imports: [ZardButtonComponent, MemberBadgeComponent, FormsModule],
   templateUrl: './member-card-viewer.component.html',
   styleUrl: './member-card-viewer.component.css',
 })

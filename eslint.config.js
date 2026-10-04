@@ -65,6 +65,13 @@ module.exports = tseslint.config(
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {},
   },
+  {
+    files: ['src/app/shared/**/*.ts'],
+    rules: {
+      '@angular-eslint/component-selector': 'off',
+      '@angular-eslint/directive-selector': 'off',
+    },
+  },
   prettierConfig,
   {
     ignores: ['dist/**', 'node_modules/**', '.angular/**', '*.config.js', 'ecosystem.config.js'],

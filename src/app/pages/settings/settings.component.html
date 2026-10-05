@@ -24,6 +24,7 @@
         <button
           z-button
           zType="ghost"
+          class="acm-btn acm-btn--ghost"
           type="button"
           role="tab"
           [attr.aria-selected]="selectedRole === role"
@@ -70,7 +71,7 @@
       </div>
       <button
         z-button
-        class="access-primary"
+        class="acm-btn acm-btn--primary"
         type="button"
         [disabled]="saving"
         [zLoading]="saving"
@@ -128,7 +129,7 @@
                 <button
                   z-button
                   zType="link"
-                  class="access-small"
+                  class="acm-btn acm-btn--link"
                   type="button"
                   (click)="saveAccount(account)"
                 >
@@ -177,7 +178,7 @@
       </div>
       <button
         z-button
-        class="access-primary"
+        class="acm-btn acm-btn--primary"
         type="submit"
         [disabled]="accountForm.invalid || creating"
         [zLoading]="creating"

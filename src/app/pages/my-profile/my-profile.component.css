@@ -88,32 +88,8 @@
   color: #294b7c;
   font-weight: 700;
 }
-.profile-card input {
-  width: 100%;
-  border: 1px solid #cbd7e8;
-  border-radius: 10px;
-  padding: 0.72rem 0.8rem;
-  color: #172a4a;
-  background: white;
-}
-.profile-card input:focus {
-  outline: 2px solid #8aaee7;
-  outline-offset: 1px;
-}
-.profile-card button {
+.profile-card button.acm-btn {
   justify-self: start;
-  border-radius: 10px;
-  background: #17469e;
-  color: white;
-  padding: 0.72rem 1.25rem;
-  font-weight: 750;
-}
-.profile-card button:hover {
-  background: #0d2d68;
-}
-.profile-card button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
 }
 .profile-hint {
   font-size: 0.8rem;

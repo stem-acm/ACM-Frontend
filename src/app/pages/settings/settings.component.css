@@ -67,15 +67,9 @@
   margin: 1.5rem 0;
   border-bottom: 1px solid #dce3ef;
 }
-.access-tabs button {
-  padding: 0.7rem 1.2rem;
-  color: #60718d;
-  font-weight: 700;
-  border-bottom: 3px solid transparent;
-}
-.access-tabs button.selected {
+.access-tabs button.acm-btn.selected {
   color: #17469e;
-  border-color: #ed1e24;
+  border-bottom: 3px solid #ed1e24;
 }
 .access-role-state {
   display: flex;
@@ -138,20 +132,6 @@
   gap: 0.6rem;
   color: #294b7c;
 }
-.access-primary {
-  background: #17469e;
-  color: white;
-  border-radius: 10px;
-  padding: 0.72rem 1.25rem;
-  font-weight: 750;
-}
-.access-primary:hover {
-  background: #0d2d68;
-}
-.access-primary:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
 .access-table-wrap {
   overflow-x: auto;
   margin: 1.3rem 0;
@@ -179,21 +159,13 @@
   color: #143a7b;
 }
 .access-table select,
-.access-fields input,
 .access-fields select {
-  border: 1px solid #cbd7e8;
-  border-radius: 9px;
-  padding: 0.6rem 0.7rem;
-  background: white;
-  color: #172a4a;
+  height: 2rem;
   width: 100%;
-}
-.access-small {
-  color: #17469e;
-  font-weight: 750;
-}
-.access-small:hover {
-  text-decoration: underline;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--input);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
 }
 .access-create {
   border-top: 1px solid #e8edf5;
@@ -237,8 +209,5 @@
   }
   .access-hero {
     padding: 1.5rem;
-  }
-  .access-tabs button {
-    padding: 0.65rem 0.8rem;
   }
 }

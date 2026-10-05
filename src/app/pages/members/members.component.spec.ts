@@ -4,7 +4,7 @@ import { MembersComponent } from './members.component';
 import { MemberService } from '@/app/services/member.service';
 import { VolunteerService } from '@/app/services/volunteer.service';
 import { AppComponent } from '@/app/app.component';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 
@@ -14,6 +14,7 @@ describe('MembersComponent', () => {
 
   const mockMemberService = {
     getAllMembers: () => of({ success: true, data: [], pagination: { total: 0 } }),
+    getStudyPlaces: () => of({ success: true, data: [] }),
   };
 
   const mockVolunteerService = {
@@ -47,5 +48,34 @@ describe('MembersComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('shows an empty state when there are no members', () => {
+    expect(fixture.nativeElement.querySelector('.acm-list-state')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.acm-list-state').textContent).toContain(
+      'ux.noMembers',
+    );
+  });
+
+  it('offers retry after the member list fails to load', () => {
+    const getMembers = spyOn(mockMemberService, 'getAllMembers').and.returnValue(
+      throwError(() => new Error('offline')),
+    );
+    component.getMemberList();
+    fixture.detectChanges();
+
+    expect(component.loadError).toBeTrue();
+    expect(fixture.nativeElement.querySelector('.acm-list-state').textContent).toContain(
+      'ux.loadError',
+    );
+
+    getMembers.and.returnValue(of({ success: true, data: [], pagination: { total: 0 } }));
+    fixture.nativeElement.querySelector('.acm-list-state button').click();
+    fixture.detectChanges();
+
+    expect(component.loadError).toBeFalse();
+    expect(fixture.nativeElement.querySelector('.acm-list-state').textContent).toContain(
+      'ux.noMembers',
+    );
   });
 });

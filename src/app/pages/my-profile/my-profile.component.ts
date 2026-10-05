@@ -1,12 +1,23 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@/app/services/auth.service';
+import { ZardBadgeComponent } from '@/shared/components/badge';
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardCardComponent } from '@/shared/components/card';
+import { ZardInputComponent } from '@/shared/components/input';
 
 @Component({
   selector: 'app-my-profile',
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [
+    FormsModule,
+    TranslateModule,
+    ZardBadgeComponent,
+    ZardButtonComponent,
+    ZardCardComponent,
+    ZardInputComponent,
+  ],
   templateUrl: './my-profile.component.html',
   styleUrl: './my-profile.component.css',
 })
@@ -30,7 +41,7 @@ export class MyProfileComponent implements OnInit {
     this.email = this.auth.user?.email ?? '';
   }
 
-  saveIdentity(): void {
+  saveIdentity(form: NgForm): void {
     this.identityMessage = '';
     this.identityError = '';
     this.savingIdentity = true;
@@ -43,6 +54,7 @@ export class MyProfileComponent implements OnInit {
       .subscribe({
         next: () => {
           this.identityPassword = '';
+          form.resetForm({ username: this.username, email: this.email, identityPassword: '' });
           this.savingIdentity = false;
           this.identityMessage = 'profile.detailsSaved';
         },
@@ -53,7 +65,7 @@ export class MyProfileComponent implements OnInit {
       });
   }
 
-  savePassword(): void {
+  savePassword(form: NgForm): void {
     this.passwordMessage = '';
     this.passwordError = '';
     if (this.newPassword !== this.confirmPassword) {
@@ -68,6 +80,7 @@ export class MyProfileComponent implements OnInit {
           this.currentPassword = '';
           this.newPassword = '';
           this.confirmPassword = '';
+          form.resetForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
           this.savingPassword = false;
           this.passwordMessage = 'profile.passwordSaved';
         },

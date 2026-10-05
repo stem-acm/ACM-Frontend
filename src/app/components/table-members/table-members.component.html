@@ -1,4 +1,62 @@
-<table z-table zSize="comfortable" class="acm-data-table">
+<div class="acm-mobile-records md:hidden">
+  @for (item of data; track item.member.registrationNumber) {
+    <article class="acm-mobile-record">
+      <div class="acm-mobile-record-head">
+        <img [src]="getfileUrl(item.member.profileImage)" alt="" />
+        <div>
+          <strong>{{
+            item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName
+          }}</strong>
+          <span>{{ item.member.registrationNumber }}</span>
+        </div>
+        @if (auth.can('members.cards')) {
+          <label class="acm-mobile-select">
+            <input
+              type="checkbox"
+              [checked]="item.selected"
+              (change)="onCheckboxChange($event, item.member)"
+            />
+            <span class="sr-only"
+              >{{ 'ux.selectMember' | translate }} {{ item.member.firstName }}
+              {{ item.member.lastName }}</span
+            >
+          </label>
+        }
+      </div>
+      <dl>
+        <div>
+          <dt>{{ 'table.columns.occupation' | translate }}</dt>
+          <dd>{{ item.member.occupation }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'table.columns.placeOfWorkStudy' | translate }}</dt>
+          <dd>{{ item.member.studyOrWorkPlace }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'table.columns.memberFor' | translate }}</dt>
+          <dd>{{ formatDate(item.member.joinDate) }}</dd>
+        </div>
+      </dl>
+      <div class="acm-mobile-record-actions">
+        <a [routerLink]="['/profil', item.member.registrationNumber]">{{
+          'table.viewProfil' | translate
+        }}</a>
+        @if (auth.can('members.delete')) {
+          <button
+            z-button
+            zType="link"
+            type="button"
+            class="acm-btn acm-btn--link-danger"
+            (click)="onDeleteClick(item.member)"
+          >
+            {{ 'buttons.delete' | translate }}
+          </button>
+        }
+      </div>
+    </article>
+  }
+</div>
+<table z-table zSize="comfortable" class="acm-data-table hidden md:table">
   <thead z-table-header>
     <tr z-table-row>
       <th z-table-head scope="col">#</th>

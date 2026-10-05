@@ -47,6 +47,7 @@ export class MembersComponent implements OnInit {
   public pageSize = 100;
   public totalMembers = 0;
   public isLoading = false;
+  public loadError = false;
   public pageInput = 1;
   private searchSubject = new Subject<string>();
 
@@ -104,8 +105,19 @@ export class MembersComponent implements OnInit {
     return this.selectedStudyPlaces.includes(place);
   }
 
+  clearFilters() {
+    const hadSearch = !!this.searchWord;
+    this.selectedStudyPlaces = [];
+    this.studyPlacesSearch = '';
+    this.searchWord = '';
+    this.currentPage = 1;
+    if (hadSearch) this.searchSubject.next('');
+    else this.getMemberList();
+  }
+
   getMemberList() {
     this.isLoading = true;
+    this.loadError = false;
     const offset = (this.currentPage - 1) * this.pageSize;
     const studyPlacesStr = this.selectedStudyPlaces.join(',');
     this.memberService
@@ -115,6 +127,7 @@ export class MembersComponent implements OnInit {
           if (result.success && result.data) {
             this.member = result.data;
             this.memberFilter = this.member;
+            this.totalMembers = result.pagination?.total ?? result.data.length;
 
             // Initialize selection list for current page
             this.membersChooseList = this.member.map(m => ({
@@ -123,8 +136,6 @@ export class MembersComponent implements OnInit {
             }));
 
             if (result.pagination) {
-              this.totalMembers = result.pagination.total;
-
               // Handle edge case where current page is empty after delete
               if (this.member.length === 0 && this.currentPage > 1) {
                 this.currentPage--;
@@ -132,13 +143,15 @@ export class MembersComponent implements OnInit {
                 return;
               }
             }
+          } else {
+            this.loadError = true;
           }
           this.pageInput = this.currentPage;
           this.isLoading = false;
         },
         error: () => {
           this.isLoading = false;
-          // Optionally show error toast if not already handled by interceptor
+          this.loadError = true;
         },
       });
   }

@@ -10,7 +10,7 @@ import { VolunteerComponent } from './pages/volunteer/volunteer.component';
 import { CheckinHistoryComponent } from './pages/checkin-history/checkin-history.component';
 import { VolunteerCertificateViewerComponent } from './components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
 import { permissionGuard } from './permission.guard';
-import { SettingsComponent } from './pages/settings/settings.component';
+import { SettingsComponent, canDeactivateSettings } from './pages/settings/settings.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 
 export const routes: Routes = [
@@ -76,6 +76,7 @@ export const routes: Routes = [
     path: 'setting',
     component: SettingsComponent,
     canActivate: [permissionGuard],
+    canDeactivate: [canDeactivateSettings],
     data: { permission: 'settings.manage' },
   },
   {

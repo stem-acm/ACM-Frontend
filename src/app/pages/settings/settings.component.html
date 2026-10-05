@@ -5,14 +5,14 @@
     <p>{{ 'access.description' | translate }}</p>
   </header>
 
-  @if (message) {
+  @if (message && message !== 'access.created') {
     <div class="access-notice" role="status">{{ message | translate }}</div>
   }
   @if (error) {
     <div class="access-error" role="alert">{{ error }}</div>
   }
 
-  <section class="access-card">
+  <section z-card class="access-card">
     <div class="access-section-head">
       <div>
         <h2>{{ 'access.rolesTitle' | translate }}</h2>
@@ -22,6 +22,9 @@
     <div class="access-tabs" role="tablist">
       @for (role of roles; track role) {
         <button
+          z-button
+          zType="ghost"
+          class="acm-btn acm-btn--ghost"
           type="button"
           role="tab"
           [attr.aria-selected]="selectedRole === role"
@@ -29,6 +32,10 @@
           (click)="selectedRole = role"
         >
           {{ 'access.roles.' + role | translate }}
+          @if (isRoleDirty(role)) {
+            <span class="access-unsaved-dot" aria-hidden="true"></span>
+            <span class="sr-only">{{ 'access.unsaved' | translate }}</span>
+          }
         </button>
       }
     </div>
@@ -66,13 +73,23 @@
           </div>
         }
       </div>
-      <button class="access-primary" type="button" [disabled]="saving" (click)="savePolicy()">
+      <button
+        z-button
+        class="acm-btn acm-btn--primary"
+        type="button"
+        [disabled]="saving"
+        [zLoading]="saving"
+        (click)="savePolicy()"
+      >
         {{ 'access.saveRole' | translate }}
       </button>
+      @if (isRoleDirty(policy.role)) {
+        <span class="access-unsaved-note" role="status">{{ 'access.unsaved' | translate }}</span>
+      }
     }
   </section>
 
-  <section class="access-card">
+  <section z-card class="access-card">
     <div class="access-section-head">
       <div>
         <h2>{{ 'access.accountsTitle' | translate }}</h2>
@@ -80,31 +97,31 @@
       </div>
     </div>
     <div class="access-table-wrap">
-      <table class="access-table">
-        <thead>
-          <tr>
-            <th>{{ 'forms.username' | translate }}</th>
-            <th>Email</th>
-            <th>{{ 'forms.role' | translate }}</th>
-            <th>{{ 'access.status' | translate }}</th>
-            <th>{{ 'access.action' | translate }}</th>
+      <table z-table class="access-table">
+        <thead z-table-header>
+          <tr z-table-row>
+            <th z-table-head>{{ 'forms.username' | translate }}</th>
+            <th z-table-head>Email</th>
+            <th z-table-head>{{ 'forms.role' | translate }}</th>
+            <th z-table-head>{{ 'access.status' | translate }}</th>
+            <th z-table-head>{{ 'access.action' | translate }}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody z-table-body>
           @for (account of accounts; track account.id) {
-            <tr>
-              <td>
+            <tr z-table-row>
+              <td z-table-cell>
                 <strong>{{ account.username }}</strong>
               </td>
-              <td>{{ account.email }}</td>
-              <td>
+              <td z-table-cell>{{ account.email }}</td>
+              <td z-table-cell>
                 <select [(ngModel)]="account.role" [disabled]="account.id === auth.user?.id">
                   @for (role of roles; track role) {
                     <option [value]="role">{{ 'access.roles.' + role | translate }}</option>
                   }
                 </select>
               </td>
-              <td>
+              <td z-table-cell>
                 <label class="access-switch"
                   ><input
                     type="checkbox"
@@ -115,8 +132,14 @@
                   }}</span></label
                 >
               </td>
-              <td>
-                <button class="access-small" type="button" (click)="saveAccount(account)">
+              <td z-table-cell>
+                <button
+                  z-button
+                  zType="link"
+                  class="acm-btn acm-btn--link"
+                  type="button"
+                  (click)="saveAccount(account)"
+                >
                   {{ 'access.save' | translate }}
                 </button>
               </td>
@@ -125,25 +148,71 @@
         </tbody>
       </table>
     </div>
-    <form class="access-create" (ngSubmit)="createAccount()" #accountForm="ngForm">
+    <form class="access-create" (ngSubmit)="createAccount(accountForm)" #accountForm="ngForm">
       <h3>{{ 'access.addAccount' | translate }}</h3>
+      @if (message === 'access.created') {
+        <p class="access-notice" role="status">{{ message | translate }}</p>
+      }
+      @if (accountError) {
+        <p class="access-error" role="alert">{{ accountError }}</p>
+      }
       <div class="access-fields">
         <label
           >{{ 'forms.username' | translate
-          }}<input name="username" required minlength="3" [(ngModel)]="newAccount.username"
-        /></label>
+          }}<input
+            z-input
+            name="username"
+            required
+            minlength="3"
+            pattern="[A-Za-z0-9]+"
+            [(ngModel)]="newAccount.username"
+            #accountUsername="ngModel"
+            [attr.aria-invalid]="accountUsername.invalid && accountUsername.touched ? true : null"
+          />
+          @if (accountUsername.touched && accountUsername.invalid) {
+            <small class="access-field-error">{{
+              (accountUsername.errors?.['required'] ? 'ux.requiredField' : 'ux.usernameFormat')
+                | translate
+            }}</small>
+          }
+        </label>
         <label
-          >Email<input name="email" type="email" required email [(ngModel)]="newAccount.email"
-        /></label>
+          >Email<input
+            z-input
+            name="email"
+            type="email"
+            required
+            email
+            [(ngModel)]="newAccount.email"
+            #accountEmail="ngModel"
+            [attr.aria-invalid]="accountEmail.invalid && accountEmail.touched ? true : null"
+          />
+          @if (accountEmail.touched && accountEmail.invalid) {
+            <small class="access-field-error">{{
+              (accountEmail.errors?.['required'] ? 'ux.requiredField' : 'ux.invalidEmail')
+                | translate
+            }}</small>
+          }
+        </label>
         <label
           >{{ 'forms.password' | translate
           }}<input
+            z-input
             name="password"
             type="password"
             required
             minlength="8"
             [(ngModel)]="newAccount.password"
-        /></label>
+            #accountPassword="ngModel"
+            [attr.aria-invalid]="accountPassword.invalid && accountPassword.touched ? true : null"
+          />
+          @if (accountPassword.touched && accountPassword.invalid) {
+            <small class="access-field-error">{{
+              (accountPassword.errors?.['required'] ? 'ux.requiredField' : 'ux.passwordLength')
+                | translate
+            }}</small>
+          }
+        </label>
         <label
           >{{ 'forms.role' | translate
           }}<select name="role" [(ngModel)]="newAccount.role">
@@ -153,7 +222,13 @@
           </select></label
         >
       </div>
-      <button class="access-primary" type="submit" [disabled]="accountForm.invalid || creating">
+      <button
+        z-button
+        class="acm-btn acm-btn--primary"
+        type="submit"
+        [disabled]="accountForm.invalid || creating"
+        [zLoading]="creating"
+      >
         {{ 'access.createAccount' | translate }}
       </button>
     </form>

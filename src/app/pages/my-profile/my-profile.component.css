@@ -8,7 +8,7 @@
   padding: 2rem 2.3rem;
   border-radius: 24px;
   color: white;
-  background: linear-gradient(125deg, #082e42, #075f78 65%, #10959b);
+  background: linear-gradient(125deg, #0d2d68, #17469e 70%, #315fa5);
   position: relative;
   overflow: hidden;
 }
@@ -24,7 +24,10 @@
   transform: rotate(32deg);
 }
 .profile-eyebrow {
-  color: #a9e4e2;
+  display: inline-block;
+  border-left: 3px solid #ed1e24;
+  padding-left: 0.7rem;
+  color: #ffadb0;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.18em;
@@ -38,7 +41,7 @@
   z-index: 1;
 }
 .profile-hero p {
-  color: #d9eeee;
+  color: #e1eafd;
   max-width: 650px;
 }
 .profile-grid {
@@ -48,10 +51,10 @@
 }
 .profile-card {
   background: white;
-  border: 1px solid #dce9e9;
+  border: 1px solid #dce3ef;
   border-radius: 20px;
   padding: 1.7rem;
-  box-shadow: 0 12px 35px #143b4d0b;
+  box-shadow: 0 12px 35px #142e5a0b;
 }
 .profile-card-head {
   display: flex;
@@ -63,11 +66,11 @@
 .profile-card h2 {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #123c4e;
+  color: #143a7b;
 }
 .profile-role {
-  background: #e6f5f3;
-  color: #087b86;
+  background: #eaf0fa;
+  color: #17469e;
   border-radius: 99px;
   font-size: 0.78rem;
   font-weight: 800;
@@ -82,43 +85,24 @@
   display: grid;
   gap: 0.4rem;
   font-size: 0.86rem;
-  color: #355969;
+  color: #294b7c;
   font-weight: 700;
 }
-.profile-card input {
-  width: 100%;
-  border: 1px solid #cbdede;
-  border-radius: 10px;
-  padding: 0.72rem 0.8rem;
-  color: #123c4e;
-  background: white;
-}
-.profile-card input:focus {
-  outline: 2px solid #9ad6d4;
-  outline-offset: 1px;
-}
-.profile-card button {
+.profile-card button.acm-btn {
   justify-self: start;
-  border-radius: 10px;
-  background: #087b86;
-  color: white;
-  padding: 0.72rem 1.25rem;
-  font-weight: 750;
-}
-.profile-card button:hover {
-  background: #066471;
-}
-.profile-card button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
 }
 .profile-hint {
   font-size: 0.8rem;
-  color: #66818d;
+  color: #60718d;
 }
 .profile-error {
-  color: #a33030;
+  color: #b92334;
   font-size: 0.86rem;
+}
+.profile-field-error {
+  color: #b92334;
+  font-size: 0.78rem;
+  font-weight: 500;
 }
 .profile-success {
   color: #087449;

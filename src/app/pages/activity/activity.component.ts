@@ -42,6 +42,7 @@ export class ActivityComponent implements OnInit {
   public searchWord = '';
   private searchSubject = new Subject<string>();
   public isLoading = false;
+  public loadError = false;
 
   public currentPage = 1;
   public pageSize = 100;
@@ -62,27 +63,30 @@ export class ActivityComponent implements OnInit {
 
   getActivityList() {
     this.isLoading = true;
+    this.loadError = false;
     const offset = (this.currentPage - 1) * this.pageSize;
     this.activityService.getAllActivity(offset, this.pageSize, this.searchWord).subscribe({
       next: (result: HttpResult<Activity[]>) => {
         if (result.success && result.data) {
           this.activity = result.data;
+          this.totalActivities = result.pagination?.total ?? result.data.length;
 
           if (result.pagination) {
-            this.totalActivities = result.pagination.total;
-
             if (this.activity.length === 0 && this.currentPage > 1) {
               this.currentPage--;
               this.getActivityList();
               return;
             }
           }
+        } else {
+          this.loadError = true;
         }
         this.pageInput = this.currentPage;
         this.isLoading = false;
       },
       error: () => {
         this.isLoading = false;
+        this.loadError = true;
       },
     });
   }
@@ -146,5 +150,11 @@ export class ActivityComponent implements OnInit {
 
   search(keyWord: string) {
     this.searchSubject.next(keyWord);
+  }
+
+  clearSearch() {
+    this.searchWord = '';
+    this.currentPage = 1;
+    this.searchSubject.next('');
   }
 }

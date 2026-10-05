@@ -1,4 +1,48 @@
-<table z-table zSize="comfortable" class="acm-data-table">
+<div class="acm-mobile-records md:hidden">
+  @for (item of checkins; track item) {
+    <article class="acm-mobile-record">
+      <div class="acm-mobile-record-head">
+        <img [src]="getfileUrl(item.Member?.profileImage)" alt="" />
+        <div>
+          <strong>{{ item.Member?.lastName?.toUpperCase() + ' ' + item.Member?.firstName }}</strong>
+          <span>{{ item.Member?.registrationNumber }}</span>
+        </div>
+        @if (isInRoom(item)) {
+          <span class="acm-mobile-in-room">{{ 'ux.inRoom' | translate }}</span>
+        }
+      </div>
+      <dl>
+        @if (showDate) {
+          <div>
+            <dt>{{ 'table.columns.checkinDate' | translate }}</dt>
+            <dd>{{ formatDate(item.checkInTime) }}</dd>
+          </div>
+        }
+        <div>
+          <dt>{{ 'table.columns.startTime' | translate }}</dt>
+          <dd>{{ formatTime(item.checkInTime) }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'table.columns.purposeOfVisit' | translate }}</dt>
+          <dd>{{ item.Activity?.name }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'table.columns.endTimeCheckin' | translate }}</dt>
+          <dd>{{ formatTime(item.checkOutTime) }}</dd>
+        </div>
+      </dl>
+      <div class="acm-mobile-record-actions">
+        <a [routerLink]="['/profil', item.Member?.registrationNumber]">{{
+          'table.viewProfil' | translate
+        }}</a>
+      </div>
+    </article>
+  }
+  @if (checkins.length === 0) {
+    <p class="acm-list-state">{{ 'table.noMembersCheckinToday' | translate }}</p>
+  }
+</div>
+<table z-table zSize="comfortable" class="acm-data-table hidden md:table">
   <thead z-table-header>
     <tr z-table-row>
       <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>

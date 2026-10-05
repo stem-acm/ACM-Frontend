@@ -42,6 +42,7 @@ export class VolunteerComponent implements OnInit {
   public pageSize = 100;
   public totalVolunteers = 0;
   public isLoading = false;
+  public loadError = false;
   public pageInput = 1;
   private searchSubject = new Subject<string>();
 
@@ -59,17 +60,21 @@ export class VolunteerComponent implements OnInit {
 
   getVolunteerList() {
     this.isLoading = true;
+    this.loadError = false;
     this.volunteerService.getAllVolunteers(0, 1000).subscribe({
       next: (result: HttpResult<Volunteer[]>) => {
         if (result.success && result.data) {
           this.allVolunteers = result.data;
           this.currentPage = 1;
           this.updateDisplayedVolunteers();
+        } else {
+          this.loadError = true;
         }
         this.isLoading = false;
       },
       error: () => {
         this.isLoading = false;
+        this.loadError = true;
       },
     });
   }
@@ -140,5 +145,12 @@ export class VolunteerComponent implements OnInit {
 
   search(keyWord: string) {
     this.searchSubject.next(keyWord);
+  }
+
+  clearSearch() {
+    this.searchWord = '';
+    this.currentPage = 1;
+    this.searchSubject.next('');
+    this.updateDisplayedVolunteers();
   }
 }

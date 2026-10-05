@@ -8,7 +8,7 @@
   margin: 1.5rem 0;
   border-radius: 24px;
   color: white;
-  background: linear-gradient(125deg, #082e42, #075f78 65%, #10959b);
+  background: linear-gradient(125deg, #0d2d68, #17469e 70%, #315fa5);
   position: relative;
   overflow: hidden;
 }
@@ -24,7 +24,10 @@
   transform: rotate(32deg);
 }
 .access-eyebrow {
-  color: #a9e4e2;
+  display: inline-block;
+  border-left: 3px solid #ed1e24;
+  padding-left: 0.7rem;
+  color: #ffadb0;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.18em;
@@ -38,41 +41,41 @@
   z-index: 1;
 }
 .access-hero p {
-  color: #d9eeee;
+  color: #e1eafd;
   max-width: 650px;
 }
 .access-card {
   background: white;
-  border: 1px solid #dce9e9;
+  border: 1px solid #dce3ef;
   border-radius: 20px;
   padding: 1.6rem;
-  box-shadow: 0 12px 35px #143b4d0b;
+  box-shadow: 0 12px 35px #142e5a0b;
   margin: 1.3rem 0;
 }
 .access-section-head h2 {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #123c4e;
+  color: #143a7b;
 }
 .access-section-head p {
-  color: #66818d;
+  color: #60718d;
   margin-top: 0.25rem;
 }
 .access-tabs {
   display: flex;
   gap: 0.5rem;
   margin: 1.5rem 0;
-  border-bottom: 1px solid #dce9e9;
+  border-bottom: 1px solid #dce3ef;
 }
 .access-tabs button {
   padding: 0.7rem 1.2rem;
-  color: #5c7580;
+  color: #60718d;
   font-weight: 700;
   border-bottom: 3px solid transparent;
 }
 .access-tabs button.selected {
-  color: #087b86;
-  border-color: #087b86;
+  color: #17469e;
+  border-color: #ed1e24;
 }
 .access-role-state {
   display: flex;
@@ -80,15 +83,15 @@
   align-items: center;
   padding: 1rem 1.2rem;
   border-radius: 14px;
-  background: #eff8f8;
+  background: #eaf0fa;
   gap: 1rem;
 }
 .access-role-state strong {
   display: block;
-  color: #123c4e;
+  color: #143a7b;
 }
 .access-role-state span {
-  color: #5c7580;
+  color: #60718d;
   font-size: 0.9rem;
 }
 .access-switch {
@@ -100,13 +103,13 @@
 }
 .access-switch input,
 .access-option input {
-  accent-color: #087b86;
+  accent-color: #17469e;
   width: 18px;
   height: 18px;
 }
 .access-hint {
   font-size: 0.83rem;
-  color: #66818d;
+  color: #60718d;
   margin: 0.6rem 0 0;
 }
 .access-groups {
@@ -116,12 +119,12 @@
   margin: 1.4rem 0;
 }
 .access-group {
-  border: 1px solid #dce9e9;
+  border: 1px solid #dce3ef;
   border-radius: 14px;
   padding: 1rem;
 }
 .access-group h3 {
-  color: #123c4e;
+  color: #143a7b;
   font-weight: 800;
   margin-bottom: 0.8rem;
 }
@@ -133,17 +136,17 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  color: #355969;
+  color: #294b7c;
 }
 .access-primary {
-  background: #087b86;
+  background: #17469e;
   color: white;
   border-radius: 10px;
   padding: 0.72rem 1.25rem;
   font-weight: 750;
 }
 .access-primary:hover {
-  background: #066471;
+  background: #0d2d68;
 }
 .access-primary:disabled {
   opacity: 0.55;
@@ -159,7 +162,7 @@
   text-align: left;
 }
 .access-table th {
-  color: #69838d;
+  color: #60718d;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -167,38 +170,38 @@
 .access-table th,
 .access-table td {
   padding: 0.85rem;
-  border-bottom: 1px solid #e6eeee;
+  border-bottom: 1px solid #e8edf5;
 }
 .access-table td {
-  color: #355969;
+  color: #344763;
 }
 .access-table strong {
-  color: #123c4e;
+  color: #143a7b;
 }
 .access-table select,
 .access-fields input,
 .access-fields select {
-  border: 1px solid #cbdede;
+  border: 1px solid #cbd7e8;
   border-radius: 9px;
   padding: 0.6rem 0.7rem;
   background: white;
-  color: #123c4e;
+  color: #172a4a;
   width: 100%;
 }
 .access-small {
-  color: #087b86;
+  color: #17469e;
   font-weight: 750;
 }
 .access-small:hover {
   text-decoration: underline;
 }
 .access-create {
-  border-top: 1px solid #e6eeee;
+  border-top: 1px solid #e8edf5;
   padding-top: 1.2rem;
 }
 .access-create h3 {
   font-weight: 800;
-  color: #123c4e;
+  color: #143a7b;
   margin-bottom: 1rem;
 }
 .access-fields {
@@ -212,7 +215,7 @@
   gap: 0.4rem;
   font-size: 0.84rem;
   font-weight: 700;
-  color: #355969;
+  color: #294b7c;
 }
 .access-notice,
 .access-error {

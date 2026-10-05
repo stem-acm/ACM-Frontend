@@ -12,7 +12,7 @@
     <div class="access-error" role="alert">{{ error }}</div>
   }
 
-  <section class="access-card">
+  <section z-card class="access-card">
     <div class="access-section-head">
       <div>
         <h2>{{ 'access.rolesTitle' | translate }}</h2>
@@ -22,6 +22,8 @@
     <div class="access-tabs" role="tablist">
       @for (role of roles; track role) {
         <button
+          z-button
+          zType="ghost"
           type="button"
           role="tab"
           [attr.aria-selected]="selectedRole === role"
@@ -66,13 +68,20 @@
           </div>
         }
       </div>
-      <button class="access-primary" type="button" [disabled]="saving" (click)="savePolicy()">
+      <button
+        z-button
+        class="access-primary"
+        type="button"
+        [disabled]="saving"
+        [zLoading]="saving"
+        (click)="savePolicy()"
+      >
         {{ 'access.saveRole' | translate }}
       </button>
     }
   </section>
 
-  <section class="access-card">
+  <section z-card class="access-card">
     <div class="access-section-head">
       <div>
         <h2>{{ 'access.accountsTitle' | translate }}</h2>
@@ -80,31 +89,31 @@
       </div>
     </div>
     <div class="access-table-wrap">
-      <table class="access-table">
-        <thead>
-          <tr>
-            <th>{{ 'forms.username' | translate }}</th>
-            <th>Email</th>
-            <th>{{ 'forms.role' | translate }}</th>
-            <th>{{ 'access.status' | translate }}</th>
-            <th>{{ 'access.action' | translate }}</th>
+      <table z-table class="access-table">
+        <thead z-table-header>
+          <tr z-table-row>
+            <th z-table-head>{{ 'forms.username' | translate }}</th>
+            <th z-table-head>Email</th>
+            <th z-table-head>{{ 'forms.role' | translate }}</th>
+            <th z-table-head>{{ 'access.status' | translate }}</th>
+            <th z-table-head>{{ 'access.action' | translate }}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody z-table-body>
           @for (account of accounts; track account.id) {
-            <tr>
-              <td>
+            <tr z-table-row>
+              <td z-table-cell>
                 <strong>{{ account.username }}</strong>
               </td>
-              <td>{{ account.email }}</td>
-              <td>
+              <td z-table-cell>{{ account.email }}</td>
+              <td z-table-cell>
                 <select [(ngModel)]="account.role" [disabled]="account.id === auth.user?.id">
                   @for (role of roles; track role) {
                     <option [value]="role">{{ 'access.roles.' + role | translate }}</option>
                   }
                 </select>
               </td>
-              <td>
+              <td z-table-cell>
                 <label class="access-switch"
                   ><input
                     type="checkbox"
@@ -115,8 +124,14 @@
                   }}</span></label
                 >
               </td>
-              <td>
-                <button class="access-small" type="button" (click)="saveAccount(account)">
+              <td z-table-cell>
+                <button
+                  z-button
+                  zType="link"
+                  class="access-small"
+                  type="button"
+                  (click)="saveAccount(account)"
+                >
                   {{ 'access.save' | translate }}
                 </button>
               </td>
@@ -130,14 +145,21 @@
       <div class="access-fields">
         <label
           >{{ 'forms.username' | translate
-          }}<input name="username" required minlength="3" [(ngModel)]="newAccount.username"
+          }}<input z-input name="username" required minlength="3" [(ngModel)]="newAccount.username"
         /></label>
         <label
-          >Email<input name="email" type="email" required email [(ngModel)]="newAccount.email"
+          >Email<input
+            z-input
+            name="email"
+            type="email"
+            required
+            email
+            [(ngModel)]="newAccount.email"
         /></label>
         <label
           >{{ 'forms.password' | translate
           }}<input
+            z-input
             name="password"
             type="password"
             required
@@ -153,7 +175,13 @@
           </select></label
         >
       </div>
-      <button class="access-primary" type="submit" [disabled]="accountForm.invalid || creating">
+      <button
+        z-button
+        class="access-primary"
+        type="submit"
+        [disabled]="accountForm.invalid || creating"
+        [zLoading]="creating"
+      >
         {{ 'access.createAccount' | translate }}
       </button>
     </form>

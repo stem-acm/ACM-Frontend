@@ -6,15 +6,18 @@
   </header>
 
   <div class="profile-grid">
-    <section class="profile-card">
+    <section z-card class="profile-card">
       <div class="profile-card-head">
         <h2>{{ 'profile.accountDetails' | translate }}</h2>
-        <span class="profile-role">{{ 'access.roles.' + auth.user?.role | translate }}</span>
+        <z-badge zType="secondary" class="profile-role">{{
+          'access.roles.' + auth.user?.role | translate
+        }}</z-badge>
       </div>
       <form (ngSubmit)="saveIdentity()" #identityForm="ngForm">
         <label
           >{{ 'forms.username' | translate }}
           <input
+            z-input
             name="username"
             required
             minlength="3"
@@ -26,6 +29,7 @@
         <label
           >Email
           <input
+            z-input
             name="email"
             type="email"
             required
@@ -37,6 +41,7 @@
         <label
           >{{ 'profile.currentPassword' | translate }}
           <input
+            z-input
             name="identityPassword"
             type="password"
             required
@@ -50,13 +55,18 @@
         @if (identityMessage) {
           <p class="profile-success" role="status">{{ identityMessage | translate }}</p>
         }
-        <button type="submit" [disabled]="identityForm.invalid || savingIdentity">
+        <button
+          z-button
+          type="submit"
+          [disabled]="identityForm.invalid || savingIdentity"
+          [zLoading]="savingIdentity"
+        >
           {{ 'profile.saveDetails' | translate }}
         </button>
       </form>
     </section>
 
-    <section class="profile-card">
+    <section z-card class="profile-card">
       <div class="profile-card-head">
         <h2>{{ 'profile.changePassword' | translate }}</h2>
       </div>
@@ -64,6 +74,7 @@
         <label
           >{{ 'profile.currentPassword' | translate }}
           <input
+            z-input
             name="currentPassword"
             type="password"
             required
@@ -74,6 +85,7 @@
         <label
           >{{ 'profile.newPassword' | translate }}
           <input
+            z-input
             name="newPassword"
             type="password"
             required
@@ -85,6 +97,7 @@
         <label
           >{{ 'profile.confirmPassword' | translate }}
           <input
+            z-input
             name="confirmPassword"
             type="password"
             required
@@ -99,7 +112,12 @@
         @if (passwordMessage) {
           <p class="profile-success" role="status">{{ passwordMessage | translate }}</p>
         }
-        <button type="submit" [disabled]="passwordForm.invalid || savingPassword">
+        <button
+          z-button
+          type="submit"
+          [disabled]="passwordForm.invalid || savingPassword"
+          [zLoading]="savingPassword"
+        >
           {{ 'profile.savePassword' | translate }}
         </button>
       </form>

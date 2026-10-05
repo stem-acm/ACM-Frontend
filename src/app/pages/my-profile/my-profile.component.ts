@@ -2,11 +2,22 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@/app/services/auth.service';
+import { ZardBadgeComponent } from '@/shared/components/badge';
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardCardComponent } from '@/shared/components/card';
+import { ZardInputComponent } from '@/shared/components/input';
 
 @Component({
   selector: 'app-my-profile',
   standalone: true,
-  imports: [FormsModule, TranslateModule],
+  imports: [
+    FormsModule,
+    TranslateModule,
+    ZardBadgeComponent,
+    ZardButtonComponent,
+    ZardCardComponent,
+    ZardInputComponent,
+  ],
   templateUrl: './my-profile.component.html',
   styleUrl: './my-profile.component.css',
 })

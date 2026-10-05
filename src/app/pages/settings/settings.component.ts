@@ -6,6 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '@/environments/environment';
 import { HttpResult } from '@/app/types/httpResult';
 import { AuthService } from '@/app/services/auth.service';
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardCardComponent } from '@/shared/components/card';
+import { ZardInputComponent } from '@/shared/components/input';
+import { ZardTableImports } from '@/shared/components/table/table.imports';
 
 type Role = 'admin' | 'intern' | 'volunteer';
 type Policy = { role: Role; active: boolean; permissions: Record<string, boolean> };
@@ -14,7 +18,15 @@ type Account = { id: number; username: string; email: string; role: Role; active
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    ZardButtonComponent,
+    ZardCardComponent,
+    ZardInputComponent,
+    ZardTableImports,
+  ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
 })

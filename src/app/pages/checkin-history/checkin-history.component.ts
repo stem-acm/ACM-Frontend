@@ -41,6 +41,7 @@ export class CheckinHistoryComponent implements OnInit {
   public pageSize = 10;
   public totalCheckins = 0;
   public isLoading = true;
+  public loadError = false;
   public pageInput = 1;
 
   ngOnInit() {
@@ -57,12 +58,33 @@ export class CheckinHistoryComponent implements OnInit {
   }
 
   getCheckins() {
-    this.checkinService.getAllCheckin().subscribe((result: HttpResult<Checkin[]>) => {
-      this.allCheckins = result.data || [];
-      this.currentPage = 1;
-      this.updateDisplayedCheckins();
-      this.isLoading = false;
+    this.isLoading = true;
+    this.loadError = false;
+    this.checkinService.getAllCheckin().subscribe({
+      next: (result: HttpResult<Checkin[]>) => {
+        if (result.success) {
+          this.allCheckins = result.data || [];
+          this.currentPage = 1;
+          this.updateDisplayedCheckins();
+        } else {
+          this.loadError = true;
+        }
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.loadError = true;
+      },
     });
+  }
+
+  clearFilters() {
+    this.searchWord = '';
+    this.startDate = '';
+    this.endDate = '';
+    this.currentPage = 1;
+    this.searchSubject.next('');
+    this.updateDisplayedCheckins();
   }
 
   search(keyWord: string) {

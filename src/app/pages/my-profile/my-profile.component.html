@@ -13,7 +13,7 @@
           'access.roles.' + auth.user?.role | translate
         }}</z-badge>
       </div>
-      <form (ngSubmit)="saveIdentity()" #identityForm="ngForm">
+      <form (ngSubmit)="saveIdentity(identityForm)" #identityForm="ngForm">
         <label
           >{{ 'forms.username' | translate }}
           <input
@@ -24,7 +24,15 @@
             pattern="[A-Za-z0-9]+"
             [(ngModel)]="username"
             autocomplete="username"
+            #profileUsername="ngModel"
+            [attr.aria-invalid]="profileUsername.invalid && profileUsername.touched ? true : null"
           />
+          @if (profileUsername.touched && profileUsername.invalid) {
+            <small class="profile-field-error">{{
+              (profileUsername.errors?.['required'] ? 'ux.requiredField' : 'ux.usernameFormat')
+                | translate
+            }}</small>
+          }
         </label>
         <label
           >Email
@@ -36,7 +44,15 @@
             email
             [(ngModel)]="email"
             autocomplete="email"
+            #profileEmail="ngModel"
+            [attr.aria-invalid]="profileEmail.invalid && profileEmail.touched ? true : null"
           />
+          @if (profileEmail.touched && profileEmail.invalid) {
+            <small class="profile-field-error">{{
+              (profileEmail.errors?.['required'] ? 'ux.requiredField' : 'ux.invalidEmail')
+                | translate
+            }}</small>
+          }
         </label>
         <label
           >{{ 'profile.currentPassword' | translate }}
@@ -47,7 +63,19 @@
             required
             [(ngModel)]="identityPassword"
             autocomplete="current-password"
+            #identityPasswordField="ngModel"
+            [attr.aria-invalid]="
+              (identityPasswordField.invalid && identityPasswordField.touched) ||
+              identityError === 'profile.wrongPassword'
+                ? true
+                : null
+            "
           />
+          @if (identityPasswordField.touched && identityPasswordField.invalid) {
+            <small class="profile-field-error">{{ 'ux.requiredField' | translate }}</small>
+          } @else if (identityError === 'profile.wrongPassword') {
+            <small class="profile-field-error">{{ identityError | translate }}</small>
+          }
         </label>
         @if (identityError) {
           <p class="profile-error" role="alert">{{ identityError | translate }}</p>
@@ -71,7 +99,7 @@
       <div class="profile-card-head">
         <h2>{{ 'profile.changePassword' | translate }}</h2>
       </div>
-      <form (ngSubmit)="savePassword()" #passwordForm="ngForm">
+      <form (ngSubmit)="savePassword(passwordForm)" #passwordForm="ngForm">
         <label
           >{{ 'profile.currentPassword' | translate }}
           <input
@@ -81,7 +109,19 @@
             required
             [(ngModel)]="currentPassword"
             autocomplete="current-password"
+            #currentPasswordField="ngModel"
+            [attr.aria-invalid]="
+              (currentPasswordField.invalid && currentPasswordField.touched) ||
+              passwordError === 'profile.wrongPassword'
+                ? true
+                : null
+            "
           />
+          @if (currentPasswordField.touched && currentPasswordField.invalid) {
+            <small class="profile-field-error">{{ 'ux.requiredField' | translate }}</small>
+          } @else if (passwordError === 'profile.wrongPassword') {
+            <small class="profile-field-error">{{ passwordError | translate }}</small>
+          }
         </label>
         <label
           >{{ 'profile.newPassword' | translate }}
@@ -91,9 +131,18 @@
             type="password"
             required
             minlength="8"
+            pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}"
             [(ngModel)]="newPassword"
             autocomplete="new-password"
+            #newPasswordField="ngModel"
+            [attr.aria-invalid]="newPasswordField.invalid && newPasswordField.touched ? true : null"
           />
+          @if (newPasswordField.touched && newPasswordField.invalid) {
+            <small class="profile-field-error">{{
+              (newPasswordField.errors?.['required'] ? 'ux.requiredField' : 'ux.passwordRules')
+                | translate
+            }}</small>
+          }
         </label>
         <label
           >{{ 'profile.confirmPassword' | translate }}
@@ -104,7 +153,19 @@
             required
             [(ngModel)]="confirmPassword"
             autocomplete="new-password"
+            #confirmPasswordField="ngModel"
+            [attr.aria-invalid]="
+              confirmPasswordField.touched &&
+              (confirmPasswordField.invalid || newPassword !== confirmPassword)
+                ? true
+                : null
+            "
           />
+          @if (confirmPasswordField.touched && confirmPasswordField.invalid) {
+            <small class="profile-field-error">{{ 'ux.requiredField' | translate }}</small>
+          } @else if (confirmPasswordField.touched && newPassword !== confirmPassword) {
+            <small class="profile-field-error">{{ 'profile.passwordMismatch' | translate }}</small>
+          }
         </label>
         <p class="profile-hint">{{ 'profile.passwordHint' | translate }}</p>
         @if (passwordError) {
@@ -117,7 +178,7 @@
           z-button
           class="acm-btn acm-btn--primary"
           type="submit"
-          [disabled]="passwordForm.invalid || savingPassword"
+          [disabled]="passwordForm.invalid || newPassword !== confirmPassword || savingPassword"
           [zLoading]="savingPassword"
         >
           {{ 'profile.savePassword' | translate }}

@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '@/environments/environment';
@@ -10,10 +10,22 @@ import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
 import { ZardInputComponent } from '@/shared/components/input';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
+import { CanDeactivateFn } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 type Role = 'admin' | 'intern' | 'volunteer';
-type Policy = { role: Role; active: boolean; permissions: Record<string, boolean> };
-type Account = { id: number; username: string; email: string; role: Role; active: boolean };
+interface Policy {
+  role: Role;
+  active: boolean;
+  permissions: Record<string, boolean>;
+}
+interface Account {
+  id: number;
+  username: string;
+  email: string;
+  role: Role;
+  active: boolean;
+}
 
 @Component({
   selector: 'app-settings',
@@ -32,8 +44,10 @@ type Account = { id: number; username: string; email: string; role: Role; active
 })
 export class SettingsComponent implements OnInit {
   private http = inject(HttpClient);
+  private translate = inject(TranslateService);
   auth = inject(AuthService);
   private url = `${environment.API_URL}/settings`;
+  private savedPolicies = new Map<Role, string>();
 
   roles: Role[] = ['admin', 'intern', 'volunteer'];
   selectedRole: Role = 'intern';
@@ -41,6 +55,7 @@ export class SettingsComponent implements OnInit {
   accounts: Account[] = [];
   message = '';
   error = '';
+  accountError = '';
   saving = false;
   creating = false;
   newAccount: { username: string; email: string; password: string; role: Role } = {
@@ -100,6 +115,37 @@ export class SettingsComponent implements OnInit {
     return this.policies.find(policy => policy.role === this.selectedRole);
   }
 
+  isRoleDirty(role: Role): boolean {
+    const policy = this.policies.find(item => item.role === role);
+    return (
+      !!policy &&
+      this.savedPolicies.has(role) &&
+      this.savedPolicies.get(role) !== this.policyState(policy)
+    );
+  }
+
+  get hasUnsavedChanges(): boolean {
+    return this.roles.some(role => this.isRoleDirty(role));
+  }
+
+  canLeave(): boolean {
+    return (
+      !this.hasUnsavedChanges || window.confirm(this.translate.instant('access.unsavedConfirm'))
+    );
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  warnBeforeUnload(event: BeforeUnloadEvent): void {
+    if (this.hasUnsavedChanges) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  }
+
+  private policyState(policy: Policy): string {
+    return JSON.stringify({ active: policy.active, permissions: policy.permissions });
+  }
+
   featureChanged(policy: Policy, feature: string): void {
     const permissions = policy.permissions;
     if (feature === 'members.cards' && permissions[feature]) permissions['members.view'] = true;
@@ -122,10 +168,23 @@ export class SettingsComponent implements OnInit {
   }
 
   reload(): void {
+    this.loadPolicies();
+    this.loadAccounts();
+  }
+
+  private loadPolicies(): void {
     this.http.get<HttpResult<Policy[]>>(`${this.url}/roles`).subscribe({
-      next: result => (this.policies = result.data),
+      next: result => {
+        this.policies = result.data;
+        this.savedPolicies = new Map(
+          result.data.map(policy => [policy.role, this.policyState(policy)]),
+        );
+      },
       error: error => this.fail(error),
     });
+  }
+
+  private loadAccounts(): void {
     this.http.get<HttpResult<Account[]>>(`${this.url}/users`).subscribe({
       next: result => (this.accounts = result.data),
       error: error => this.fail(error),
@@ -146,6 +205,7 @@ export class SettingsComponent implements OnInit {
           this.policies = this.policies.map(item =>
             item.role === policy.role ? result.data : item,
           );
+          this.savedPolicies.set(policy.role, this.policyState(result.data));
           this.saving = false;
           this.message = 'access.saved';
           this.error = '';
@@ -172,13 +232,15 @@ export class SettingsComponent implements OnInit {
         },
         error: error => {
           this.fail(error);
-          this.reload();
+          this.loadAccounts();
         },
       });
   }
 
-  createAccount(): void {
+  createAccount(form: NgForm): void {
     this.creating = true;
+    this.accountError = '';
+    this.message = '';
     this.http
       .post<HttpResult<Account>>(`${environment.API_URL}/auth/register`, this.newAccount)
       .subscribe({
@@ -187,11 +249,12 @@ export class SettingsComponent implements OnInit {
           this.message = 'access.created';
           this.error = '';
           this.newAccount = { username: '', email: '', password: '', role: 'volunteer' };
-          this.reload();
+          form.resetForm(this.newAccount);
+          this.loadAccounts();
         },
         error: error => {
           this.creating = false;
-          this.fail(error);
+          this.accountError = error.error?.message || this.translate.instant('access.createError');
         },
       });
   }
@@ -201,3 +264,6 @@ export class SettingsComponent implements OnInit {
     this.error = error.error?.message || 'Unable to save changes';
   }
 }
+
+export const canDeactivateSettings: CanDeactivateFn<SettingsComponent> = component =>
+  component.canLeave();

@@ -99,6 +99,11 @@
   color: #b92334;
   font-size: 0.86rem;
 }
+.profile-field-error {
+  color: #b92334;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
 .profile-success {
   color: #087449;
   font-size: 0.86rem;

@@ -719,6 +719,106 @@ app-add-volunteer form .acm-entry-modal__title::before {
   box-shadow: 0 18px 35px #142e5a1c;
 }
 
+.acm-filter-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0 1rem;
+  color: #60718d;
+  font-size: 0.875rem;
+}
+.acm-list-state {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+  background: #fff;
+  color: #344763;
+  text-align: center;
+}
+@media (max-width: 767px) {
+  .acm-mobile-records {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #f5f7fb;
+  }
+  .acm-mobile-record {
+    padding: 1rem;
+    border: 1px solid #dce3ef;
+    border-radius: 0.875rem;
+    background: #fff;
+  }
+  .acm-mobile-record-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .acm-mobile-record-head img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .acm-mobile-record-head > div {
+    display: grid;
+    min-width: 0;
+  }
+  .acm-mobile-record-head strong {
+    color: #172a4a;
+    overflow-wrap: anywhere;
+  }
+  .acm-mobile-record-head span,
+  .acm-mobile-record dt {
+    color: #60718d;
+    font-size: 0.78rem;
+  }
+  .acm-mobile-select,
+  .acm-mobile-in-room {
+    margin-left: auto;
+  }
+  .acm-mobile-in-room {
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    color: #087449 !important;
+    background: #e4f8ed;
+    white-space: nowrap;
+  }
+  .acm-mobile-record dl {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .acm-mobile-record dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .acm-mobile-record dd {
+    color: #172a4a;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  .acm-mobile-record-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e8edf5;
+  }
+  .acm-mobile-record-actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    color: #173f87;
+    font-weight: 600;
+  }
+  .acm-mobile-record-actions button.acm-btn {
+    min-height: 2.5rem;
+  }
+}
+
 .acm-dashboard-hero {
   position: relative;
   display: flex;

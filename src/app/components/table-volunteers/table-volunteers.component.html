@@ -1,4 +1,43 @@
-<table z-table zSize="comfortable" class="acm-data-table">
+<div class="acm-mobile-records md:hidden">
+  @for (volunteer of data; track volunteer) {
+    <article class="acm-mobile-record">
+      <div class="acm-mobile-record-head">
+        <img [src]="getfileUrl(volunteer.Member?.profileImage)" alt="" />
+        <div>
+          <strong>{{
+            volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName
+          }}</strong>
+          <span>{{ volunteer.Member?.registrationNumber }}</span>
+        </div>
+      </div>
+      <dl>
+        <div>
+          <dt>{{ 'table.columns.volunteerId' | translate }}</dt>
+          <dd>{{ volunteer.id }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'table.columns.joinDate' | translate }}</dt>
+          <dd>{{ formatDate(volunteer.joinDate) }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'table.columns.expirationDate' | translate }}</dt>
+          <dd>{{ formatDate(volunteer.expirationDate) }}</dd>
+        </div>
+      </dl>
+      <div class="acm-mobile-record-actions">
+        @if (auth.can('volunteers.certificate')) {
+          <a [routerLink]="['/volunteer', volunteer.id, 'certificate']">{{
+            'table.certificate' | translate
+          }}</a>
+        }
+        <a [routerLink]="['/profil', volunteer.Member?.registrationNumber]">{{
+          'table.viewProfil' | translate
+        }}</a>
+      </div>
+    </article>
+  }
+</div>
+<table z-table zSize="comfortable" class="acm-data-table hidden md:table">
   <thead z-table-header>
     <tr z-table-row>
       <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>

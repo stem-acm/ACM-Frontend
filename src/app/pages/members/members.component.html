@@ -133,7 +133,9 @@
   <div
     class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900"
   >
-    <label for="table-search" class="sr-only">{{ 'table.pagination.results' | translate }}</label>
+    <label for="table-search-users" class="sr-only">{{
+      'placeholders.searchMembers' | translate
+    }}</label>
     <div class="relative">
       <div
         class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
@@ -231,8 +233,38 @@
       }
     </div>
   </div>
+  <div class="acm-filter-summary" role="status">
+    @if (!isLoading && !loadError) {
+      <span>{{
+        (totalMembers === 1 ? 'ux.oneResult' : 'ux.results') | translate: { count: totalMembers }
+      }}</span>
+    }
+    @for (place of selectedStudyPlaces; track place) {
+      <button
+        z-button
+        zType="secondary"
+        type="button"
+        class="acm-btn acm-btn--secondary acm-btn--sm"
+        (click)="toggleStudyPlace(place)"
+        [attr.aria-label]="('ux.removeFilter' | translate) + ': ' + place"
+      >
+        {{ place }} <span aria-hidden="true">×</span>
+      </button>
+    }
+    @if (selectedStudyPlaces.length || searchWord) {
+      <button
+        z-button
+        zType="link"
+        type="button"
+        class="acm-btn acm-btn--link"
+        (click)="clearFilters()"
+      >
+        {{ 'ux.clearFilters' | translate }}
+      </button>
+    }
+  </div>
   <div class="relative max-h-[70vh] rounded-lg overflow-x-auto shadow-lg">
-    @if (isLoading || !memberFilter) {
+    @if (isLoading) {
       <app-table-loading
         [data]="{
           columns: [
@@ -245,6 +277,32 @@
           textLoading: 'loading.searchMembers',
         }"
       />
+    } @else if (loadError) {
+      <div class="acm-list-state" role="alert">
+        <p>{{ 'ux.loadError' | translate }}</p>
+        <button z-button type="button" class="acm-btn acm-btn--primary" (click)="getMemberList()">
+          {{ 'ux.retry' | translate }}
+        </button>
+      </div>
+    } @else if (totalMembers === 0) {
+      <div class="acm-list-state" role="status">
+        <p>
+          {{
+            (searchWord || selectedStudyPlaces.length ? 'ux.noMatches' : 'ux.noMembers') | translate
+          }}
+        </p>
+        @if (searchWord || selectedStudyPlaces.length) {
+          <button
+            z-button
+            zType="outline"
+            type="button"
+            class="acm-btn acm-btn--outline"
+            (click)="clearFilters()"
+          >
+            {{ 'ux.clearFilters' | translate }}
+          </button>
+        }
+      </div>
     } @else {
       <app-table-members
         [data]="membersChooseList"

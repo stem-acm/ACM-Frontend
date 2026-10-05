@@ -71,6 +71,18 @@
   color: #17469e;
   border-bottom: 3px solid #ed1e24;
 }
+.access-unsaved-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #ed1e24;
+}
+.access-unsaved-note {
+  margin-left: 0.75rem;
+  color: #b92334;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
 .access-role-state {
   display: flex;
   justify-content: space-between;
@@ -188,6 +200,11 @@
   font-size: 0.84rem;
   font-weight: 700;
   color: #294b7c;
+}
+.access-field-error {
+  color: #b92334;
+  font-size: 0.78rem;
+  font-weight: 500;
 }
 .access-notice,
 .access-error {

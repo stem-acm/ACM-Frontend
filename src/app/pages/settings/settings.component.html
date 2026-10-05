@@ -5,7 +5,7 @@
     <p>{{ 'access.description' | translate }}</p>
   </header>
 
-  @if (message) {
+  @if (message && message !== 'access.created') {
     <div class="access-notice" role="status">{{ message | translate }}</div>
   }
   @if (error) {
@@ -32,6 +32,10 @@
           (click)="selectedRole = role"
         >
           {{ 'access.roles.' + role | translate }}
+          @if (isRoleDirty(role)) {
+            <span class="access-unsaved-dot" aria-hidden="true"></span>
+            <span class="sr-only">{{ 'access.unsaved' | translate }}</span>
+          }
         </button>
       }
     </div>
@@ -79,6 +83,9 @@
       >
         {{ 'access.saveRole' | translate }}
       </button>
+      @if (isRoleDirty(policy.role)) {
+        <span class="access-unsaved-note" role="status">{{ 'access.unsaved' | translate }}</span>
+      }
     }
   </section>
 
@@ -141,13 +148,34 @@
         </tbody>
       </table>
     </div>
-    <form class="access-create" (ngSubmit)="createAccount()" #accountForm="ngForm">
+    <form class="access-create" (ngSubmit)="createAccount(accountForm)" #accountForm="ngForm">
       <h3>{{ 'access.addAccount' | translate }}</h3>
+      @if (message === 'access.created') {
+        <p class="access-notice" role="status">{{ message | translate }}</p>
+      }
+      @if (accountError) {
+        <p class="access-error" role="alert">{{ accountError }}</p>
+      }
       <div class="access-fields">
         <label
           >{{ 'forms.username' | translate
-          }}<input z-input name="username" required minlength="3" [(ngModel)]="newAccount.username"
-        /></label>
+          }}<input
+            z-input
+            name="username"
+            required
+            minlength="3"
+            pattern="[A-Za-z0-9]+"
+            [(ngModel)]="newAccount.username"
+            #accountUsername="ngModel"
+            [attr.aria-invalid]="accountUsername.invalid && accountUsername.touched ? true : null"
+          />
+          @if (accountUsername.touched && accountUsername.invalid) {
+            <small class="access-field-error">{{
+              (accountUsername.errors?.['required'] ? 'ux.requiredField' : 'ux.usernameFormat')
+                | translate
+            }}</small>
+          }
+        </label>
         <label
           >Email<input
             z-input
@@ -156,7 +184,16 @@
             required
             email
             [(ngModel)]="newAccount.email"
-        /></label>
+            #accountEmail="ngModel"
+            [attr.aria-invalid]="accountEmail.invalid && accountEmail.touched ? true : null"
+          />
+          @if (accountEmail.touched && accountEmail.invalid) {
+            <small class="access-field-error">{{
+              (accountEmail.errors?.['required'] ? 'ux.requiredField' : 'ux.invalidEmail')
+                | translate
+            }}</small>
+          }
+        </label>
         <label
           >{{ 'forms.password' | translate
           }}<input
@@ -166,7 +203,16 @@
             required
             minlength="8"
             [(ngModel)]="newAccount.password"
-        /></label>
+            #accountPassword="ngModel"
+            [attr.aria-invalid]="accountPassword.invalid && accountPassword.touched ? true : null"
+          />
+          @if (accountPassword.touched && accountPassword.invalid) {
+            <small class="access-field-error">{{
+              (accountPassword.errors?.['required'] ? 'ux.requiredField' : 'ux.passwordLength')
+                | translate
+            }}</small>
+          }
+        </label>
         <label
           >{{ 'forms.role' | translate
           }}<select name="role" [(ngModel)]="newAccount.role">

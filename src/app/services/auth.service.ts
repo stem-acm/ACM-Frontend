@@ -3,7 +3,15 @@ import { environment } from '@/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { HttpResult } from '@/app/types/httpResult';
 import { User } from '@/app/interfaces/user';
-import { BehaviorSubject, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  finalize,
+  Observable,
+  shareReplay,
+  tap,
+  throwError,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +20,7 @@ export class AuthService {
   private URL: string = environment.API_URL;
   private http = inject(HttpClient);
   private userSubject = new BehaviorSubject<User | null>(null);
+  private verification$?: Observable<HttpResult<User>>;
   readonly user$ = this.userSubject.asObservable();
 
   get user(): User | null {
@@ -40,7 +49,15 @@ export class AuthService {
   login(credentials: { username: string; password: string }) {
     return this.http
       .post<HttpResult<{ user: User; token: string }>>(`${this.URL}/auth/login`, credentials)
-      .pipe(tap(result => this.setUser(result.data.user)));
+      .pipe(
+        tap(result => {
+          if (!result.success || !result.data?.token || !result.data.user) {
+            throw new Error(result.message || 'Unauthorized');
+          }
+          this.saveToken(result.data.token);
+          this.setUser(result.data.user);
+        }),
+      );
   }
 
   logout(): void {
@@ -57,18 +74,34 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return !!this.getToken() && !!this.user;
   }
 
-  verifyToken() {
-    const token: string | null = this.getToken();
+  verifyToken(): Observable<HttpResult<User>> {
+    const token = this.getToken();
     if (!token) {
+      this.setUser(null);
       return throwError(() => new Error('Unauthorized'));
     }
+    if (this.verification$) return this.verification$;
 
-    return this.http
-      .get<HttpResult<User>>(`${this.URL}/auth/token`)
-      .pipe(tap(result => this.setUser(result.data)));
+    this.verification$ = this.http.get<HttpResult<User>>(`${this.URL}/auth/token`).pipe(
+      tap(result => {
+        // Ignore a response belonging to a session that has since ended or changed.
+        if (this.getToken() !== token) throw new Error('Session changed');
+        if (!result.success || !result.data) throw new Error(result.message || 'Unauthorized');
+        this.setUser(result.data);
+      }),
+      catchError(error => {
+        if (this.getToken() === token) this.logout();
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        this.verification$ = undefined;
+      }),
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
+    return this.verification$;
   }
 
   updateProfile(changes: {

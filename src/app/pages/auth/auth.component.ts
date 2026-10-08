@@ -2,7 +2,6 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '@/app/services/auth.service';
 import { Router } from '@angular/router';
-import { AppComponent } from '@/app/app.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from '@/environments/environment';
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -25,7 +24,6 @@ import { ZardCardComponent } from '@/shared/components/card';
 export class AuthComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
-  private app = inject(AppComponent);
   public showExperimentalFeatures = environment.SHOW_EXPERIMENTAL_FEATURES;
 
   public username!: string;
@@ -53,17 +51,14 @@ export class AuthComponent {
 
   onLogin() {
     this.authService.login({ username: this.username, password: this.password }).subscribe(
-      res => {
-        this.authService.saveToken(res.data.token);
+      () => {
         this.loading = false;
-        this.app.userConnected = true;
-        this.app.user = res.data.user;
         this.router.navigateByUrl(this.authService.firstAllowedRoute());
       },
       err => {
         this.error = {
           enabled: true,
-          message: err.error.message,
+          message: err.error?.message || err.message,
         };
         this.loading = false;
       },

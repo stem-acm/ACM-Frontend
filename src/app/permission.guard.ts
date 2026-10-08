@@ -14,3 +14,15 @@ export const permissionGuard: CanActivateFn = async route => {
     return router.parseUrl('/auth');
   }
 };
+
+export const guestGuard: CanActivateFn = async () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  try {
+    await firstValueFrom(auth.verifyToken());
+    const destination = auth.firstAllowedRoute();
+    return destination === '/auth' ? true : router.parseUrl(destination);
+  } catch {
+    return true;
+  }
+};

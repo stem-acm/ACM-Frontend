@@ -5,34 +5,40 @@
       <h1>{{ 'pages.overview' | translate }}</h1>
       <p>{{ 'pages.brandTagline' | translate }}</p>
     </div>
-    <div class="acm-hero-mark" aria-hidden="true">★</div>
-  </section>
-  @if (!statistics) {
-    <app-card-statistic-skeleton />
-  } @else {
     <div class="acm-stat-grid">
-      @if (auth.can('members.view')) {
-        <app-card-statistic
-          [data]="{
-            title: 'nav.members' | translate,
-            value: statistics.members,
-            icon: 'people',
-            routerLink: '/members',
-          }"
-        />
-      }
-      @if (auth.can('activities.view')) {
-        <app-card-statistic
-          [data]="{
-            title: 'nav.activity' | translate,
-            value: statistics.activities,
-            icon: 'event',
-            routerLink: '/activity',
-          }"
-        />
+      @if (!statistics) {
+        @if (auth.can('members.view')) {
+          <app-card-statistic-skeleton />
+        }
+        @if (auth.can('activities.view')) {
+          <app-card-statistic-skeleton />
+        }
+      } @else {
+        @if (auth.can('members.view')) {
+          <app-card-statistic
+            [data]="{
+              title: 'nav.members' | translate,
+              value: statistics.members,
+              icon: 'people',
+              routerLink: '/members',
+            }"
+          />
+        }
+        @if (auth.can('activities.view')) {
+          <app-card-statistic
+            [data]="{
+              title: 'nav.activity' | translate,
+              value: statistics.activities,
+              icon: 'event',
+              routerLink: '/activity',
+            }"
+          />
+        }
       }
     </div>
-  }
+
+    <div class="acm-hero-mark" aria-hidden="true">★</div>
+  </section>
 
   @if (auth.can('checkins.view')) {
     <div class="acm-section-heading">

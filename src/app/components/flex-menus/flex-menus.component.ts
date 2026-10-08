@@ -45,11 +45,5 @@ export class FlexMenusComponent {
       exact: false,
       permission: 'checkins.view',
     },
-    {
-      route: '/checkin',
-      labelKey: 'nav.checkin',
-      exact: false,
-      permission: 'checkins.create',
-    },
   ];
 }

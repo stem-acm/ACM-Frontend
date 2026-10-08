@@ -4,7 +4,7 @@
   class="acm-stat-card flex items-center p-5 h-fit min-w-64 shadow-sm rounded-xl cursor-pointer transition"
 >
   <div
-    class="inline-flex shrink-0 items-center justify-center h-12 w-12 text-primary bg-secondary rounded-xl mr-5"
+    class="acm-stat-icon inline-flex shrink-0 items-center justify-center h-12 w-12 text-primary bg-secondary rounded-xl mr-5"
   >
     @switch (data.icon) {
       @case ('event') {
@@ -92,7 +92,9 @@
     }
   </div>
   <div>
-    <span class="block text-3xl font-bold text-primary">{{ data.value }}</span>
-    <span class="block text-sm text-muted-foreground">{{ data.title | translate }}</span>
+    <span class="acm-stat-value block text-3xl font-bold text-primary">{{ data.value }}</span>
+    <span class="acm-stat-label block text-sm text-muted-foreground">{{
+      data.title | translate
+    }}</span>
   </div>
 </a>

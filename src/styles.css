@@ -835,6 +835,7 @@ app-add-volunteer form .acm-entry-modal__title::before {
 }
 .acm-dashboard-hero::after {
   content: '';
+  pointer-events: none;
   position: absolute;
   right: -5rem;
   top: -10rem;
@@ -890,6 +891,101 @@ app-add-volunteer form .acm-entry-modal__title::before {
 .acm-stat-grid .acm-stat-card {
   display: block;
   width: 100%;
+}
+.acm-dashboard-hero > div:first-child {
+  flex: 0 0 auto;
+}
+.acm-dashboard-hero .acm-stat-grid {
+  position: relative;
+  z-index: 1;
+  flex: 0 1 400px;
+  min-width: 0;
+  margin: 0 1.5rem 0 auto;
+}
+.acm-dashboard-hero .acm-stat-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+  height: 100%;
+  min-height: 112px;
+  padding: 1.25rem 1rem;
+  border: 1px solid #ffffff30;
+  border-radius: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, #ffffff16, #ffffff09);
+  box-shadow: inset 0 1px 0 #ffffff0d;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+.acm-dashboard-hero .acm-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: #ffffff60;
+  background: linear-gradient(135deg, #ffffff24, #ffffff12);
+}
+.acm-dashboard-hero .acm-stat-card:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+.acm-dashboard-hero .acm-stat-icon {
+  margin: 0;
+  color: #dbeafe;
+  background: #ffffff12;
+  border: 1px solid #ffffff1c;
+}
+.acm-dashboard-hero .acm-stat-value {
+  color: #fff;
+  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.acm-dashboard-hero .acm-stat-label {
+  margin-top: 0.4rem;
+  color: #d3e2f7;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.acm-dashboard-hero app-card-statistic-skeleton > div {
+  width: 100%;
+  min-width: 0;
+  min-height: 112px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid #ffffff30;
+  border-radius: 1rem;
+  background: #ffffff0d;
+  box-shadow: none;
+}
+.acm-dashboard-hero app-card-statistic-skeleton .animate-pulse {
+  background: #ffffff26;
+}
+@media (prefers-reduced-motion: reduce) {
+  .acm-dashboard-hero .acm-stat-card {
+    transition: none;
+  }
+  .acm-dashboard-hero .acm-stat-card:hover {
+    transform: none;
+  }
+}
+.acm-dashboard-hero .acm-hero-mark {
+  flex-shrink: 0;
+}
+@media (max-width: 1100px) {
+  .acm-dashboard-hero {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .acm-dashboard-hero .acm-stat-grid {
+    order: 1;
+    flex-basis: 100%;
+    margin: 0;
+  }
+  .acm-dashboard-hero .acm-stat-card {
+    width: 100%;
+  }
 }
 .acm-section-heading {
   display: flex;
@@ -1196,26 +1292,15 @@ input[type='radio'] {
   --tw-ring-color: #315fa54d;
 }
 
-@media (max-width: 768px) {
-  .acm-dashboard-hero {
-    min-height: 175px;
-    padding: 2rem;
-  }
-  .acm-hero-mark {
-    width: 58px;
-    height: 58px;
-    font-size: 2rem;
-  }
-  .acm-stat-grid {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 1024px) {
   .acm-navbar-inner {
     width: min(100% - 2rem, 1480px);
     min-height: 72px;
     gap: 0.5rem;
   }
   .acm-brand {
-    width: 175px;
+    flex: 0 1 175px;
+    min-width: 0;
   }
   button.acm-btn.acm-mobile-toggle {
     display: inline-flex;
@@ -1235,15 +1320,52 @@ input[type='radio'] {
     border-bottom: 1px solid #dce3ef;
     background: #fff;
     box-shadow: 0 16px 24px #142e5a16;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
   .acm-menu.is-open {
     display: flex;
   }
   .acm-menu a {
     justify-content: flex-start;
+    min-width: 0;
+    height: auto;
+    min-height: 44px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .acm-navbar-actions {
+    flex-shrink: 0;
+    gap: 0.4rem;
+  }
+  .acm-user-menu {
+    min-width: min(230px, 100%);
+    max-width: 100%;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
   }
   .acm-language {
     max-width: 90px;
+  }
+}
+
+@media (max-width: 768px) {
+  .acm-dashboard-hero {
+    min-height: 175px;
+    padding: 2rem;
+    position: relative;
+  }
+  .acm-hero-mark {
+    width: 58px;
+    height: 58px;
+    font-size: 2rem;
+    position: absolute;
+    right: 2rem;
+    top: 4rem;
+  }
+  .acm-stat-grid {
+    grid-template-columns: 1fr;
   }
   .acm-page {
     width: min(100% - 2rem, 1480px);

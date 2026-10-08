@@ -153,8 +153,8 @@
       @if (message === 'access.created') {
         <p class="access-notice" role="status">{{ message | translate }}</p>
       }
-      @if (accountError) {
-        <p class="access-error" role="alert">{{ accountError }}</p>
+      @if (accountError) { ici
+        <p class="access-error" role="alert">{{ accountError | translate }}</p>
       }
       <div class="access-fields">
         <label

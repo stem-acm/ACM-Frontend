@@ -245,7 +245,13 @@
   },
   "errors": {
     "fillAll": "Mangataka anao mameno ny saha rehetra",
-    "memberNotFound": "Tsy hita ny mpikambana {{registrationNumber}}."
+    "memberNotFound": "Tsy hita ny mpikambana {{registrationNumber}}.",
+    "UsernameMust3Characters": "Tsy maintsy misy litera 3 farafahakeliny ny anarana.",
+    "UsernameMustAlphanumeric": "Tsy maintsy ahitana litera sy isa ny anarana.",
+    "InvalidEmailFormat": "Diso ny endriky ny adiresy mailaka.",
+    "passwordMust8Characters": "8 farafahakeliny ny tenimiafina.",
+    "passwordMustContainLetter": "Ny tenimiafina dia tsy maintsy misy litera iray farafahakeliny.",
+    "passwordMustContainNumber": "Ny tenimiafina dia tsy maintsy misy isa iray farafahakeliny."
   },
   "common": {
     "in": "ao"

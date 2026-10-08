@@ -2,7 +2,7 @@ import { Component, inject, Input, OnInit, OnDestroy } from '@angular/core';
 import { AcmLogoComponent } from '@/app/components/acm-logo/acm-logo.component';
 import { FlexMenusComponent } from '@/app/components/flex-menus/flex-menus.component';
 import { AuthService } from '@/app/services/auth.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { User } from '@/app/interfaces/user';
 import { environment } from '@/environments/environment';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -37,6 +37,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ];
 
   auth = inject(AuthService);
+  private router = inject(Router);
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
   private langChangeSubscription?: Subscription;
@@ -57,7 +58,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   logout() {
     this.auth.logout();
-    window.location.reload();
+    this.router.navigateByUrl('/auth');
   }
 
   toggleUserMenu() {

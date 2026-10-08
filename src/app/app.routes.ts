@@ -9,7 +9,7 @@ import { CheckinComponent } from './pages/checkin/checkin.component';
 import { VolunteerComponent } from './pages/volunteer/volunteer.component';
 import { CheckinHistoryComponent } from './pages/checkin-history/checkin-history.component';
 import { VolunteerCertificateViewerComponent } from './components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
-import { permissionGuard } from './permission.guard';
+import { guestGuard, permissionGuard } from './permission.guard';
 import { SettingsComponent, canDeactivateSettings } from './pages/settings/settings.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 
@@ -17,6 +17,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthComponent,
+    canActivate: [guestGuard],
   },
   {
     path: '',

@@ -245,7 +245,13 @@
   },
   "errors": {
     "fillAll": "Veuillez remplir tous les champs",
-    "memberNotFound": "Le membre {{registrationNumber}} est introuvable."
+    "memberNotFound": "Le membre {{registrationNumber}} est introuvable.",
+    "UsernameMust3Characters": "Le nom d'utilisateur doit comporter au moins 3 caractères.",
+    "UsernameMustAlphanumeric": "Le nom d'utilisateur doit être alphanumérique.",
+    "InvalidEmailFormat": "Format d'adresse e-mail invalide.",
+    "passwordMust8Characters": "Le mot de passe doit comporter au moins 8 caractères.",
+    "passwordMustContainLetter": "Le mot de passe doit contenir au moins une lettre.",
+    "passwordMustContainNumber": "Le mot de passe doit contenir au moins un chiffre."
   },
   "common": {
     "in": "à"

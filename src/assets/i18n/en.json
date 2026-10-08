@@ -245,7 +245,14 @@
   },
   "errors": {
     "fillAll": "Please, fill all",
-    "memberNotFound": "Member {{registrationNumber}} is not found."
+    "memberNotFound": "Member {{registrationNumber}} is not found.",
+    "UsernameMust3Characters": "Username must be at least 3 characters",
+    "UsernameMustAlphanumeric": "Username must be alphanumeric",
+    "InvalidEmailFormat": "Invalid email format",
+    "passwordMust8Characters": "Password must be at least 8 characters.",
+    "passwordMustContainLetter": "Password must contain at least one letter.",
+    "passwordMustContainNumber": "Password must contain at least one number"
+
   },
   "common": {
     "in": "in"

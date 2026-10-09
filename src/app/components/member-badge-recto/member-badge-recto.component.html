@@ -24,7 +24,7 @@
 
     @if (checkData.stamp) {
       <img
-        class="absolute w-48 top-1/5 opacity-50 left-1/6"
+        class="absolute rotate-6 w-48 top-4 opacity-60 right-[1%]"
         [src]="getfileUrl('tapon.png')"
         alt="tapon image"
       />
@@ -63,9 +63,13 @@
   <!-- Body -->
   <div class="text-xs font-semibold">
     <div class="flex">
-      <div>Full name: Mr. / Mrs. / Miss.</div>
+      <div>Full name: {{ member.title }}</div>
       <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-        <app-text-cursive text="{{ member.firstName }} {{ member.lastName }}" />
+        <app-text-cursive
+          text="{{ member.firstName }} {{
+            member.lastName.charAt(0).toUpperCase() + member.lastName.slice(1).toLowerCase()
+          }}"
+        />
       </div>
     </div>
 
@@ -76,7 +80,9 @@
       </div>
       <div>in</div>
       <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-        <app-text-cursive [text]="member.birthPlace" />
+        <app-text-cursive
+          [text]="member.birthPlace.charAt(0).toUpperCase() + member.birthPlace.slice(1)"
+        />
       </div>
     </div>
 

@@ -1,0 +1,10 @@
+.acm-gender-field:disabled {
+  background-color: #e5e7eb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+:host-context(.dark) .acm-gender-field:disabled {
+  background-color: #374151;
+  color: #9ca3af;
+}

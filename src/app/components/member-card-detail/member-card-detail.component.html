@@ -20,9 +20,8 @@
           <dl class="divide-y divide-gray-100">
             <app-list-value
               [label]="'forms.fullName' | translate"
+              [boldPrefix]="member.title || ''"
               [value]="
-                ('forms.titlePrefix' | translate) +
-                ' ' +
                 member.firstName +
                 ' ' +
                 member.lastName.charAt(0).toUpperCase() +
@@ -36,7 +35,8 @@
                 ', ' +
                 ('common.in' | translate) +
                 ' ' +
-                member.birthPlace
+                member.birthPlace.charAt(0).toUpperCase() +
+                member.birthPlace.slice(1)
               "
             />
             <app-list-value

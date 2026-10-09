@@ -244,13 +244,14 @@ export class SettingsComponent implements OnInit {
     this.http
       .post<HttpResult<Account>>(`${environment.API_URL}/auth/register`, this.newAccount)
       .subscribe({
-        next: () => {
+        next: (result: HttpResult<Account>) => {
           this.creating = false;
           this.message = 'access.created';
           this.error = '';
           this.newAccount = { username: '', email: '', password: '', role: 'volunteer' };
           form.resetForm(this.newAccount);
-          this.loadAccounts();
+          // this.loadAccounts();
+          this.accounts.push(result.data);
         },
         error: error => {
           this.creating = false;

@@ -53,6 +53,7 @@ export class MembersComponent implements OnInit {
 
   public membersClicked!: Member[];
   public membersChooseList: { selected: boolean; member: Member }[] = [];
+  private selectedMembers = new Map<number, Member>();
   // public membersChooseListFilter: { selected: boolean; member: Member }[] = []; // Not needed as we use membersChooseList for the current page
   public showCard = false;
 
@@ -129,9 +130,15 @@ export class MembersComponent implements OnInit {
             this.memberFilter = this.member;
             this.totalMembers = result.pagination?.total ?? result.data.length;
 
-            // Initialize selection list for current page
+            // Restore selections and refresh stored member details for this page.
+            this.member.forEach(m => {
+              if (m.registrationNumber != null && this.selectedMembers.has(m.registrationNumber)) {
+                this.selectedMembers.set(m.registrationNumber, m);
+              }
+            });
             this.membersChooseList = this.member.map(m => ({
-              selected: false,
+              selected:
+                m.registrationNumber != null && this.selectedMembers.has(m.registrationNumber),
               member: m,
             }));
 
@@ -164,7 +171,8 @@ export class MembersComponent implements OnInit {
     });
   }
 
-  onMemberDeleted() {
+  onMemberDeleted(registrationNumber?: number) {
+    if (registrationNumber != null) this.selectedMembers.delete(registrationNumber);
     this.memberFilter = []; // Immediate visual feedback
     this.getMemberList();
     this.getVolunteersList();
@@ -215,12 +223,20 @@ export class MembersComponent implements OnInit {
 
   // Selection Logic
   selectAll(select: boolean) {
+    if (!select) this.selectedMembers.clear();
     this.membersChooseList.forEach(e => {
-      e.selected = select;
+      this.onMemberSelectionChange({ member: e.member, selected: select });
     });
   }
 
   onMemberSelectionChange(event: { member: Member; selected: boolean }) {
+    const registrationNumber = event.member.registrationNumber;
+    if (registrationNumber == null) return;
+    if (event.selected) {
+      this.selectedMembers.set(registrationNumber, event.member);
+    } else {
+      this.selectedMembers.delete(registrationNumber);
+    }
     const item = this.membersChooseList.find(
       e => e.member.registrationNumber === event.member.registrationNumber,
     );
@@ -230,12 +246,13 @@ export class MembersComponent implements OnInit {
   }
 
   countMembersChooseList(select: boolean): number {
-    return this.membersChooseList.filter(e => e.selected === select).length;
+    return select
+      ? this.selectedMembers.size
+      : this.membersChooseList.filter(e => !e.selected).length;
   }
 
   printAllSelected() {
-    const memberChoosed = this.membersChooseList.filter(e => e.selected === true);
-    this.membersClicked = memberChoosed.map(e => e.member);
+    this.membersClicked = Array.from(this.selectedMembers.values());
     this.showCard = true;
   }
 

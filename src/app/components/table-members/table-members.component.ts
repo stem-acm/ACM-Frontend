@@ -35,7 +35,7 @@ export class TableMembersComponent {
   @Input() data!: { selected: boolean; member: Member }[];
   @Input() volunteersList!: Volunteer[];
 
-  @Output() memberDeleted = new EventEmitter<void>();
+  @Output() memberDeleted = new EventEmitter<number>();
 
   private translateService = inject(TranslateService);
   private memberService = inject(MemberService);
@@ -132,7 +132,7 @@ export class TableMembersComponent {
         next: (result: HttpResult<null>) => {
           if (result.success) {
             this.toastService.showToast('Member deleted successfully');
-            this.memberDeleted.emit();
+            this.memberDeleted.emit(this.memberToDeleteId!);
           } else {
             this.toastService.showToast(result.message || 'Failed to delete member');
           }

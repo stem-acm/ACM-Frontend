@@ -307,7 +307,7 @@
       <app-table-members
         [data]="membersChooseList"
         [volunteersList]="volunteers"
-        (memberDeleted)="onMemberDeleted()"
+        (memberDeleted)="onMemberDeleted($event)"
         (memberSelectionChange)="onMemberSelectionChange($event)"
       />
 

@@ -63,7 +63,7 @@
   <!-- Body -->
   <div class="text-xs font-semibold">
     <div class="flex">
-      <div>Full name: Mr. / Mrs. / Miss.</div>
+      <div>Full name: {{ member.title }}</div>
       <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
         <app-text-cursive text="{{ member.firstName }} {{ member.lastName }}" />
       </div>

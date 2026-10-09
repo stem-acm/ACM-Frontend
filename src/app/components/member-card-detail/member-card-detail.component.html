@@ -21,7 +21,7 @@
             <app-list-value
               [label]="'forms.fullName' | translate"
               [value]="
-                ('forms.titlePrefix' | translate) +
+                (member.title || '') +
                 ' ' +
                 member.firstName +
                 ' ' +

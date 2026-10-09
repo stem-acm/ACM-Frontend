@@ -10,4 +10,5 @@ import { Component, Input } from '@angular/core';
 export class ListValueComponent {
   @Input() label!: string;
   @Input() value!: string;
+  @Input() boldPrefix = '';
 }

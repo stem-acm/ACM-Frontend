@@ -1,4 +1,9 @@
 <div class="px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
   <dt class="text-sm/6 font-medium text-gray-900 text-right">{{ label }} :</dt>
-  <dd class="text-sm/6 text-gray-700 sm:col-span-2">{{ value }}</dd>
+  <dd class="text-sm/6 text-gray-700 sm:col-span-2">
+    @if (boldPrefix) {
+      <strong class="font-bold">{{ boldPrefix }}</strong>{{ ' ' }}
+    }
+    {{ value }}
+  </dd>
 </div>

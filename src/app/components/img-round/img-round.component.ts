@@ -15,4 +15,12 @@ export class ImgRoundComponent {
   @Input() isLoadingBadge = false;
   @Input() width = '48'; // Default to w-48 (192px)
   @Input() height = '48'; // Default to h-48 (192px)
+  @Input() alt!: string;
+  @Input() imgUrlError!: string;
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.onerror = null;
+    img.src = this.imgUrlError;
+  }
 }

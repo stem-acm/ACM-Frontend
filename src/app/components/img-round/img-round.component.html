@@ -8,7 +8,7 @@
   "
 >
   <div class="rounded-full overflow-hidden h-full w-full">
-    <img class="w-full h-full object-cover object-center" [src]="imgUrl" alt="Profile image" />
+    <img class="w-full h-full object-cover object-center" [src]="imgUrl" (error)="onImageError($event)" [alt]="alt" />
   </div>
   @if (isVolunteer) {
     <app-badge [isLoading]="isLoadingBadge" />

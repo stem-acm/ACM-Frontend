@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './member-card-viewer.component.css',
 })
 export class MemberCardViewerComponent {
-  @Input() member!: Member[];
+  @Input() member: Member[] = [];
   @Output() closed = new EventEmitter<boolean>();
   public checkData: { stamp: boolean; signature: boolean } = { stamp: false, signature: false };
 
@@ -26,6 +26,8 @@ export class MemberCardViewerComponent {
   }
 
   openPDF() {
+    if (this.member.length === 0) return;
+
     const content = document.getElementById('badgeSectionToPrint')?.cloneNode(true);
     if (!content) return;
 

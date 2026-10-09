@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { Member } from '@/app/interfaces/member';
+
 import { MemberCardViewerComponent } from './member-card-viewer.component';
 
 describe('MemberCardViewerComponent', () => {
@@ -18,6 +20,14 @@ describe('MemberCardViewerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('disables printing and creates no print frame when there are no cards', () => {
+    const button = fixture.nativeElement.querySelector('button:last-child');
+    expect(button.disabled).toBeTrue();
+    const appendChild = spyOn(document.body, 'appendChild').and.callThrough();
+    component.print();
+    expect(appendChild).not.toHaveBeenCalled();
   });
 
   it('keeps the print frame until Chrome finishes printing', async () => {
@@ -39,6 +49,7 @@ describe('MemberCardViewerComponent', () => {
     });
 
     try {
+      component.member = [{} as Member];
       component.print();
       await Promise.resolve();
 

@@ -69,6 +69,25 @@ describe('MembersComponent', () => {
     return members;
   }
 
+  it('disables printing and keeps the viewer closed without selected members', () => {
+    spyOn(component.auth, 'can').and.returnValue(true);
+    mockPages();
+    fixture.detectChanges();
+    const button = Array.from<HTMLButtonElement>(
+      fixture.nativeElement.querySelectorAll('button'),
+    ).find(button => button.textContent?.includes('cards.printCards'))!;
+    expect(button.disabled).toBeTrue();
+    button.click();
+    component.printAllSelected();
+    expect(component.showCard).toBeFalse();
+
+    component.selectAll(true);
+    fixture.detectChanges();
+    expect(button.disabled).toBeFalse();
+    button.click();
+    expect(component.showCard).toBeTrue();
+  });
+
   it('keeps selections across three pages and prints every selected member once', () => {
     const members = mockPages();
     component.onMemberSelectionChange({ member: members[0], selected: true });

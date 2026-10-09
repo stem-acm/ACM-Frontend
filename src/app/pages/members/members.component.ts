@@ -252,6 +252,8 @@ export class MembersComponent implements OnInit {
   }
 
   printAllSelected() {
+    if (this.countMembersChooseList(true) === 0) return;
+
     this.membersClicked = Array.from(this.selectedMembers.values());
     this.showCard = true;
   }

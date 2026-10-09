@@ -105,6 +105,8 @@ export class CardsComponent implements OnInit {
   }
 
   printAllSelected() {
+    if (this.countMembersChooseList(true) === 0) return;
+
     const memberChoosed = this.membersChooseList.filter(e => e.selected === true);
     this.membersClicked = memberChoosed.map(e => e.member);
     this.showCard = true;

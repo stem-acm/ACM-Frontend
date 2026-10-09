@@ -5,12 +5,8 @@
     <h1 class="text-2xl text-center m-2">Membership Card</h1>
     <div class="max-h-[70dvh] overflow-auto">
       <div id="badgeSectionToPrint" class="border border-gray-200 rounded p-px">
-        @for (page of memberPages; track $index) {
-          <div class="badge-print-page">
-            @for (item of page; track item.registrationNumber) {
-              <app-member-badge [member]="item" [checkData]="checkData" />
-            }
-          </div>
+        @for (item of member; track item) {
+          <app-member-badge [member]="item" [checkData]="checkData" />
         }
       </div>
     </div>

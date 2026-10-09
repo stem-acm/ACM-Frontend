@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MemberCardViewerComponent } from './member-card-viewer.component';
-import { Member } from '@/app/interfaces/member';
 
 describe('MemberCardViewerComponent', () => {
   let component: MemberCardViewerComponent;
@@ -19,14 +18,6 @@ describe('MemberCardViewerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('groups selected member cards into pages of four without losing any cards', () => {
-    component.member = Array.from({ length: 9 }, (_, i) => ({
-      registrationNumber: i + 1,
-    })) as Member[];
-    expect(component.memberPages.map(page => page.length)).toEqual([4, 4, 1]);
-    expect(component.memberPages.flat()).toEqual(component.member);
   });
 
   it('keeps the print frame until Chrome finishes printing', async () => {

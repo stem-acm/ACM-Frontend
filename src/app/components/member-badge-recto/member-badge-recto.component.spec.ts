@@ -18,7 +18,7 @@ describe('MemberBadgeRectoComponent', () => {
       firstName: 'Test',
       lastName: 'Member',
       birthPlace: 'Mahajanga',
-      address: 'Short address',
+      address: 'Short',
     } as Member;
     component.checkData = { stamp: false, signature: false };
     fixture.detectChanges();
@@ -28,16 +28,32 @@ describe('MemberBadgeRectoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('keeps a fixed height and fits the complete long address', async () => {
-    const card = fixture.nativeElement.querySelector('.badge-recto') as HTMLElement;
-    expect(card.getBoundingClientRect().height).toBe(340);
-    component.member.address = 'A long address in Mahajanga with additional directions '.repeat(12);
-    fixture.detectChanges();
+  it('shrinks long addresses to one line and restores the normal size for short addresses', async () => {
+    const text = fixture.nativeElement.querySelector('.badge-address-text') as HTMLElement;
+    const container = text.parentElement!;
+    container.style.width = '160px';
+    container.style.flex = 'none';
     await document.fonts.ready;
     await new Promise(resolve => requestAnimationFrame(resolve));
-    const address = fixture.nativeElement.querySelector('.badge-address-text') as HTMLElement;
-    expect(address.textContent?.trim()).toBe(component.member.address.trim());
-    expect(address.scrollHeight).toBeLessThanOrEqual(address.parentElement!.clientHeight);
-    expect(card.getBoundingClientRect().height).toBe(340);
+    const normalSize = parseFloat(getComputedStyle(text).fontSize);
+    const originalHeight = container.getBoundingClientRect().height;
+
+    component.member = {
+      ...component.member,
+      address: 'A very long physical address in Mahajanga '.repeat(8),
+    };
+    component.ngOnChanges();
+    fixture.detectChanges();
+    await Promise.resolve();
+    expect(parseFloat(getComputedStyle(text).fontSize)).toBeLessThan(normalSize);
+    expect(text.getBoundingClientRect().width).toBeLessThanOrEqual(container.clientWidth - 8);
+    expect(container.getBoundingClientRect().height).toBe(originalHeight);
+    expect(text.textContent?.trim()).toBe(component.member.address.trim());
+
+    component.member = { ...component.member, address: 'Short' };
+    component.ngOnChanges();
+    fixture.detectChanges();
+    await Promise.resolve();
+    expect(parseFloat(getComputedStyle(text).fontSize)).toBe(normalSize);
   });
 });

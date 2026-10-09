@@ -22,32 +22,36 @@ import { environment } from '@/environments/environment';
 export class MemberBadgeRectoComponent implements AfterViewInit, OnChanges, OnDestroy {
   @ViewChild('addressText') addressText!: ElementRef<HTMLElement>;
   private addressObserver?: ResizeObserver;
+  private destroyed = false;
+
+  ngAfterViewInit() {
+    this.addressObserver = new ResizeObserver(() => this.fitAddress());
+    this.addressObserver.observe(this.addressText.nativeElement.parentElement!);
+    document.fonts.ready.then(() => this.fitAddress());
+    this.fitAddress();
+  }
 
   ngOnChanges() {
     if (this.addressText) queueMicrotask(() => this.fitAddress());
   }
 
-  ngAfterViewInit() {
-    const container = this.addressText.nativeElement.parentElement!;
-    this.addressObserver = new ResizeObserver(() => this.fitAddress());
-    this.addressObserver.observe(container);
-    document.fonts.ready.then(() => this.fitAddress());
-    this.fitAddress();
-  }
-
   ngOnDestroy() {
+    this.destroyed = true;
     this.addressObserver?.disconnect();
   }
 
   private fitAddress() {
+    if (this.destroyed) return;
     const text = this.addressText.nativeElement;
     const container = text.parentElement!;
-    if (!container.clientWidth) return;
-    let size = 13;
-    text.style.fontSize = `${size}px`;
-    while (text.scrollHeight > container.clientHeight && size > 1) {
-      size -= 0.5;
-      text.style.fontSize = `${size}px`;
+    const availableWidth =
+      container.clientWidth - parseFloat(getComputedStyle(container).paddingLeft);
+    if (availableWidth <= 0) return;
+    text.style.fontSize = 'small';
+    const width = text.getBoundingClientRect().width;
+    if (width > availableWidth) {
+      const normalSize = parseFloat(getComputedStyle(text).fontSize);
+      text.style.fontSize = `${normalSize * (availableWidth / width) * 0.98}px`;
     }
   }
 

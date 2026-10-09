@@ -1,0 +1,11 @@
+.badge-pair {
+  height: 340px;
+}
+
+app-member-badge-recto,
+app-member-badge-verso {
+  display: block;
+  width: 448px;
+  height: 340px;
+  flex-shrink: 0;
+}

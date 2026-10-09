@@ -16,6 +16,14 @@ export class MemberCardViewerComponent {
   @Output() closed = new EventEmitter<boolean>();
   public checkData: { stamp: boolean; signature: boolean } = { stamp: false, signature: false };
 
+  get memberPages(): Member[][] {
+    const pages: Member[][] = [];
+    for (let i = 0; i < (this.member?.length ?? 0); i += 4) {
+      pages.push(this.member.slice(i, i + 4));
+    }
+    return pages;
+  }
+
   close() {
     this.closed.emit(true);
   }
@@ -63,6 +71,25 @@ export class MemberCardViewerComponent {
         <head>
           <title>Print</title>
           ${styles}
+          <style>
+            @page { size: A4 portrait; margin: 10mm; }
+            html, body { margin: 0; padding: 0; }
+            #badgeSectionToPrint { border: 0; padding: 0; }
+            .badge-print-page {
+              width: 190mm;
+              height: 276mm;
+              display: grid;
+              grid-template-rows: repeat(4, 66mm);
+              gap: 3mm;
+              justify-items: center;
+              break-after: page;
+              break-inside: avoid;
+            }
+            .badge-print-page:last-child { break-after: auto; }
+            .badge-print-page > app-member-badge { display: block; zoom: 0.72; }
+            .badge-pair { margin: 0; break-inside: avoid; }
+            .badge-pair > * > div { box-shadow: none; }
+          </style>
         </head>
         <body>
           ${contentHtml}

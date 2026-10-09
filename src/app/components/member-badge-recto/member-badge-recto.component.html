@@ -1,5 +1,5 @@
 <div
-  class="w-md mx-auto border rounded-sm shadow-xl bg-white overflow-hidden p-1 text-nowrap"
+  class="badge-recto w-md mx-auto border rounded-sm shadow-xl bg-white overflow-hidden p-1 text-nowrap"
   style="font-family: 'Times New Roman', Times, serif"
 >
   <!-- Header -->
@@ -89,7 +89,7 @@
     <div class="flex">
       <div class="shrink-0">Physical Adress (in Mahajanga) :</div>
       <div class="badge-address flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-        <app-text-cursive [text]="member.address" />
+        <span #addressText class="badge-address-text text-primary">{{ member.address }}</span>
       </div>
     </div>
 

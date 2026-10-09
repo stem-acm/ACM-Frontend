@@ -2,7 +2,7 @@
   @for (item of data; track item.member.registrationNumber) {
     <article class="acm-mobile-record">
       <div class="acm-mobile-record-head">
-        <img [src]="getfileUrl(item.member.profileImage)" alt="" />
+        <img [src]="getfileUrl(item.member.profileImage)" (error)="onImageError($event)" [alt]="item.member.lastName" />
         <div>
           <strong>{{
             item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName
@@ -86,7 +86,8 @@
           <img
             class="w-10 h-10 rounded-full"
             [src]="getfileUrl(item.member.profileImage)"
-            alt="Profile image"
+            (error)="onImageError($event)"
+            [alt]="item.member.lastName"
           />
           <div class="ps-3">
             <div class="text-base font-semibold">

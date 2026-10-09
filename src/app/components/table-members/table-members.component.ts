@@ -75,6 +75,12 @@ export class TableMembersComponent {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.onerror = null;
+    img.src = `${this.URL}/user.png`;
+  }
+
   isVolunteer(registrationNumber: number): boolean {
     return this.volunteersList.some(
       volunteer => volunteer.registrationNumber === registrationNumber,

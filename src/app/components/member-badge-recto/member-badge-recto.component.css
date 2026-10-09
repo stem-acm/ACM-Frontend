@@ -1,0 +1,14 @@
+.badge-address {
+  min-width: 0;
+  white-space: nowrap;
+  padding-left: 8px;
+  height: 18px;
+  line-height: 18px;
+}
+
+.badge-address-text {
+  display: inline-block;
+  font-family: 'edu-cursive', cursive;
+  font-size: small;
+  line-height: normal;
+}

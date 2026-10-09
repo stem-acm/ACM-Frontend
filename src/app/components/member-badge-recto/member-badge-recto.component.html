@@ -87,9 +87,9 @@
     </div>
 
     <div class="flex">
-      <div>Physical Adress (in Mahajanga) :</div>
-      <div class="flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
-        <app-text-cursive [text]="member.address" />
+      <div class="shrink-0">Physical Adress (in Mahajanga) :</div>
+      <div class="badge-address flex-1 border-b border-gray-900 h-fit -translate-y-[5px] mx-1">
+        <span #addressText class="badge-address-text text-primary">{{ member.address }}</span>
       </div>
     </div>
 

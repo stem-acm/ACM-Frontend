@@ -20,10 +20,31 @@ export class BooksComponent implements OnInit {
 
   readonly today = this.formatDate(new Date());
   loans: BookLoan[] = [];
+  readonly pageSize = 25;
+  currentPage = 1;
+  totalLoans = 0;
   showAddForm = false;
   showSuccess = false;
   isLoading = false;
   loadError = '';
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.totalLoans / this.pageSize));
+  }
+
+  get firstLoan(): number {
+    return this.totalLoans === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get lastLoan(): number {
+    return Math.min((this.currentPage - 1) * this.pageSize + this.loans.length, this.totalLoans);
+  }
+
+  changePage(page: number): void {
+    if (this.isLoading || page < 1 || page > this.totalPages || page === this.currentPage) return;
+    this.currentPage = page;
+    this.loadLoans();
+  }
 
   ngOnInit(): void {
     this.loadLoans();
@@ -32,9 +53,10 @@ export class BooksComponent implements OnInit {
   loadLoans(): void {
     this.isLoading = true;
     this.loadError = '';
-    this.bookLoanService.getAll().subscribe({
+    this.bookLoanService.getAll((this.currentPage - 1) * this.pageSize, this.pageSize).subscribe({
       next: result => {
         this.loans = result.data;
+        this.totalLoans = result.pagination?.total ?? result.data.length;
         this.isLoading = false;
       },
       error: error => {
@@ -52,8 +74,9 @@ export class BooksComponent implements OnInit {
     this.showAddForm = false;
   }
 
-  addLoan(loan: BookLoan): void {
-    this.loans = [loan, ...this.loans];
+  addLoan(): void {
+    this.currentPage = 1;
+    this.loadLoans();
     this.showAddForm = false;
     this.showSuccess = true;
   }

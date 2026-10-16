@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
+import { HttpResult } from '@/app/types/httpResult';
 
 import { BookLoan } from '@/app/interfaces/book-loan';
 import { Member } from '@/app/interfaces/member';
@@ -11,6 +12,7 @@ import { BooksComponent } from './books.component';
 describe('BooksComponent', () => {
   let component: BooksComponent;
   let fixture: ComponentFixture<BooksComponent>;
+  let getAll: jasmine.Spy;
 
   const loan: BookLoan = {
     User: {
@@ -35,13 +37,16 @@ describe('BooksComponent', () => {
   };
 
   beforeEach(async () => {
+    getAll = jasmine
+      .createSpy('getAll')
+      .and.returnValue(of({ success: true, data: [], pagination: { total: 0 } }));
     await TestBed.configureTestingModule({
       imports: [BooksComponent, TranslateModule.forRoot()],
       providers: [
         {
           provide: BookLoanService,
           useValue: {
-            getAll: () => of({ success: true, message: 'All loans', data: [] }),
+            getAll,
             markReturned: (id: number, date: string) =>
               of({
                 success: true,
@@ -73,7 +78,12 @@ describe('BooksComponent', () => {
 
   it('adds a submitted loan and closes the dialog', () => {
     component.openAddForm();
-    component.addLoan(loan);
+    getAll.and.returnValue(of({ success: true, data: [loan], pagination: { total: 26 } }));
+    component.currentPage = 2;
+    component.addLoan();
+    expect(component.currentPage).toBe(1);
+    expect(getAll).toHaveBeenCalledWith(0, 25);
+    expect(component.totalLoans).toBe(26);
 
     expect(component.loans.length).toBe(1);
     expect(component.loans[0].registrationNumber).toBe(101);
@@ -81,9 +91,61 @@ describe('BooksComponent', () => {
   });
 
   it('marks a loan as returned', () => {
-    component.addLoan({ ...loan, id: 1, borrowingDate: component.today });
+    component.loans = [{ ...loan, id: 1, borrowingDate: component.today }];
     component.markAsReturned(component.loans[0]);
 
     expect(component.loans[0].effectiveReturnDate).toBe(component.today);
+  });
+  it('requests page offsets and displays server totals and the final partial page', () => {
+    component.totalLoans = 26;
+    getAll.and.returnValue(of({ success: true, data: [loan], pagination: { total: 26 } }));
+    component.changePage(2);
+    fixture.detectChanges();
+    expect(getAll).toHaveBeenCalledWith(25, 25);
+    expect(component.firstLoan).toBe(26);
+    expect(component.lastLoan).toBe(26);
+    expect(component.totalPages).toBe(2);
+    const buttons = fixture.nativeElement.querySelectorAll('.books-pagination button');
+    expect(buttons[0].disabled).toBeFalse();
+    expect(buttons[1].disabled).toBeTrue();
+    component.changePage(1);
+    expect(getAll).toHaveBeenCalledWith(0, 25);
+  });
+
+  it('prevents invalid navigation and duplicate requests while loading', () => {
+    component.totalLoans = 60;
+    const response = new Subject<HttpResult<BookLoan[]>>();
+    getAll.and.returnValue(response);
+    getAll.calls.reset();
+    component.changePage(0);
+    component.changePage(4);
+    component.changePage(1);
+    expect(getAll).not.toHaveBeenCalled();
+    component.changePage(2);
+    component.changePage(3);
+    expect(getAll).toHaveBeenCalledTimes(1);
+    expect(component.currentPage).toBe(2);
+    response.next({
+      success: true,
+      message: '',
+      data: [loan],
+      pagination: { total: 60, offset: 25, limit: 25, hasMore: true },
+    });
+    response.complete();
+  });
+
+  it('retries a failed page and handles an empty list', () => {
+    expect(component.firstLoan).toBe(0);
+    expect(component.lastLoan).toBe(0);
+    expect(component.totalPages).toBe(1);
+    component.totalLoans = 26;
+    getAll.and.returnValue(throwError(() => new Error('Failed')));
+    component.changePage(2);
+    expect(component.loadError).toBeTruthy();
+    getAll.and.returnValue(of({ success: true, data: [loan], pagination: { total: 26 } }));
+    component.loadLoans();
+    expect(getAll).toHaveBeenCalledWith(25, 25);
+    expect(component.loadError).toBe('');
+    expect(component.loans).toEqual([loan]);
   });
 });

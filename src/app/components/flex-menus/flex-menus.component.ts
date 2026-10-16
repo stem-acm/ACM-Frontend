@@ -14,7 +14,7 @@ import { AuthService } from '@/app/services/auth.service';
 export class FlexMenusComponent {
   auth = inject(AuthService);
   @Input() mobileOpen = false;
-  public menus: { route: string; labelKey: string; exact: boolean; permission: string }[] = [
+  public menus: { route: string; labelKey: string; exact: boolean; permission?: string }[] = [
     {
       route: '/',
       labelKey: 'nav.home',
@@ -44,6 +44,12 @@ export class FlexMenusComponent {
       labelKey: 'nav.checkin-history',
       exact: false,
       permission: 'checkins.view',
+    },
+    {
+      route: '/book',
+      labelKey: 'nav.book',
+      exact: false,
+      permission: 'books.view',
     },
   ];
 }

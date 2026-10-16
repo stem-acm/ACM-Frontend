@@ -108,6 +108,14 @@ export class SettingsComponent implements OnInit {
         ['checkins.delete', 'access.actions.delete'],
       ],
     },
+    {
+      label: 'access.groups.books',
+      features: [
+        ['books.view', 'access.actions.view'],
+        ['books.create', 'access.actions.create'],
+        ['books.update', 'access.actions.update'],
+      ],
+    },
     { label: 'access.groups.settings', features: [['settings.manage', 'access.actions.manage']] },
   ];
 
@@ -154,12 +162,19 @@ export class SettingsComponent implements OnInit {
     }
     if (feature === 'checkins.create' && permissions[feature])
       permissions['activities.view'] = true;
+    if ((feature === 'books.create' || feature === 'books.update') && permissions[feature]) {
+      permissions['books.view'] = true;
+    }
     if (feature === 'members.view' && !permissions[feature]) permissions['members.cards'] = false;
     if (feature === 'volunteers.view' && !permissions[feature]) {
       permissions['volunteers.certificate'] = false;
     }
     if (feature === 'activities.view' && !permissions[feature]) {
       permissions['checkins.create'] = false;
+    }
+    if (feature === 'books.view' && !permissions[feature]) {
+      permissions['books.create'] = false;
+      permissions['books.update'] = false;
     }
   }
 

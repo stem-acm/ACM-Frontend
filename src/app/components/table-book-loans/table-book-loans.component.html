@@ -1,0 +1,74 @@
+@if (data.length === 0) {
+  <div class="books-empty">
+    <div aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path
+          d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+    <h3>{{ 'books.emptyTitle' | translate }}</h3>
+    <p>{{ 'books.emptyDescription' | translate }}</p>
+  </div>
+} @else {
+  <div class="books-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'books.registrationNumber' | translate }}</th>
+          <th>{{ 'books.bookTitle' | translate }}</th>
+          <th>{{ 'books.borrowingDate' | translate }}</th>
+          <th>{{ 'books.expectedReturnDate' | translate }}</th>
+          <th>{{ 'books.effectiveReturnDate' | translate }}</th>
+          <th>{{ 'books.status' | translate }}</th>
+          <th>
+            <span class="sr-only">{{ 'books.actions' | translate }}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (loan of data; track loan.id) {
+          <tr>
+            <td>
+              <strong>{{ loan.registrationNumber }}</strong>
+              @if (loan.Member) {
+                <small class="books-member-name">
+                  {{ loan.Member.firstName }} {{ loan.Member.lastName }}
+                </small>
+              }
+            </td>
+            <td>{{ loan.bookTitle }}</td>
+            <td>{{ loan.borrowingDate | date: 'mediumDate' }}</td>
+            <td>{{ loan.expectedReturnDate | date: 'mediumDate' }}</td>
+            <td>
+              {{ loan.effectiveReturnDate ? (loan.effectiveReturnDate | date: 'mediumDate') : '—' }}
+            </td>
+            <td>
+              <span [class]="'books-status books-status--' + getStatus(loan)">{{
+                'books.statuses.' + getStatus(loan) | translate
+              }}</span>
+            </td>
+            <td class="books-action">
+              @if (!loan.effectiveReturnDate && canUpdate) {
+                <button
+                  z-button
+                  zType="outline"
+                  type="button"
+                  class="acm-btn acm-btn--outline acm-btn--sm"
+                  [disabled]="loan.borrowingDate > today"
+                  (click)="markAsReturned(loan)"
+                >
+                  {{ 'books.markReturned' | translate }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

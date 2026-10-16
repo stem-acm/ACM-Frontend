@@ -12,6 +12,7 @@ import { VolunteerCertificateViewerComponent } from './components/volunteer-cert
 import { guestGuard, permissionGuard } from './permission.guard';
 import { SettingsComponent, canDeactivateSettings } from './pages/settings/settings.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
+import { BooksComponent } from './pages/books/books.component';
 
 export const routes: Routes = [
   {
@@ -85,5 +86,11 @@ export const routes: Routes = [
     component: MyProfileComponent,
     canActivate: [permissionGuard],
     data: { permission: 'profile.edit' },
+  },
+  {
+    path: 'book',
+    component: BooksComponent,
+    canActivate: [permissionGuard],
+    data: { permission: 'books.view' },
   },
 ];

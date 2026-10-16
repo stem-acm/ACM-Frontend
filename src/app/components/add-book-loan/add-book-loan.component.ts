@@ -4,10 +4,20 @@ import { BookLoan, BookLoanInput } from '@/app/interfaces/book-loan';
 import { Member } from '@/app/interfaces/member';
 import { MemberService } from '@/app/services/member.service';
 import { BookLoanService } from '@/app/services/book-loan.service';
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  of,
+  Subject,
+  switchMap,
+  timer,
+} from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-add-book-loan',
@@ -23,6 +33,13 @@ export class AddBookLoanComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly memberService = inject(MemberService);
   private readonly bookLoanService = inject(BookLoanService);
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly titleSearch = new Subject<string>();
+  bookTitles: string[] = [];
+  titlesLoading = false;
+  titlesLoadError = false;
+  titleSuggestionsOpen = false;
 
   readonly today = this.formatDate(new Date());
   submitted = false;
@@ -44,6 +61,29 @@ export class AddBookLoanComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.titleSearch
+      .pipe(
+        switchMap(value => {
+          this.bookTitles = [];
+          this.titlesLoadError = false;
+          const search = value.trim();
+          this.titlesLoading = !!search;
+          if (!search) return of([] as string[]);
+          return timer(300).pipe(
+            switchMap(() => this.bookLoanService.getTitles(search)),
+            map(result => (result.success ? result.data : [])),
+            catchError(() => {
+              this.titlesLoadError = true;
+              return of([] as string[]);
+            }),
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(titles => {
+        this.bookTitles = titles;
+        this.titlesLoading = false;
+      });
     this.loadMembers();
     this.searchSubject
       .pipe(
@@ -134,6 +174,27 @@ export class AddBookLoanComponent implements OnInit {
     this.filteredMembers = [];
   }
 
+  searchBookTitles(): void {
+    this.titleSuggestionsOpen = true;
+    this.titleSearch.next(this.loanForm.controls.bookTitle.value);
+  }
+
+  selectBookTitle(title: string): void {
+    this.loanForm.controls.bookTitle.setValue(title);
+    this.dismissBookTitles();
+  }
+
+  dismissBookTitles(): void {
+    this.titleSuggestionsOpen = false;
+    this.titleSearch.next('');
+  }
+
+  onTitleFocusOut(event: FocusEvent): void {
+    if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) {
+      this.dismissBookTitles();
+    }
+  }
+
   private loadMembers(): void {
     this.membersLoading = true;
     this.membersLoadError = false;
@@ -151,6 +212,7 @@ export class AddBookLoanComponent implements OnInit {
   }
 
   private resetForm(): void {
+    this.dismissBookTitles();
     const borrowingDate = this.formatDate(new Date());
     this.loanForm.reset({
       bookTitle: '',

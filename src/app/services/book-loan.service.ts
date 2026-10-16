@@ -15,6 +15,11 @@ export class BookLoanService {
     return this.http.get<HttpResult<BookLoan[]>>(this.url, { params });
   }
 
+  getTitles(search: string) {
+    const params = new HttpParams().set('search', search).set('limit', 10);
+    return this.http.get<HttpResult<string[]>>(`${this.url}/titles`, { params });
+  }
+
   getById(id: number) {
     return this.http.get<HttpResult<BookLoan>>(`${this.url}/${id}`);
   }

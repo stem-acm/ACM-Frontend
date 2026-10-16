@@ -95,6 +95,8 @@
     "membersLoadError": "Tsy azo nampidirina ny mpikambana.",
     "noMembersFound": "Tsy misy mpikambana mifanaraka amin'ny fikarohana.",
     "memberRequired": "Misafidiana mpikambana marina ao amin'ny soso-kevitra.",
+    "loadingTitles": "Maka ny lohatenin’ny boky…",
+    "titlesLoadError": "Tsy azo alaina ny soso-kevitra. Afaka manoratra lohateny ianao.",
     "bookTitle": "Lohatenin'ny boky",
     "titlePlaceholder": "Ampidiro ny lohatenin'ny boky",
     "borrowingDate": "Daty nindramana",

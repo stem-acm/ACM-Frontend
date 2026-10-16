@@ -1,6 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
+import { HttpResult } from '@/app/types/httpResult';
 
 import { BookLoanInput } from '@/app/interfaces/book-loan';
 import { User } from '@/app/interfaces/user';
@@ -13,6 +14,7 @@ describe('AddBookLoanComponent', () => {
   let component: AddBookLoanComponent;
   let fixture: ComponentFixture<AddBookLoanComponent>;
   let getAllMembers: jasmine.Spy;
+  let getTitles: jasmine.Spy;
   const user: User = {
     id: 1,
     username: 'librarian',
@@ -39,6 +41,9 @@ describe('AddBookLoanComponent', () => {
   ] as Member[];
 
   beforeEach(async () => {
+    getTitles = jasmine
+      .createSpy('getTitles')
+      .and.returnValue(of({ success: true, data: ['Things Fall Apart'] }));
     getAllMembers = jasmine
       .createSpy('getAllMembers')
       .and.callFake((_offset: number, _limit: number, search = '') =>
@@ -63,6 +68,7 @@ describe('AddBookLoanComponent', () => {
         {
           provide: BookLoanService,
           useValue: {
+            getTitles,
             create: (loan: BookLoanInput) =>
               of({ success: true, message: 'Created', data: { ...loan, id: 1, User: user } }),
           },
@@ -150,4 +156,56 @@ describe('AddBookLoanComponent', () => {
     expect(component.selectedMember).toBeNull();
     expect(component.memberSearch).toBe('');
   });
+  it('debounces title searches and fills the input from a suggestion', fakeAsync(() => {
+    component.loanForm.controls.bookTitle.setValue('Things');
+    component.searchBookTitles();
+    tick(299);
+    expect(getTitles).not.toHaveBeenCalled();
+    tick(1);
+    expect(getTitles).toHaveBeenCalledWith('Things');
+    fixture.detectChanges();
+    const option = fixture.nativeElement.querySelector('#book-title-suggestions button');
+    expect(option.textContent).toContain('Things Fall Apart');
+    option.click();
+    expect(component.loanForm.controls.bookTitle.value).toBe('Things Fall Apart');
+    expect(component.bookTitles).toEqual([]);
+    expect(component.titleSuggestionsOpen).toBeFalse();
+  }));
+
+  it('cancels outdated searches and clears suggestions for empty input', fakeAsync(() => {
+    const oldResponse = new Subject<HttpResult<string[]>>();
+    getTitles.and.returnValue(oldResponse);
+    component.loanForm.controls.bookTitle.setValue('old');
+    component.searchBookTitles();
+    tick(300);
+    getTitles.and.returnValue(of({ success: true, data: ['New title'] }));
+    component.loanForm.controls.bookTitle.setValue('new');
+    component.searchBookTitles();
+    oldResponse.next({ success: true, message: '', data: ['Old title'] });
+    expect(component.bookTitles).toEqual([]);
+    tick(300);
+    expect(component.bookTitles).toEqual(['New title']);
+    component.loanForm.controls.bookTitle.setValue('   ');
+    component.searchBookTitles();
+    tick(300);
+    expect(component.bookTitles).toEqual([]);
+    expect(getTitles).toHaveBeenCalledTimes(2);
+  }));
+
+  it('recovers from suggestion errors and allows a new title', fakeAsync(() => {
+    getTitles.and.returnValue(throwError(() => new Error('Failed')));
+    component.loanForm.controls.bookTitle.setValue('Original title');
+    component.searchBookTitles();
+    tick(300);
+    expect(component.titlesLoadError).toBeTrue();
+    expect(component.loanForm.controls.bookTitle.valid).toBeTrue();
+    getTitles.and.returnValue(of({ success: true, data: ['Other title'] }));
+    component.loanForm.controls.bookTitle.setValue('Other');
+    component.searchBookTitles();
+    tick(300);
+    expect(component.titlesLoadError).toBeFalse();
+    expect(component.bookTitles).toEqual(['Other title']);
+    component.cancel();
+    expect(component.bookTitles).toEqual([]);
+  }));
 });

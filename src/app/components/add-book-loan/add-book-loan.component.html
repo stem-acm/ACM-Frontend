@@ -63,16 +63,51 @@
         }
       </div>
 
-      <div class="books-field">
+      <div class="books-field books-member-field" (focusout)="onTitleFocusOut($event)">
         <label for="book-title">{{ 'books.bookTitle' | translate }} <span>*</span></label>
         <input
           z-input
           id="book-title"
           type="text"
           formControlName="bookTitle"
+          autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-controls="book-title-suggestions"
+          [attr.aria-expanded]="titleSuggestionsOpen && bookTitles.length > 0"
+          (input)="searchBookTitles()"
+          (focus)="searchBookTitles()"
+          (keydown.escape)="dismissBookTitles()"
           [placeholder]="'books.titlePlaceholder' | translate"
           [attr.aria-invalid]="showError('bookTitle')"
         />
+        @if (titleSuggestionsOpen) {
+          @if (titlesLoading) {
+            <p class="books-member-state" role="status">{{ 'books.loadingTitles' | translate }}</p>
+          } @else if (titlesLoadError) {
+            <p class="books-member-state books-error" role="status">
+              {{ 'books.titlesLoadError' | translate }}
+            </p>
+          } @else if (bookTitles.length > 0) {
+            <div
+              id="book-title-suggestions"
+              class="books-member-suggestions"
+              role="listbox"
+              [attr.aria-label]="'books.bookTitle' | translate"
+            >
+              @for (title of bookTitles; track title) {
+                <button
+                  type="button"
+                  role="option"
+                  [attr.aria-selected]="loanForm.controls.bookTitle.value === title"
+                  (click)="selectBookTitle(title)"
+                >
+                  <span>{{ title }}</span>
+                </button>
+              }
+            </div>
+          }
+        }
         @if (showError('bookTitle')) {
           <p class="books-error">{{ 'books.required' | translate }}</p>
         }

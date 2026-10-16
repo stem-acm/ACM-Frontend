@@ -95,6 +95,8 @@
     "membersLoadError": "Impossible de charger les membres.",
     "noMembersFound": "Aucun membre ne correspond à cette recherche.",
     "memberRequired": "Sélectionnez un membre valide dans les suggestions.",
+    "loadingTitles": "Chargement des titres…",
+    "titlesLoadError": "Impossible de charger les suggestions. Vous pouvez saisir un titre.",
     "bookTitle": "Titre du livre",
     "titlePlaceholder": "Saisissez le titre du livre",
     "borrowingDate": "Date d'emprunt",

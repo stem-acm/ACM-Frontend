@@ -95,6 +95,8 @@
     "membersLoadError": "Members could not be loaded.",
     "noMembersFound": "No member matches this search.",
     "memberRequired": "Select a valid member from the suggestions.",
+    "loadingTitles": "Loading book titles…",
+    "titlesLoadError": "Book suggestions could not be loaded. You can still enter a title.",
     "bookTitle": "Book title",
     "titlePlaceholder": "Enter the book title",
     "borrowingDate": "Borrowing date",

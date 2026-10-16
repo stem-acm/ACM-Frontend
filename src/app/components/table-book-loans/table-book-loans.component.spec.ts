@@ -10,6 +10,16 @@ describe('TableBookLoansComponent', () => {
   let fixture: ComponentFixture<TableBookLoansComponent>;
 
   const loan: BookLoan = {
+    User: {
+      id: 1,
+      username: 'librarian',
+      email: 'librarian@example.com',
+      role: 'admin',
+      active: true,
+      permissions: {},
+      createdAt: '2026-10-01T00:00:00Z',
+      updatedAt: '2026-10-01T00:00:00Z',
+    },
     id: 1,
     registrationNumber: 101,
     Member: {

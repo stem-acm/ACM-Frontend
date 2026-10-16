@@ -81,3 +81,26 @@
     padding: 1rem;
   }
 }
+
+.books-pagination,
+.books-pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.books-pagination {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+.books-pagination p {
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .books-pagination {
+    padding: 1rem;
+  }
+}

@@ -1,4 +1,4 @@
-import { BookLoan } from '@/app/interfaces/book-loan';
+import { BookLoan, BookLoanInput } from '@/app/interfaces/book-loan';
 import { HttpResult } from '@/app/types/httpResult';
 import { environment } from '@/environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -15,11 +15,16 @@ export class BookLoanService {
     return this.http.get<HttpResult<BookLoan[]>>(this.url, { params });
   }
 
+  getTitles(search: string) {
+    const params = new HttpParams().set('search', search).set('limit', 10);
+    return this.http.get<HttpResult<string[]>>(`${this.url}/titles`, { params });
+  }
+
   getById(id: number) {
     return this.http.get<HttpResult<BookLoan>>(`${this.url}/${id}`);
   }
 
-  create(loan: BookLoan) {
+  create(loan: BookLoanInput) {
     return this.http.post<HttpResult<BookLoan>>(this.url, {
       registrationNumber: loan.registrationNumber,
       bookTitle: loan.bookTitle,
@@ -29,7 +34,7 @@ export class BookLoanService {
     });
   }
 
-  update(loan: BookLoan) {
+  update(loan: BookLoanInput & Pick<BookLoan, 'id'>) {
     return this.http.put<HttpResult<BookLoan>>(`${this.url}/${loan.id}`, {
       registrationNumber: loan.registrationNumber,
       bookTitle: loan.bookTitle,

@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 
 import { Member } from '@/app/interfaces/member';
 import { MemberService } from '@/app/services/member.service';
+import { BookLoanService } from '@/app/services/book-loan.service';
 import { AddBookLoanComponent } from './add-book-loan.component';
 
 describe('AddBookLoanComponent', () => {
@@ -46,6 +47,12 @@ describe('AddBookLoanComponent', () => {
         {
           provide: MemberService,
           useValue: { getAllMembers },
+        },
+        {
+          provide: BookLoanService,
+          useValue: {
+            create: (loan: object) => of({ success: true, message: 'Created', data: loan }),
+          },
         },
       ],
     }).compileComponents();

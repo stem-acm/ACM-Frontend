@@ -38,6 +38,7 @@ export class AuthService {
       ['members.view', '/members'],
       ['volunteers.view', '/volunteer'],
       ['activities.view', '/activity'],
+      ['books.view', '/book'],
       ['checkins.view', '/checkin-history'],
       ['checkins.create', '/checkin'],
       ['settings.manage', '/setting'],

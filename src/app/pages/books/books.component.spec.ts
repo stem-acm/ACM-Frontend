@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
 import { BookLoan } from '@/app/interfaces/book-loan';
 import { Member } from '@/app/interfaces/member';
+import { BookLoanService } from '@/app/services/book-loan.service';
+import { AuthService } from '@/app/services/auth.service';
 import { BooksComponent } from './books.component';
 
 describe('BooksComponent', () => {
@@ -24,6 +27,21 @@ describe('BooksComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BooksComponent, TranslateModule.forRoot()],
+      providers: [
+        {
+          provide: BookLoanService,
+          useValue: {
+            getAll: () => of({ success: true, message: 'All loans', data: [] }),
+            markReturned: (id: number, date: string) =>
+              of({
+                success: true,
+                message: 'Returned',
+                data: { ...loan, id, effectiveReturnDate: date },
+              }),
+          },
+        },
+        { provide: AuthService, useValue: { can: () => true } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BooksComponent);
@@ -49,12 +67,11 @@ describe('BooksComponent', () => {
 
     expect(component.loans.length).toBe(1);
     expect(component.loans[0].registrationNumber).toBe(101);
-    expect(component.loans[0].id).toBeDefined();
     expect(component.showAddForm).toBeFalse();
   });
 
   it('marks a loan as returned', () => {
-    component.addLoan({ ...loan, borrowingDate: component.today });
+    component.addLoan({ ...loan, id: 1, borrowingDate: component.today });
     component.markAsReturned(component.loans[0]);
 
     expect(component.loans[0].effectiveReturnDate).toBe(component.today);

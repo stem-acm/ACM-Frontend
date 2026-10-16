@@ -48,6 +48,7 @@
       "members": "Membres",
       "volunteers": "Bénévoles",
       "activities": "Activités",
+      "books": "Livres",
       "checkins": "Présences",
       "profile": "Mon profil",
       "settings": "Paramètres et comptes"
@@ -107,6 +108,7 @@
     "saved": "L'emprunt a bien été enregistré.",
     "dismiss": "Fermer le message",
     "loanList": "Emprunts enregistrés",
+    "loadingLoans": "Chargement des emprunts…",
     "loanCount": "{{count}} emprunt(s)",
     "emptyTitle": "Aucun emprunt enregistré",
     "emptyDescription": "Les emprunts ajoutés depuis le formulaire apparaîtront ici.",

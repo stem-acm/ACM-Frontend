@@ -4,17 +4,24 @@
       <h1>{{ 'books.title' | translate }}</h1>
       <p>{{ 'books.description' | translate }}</p>
     </div>
-    <button
-      z-button
-      type="button"
-      (click)="openAddForm()"
-      class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
-    >
-      <svg class="w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg>
-      {{ 'books.newLoan' | translate }}
-    </button>
+    @if (auth.can('books.create')) {
+      <button
+        z-button
+        type="button"
+        (click)="openAddForm()"
+        class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+      >
+        <svg class="w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M12 5v14M5 12h14"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+        {{ 'books.newLoan' | translate }}
+      </button>
+    }
   </header>
 
   @if (showSuccess) {
@@ -38,10 +45,26 @@
         <p>{{ 'books.loanCount' | translate: { count: loans.length } }}</p>
       </div>
     </div>
-    <app-table-book-loans [data]="loans" [today]="today" (returned)="markAsReturned($event)" />
+    @if (isLoading) {
+      <div class="books-state">{{ 'books.loadingLoans' | translate }}</div>
+    } @else if (loadError) {
+      <div class="books-state" role="alert">
+        <p>{{ loadError }}</p>
+        <button z-button type="button" class="acm-btn acm-btn--outline" (click)="loadLoans()">
+          {{ 'ux.retry' | translate }}
+        </button>
+      </div>
+    } @else {
+      <app-table-book-loans
+        [data]="loans"
+        [today]="today"
+        [canUpdate]="auth.can('books.update')"
+        (returned)="markAsReturned($event)"
+      />
+    }
   </section>
 </main>
 
-@if (showAddForm) {
+@if (showAddForm && auth.can('books.create')) {
   <app-add-book-loan (canceled)="cancelAddForm()" (success)="addLoan($event)" />
 }

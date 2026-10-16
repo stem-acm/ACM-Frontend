@@ -127,6 +127,9 @@
     </div>
 
     <div class="acm-entry-modal__actions">
+      @if (saveError) {
+        <p class="books-save-error" role="alert">{{ saveError }}</p>
+      }
       <button
         z-button
         zType="outline"
@@ -136,7 +139,7 @@
       >
         {{ 'buttons.cancel' | translate }}
       </button>
-      <button z-button type="submit" class="acm-btn acm-btn--primary">
+      <button z-button type="submit" [disabled]="saving" class="acm-btn acm-btn--primary">
         {{ 'books.saveLoan' | translate }}
       </button>
     </div>

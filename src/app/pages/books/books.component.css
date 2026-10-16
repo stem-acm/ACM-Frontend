@@ -65,6 +65,17 @@
   font-size: 1.15rem;
   font-weight: 700;
 }
+.books-state {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+  color: var(--muted-foreground);
+  text-align: center;
+}
+.books-state p {
+  margin: 0;
+}
 @media (max-width: 700px) {
   .books-list-heading {
     padding: 1rem;

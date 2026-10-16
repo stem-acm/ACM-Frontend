@@ -48,6 +48,7 @@
       "members": "Members",
       "volunteers": "Volunteers",
       "activities": "Activities",
+      "books": "Books",
       "checkins": "Check-ins",
       "profile": "My profile",
       "settings": "Settings and accounts"
@@ -107,6 +108,7 @@
     "saved": "The loan was saved successfully.",
     "dismiss": "Dismiss message",
     "loanList": "Recorded loans",
+    "loadingLoans": "Loading book loans…",
     "loanCount": "{{count}} loan(s)",
     "emptyTitle": "No loans recorded",
     "emptyDescription": "Loans added with the form will appear here.",

@@ -3,6 +3,7 @@ import { ZardInputComponent } from '@/shared/components/input';
 import { BookLoan } from '@/app/interfaces/book-loan';
 import { Member } from '@/app/interfaces/member';
 import { MemberService } from '@/app/services/member.service';
+import { BookLoanService } from '@/app/services/book-loan.service';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,6 +22,7 @@ export class AddBookLoanComponent implements OnInit {
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly memberService = inject(MemberService);
+  private readonly bookLoanService = inject(BookLoanService);
 
   readonly today = this.formatDate(new Date());
   submitted = false;
@@ -29,6 +31,8 @@ export class AddBookLoanComponent implements OnInit {
   memberSearch = '';
   membersLoading = false;
   membersLoadError = false;
+  saving = false;
+  saveError = '';
   private readonly searchSubject = new Subject<string>();
   private readonly pageSize = 200;
 
@@ -84,15 +88,28 @@ export class AddBookLoanComponent implements OnInit {
     }
 
     const value = this.loanForm.getRawValue();
-    this.success.emit({
+    const loan: BookLoan = {
       registrationNumber: this.selectedMember.registrationNumber,
       bookTitle: value.bookTitle.trim(),
       borrowingDate: value.borrowingDate,
       expectedReturnDate: value.expectedReturnDate,
       effectiveReturnDate: value.effectiveReturnDate,
       Member: this.selectedMember,
+    };
+
+    this.saving = true;
+    this.saveError = '';
+    this.bookLoanService.create(loan).subscribe({
+      next: result => {
+        this.saving = false;
+        this.success.emit(result.data);
+        this.resetForm();
+      },
+      error: error => {
+        this.saving = false;
+        this.saveError = error.error?.message || 'Unable to save the book loan.';
+      },
     });
-    this.resetForm();
   }
 
   cancel(): void {
@@ -146,6 +163,7 @@ export class AddBookLoanComponent implements OnInit {
     this.selectedMember = null;
     this.filteredMembers = [];
     this.submitted = false;
+    this.saveError = '';
   }
 
   private validateEffectiveReturnDate(): void {

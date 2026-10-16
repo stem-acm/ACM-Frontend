@@ -49,6 +49,7 @@ export class FlexMenusComponent {
       route: '/book',
       labelKey: 'nav.book',
       exact: false,
+      permission: 'books.view',
     },
   ];
 }

@@ -110,6 +110,11 @@
   color: var(--muted-foreground);
   font-size: 0.76rem;
 }
+.books-save-error {
+  margin: 0 auto 0 0;
+  color: var(--destructive);
+  font-size: 0.8rem;
+}
 .books-member-state {
   margin: 0.45rem 0 0;
 }

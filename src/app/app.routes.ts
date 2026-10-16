@@ -9,7 +9,7 @@ import { CheckinComponent } from './pages/checkin/checkin.component';
 import { VolunteerComponent } from './pages/volunteer/volunteer.component';
 import { CheckinHistoryComponent } from './pages/checkin-history/checkin-history.component';
 import { VolunteerCertificateViewerComponent } from './components/volunteer-certificate-viewer/volunteer-certificate-viewer.component';
-import { authenticatedGuard, guestGuard, permissionGuard } from './permission.guard';
+import { guestGuard, permissionGuard } from './permission.guard';
 import { SettingsComponent, canDeactivateSettings } from './pages/settings/settings.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { BooksComponent } from './pages/books/books.component';
@@ -90,6 +90,7 @@ export const routes: Routes = [
   {
     path: 'book',
     component: BooksComponent,
-    canActivate: [authenticatedGuard],
+    canActivate: [permissionGuard],
+    data: { permission: 'books.view' },
   },
 ];

@@ -48,6 +48,7 @@
       "members": "Mpikambana",
       "volunteers": "Mpilatsaka an-tsitrapo",
       "activities": "Hetsika",
+      "books": "Boky",
       "checkins": "Fisoratana anarana",
       "profile": "Ny mombamomba ahy",
       "settings": "Fikirana sy kaonty"
@@ -107,6 +108,7 @@
     "saved": "Voatahiry ny fampindramana.",
     "dismiss": "Hidio ny hafatra",
     "loanList": "Fampindramana voarakitra",
+    "loadingLoans": "Ampidirina ny fampindramam-boky…",
     "loanCount": "Fampindramana {{count}}",
     "emptyTitle": "Tsy mbola misy fampindramana",
     "emptyDescription": "Hiseho eto ny fampindramana ampidirina amin'ny taratasy.",

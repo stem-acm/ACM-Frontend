@@ -53,7 +53,7 @@
               }}</span>
             </td>
             <td class="books-action">
-              @if (!loan.effectiveReturnDate) {
+              @if (!loan.effectiveReturnDate && canUpdate) {
                 <button
                   z-button
                   zType="outline"

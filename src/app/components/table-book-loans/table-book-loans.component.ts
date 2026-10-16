@@ -16,6 +16,7 @@ type LoanStatus = 'returned' | 'overdue' | 'borrowed';
 export class TableBookLoansComponent {
   @Input({ required: true }) data: BookLoan[] = [];
   @Input({ required: true }) today = '';
+  @Input() canUpdate = false;
   @Output() returned = new EventEmitter<BookLoan>();
 
   getStatus(loan: BookLoan): LoanStatus {

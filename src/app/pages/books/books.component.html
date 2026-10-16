@@ -1,0 +1,47 @@
+<main class="acm-page books-page">
+  <header class="books-header flex justify-between items-center">
+    <div>
+      <h1>{{ 'books.title' | translate }}</h1>
+      <p>{{ 'books.description' | translate }}</p>
+    </div>
+    <button
+      z-button
+      type="button"
+      (click)="openAddForm()"
+      class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
+    >
+      <svg class="w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      {{ 'books.newLoan' | translate }}
+    </button>
+  </header>
+
+  @if (showSuccess) {
+    <div class="books-success" role="status">
+      <span aria-hidden="true">✓</span>
+      <p>{{ 'books.saved' | translate }}</p>
+      <button
+        type="button"
+        (click)="showSuccess = false"
+        [attr.aria-label]="'books.dismiss' | translate"
+      >
+        ×
+      </button>
+    </div>
+  }
+
+  <section class="books-card books-list" aria-labelledby="loans-title">
+    <div class="books-list-heading">
+      <div>
+        <h2 id="loans-title">{{ 'books.loanList' | translate }}</h2>
+        <p>{{ 'books.loanCount' | translate: { count: loans.length } }}</p>
+      </div>
+    </div>
+    <app-table-book-loans [data]="loans" [today]="today" (returned)="markAsReturned($event)" />
+  </section>
+</main>
+
+@if (showAddForm) {
+  <app-add-book-loan (canceled)="cancelAddForm()" (success)="addLoan($event)" />
+}

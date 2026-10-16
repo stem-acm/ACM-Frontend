@@ -1,0 +1,111 @@
+<div class="acm-entry-modal">
+  <form
+    [formGroup]="loanForm"
+    (ngSubmit)="saveLoan()"
+    class="acm-entry-modal__panel books-modal-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="loan-modal-title"
+    novalidate
+  >
+    <h1 id="loan-modal-title" class="acm-entry-modal__title">
+      {{ 'books.newLoan' | translate }}
+    </h1>
+
+    <div class="books-form-grid">
+      <div class="books-field">
+        <label for="registration-number"
+          >{{ 'books.registrationNumber' | translate }} <span>*</span></label
+        >
+        <input
+          z-input
+          id="registration-number"
+          type="text"
+          formControlName="registrationNumber"
+          [placeholder]="'books.registrationPlaceholder' | translate"
+          [attr.aria-invalid]="showError('registrationNumber')"
+        />
+        @if (showError('registrationNumber')) {
+          <p class="books-error">{{ 'books.required' | translate }}</p>
+        }
+      </div>
+
+      <div class="books-field">
+        <label for="book-title">{{ 'books.bookTitle' | translate }} <span>*</span></label>
+        <input
+          z-input
+          id="book-title"
+          type="text"
+          formControlName="bookTitle"
+          [placeholder]="'books.titlePlaceholder' | translate"
+          [attr.aria-invalid]="showError('bookTitle')"
+        />
+        @if (showError('bookTitle')) {
+          <p class="books-error">{{ 'books.required' | translate }}</p>
+        }
+      </div>
+
+      <div class="books-field">
+        <label for="borrowing-date">{{ 'books.borrowingDate' | translate }} <span>*</span></label>
+        <input
+          z-input
+          id="borrowing-date"
+          type="date"
+          formControlName="borrowingDate"
+          [attr.aria-invalid]="showError('borrowingDate')"
+        />
+        @if (showError('borrowingDate')) {
+          <p class="books-error">{{ 'books.required' | translate }}</p>
+        }
+      </div>
+
+      <div class="books-field">
+        <label for="expected-return-date"
+          >{{ 'books.expectedReturnDate' | translate }} <span>*</span></label
+        >
+        <input
+          z-input
+          id="expected-return-date"
+          type="date"
+          formControlName="expectedReturnDate"
+          [attr.aria-invalid]="showError('expectedReturnDate')"
+        />
+        <small>{{ 'books.expectedHelp' | translate }}</small>
+        @if (showError('expectedReturnDate')) {
+          <p class="books-error">{{ 'books.required' | translate }}</p>
+        }
+      </div>
+
+      <div class="books-field books-field--wide">
+        <label for="effective-return-date">{{ 'books.effectiveReturnDate' | translate }}</label>
+        <input
+          z-input
+          id="effective-return-date"
+          type="date"
+          formControlName="effectiveReturnDate"
+          [min]="loanForm.controls.borrowingDate.value"
+          [attr.aria-invalid]="showError('effectiveReturnDate')"
+        />
+        <small>{{ 'books.effectiveHelp' | translate }}</small>
+        @if (loanForm.controls.effectiveReturnDate.hasError('returnBeforeBorrowing')) {
+          <p class="books-error">{{ 'books.returnDateError' | translate }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="acm-entry-modal__actions">
+      <button
+        z-button
+        zType="outline"
+        type="button"
+        (click)="cancel()"
+        class="acm-btn acm-btn--outline"
+      >
+        {{ 'buttons.cancel' | translate }}
+      </button>
+      <button z-button type="submit" class="acm-btn acm-btn--primary">
+        {{ 'books.saveLoan' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -78,7 +78,36 @@
     "manageIntern": "Manage intern",
     "openUserMenu": "Open user menu",
     "openMainMenu": "Open main menu",
-    "language": "Language"
+    "language": "Language",
+    "book": "Books"
+  },
+  "books": {
+    "title": "Books",
+    "description": "Record and track members' book loans.",
+    "newLoan": "New loan",
+    "formHelp": "Enter the member, book and loan dates.",
+    "registrationNumber": "Registration number",
+    "registrationPlaceholder": "E.g. ACM-2026-001",
+    "bookTitle": "Book title",
+    "titlePlaceholder": "Enter the book title",
+    "borrowingDate": "Borrowing date",
+    "expectedReturnDate": "Expected return date",
+    "effectiveReturnDate": "Effective return date",
+    "expectedHelp": "Automatically set to 7 days later, but can be edited.",
+    "effectiveHelp": "Leave this blank until the book has been returned.",
+    "returnDateError": "The return date cannot be before the borrowing date.",
+    "required": "This field is required.",
+    "saveLoan": "Save loan",
+    "saved": "The loan was saved successfully.",
+    "dismiss": "Dismiss message",
+    "loanList": "Recorded loans",
+    "loanCount": "{{count}} loan(s)",
+    "emptyTitle": "No loans recorded",
+    "emptyDescription": "Loans added with the form will appear here.",
+    "status": "Status",
+    "actions": "Actions",
+    "markReturned": "Mark as returned",
+    "statuses": { "borrowed": "On loan", "overdue": "Overdue", "returned": "Returned" }
   },
   "profile": {
     "title": "My profile",
@@ -252,7 +281,6 @@
     "passwordMust8Characters": "Password must be at least 8 characters.",
     "passwordMustContainLetter": "Password must contain at least one letter.",
     "passwordMustContainNumber": "Password must contain at least one number"
-
   },
   "common": {
     "in": "in"

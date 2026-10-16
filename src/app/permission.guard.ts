@@ -15,6 +15,17 @@ export const permissionGuard: CanActivateFn = async route => {
   }
 };
 
+export const authenticatedGuard: CanActivateFn = async () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  try {
+    await firstValueFrom(auth.verifyToken());
+    return true;
+  } catch {
+    return router.parseUrl('/auth');
+  }
+};
+
 export const guestGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
   const router = inject(Router);

@@ -1,6 +1,6 @@
 <div class="acm-menu" id="main-menu" [class.is-open]="mobileOpen">
   @for (item of menus; track item.route) {
-    @if (auth.can(item.permission)) {
+    @if (!item.permission || auth.can(item.permission)) {
       <a
         z-button
         zType="ghost"

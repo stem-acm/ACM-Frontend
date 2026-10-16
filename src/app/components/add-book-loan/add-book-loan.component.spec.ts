@@ -1,15 +1,53 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 
+import { Member } from '@/app/interfaces/member';
+import { MemberService } from '@/app/services/member.service';
 import { AddBookLoanComponent } from './add-book-loan.component';
 
 describe('AddBookLoanComponent', () => {
   let component: AddBookLoanComponent;
   let fixture: ComponentFixture<AddBookLoanComponent>;
+  let getAllMembers: jasmine.Spy;
+  const members = [
+    {
+      registrationNumber: 101,
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      studyOrWorkPlace: 'University',
+    },
+    {
+      registrationNumber: 202,
+      firstName: 'James',
+      lastName: 'Baldwin',
+      studyOrWorkPlace: 'Library',
+    },
+  ] as Member[];
 
   beforeEach(async () => {
+    getAllMembers = jasmine
+      .createSpy('getAllMembers')
+      .and.callFake((_offset: number, _limit: number, search = '') =>
+        of({
+          success: true,
+          data: search
+            ? members.filter(member =>
+                [member.registrationNumber, member.firstName, member.lastName].some(value =>
+                  String(value).toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+                ),
+              )
+            : members,
+        }),
+      );
     await TestBed.configureTestingModule({
       imports: [AddBookLoanComponent, TranslateModule.forRoot()],
+      providers: [
+        {
+          provide: MemberService,
+          useValue: { getAllMembers },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddBookLoanComponent);
@@ -27,16 +65,15 @@ describe('AddBookLoanComponent', () => {
   it('emits a valid loan', () => {
     const success = jasmine.createSpy('success');
     component.success.subscribe(success);
-    component.loanForm.patchValue({
-      registrationNumber: ' ACM-001 ',
-      bookTitle: ' Things Fall Apart ',
-    });
+    component.selectMember(members[0]);
+    component.loanForm.patchValue({ bookTitle: ' Things Fall Apart ' });
 
     component.saveLoan();
 
     expect(success).toHaveBeenCalledWith(
       jasmine.objectContaining({
-        registrationNumber: 'ACM-001',
+        registrationNumber: 101,
+        memberFirstName: 'Ada',
         bookTitle: 'Things Fall Apart',
       }),
     );
@@ -44,7 +81,6 @@ describe('AddBookLoanComponent', () => {
 
   it('rejects a return date before the borrowing date', () => {
     component.loanForm.patchValue({
-      registrationNumber: 'ACM-001',
       bookTitle: 'Things Fall Apart',
       borrowingDate: '2026-10-15',
       effectiveReturnDate: '2026-10-14',
@@ -57,14 +93,40 @@ describe('AddBookLoanComponent', () => {
     ).toBeTrue();
   });
 
+  it('searches the complete member source by registration number, first name and last name', fakeAsync(() => {
+    component.searchMembers('101');
+    tick(1000);
+    expect(component.filteredMembers).toEqual([members[0]]);
+
+    component.searchMembers('james');
+    tick(1000);
+    expect(component.filteredMembers).toEqual([members[1]]);
+
+    component.searchMembers('lovelace');
+    tick(1000);
+    expect(component.filteredMembers).toEqual([members[0]]);
+    expect(getAllMembers).toHaveBeenCalledWith(0, 200, 'lovelace');
+  }));
+
+  it('does not emit a loan until a real member is selected', () => {
+    const success = jasmine.createSpy('success');
+    component.success.subscribe(success);
+    component.loanForm.controls.bookTitle.setValue('Things Fall Apart');
+
+    component.saveLoan();
+
+    expect(success).not.toHaveBeenCalled();
+  });
+
   it('resets and emits when canceled', () => {
     const canceled = jasmine.createSpy('canceled');
     component.canceled.subscribe(canceled);
-    component.loanForm.controls.registrationNumber.setValue('ACM-001');
+    component.selectMember(members[0]);
 
     component.cancel();
 
     expect(canceled).toHaveBeenCalled();
-    expect(component.loanForm.controls.registrationNumber.value).toBe('');
+    expect(component.selectedMember).toBeNull();
+    expect(component.memberSearch).toBe('');
   });
 });

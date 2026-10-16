@@ -10,7 +10,9 @@ describe('TableBookLoansComponent', () => {
 
   const loan: BookLoan = {
     id: 1,
-    registrationNumber: 'ACM-001',
+    registrationNumber: 101,
+    memberFirstName: 'Ada',
+    memberLastName: 'Lovelace',
     bookTitle: 'Things Fall Apart',
     borrowingDate: '2026-10-01',
     expectedReturnDate: '2026-10-08',

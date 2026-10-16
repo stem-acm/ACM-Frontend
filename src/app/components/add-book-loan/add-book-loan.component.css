@@ -13,6 +13,9 @@
   grid-column: 1 / -1;
   width: calc(50% - 0.75rem);
 }
+.books-field--full {
+  grid-column: 1 / -1;
+}
 .books-field label {
   display: block;
   margin-bottom: 0.45rem;
@@ -43,6 +46,72 @@
   margin: 0.35rem 0 0;
   color: var(--destructive);
   font-size: 0.78rem;
+}
+.books-member-field {
+  position: relative;
+}
+.books-member-input-wrap {
+  position: relative;
+}
+.books-member-input-wrap input {
+  padding-right: 2.5rem;
+}
+.books-member-selected {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  color: #fff;
+  background: #23804b;
+  transform: translateY(-50%);
+  font-size: 0.72rem;
+}
+.books-member-suggestions {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% - 0.1rem);
+  left: 0;
+  right: 0;
+  max-height: 13rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+  box-shadow: 0 14px 34px rgb(20 46 90 / 18%);
+}
+.books-member-suggestions button {
+  display: grid;
+  width: 100%;
+  gap: 0.2rem;
+  padding: 0.75rem 0.9rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
+  background: transparent;
+  text-align: left;
+}
+.books-member-suggestions button:last-child {
+  border-bottom: 0;
+}
+.books-member-suggestions button:hover,
+.books-member-suggestions button:focus-visible {
+  background: var(--secondary);
+}
+.books-member-suggestions span {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.books-member-suggestions small,
+.books-member-state {
+  color: var(--muted-foreground);
+  font-size: 0.76rem;
+}
+.books-member-state {
+  margin: 0.45rem 0 0;
 }
 @media (max-width: 700px) {
   .books-form-grid {

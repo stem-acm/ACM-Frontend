@@ -13,20 +13,53 @@
     </h1>
 
     <div class="books-form-grid">
-      <div class="books-field">
-        <label for="registration-number"
-          >{{ 'books.registrationNumber' | translate }} <span>*</span></label
-        >
-        <input
-          z-input
-          id="registration-number"
-          type="text"
-          formControlName="registrationNumber"
-          [placeholder]="'books.registrationPlaceholder' | translate"
-          [attr.aria-invalid]="showError('registrationNumber')"
-        />
-        @if (showError('registrationNumber')) {
-          <p class="books-error">{{ 'books.required' | translate }}</p>
+      <div class="books-field books-field--full books-member-field">
+        <label for="member-search">{{ 'books.selectMember' | translate }} <span>*</span></label>
+        <div class="books-member-input-wrap">
+          <input
+            z-input
+            id="member-search"
+            type="search"
+            autocomplete="off"
+            [value]="memberSearch"
+            (input)="searchMembers($any($event.target).value)"
+            [placeholder]="'books.searchMemberPlaceholder' | translate"
+            [attr.aria-invalid]="submitted && !selectedMember"
+            aria-autocomplete="list"
+            [attr.aria-expanded]="filteredMembers.length > 0"
+            aria-controls="member-suggestions"
+          />
+          @if (selectedMember) {
+            <span class="books-member-selected" aria-hidden="true">✓</span>
+          }
+        </div>
+
+        @if (membersLoading) {
+          <p class="books-member-state">{{ 'books.loadingMembers' | translate }}</p>
+        } @else if (membersLoadError) {
+          <p class="books-member-state books-error">{{ 'books.membersLoadError' | translate }}</p>
+        } @else if (filteredMembers.length > 0 && memberSearch) {
+          <div id="member-suggestions" class="books-member-suggestions" role="listbox">
+            @for (member of filteredMembers; track member.registrationNumber) {
+              <button
+                type="button"
+                role="option"
+                [attr.aria-selected]="
+                  selectedMember?.registrationNumber === member.registrationNumber
+                "
+                (click)="selectMember(member)"
+              >
+                <span>{{ member.firstName }} {{ member.lastName }}</span>
+                <small>{{ member.registrationNumber }} · {{ member.studyOrWorkPlace }}</small>
+              </button>
+            }
+          </div>
+        } @else if (memberSearch && !selectedMember) {
+          <p class="books-member-state">{{ 'books.noMembersFound' | translate }}</p>
+        }
+
+        @if (submitted && !selectedMember) {
+          <p class="books-error">{{ 'books.memberRequired' | translate }}</p>
         }
       </div>
 

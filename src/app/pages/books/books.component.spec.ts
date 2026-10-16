@@ -9,7 +9,9 @@ describe('BooksComponent', () => {
   let fixture: ComponentFixture<BooksComponent>;
 
   const loan: BookLoan = {
-    registrationNumber: 'ACM-001',
+    registrationNumber: 101,
+    memberFirstName: 'Ada',
+    memberLastName: 'Lovelace',
     bookTitle: 'Things Fall Apart',
     borrowingDate: '2026-10-15',
     expectedReturnDate: '2026-10-22',
@@ -43,7 +45,7 @@ describe('BooksComponent', () => {
     component.addLoan(loan);
 
     expect(component.loans.length).toBe(1);
-    expect(component.loans[0].registrationNumber).toBe('ACM-001');
+    expect(component.loans[0].registrationNumber).toBe(101);
     expect(component.loans[0].id).toBeDefined();
     expect(component.showAddForm).toBeFalse();
   });

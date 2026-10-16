@@ -1,6 +1,8 @@
 export interface BookLoan {
   id?: number;
-  registrationNumber: string;
+  registrationNumber: number;
+  memberFirstName: string;
+  memberLastName: string;
   bookTitle: string;
   borrowingDate: string;
   expectedReturnDate: string;

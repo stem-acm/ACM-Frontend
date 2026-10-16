@@ -2,7 +2,11 @@
   @for (volunteer of data; track volunteer) {
     <article class="acm-mobile-record">
       <div class="acm-mobile-record-head">
-        <img [src]="getfileUrl(volunteer.Member?.profileImage)" alt="" />
+        <img
+          [src]="getfileUrl(volunteer.Member?.profileImage)"
+          (error)="onImageError($event)"
+          [alt]="volunteer.Member?.lastName"
+        />
         <div>
           <strong>{{
             volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName
@@ -54,7 +58,8 @@
           <img
             class="w-10 h-10 rounded-full"
             [src]="getfileUrl(volunteer.Member?.profileImage)"
-            alt="Profile image"
+            (error)="onImageError($event)"
+            [alt]="volunteer.Member?.lastName"
           />
           <div class="ps-3">
             <div class="text-base font-semibold">

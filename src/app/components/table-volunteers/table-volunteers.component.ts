@@ -25,6 +25,12 @@ export class TableVolunteersComponent {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.onerror = null;
+    img.src = `${this.URL}/user.png`;
+  }
+
   formatDate(date?: Date | null | undefined) {
     return this.dateUtil.formatDateFull(date);
   }

@@ -20,7 +20,8 @@
     <div class="w-14 h-14 rounded-full overflow-hidden">
       <img
         [src]="getfileUrl(memberChoose.member.profileImage)"
-        alt="profile image"
+        (error)="onImageError($event)"
+        [alt]="memberChoose.member.lastName"
         class="w-full h-full object-cover object-center"
       />
     </div>

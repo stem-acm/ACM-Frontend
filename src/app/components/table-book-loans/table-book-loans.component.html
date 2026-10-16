@@ -35,6 +35,11 @@
           <tr>
             <td>
               <strong>{{ loan.registrationNumber }}</strong>
+              @if (loan.Member) {
+                <small class="books-member-name">
+                  {{ loan.Member.firstName }} {{ loan.Member.lastName }}
+                </small>
+              }
             </td>
             <td>{{ loan.bookTitle }}</td>
             <td>{{ loan.borrowingDate | date: 'mediumDate' }}</td>

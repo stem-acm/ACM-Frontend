@@ -23,6 +23,12 @@
 .books-table-wrap td strong {
   color: #173f87;
 }
+.books-member-name {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
 .books-action {
   text-align: right;
   white-space: nowrap;

@@ -86,12 +86,11 @@ export class AddBookLoanComponent implements OnInit {
     const value = this.loanForm.getRawValue();
     this.success.emit({
       registrationNumber: this.selectedMember.registrationNumber,
-      memberFirstName: this.selectedMember.firstName,
-      memberLastName: this.selectedMember.lastName,
       bookTitle: value.bookTitle.trim(),
       borrowingDate: value.borrowingDate,
       expectedReturnDate: value.expectedReturnDate,
       effectiveReturnDate: value.effectiveReturnDate,
+      Member: this.selectedMember,
     });
     this.resetForm();
   }

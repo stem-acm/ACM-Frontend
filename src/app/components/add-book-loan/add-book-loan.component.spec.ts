@@ -73,7 +73,7 @@ describe('AddBookLoanComponent', () => {
     expect(success).toHaveBeenCalledWith(
       jasmine.objectContaining({
         registrationNumber: 101,
-        memberFirstName: 'Ada',
+        Member: members[0],
         bookTitle: 'Things Fall Apart',
       }),
     );

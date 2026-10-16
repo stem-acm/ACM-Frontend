@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { BookLoan } from '@/app/interfaces/book-loan';
+import { Member } from '@/app/interfaces/member';
 import { TableBookLoansComponent } from './table-book-loans.component';
 
 describe('TableBookLoansComponent', () => {
@@ -11,8 +12,10 @@ describe('TableBookLoansComponent', () => {
   const loan: BookLoan = {
     id: 1,
     registrationNumber: 101,
-    memberFirstName: 'Ada',
-    memberLastName: 'Lovelace',
+    Member: {
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+    } as Member,
     bookTitle: 'Things Fall Apart',
     borrowingDate: '2026-10-01',
     expectedReturnDate: '2026-10-08',

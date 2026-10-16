@@ -2,6 +2,8 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
+import { BookLoanInput } from '@/app/interfaces/book-loan';
+import { User } from '@/app/interfaces/user';
 import { Member } from '@/app/interfaces/member';
 import { MemberService } from '@/app/services/member.service';
 import { BookLoanService } from '@/app/services/book-loan.service';
@@ -11,6 +13,16 @@ describe('AddBookLoanComponent', () => {
   let component: AddBookLoanComponent;
   let fixture: ComponentFixture<AddBookLoanComponent>;
   let getAllMembers: jasmine.Spy;
+  const user: User = {
+    id: 1,
+    username: 'librarian',
+    email: 'librarian@example.com',
+    role: 'admin',
+    active: true,
+    permissions: {},
+    createdAt: '2026-10-01T00:00:00Z',
+    updatedAt: '2026-10-01T00:00:00Z',
+  };
   const members = [
     {
       registrationNumber: 101,
@@ -51,7 +63,8 @@ describe('AddBookLoanComponent', () => {
         {
           provide: BookLoanService,
           useValue: {
-            create: (loan: object) => of({ success: true, message: 'Created', data: loan }),
+            create: (loan: BookLoanInput) =>
+              of({ success: true, message: 'Created', data: { ...loan, id: 1, User: user } }),
           },
         },
       ],
@@ -69,7 +82,7 @@ describe('AddBookLoanComponent', () => {
     expect(component.loanForm.controls.effectiveReturnDate.value).toBe('');
   });
 
-  it('emits a valid loan', () => {
+  it('emits the saved loan including its server-provided user', () => {
     const success = jasmine.createSpy('success');
     component.success.subscribe(success);
     component.selectMember(members[0]);
@@ -80,7 +93,8 @@ describe('AddBookLoanComponent', () => {
     expect(success).toHaveBeenCalledWith(
       jasmine.objectContaining({
         registrationNumber: 101,
-        Member: members[0],
+        id: 1,
+        User: user,
         bookTitle: 'Things Fall Apart',
       }),
     );

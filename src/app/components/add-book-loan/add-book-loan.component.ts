@@ -1,6 +1,6 @@
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardInputComponent } from '@/shared/components/input';
-import { BookLoan } from '@/app/interfaces/book-loan';
+import { BookLoan, BookLoanInput } from '@/app/interfaces/book-loan';
 import { Member } from '@/app/interfaces/member';
 import { MemberService } from '@/app/services/member.service';
 import { BookLoanService } from '@/app/services/book-loan.service';
@@ -88,13 +88,12 @@ export class AddBookLoanComponent implements OnInit {
     }
 
     const value = this.loanForm.getRawValue();
-    const loan: BookLoan = {
+    const loan: BookLoanInput = {
       registrationNumber: this.selectedMember.registrationNumber,
       bookTitle: value.bookTitle.trim(),
       borrowingDate: value.borrowingDate,
       expectedReturnDate: value.expectedReturnDate,
       effectiveReturnDate: value.effectiveReturnDate,
-      Member: this.selectedMember,
     };
 
     this.saving = true;

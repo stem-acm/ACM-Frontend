@@ -44,6 +44,36 @@
         <h2 id="loans-title">{{ 'books.loanList' | translate }}</h2>
         <p>{{ 'books.loanCount' | translate: { count: totalLoans } }}</p>
       </div>
+      <div class="books-search relative">
+        <div
+          class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+        >
+          <svg
+            class="w-4 h-4 text-gray-500 dark:text-gray-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+            />
+          </svg>
+        </div>
+        <input
+          z-input
+          type="search"
+          [(ngModel)]="searchWord"
+          (input)="search(searchWord)"
+          id="table-search-book-loans"
+          class="block p-2 ps-10 h-11 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-4 focus:outline-none focus:ring-primary/20 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+          [placeholder]="'placeholders.searchBookLoans' | translate"
+        />
+      </div>
     </div>
     @if (isLoading) {
       <div class="books-state">{{ 'books.loadingLoans' | translate }}</div>
@@ -54,6 +84,19 @@
           {{ 'ux.retry' | translate }}
         </button>
       </div>
+    } @else if (totalLoans === 0 && searchWord) {
+      <div class="books-state" role="status">
+        <p>{{ 'ux.noMatches' | translate }}</p>
+        <button
+          z-button
+          zType="outline"
+          type="button"
+          class="acm-btn acm-btn--outline"
+          (click)="clearSearch()"
+        >
+          {{ 'ux.clearFilters' | translate }}
+        </button>
+      </div>
     } @else {
       <app-table-book-loans
         [data]="loans"
@@ -62,40 +105,42 @@
         (returned)="markAsReturned($event)"
       />
     }
-    <nav class="books-pagination" [attr.aria-label]="'books.loanList' | translate">
-      <p aria-live="polite">
-        {{ 'table.pagination.showing' | translate }} {{ firstLoan }}
-        {{ 'table.pagination.to' | translate }} {{ lastLoan }}
-        {{ 'table.pagination.of' | translate }} {{ totalLoans }}
-        {{ 'table.pagination.results' | translate }}
-      </p>
-      <div class="books-pagination-controls">
-        <button
-          z-button
-          zType="outline"
-          type="button"
-          class="acm-btn acm-btn--outline"
-          [zDisabled]="isLoading || currentPage === 1"
-          (click)="changePage(currentPage - 1)"
-        >
-          {{ 'table.pagination.previous' | translate }}
-        </button>
-        <span
-          >{{ 'table.pagination.page' | translate }} {{ currentPage }}
-          {{ 'table.pagination.of' | translate }} {{ totalPages }}</span
-        >
-        <button
-          z-button
-          zType="outline"
-          type="button"
-          class="acm-btn acm-btn--outline"
-          [zDisabled]="isLoading || currentPage >= totalPages"
-          (click)="changePage(currentPage + 1)"
-        >
-          {{ 'table.pagination.next' | translate }}
-        </button>
-      </div>
-    </nav>
+    @if (!isLoading && !loadError && totalLoans > 0) {
+      <nav class="books-pagination" [attr.aria-label]="'books.loanList' | translate">
+        <p aria-live="polite">
+          {{ 'table.pagination.showing' | translate }} {{ firstLoan }}
+          {{ 'table.pagination.to' | translate }} {{ lastLoan }}
+          {{ 'table.pagination.of' | translate }} {{ totalLoans }}
+          {{ 'table.pagination.results' | translate }}
+        </p>
+        <div class="books-pagination-controls">
+          <button
+            z-button
+            zType="outline"
+            type="button"
+            class="acm-btn acm-btn--outline"
+            [zDisabled]="isLoading || currentPage === 1"
+            (click)="changePage(currentPage - 1)"
+          >
+            {{ 'table.pagination.previous' | translate }}
+          </button>
+          <span
+            >{{ 'table.pagination.page' | translate }} {{ currentPage }}
+            {{ 'table.pagination.of' | translate }} {{ totalPages }}</span
+          >
+          <button
+            z-button
+            zType="outline"
+            type="button"
+            class="acm-btn acm-btn--outline"
+            [zDisabled]="isLoading || currentPage >= totalPages"
+            (click)="changePage(currentPage + 1)"
+          >
+            {{ 'table.pagination.next' | translate }}
+          </button>
+        </div>
+      </nav>
+    }
   </section>
 </main>
 

@@ -4,13 +4,23 @@ import { BookLoan } from '@/app/interfaces/book-loan';
 import { BookLoanService } from '@/app/services/book-loan.service';
 import { AuthService } from '@/app/services/auth.service';
 import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardInputComponent } from '@/shared/components/input';
 import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-books',
   standalone: true,
-  imports: [TranslateModule, ZardButtonComponent, AddBookLoanComponent, TableBookLoansComponent],
+  imports: [
+    TranslateModule,
+    FormsModule,
+    ZardButtonComponent,
+    ZardInputComponent,
+    AddBookLoanComponent,
+    TableBookLoansComponent,
+  ],
   templateUrl: './books.component.html',
   styleUrl: './books.component.css',
 })
@@ -27,6 +37,8 @@ export class BooksComponent implements OnInit {
   showSuccess = false;
   isLoading = false;
   loadError = '';
+  searchWord = '';
+  private readonly searchSubject = new Subject<string>();
 
   get totalPages(): number {
     return Math.max(1, Math.ceil(this.totalLoans / this.pageSize));
@@ -47,23 +59,40 @@ export class BooksComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.searchSubject.pipe(debounceTime(500), distinctUntilChanged()).subscribe(value => {
+      this.searchWord = value;
+      this.currentPage = 1;
+      this.loadLoans();
+    });
     this.loadLoans();
   }
 
   loadLoans(): void {
     this.isLoading = true;
     this.loadError = '';
-    this.bookLoanService.getAll((this.currentPage - 1) * this.pageSize, this.pageSize).subscribe({
-      next: result => {
-        this.loans = result.data;
-        this.totalLoans = result.pagination?.total ?? result.data.length;
-        this.isLoading = false;
-      },
-      error: error => {
-        this.isLoading = false;
-        this.loadError = error.error?.message || 'Unable to load book loans.';
-      },
-    });
+    this.bookLoanService
+      .getAll((this.currentPage - 1) * this.pageSize, this.pageSize, this.searchWord)
+      .subscribe({
+        next: result => {
+          this.loans = result.data;
+          this.totalLoans = result.pagination?.total ?? result.data.length;
+          this.isLoading = false;
+        },
+        error: error => {
+          this.isLoading = false;
+          this.loadError = error.error?.message || 'Unable to load book loans.';
+        },
+      });
+  }
+
+  search(keyword: string): void {
+    this.searchSubject.next(keyword);
+  }
+
+  clearSearch(): void {
+    this.searchWord = '';
+    this.currentPage = 1;
+    this.searchSubject.next('');
   }
 
   openAddForm(): void {

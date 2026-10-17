@@ -65,6 +65,12 @@
   font-size: 1.15rem;
   font-weight: 700;
 }
+.books-search {
+  flex: 0 1 20rem;
+}
+.books-search input {
+  width: 100%;
+}
 .books-state {
   display: grid;
   justify-items: center;
@@ -78,7 +84,13 @@
 }
 @media (max-width: 700px) {
   .books-list-heading {
+    align-items: stretch;
+    flex-direction: column;
     padding: 1rem;
+  }
+  .books-search {
+    flex-basis: auto;
+    width: 100%;
   }
 }
 

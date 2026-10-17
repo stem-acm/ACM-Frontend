@@ -74,6 +74,20 @@
         [placeholder]="'placeholders.searchBookLoans' | translate"
       />
     </div>
+    <div class="books-status-filter">
+      <label for="book-loan-status" class="sr-only">{{ 'books.statusFilter' | translate }}</label>
+      <select
+        id="book-loan-status"
+        [ngModel]="selectedStatus"
+        (ngModelChange)="changeStatus($event)"
+        class="h-11 px-4 text-sm font-bold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-4 focus:outline-none focus:ring-primary/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+      >
+        <option value="all">{{ 'books.filters.all' | translate }}</option>
+        <option value="active">{{ 'books.filters.active' | translate }}</option>
+        <option value="overdue">{{ 'books.filters.overdue' | translate }}</option>
+        <option value="returned">{{ 'books.filters.returned' | translate }}</option>
+      </select>
+    </div>
   </div>
 
   <div class="acm-filter-summary" role="status">
@@ -96,7 +110,7 @@
           {{ 'ux.retry' | translate }}
         </button>
       </div>
-    } @else if (totalLoans === 0 && searchWord) {
+    } @else if (totalLoans === 0 && (searchWord || selectedStatus !== 'all')) {
       <div class="acm-list-state" role="status">
         <p>{{ 'ux.noMatches' | translate }}</p>
         <button
@@ -104,7 +118,7 @@
           zType="outline"
           type="button"
           class="acm-btn acm-btn--outline"
-          (click)="clearSearch()"
+          (click)="clearFilters()"
         >
           {{ 'ux.clearFilters' | translate }}
         </button>

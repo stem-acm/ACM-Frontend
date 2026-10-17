@@ -1,7 +1,7 @@
 import { AddBookLoanComponent } from '@/app/components/add-book-loan/add-book-loan.component';
 import { TableBookLoansComponent } from '@/app/components/table-book-loans/table-book-loans.component';
 import { BookLoan } from '@/app/interfaces/book-loan';
-import { BookLoanService } from '@/app/services/book-loan.service';
+import { BookLoanService, BookLoanStatusFilter } from '@/app/services/book-loan.service';
 import { AuthService } from '@/app/services/auth.service';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardInputComponent } from '@/shared/components/input';
@@ -38,6 +38,7 @@ export class BooksComponent implements OnInit {
   isLoading = false;
   loadError = '';
   searchWord = '';
+  selectedStatus: BookLoanStatusFilter = 'all';
   private readonly searchSubject = new Subject<string>();
 
   get totalPages(): number {
@@ -71,7 +72,12 @@ export class BooksComponent implements OnInit {
     this.isLoading = true;
     this.loadError = '';
     this.bookLoanService
-      .getAll((this.currentPage - 1) * this.pageSize, this.pageSize, this.searchWord)
+      .getAll(
+        (this.currentPage - 1) * this.pageSize,
+        this.pageSize,
+        this.searchWord,
+        this.selectedStatus,
+      )
       .subscribe({
         next: result => {
           this.loans = result.data;
@@ -95,6 +101,22 @@ export class BooksComponent implements OnInit {
     this.searchSubject.next('');
   }
 
+  changeStatus(status: BookLoanStatusFilter): void {
+    if (status === this.selectedStatus) return;
+    this.selectedStatus = status;
+    this.currentPage = 1;
+    this.loadLoans();
+  }
+
+  clearFilters(): void {
+    const hadSearch = this.searchWord !== '';
+    this.selectedStatus = 'all';
+    this.searchWord = '';
+    this.currentPage = 1;
+    if (hadSearch) this.searchSubject.next('');
+    else this.loadLoans();
+  }
+
   openAddForm(): void {
     this.showAddForm = true;
   }
@@ -114,7 +136,11 @@ export class BooksComponent implements OnInit {
     if (!loan.id || loan.borrowingDate > this.today) return;
     this.bookLoanService.markReturned(loan.id, this.today).subscribe({
       next: result => {
-        this.loans = this.loans.map(item => (item.id === loan.id ? result.data : item));
+        if (this.selectedStatus === 'active' || this.selectedStatus === 'overdue') {
+          this.loadLoans();
+        } else {
+          this.loans = this.loans.map(item => (item.id === loan.id ? result.data : item));
+        }
         this.showSuccess = true;
       },
       error: error => {

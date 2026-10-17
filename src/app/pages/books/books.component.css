@@ -39,6 +39,9 @@
   background: transparent;
   border: 0;
 }
+.books-status-filter select {
+  min-width: 12rem;
+}
 .books-pagination,
 .books-pagination-controls {
   display: flex;
@@ -59,6 +62,10 @@
   margin: 0;
 }
 @media (max-width: 767px) {
+  .books-status-filter,
+  .books-status-filter select {
+    width: 100%;
+  }
   .books-pagination {
     justify-content: center;
     padding: 1rem;

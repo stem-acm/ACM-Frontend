@@ -40,6 +40,12 @@ export class TableCheckinsComponent implements OnInit, OnDestroy {
     return `${this.URL}/${fileName && fileName != '' ? fileName : 'user.png'}`;
   }
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.onerror = null;
+    img.src = `${this.URL}/user.png`;
+  }
+
   formatTime(date?: Date | string): string {
     if (!date) return this.translateService.instant('table.noTime');
     return dayjs(date).format('h:mm A');

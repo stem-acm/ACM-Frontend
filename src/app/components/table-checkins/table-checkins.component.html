@@ -2,7 +2,11 @@
   @for (item of checkins; track item) {
     <article class="acm-mobile-record">
       <div class="acm-mobile-record-head">
-        <img [src]="getfileUrl(item.Member?.profileImage)" alt="" />
+        <img
+          [src]="getfileUrl(item.Member?.profileImage)"
+          (error)="onImageError($event)"
+          [alt]="item.Member?.firstName"
+        />
         <div>
           <strong>{{ item.Member?.lastName?.toUpperCase() + ' ' + item.Member?.firstName }}</strong>
           <span>{{ item.Member?.registrationNumber }}</span>
@@ -63,7 +67,8 @@
             <img
               class="w-10 h-10 rounded-full"
               [src]="getfileUrl(item?.Member?.profileImage)"
-              alt="Jese image"
+              (error)="onImageError($event)"
+              [alt]="item.Member?.firstName"
             />
             @if (isInRoom(item)) {
               <span

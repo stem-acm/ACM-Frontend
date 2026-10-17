@@ -15,8 +15,58 @@
     <p>{{ 'books.emptyDescription' | translate }}</p>
   </div>
 } @else {
+  <div class="acm-mobile-records md:hidden">
+    @for (loan of data; track loan.id) {
+      <article class="acm-mobile-record">
+        <div class="acm-mobile-record-head books-mobile-head">
+          <div>
+            <strong>{{ loan.bookTitle }}</strong>
+            <span>
+              {{ loan.registrationNumber }}
+              @if (loan.Member) {
+                · {{ loan.Member.firstName }} {{ loan.Member.lastName }}
+              }
+            </span>
+          </div>
+          <span [class]="'books-status books-status--' + getStatus(loan)">{{
+            'books.statuses.' + getStatus(loan) | translate
+          }}</span>
+        </div>
+        <dl>
+          <div>
+            <dt>{{ 'books.borrowingDate' | translate }}</dt>
+            <dd>{{ loan.borrowingDate | date: 'mediumDate' }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'books.expectedReturnDate' | translate }}</dt>
+            <dd>{{ loan.expectedReturnDate | date: 'mediumDate' }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'books.effectiveReturnDate' | translate }}</dt>
+            <dd>
+              {{ loan.effectiveReturnDate ? (loan.effectiveReturnDate | date: 'mediumDate') : '—' }}
+            </dd>
+          </div>
+        </dl>
+        @if (!loan.effectiveReturnDate && canUpdate) {
+          <div class="acm-mobile-record-actions">
+            <button
+              z-button
+              zType="outline"
+              type="button"
+              class="acm-btn acm-btn--outline acm-btn--sm"
+              [disabled]="loan.borrowingDate > today"
+              (click)="markAsReturned(loan)"
+            >
+              {{ 'books.markReturned' | translate }}
+            </button>
+          </div>
+        }
+      </article>
+    }
+  </div>
   <div class="books-table-wrap">
-    <table>
+    <table class="acm-data-table">
       <thead>
         <tr>
           <th>{{ 'books.registrationNumber' | translate }}</th>

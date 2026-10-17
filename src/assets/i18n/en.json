@@ -117,7 +117,14 @@
     "status": "Status",
     "actions": "Actions",
     "markReturned": "Mark as returned",
-    "statuses": { "borrowed": "On loan", "overdue": "Overdue", "returned": "Returned" }
+    "statuses": { "borrowed": "On loan", "overdue": "Overdue", "returned": "Returned" },
+    "statusFilter": "Filter loans by status",
+    "filters": {
+      "all": "All statuses",
+      "active": "Active",
+      "overdue": "Overdue",
+      "returned": "Returned"
+    }
   },
   "profile": {
     "title": "My profile",
@@ -193,6 +200,7 @@
     "searchMembers": "Search for members",
     "searchActivities": "Search for activities",
     "searchVolunteer": "Search for volunteer",
+    "searchBookLoans": "Search book loans",
     "searchMember": "eg: John",
     "searchStudyPlaces": "Search study/workplace..."
   },

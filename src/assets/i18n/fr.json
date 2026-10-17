@@ -117,7 +117,14 @@
     "status": "Statut",
     "actions": "Actions",
     "markReturned": "Marquer comme rendu",
-    "statuses": { "borrowed": "En cours", "overdue": "En retard", "returned": "Rendu" }
+    "statuses": { "borrowed": "En cours", "overdue": "En retard", "returned": "Rendu" },
+    "statusFilter": "Filtrer les emprunts par statut",
+    "filters": {
+      "all": "Tous les statuts",
+      "active": "En cours",
+      "overdue": "En retard",
+      "returned": "Rendus"
+    }
   },
   "profile": {
     "title": "Mon profil",
@@ -193,6 +200,7 @@
     "searchMembers": "Rechercher des membres",
     "searchActivities": "Rechercher des activités",
     "searchVolunteer": "Rechercher un bénévole",
+    "searchBookLoans": "Rechercher un emprunt",
     "searchMember": "ex: Jean",
     "searchStudyPlaces": "Rechercher un lieu d'étude/travail..."
   },

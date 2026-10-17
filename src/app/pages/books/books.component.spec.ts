@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { of, Subject, throwError } from 'rxjs';
 import { HttpResult } from '@/app/types/httpResult';
@@ -82,7 +82,7 @@ describe('BooksComponent', () => {
     component.currentPage = 2;
     component.addLoan();
     expect(component.currentPage).toBe(1);
-    expect(getAll).toHaveBeenCalledWith(0, 25);
+    expect(getAll).toHaveBeenCalledWith(0, 25, '', 'all');
     expect(component.totalLoans).toBe(26);
 
     expect(component.loans.length).toBe(1);
@@ -101,7 +101,7 @@ describe('BooksComponent', () => {
     getAll.and.returnValue(of({ success: true, data: [loan], pagination: { total: 26 } }));
     component.changePage(2);
     fixture.detectChanges();
-    expect(getAll).toHaveBeenCalledWith(25, 25);
+    expect(getAll).toHaveBeenCalledWith(25, 25, '', 'all');
     expect(component.firstLoan).toBe(26);
     expect(component.lastLoan).toBe(26);
     expect(component.totalPages).toBe(2);
@@ -109,7 +109,7 @@ describe('BooksComponent', () => {
     expect(buttons[0].disabled).toBeFalse();
     expect(buttons[1].disabled).toBeTrue();
     component.changePage(1);
-    expect(getAll).toHaveBeenCalledWith(0, 25);
+    expect(getAll).toHaveBeenCalledWith(0, 25, '', 'all');
   });
 
   it('prevents invalid navigation and duplicate requests while loading', () => {
@@ -144,8 +144,60 @@ describe('BooksComponent', () => {
     expect(component.loadError).toBeTruthy();
     getAll.and.returnValue(of({ success: true, data: [loan], pagination: { total: 26 } }));
     component.loadLoans();
-    expect(getAll).toHaveBeenCalledWith(25, 25);
+    expect(getAll).toHaveBeenCalledWith(25, 25, '', 'all');
     expect(component.loadError).toBe('');
     expect(component.loans).toEqual([loan]);
+  });
+
+  it('searches from the first page after the same debounce as Volunteer', fakeAsync(() => {
+    getAll.calls.reset();
+    component.currentPage = 2;
+
+    component.search('Ada');
+    tick(499);
+    expect(getAll).not.toHaveBeenCalled();
+
+    tick(1);
+    expect(component.currentPage).toBe(1);
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, 'Ada', 'all');
+  }));
+
+  it('clears the search and reloads all loans', fakeAsync(() => {
+    component.searchWord = '2026-10-15';
+    component.currentPage = 2;
+    getAll.calls.reset();
+
+    component.clearSearch();
+    tick(500);
+
+    expect(component.searchWord).toBe('');
+    expect(component.currentPage).toBe(1);
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, '', 'all');
+  }));
+
+  it('combines the status filter with the current search and ignores duplicate selections', () => {
+    component.searchWord = 'Ada';
+    component.currentPage = 2;
+    getAll.calls.reset();
+
+    component.changeStatus('overdue');
+
+    expect(component.currentPage).toBe(1);
+    expect(component.searchWord).toBe('Ada');
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, 'Ada', 'overdue');
+
+    getAll.calls.reset();
+    component.changeStatus('overdue');
+    expect(getAll).not.toHaveBeenCalled();
+  });
+
+  it('clears a status-only filter immediately', () => {
+    component.selectedStatus = 'returned';
+    getAll.calls.reset();
+
+    component.clearFilters();
+
+    expect(component.selectedStatus).toBe('all');
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, '', 'all');
   });
 });

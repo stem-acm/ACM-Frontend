@@ -117,7 +117,14 @@
     "status": "Toetra",
     "actions": "Asa",
     "markReturned": "Mariho fa naverina",
-    "statuses": { "borrowed": "Mbola indramina", "overdue": "Tara", "returned": "Naverina" }
+    "statuses": { "borrowed": "Mbola indramina", "overdue": "Tara", "returned": "Naverina" },
+    "statusFilter": "Sivano araka ny toetra",
+    "filters": {
+      "all": "Toetra rehetra",
+      "active": "Mbola indramina",
+      "overdue": "Tara",
+      "returned": "Naverina"
+    }
   },
   "profile": {
     "title": "Ny mombamomba ahy",
@@ -193,6 +200,7 @@
     "searchMembers": "Hitady mpikambana",
     "searchActivities": "Hitady hetsika",
     "searchVolunteer": "Hitady mpanao an-tsitrapo",
+    "searchBookLoans": "Hitady fampindramam-boky",
     "searchMember": "oh: Jean",
     "searchStudyPlaces": "Hitady toerana fianarana/asa..."
   },

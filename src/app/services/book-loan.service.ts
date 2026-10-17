@@ -4,14 +4,19 @@ import { environment } from '@/environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
+export type BookLoanStatusFilter = 'all' | 'active' | 'overdue' | 'returned';
+
 @Injectable({ providedIn: 'root' })
 export class BookLoanService {
   private readonly http = inject(HttpClient);
   private readonly url = `${environment.API_URL}/book-loans`;
 
-  getAll(offset = 0, limit = 100, search = '', status?: 'borrowed' | 'overdue' | 'returned') {
-    let params = new HttpParams().set('offset', offset).set('limit', limit).set('search', search);
-    if (status) params = params.set('status', status);
+  getAll(offset = 0, limit = 100, search = '', status: BookLoanStatusFilter = 'all') {
+    const params = new HttpParams()
+      .set('offset', offset)
+      .set('limit', limit)
+      .set('search', search)
+      .set('status', status);
     return this.http.get<HttpResult<BookLoan[]>>(this.url, { params });
   }
 

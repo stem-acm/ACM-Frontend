@@ -2,7 +2,7 @@
 
 Angular 18 single-page application for managing members, attendance, activities, volunteers, book loans, badges, certificates, and role-based administration. It calls the separate ACM Express API and receives live updates through server-sent events (SSE).
 
-This guide deploys a production static build on **Ubuntu Server 24.04 LTS with Nginx and HTTPS**. [Deploy the backend first](../ACM-Backend/README.md): the frontend requires its PostgreSQL database, migrated schema, initial administrator, and reachable HTTPS API. These instructions describe deployment; no VPS is modified by this README.
+Choose the [full Docker VPS deployment](#full-docker-deployment-on-a-vps) or the host static deployment below. Both serve a production build on **Ubuntu Server 24.04 LTS with Nginx and HTTPS**. [Deploy the backend first](../ACM-Backend/README.md): the frontend requires its PostgreSQL database, migrated schema, initial administrator, and reachable HTTPS API. These instructions describe deployment; no VPS is modified by this README.
 
 ## 1. Understand the deployment
 
@@ -303,7 +303,279 @@ readlink -f /var/www/acm/current
 - `npm test` runs browser-based Karma tests and needs a compatible browser; building successfully does not replace end-to-end verification.
 - The existing production Dockerfile builds Angular and then runs `serve` on port 4200. `docker-compose.prod.yml` publishes that port publicly. The root `docker-compose.yml` is commented out; plain `docker compose up` is not the production frontend command.
 
-If you choose containers instead of the host-static deployment, build with `docker compose -f docker-compose.prod.yml up -d --build` **after editing production URLs**. Change the Compose port mapping to `127.0.0.1:4200:4200`, and use a separate Nginx frontend virtual host proxying to `http://127.0.0.1:4200` instead of the static-root configuration above. Retain the HTTPS/domain setup. Install Docker Engine/Compose first using the [official Ubuntu instructions](https://docs.docker.com/engine/install/ubuntu/). Docker-published ports can bypass UFW rules, so loopback binding matters. The existing image uses Node 20 and an unpinned global `serve`; review those choices before adopting it as your maintained production path. Do not run both frontend serving approaches for the same domain.
+## Full Docker deployment on a VPS
+
+This path runs the production Angular build in an **Nginx container**, with **host Nginx and Certbot** handling public HTTPS. Pair it with the [backend Docker deployment](../ACM-Backend/README.md#full-docker-deployment-on-a-vps), which runs the API and PostgreSQL in Docker. Host Node/npm and the static release symlink setup above are not needed for this path.
+
+The Dockerfile, container Nginx configuration, and Compose file below are complete examples to create on your VPS. This documentation does not modify the existing development/production Docker files. Use these dedicated deployment files to get Node 22 builds, static Nginx serving, and loopback-only publication.
+
+### F1. Prepare the VPS and repositories
+
+Use Ubuntu Server 24.04 LTS with sudo-capable SSH user `deploy`. Point `acm.example.com` and `api.acm.example.com` at the appropriate VPS IPs, replacing these names throughout the instructions. Publish IPv6 DNS only if configured. Allow your actual SSH port and ports 80/443 in the provider firewall and UFW.
+
+Complete [backend Docker steps D1–D9](../ACM-Backend/README.md#full-docker-deployment-on-a-vps) first: they include the complete Docker Engine/Compose installation commands, host Nginx/Certbot setup, API image/Compose configuration, database migrations, administrator creation, and optional spreadsheet imports. Confirm:
+
+```bash
+sudo docker compose version
+sudo systemctl status docker nginx --no-pager
+curl --fail https://api.acm.example.com/health
+```
+
+On a separate frontend VPS, use backend step D1 to install **only the Docker/host Nginx prerequisites** on that server, then follow this guide; do not create another API/database there. Host Nginx must own ports 80/443. The frontend container will listen only on host `127.0.0.1:4200`; users access the public HTTPS domain.
+
+```bash
+sudo mkdir -p /srv/acm
+sudo chown deploy:deploy /srv/acm
+cd /srv/acm
+git clone <FRONTEND_REPOSITORY_URL> ACM-Frontend
+install -d -m 700 /srv/acm/docker
+```
+
+Use an existing checkout if present, after inspecting its working tree. Do not place private keys/secrets in source or image build contexts. No `npm install` is required on the host because the image builds dependencies internally.
+
+### F2. Configure the production browser URLs
+
+Edit `/srv/acm/ACM-Frontend/src/environments/environment.ts` before building:
+
+```typescript
+export const environment = {
+  API_URL: 'https://api.acm.example.com/api',
+  FILE_URL: 'https://api.acm.example.com/uploads',
+  STATIC_WEB_URL: 'https://api.acm.example.com',
+  SHOW_EXPERIMENTAL_FEATURES: false,
+};
+```
+
+These are **public browser URLs**, not Compose service names: `http://backend:3000` would not resolve in visitors' browsers. Keep `/api` and `/uploads` as shown and use HTTPS. The build does not use `environment.development.ts`; runtime container variables cannot rewrite already compiled URLs. Do not add private API/database/JWT credentials to any frontend environment file.
+
+On the backend VPS, set `ALLOWED_ORIGINS=https://acm.example.com` in `/srv/acm/docker/.env` and apply it by recreating the API:
+
+```bash
+cd /srv/acm/docker
+sudo docker compose --env-file .env -f backend.yaml up -d --force-recreate backend
+```
+
+Do this only where the backend Docker deployment is installed. A plain container restart does not inject changed environment variables. For multiple frontend origins use a comma-separated list, with no trailing slash/path.
+
+### F3. Create the container configuration
+
+Create `/srv/acm/docker/frontend.nginx.conf`:
+
+```nginx
+server {
+    listen 8080;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location = /index.html {
+        add_header Cache-Control "no-cache" always;
+    }
+
+    location ~* \.(?:js|css|map|json|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|pdf)$ {
+        try_files $uri =404;
+        add_header Cache-Control "no-cache" always;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+
+The final fallback lets Angular handle direct navigation/refresh on nested routes. Missing static assets return a real 404. Conservative revalidation avoids caching an old index or unversioned assets indefinitely. This serves the app at `/`, not a subdirectory.
+
+Create `/srv/acm/docker/frontend.Dockerfile`:
+
+```dockerfile
+FROM node:22-bookworm-slim AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
+COPY angular.json tsconfig*.json .postcssrc.json ./
+COPY src ./src
+COPY public ./public
+RUN npm run build -- --configuration production
+
+FROM nginx:stable-alpine
+RUN rm /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/acm-frontend/browser/ /usr/share/nginx/html/
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+The whitelist of copied files excludes `.env`, Git history, and deployment secrets. `--legacy-peer-deps` matches the repository's current dependency requirements. Only compiled assets enter the runtime image. The Nginx configuration is mounted read-only by Compose below; it need not be copied from outside the build context.
+
+Create `/srv/acm/docker/frontend.yaml`:
+
+```yaml
+name: acm-web
+services:
+  frontend:
+    image: acm-frontend:local
+    build:
+      context: ../ACM-Frontend
+      dockerfile: /srv/acm/docker/frontend.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4200:8080"
+    volumes:
+      - ./frontend.nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: [CMD-SHELL, 'wget -q -O /dev/null http://127.0.0.1:8080/index.html || exit 1']
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+```
+
+This separate Compose project is named `acm-web`; the backend project is `acm-api`. They do not need a shared Docker network because browser requests use the public API domain. Do not combine these files with `-f backend.yaml -f frontend.yaml` or change project names accidentally. No frontend data volume is needed: assets are built into the image, while all persistent application data lives in the backend database/uploads volumes.
+
+Docker-published ports can bypass UFW, so retain the explicit loopback binding. See [Docker's firewall documentation](https://docs.docker.com/engine/network/packet-filtering-firewalls/). Do not publish port 4200 on `0.0.0.0` as a substitute for HTTPS.
+
+### F4. Build and start the frontend container
+
+```bash
+cd /srv/acm/docker
+sudo docker compose -f frontend.yaml config --quiet
+sudo docker compose -f frontend.yaml build --pull frontend
+sudo docker compose -f frontend.yaml up -d --wait frontend
+sudo docker compose -f frontend.yaml ps
+curl --fail -I http://127.0.0.1:4200/
+sudo docker compose -f frontend.yaml exec frontend nginx -t
+```
+
+Stop on any failed command. The image build enforces Angular's production budgets and produces `/app/dist/acm-frontend/browser`; it may require several GB of RAM temporarily. If memory is insufficient, build/tag the image on a matching CPU architecture in CI or another machine, transfer it via a registry or `docker save`/`docker load`, and run the same Compose service without rebuilding. Never publish partial output after a failed build.
+
+Record the source revision and image/base digests for repeatability. `node:22-bookworm-slim` and `nginx:stable-alpine` tags receive updates; pull and test them deliberately. The configuration file must exist before `up` or a bind mount can be created incorrectly as a directory.
+
+### F5. Configure the host reverse proxy
+
+Create `/etc/nginx/sites-available/acm-frontend` on the frontend VPS:
+
+```nginx
+server {
+    listen 80;
+    server_name acm.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:4200;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Use this configuration **instead of** the host static-root/symlink configuration in section 7. If the virtual host already exists, replace its contents deliberately and keep only one server for this domain. Preserve the separate API virtual host.
+
+```bash
+sudo ln -s /etc/nginx/sites-available/acm-frontend /etc/nginx/sites-enabled/acm-frontend
+sudo nginx -t
+sudo systemctl reload nginx
+curl --fail -I http://acm.example.com/
+```
+
+Skip symlink creation if it already exists. If you see the default welcome page, check DNS and `server_name`. Nginx's host proxy forwards to the container; the **container** handles Angular route fallback. API and SSE traffic goes to the backend domain, whose Nginx configuration needs its own streaming settings from backend D9.
+
+### F6. Enable HTTPS and automatic renewal
+
+If Certbot was not installed during backend deployment on this host:
+
+```bash
+sudo snap install --classic certbot
+```
+
+Then:
+
+```bash
+sudo /snap/bin/certbot --nginx -d acm.example.com
+sudo nginx -t
+sudo /snap/bin/certbot renew --dry-run
+systemctl list-timers --all | grep certbot
+curl --fail -I https://acm.example.com/
+```
+
+Provide your email and enable HTTP-to-HTTPS redirection if prompted. Keep inbound port 80 for renewal/redirects and port 443 for the app. Follow the [official Certbot Nginx instructions](https://certbot.eff.org/instructions?os=snap&tab=standard&ws=nginx) if your server already uses another certificate installation. Certificates reside on the host and survive container recreation; include `/etc/letsencrypt` and Nginx configuration in protected host backups.
+
+### F7. Import historical data and verify all features
+
+Members and loans are imported **in backend containers**, not in the frontend image. Follow [backend Docker step D8](../ACM-Backend/README.md#d8-import-members-and-loans-into-docker-postgresql), including:
+
+1. Apply all migrations and create the first admin.
+2. Upload workbooks into the private host import directory and mount it read-only for import commands.
+3. Validate/compare/import members with original IDs before loans.
+4. Validate/import loans; resolve missing members/conflicting IDs before retrying.
+5. Copy corresponding photos into the backend uploads volume; spreadsheets contain references only.
+
+Use [IMPORT_MEMBERS.md](../ACM-Backend/src/db/IMPORT_MEMBERS.md) and [IMPORT_BOOKS.md](../ACM-Backend/src/db/IMPORT_BOOKS.md) for formats and validation rules. Do not use their host port 5434 examples against this unexposed Docker database.
+
+From a browser, verify HTTPS login, member/loan counts and dates, images, record creation, direct navigation/refresh of nested pages, QR camera permission, and live updates in two sessions. Network requests must target the public API URL, not localhost or a Docker service name. A pending `text/event-stream` request is normal. Health checks alone do not verify database access, CORS, or feature behavior.
+
+At a suitable maintenance time, reboot the host and verify Docker, host Nginx, the frontend, and the backend return. `restart: unless-stopped` restarts normally running containers; manually stopped services need an explicit `up`/`start`. An unhealthy container is not automatically restarted solely because of its health status.
+
+### F8. Logs, updates, and rollback
+
+```bash
+cd /srv/acm/docker
+sudo docker compose -f frontend.yaml logs --tail=100 frontend
+sudo docker compose -f frontend.yaml ps
+sudo tail -n 100 /var/log/nginx/error.log
+sudo docker system df
+```
+
+For each update, preserve the running image, record the frontend Git revision, and review local production environment changes before pulling:
+
+```bash
+sudo docker image tag acm-frontend:local acm-frontend:previous
+cd /srv/acm/ACM-Frontend
+git status --short
+git rev-parse HEAD
+git pull --ff-only
+# Confirm environment.ts still contains your production URLs.
+cd /srv/acm/docker
+sudo docker compose -f frontend.yaml build --pull frontend
+sudo docker compose -f frontend.yaml up -d --no-deps --force-recreate --wait frontend
+curl --fail -I https://acm.example.com/
+```
+
+Run subsequent commands only if the earlier command succeeds. The old container can serve users while the image builds; recreation briefly interrupts service. Re-run browser checks after switching. Existing browser tabs may retain older code; refresh if an old tab requests a lazy bundle no longer present in the new image.
+
+To roll back to the saved image:
+
+```bash
+cd /srv/acm/docker
+sudo docker image tag acm-frontend:previous acm-frontend:local
+sudo docker compose -f frontend.yaml up -d --no-deps --force-recreate --wait frontend
+```
+
+Check backend compatibility before rolling back. Preserve a matching copy of `frontend.nginx.conf`, Dockerfile, Compose file, source revision, and production URLs; image rollback does not undo an external config edit. Keep versioned image tags or export archives if more than one previous release is required. Do not prune your rollback images until the update has been verified.
+
+After changing browser URLs, rebuild/recreate the frontend. After changing the mounted container Nginx configuration, validate it with `compose exec frontend nginx -t`, then reload it with `compose exec frontend nginx -s reload` (or recreate the container). Host Nginx edits require `sudo nginx -t` and `sudo systemctl reload nginx` separately.
+
+### F9. Backup, restore, and common failures
+
+The frontend has no user data volume. Back up source revision/build settings, release images (or registry references), `/srv/acm/docker/frontend.*`, host Nginx configuration, and certificate configuration/keys privately. User data recovery is the [backend Docker backup/restore procedure](../ACM-Backend/README.md#d11-back-up-and-restore-docker-data); rebuilding the frontend cannot restore members, loans, or photos.
+
+To recover on a replacement VPS: install Docker/Nginx, restore the frontend source/settings or load the matching saved image, restore the three frontend deployment files, run `compose up -d --wait frontend`, restore/reissue HTTPS certificates, and verify DNS and API reachability. Use a protected backup of the backend secrets and data for its separate recovery. Run `nginx -t` before enabling restored host configuration.
+
+| Docker symptom | Action |
+| --- | --- |
+| Frontend container unhealthy | Inspect logs, mounted config, and `/index.html`; confirm image build succeeded. |
+| Host Nginx returns 502 | Check `compose ps` and `curl http://127.0.0.1:4200/`; confirm port mapping is 4200 → 8080. |
+| Deep-link refresh gives 404 | Check the container's `try_files` fallback and host proxy configuration. |
+| Browser calls localhost/`backend` | Correct production environment URLs, then rebuild/recreate. |
+| CORS fails after backend `.env` edit | Recreate the API container, and verify the exact HTTPS frontend origin. |
+| Config mount is a directory | The host config file was missing at creation; stop the service, correct the path/file, then recreate. |
+| Live updates stall | Check API-side SSE settings; the frontend proxy does not carry cross-origin API streams. |
+| Imported data absent | Confirm imports ran against the backend production Compose project, not development/host PostgreSQL. |
 
 ## References
 

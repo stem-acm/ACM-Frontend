@@ -20,6 +20,21 @@
     "passwordLength": "Utilisez au moins 8 caractères.",
     "passwordRules": "Utilisez au moins 8 caractères, dont une lettre et un chiffre."
   },
+  "memberPhoto": {
+    "title": "Photo du membre",
+    "help": "Facultatif. Utilisez une image JPEG, PNG ou WebP de 5 Mo maximum.",
+    "previewAlt": "Aperçu de la photo du membre",
+    "take": "Prendre une photo",
+    "import": "Importer une photo",
+    "remove": "Retirer la photo",
+    "capture": "Capturer",
+    "errors": {
+      "unavailable": "La caméra n'est pas disponible. Importez une image à la place.",
+      "denied": "L'accès à la caméra a été refusé ou elle est indisponible. Importez une image à la place.",
+      "type": "Seules les images JPEG, PNG ou WebP sont acceptées.",
+      "size": "L'image ne doit pas dépasser 5 Mo."
+    }
+  },
   "access": {
     "title": "Paramètres d'accès",
     "description": "Choisissez ce que chaque rôle peut voir et faire dans l'application.",

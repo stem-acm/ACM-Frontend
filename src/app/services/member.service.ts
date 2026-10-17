@@ -44,18 +44,33 @@ export class MemberService {
     );
   }
 
-  addMember(member: Member) {
-    return this.http.post<HttpResult<Member>>(`${this.URL}/members`, member);
+  addMember(member: Member, photo?: File | null) {
+    return this.http.post<HttpResult<Member>>(
+      `${this.URL}/members`,
+      this.toFormData(member, photo),
+    );
   }
 
-  updateMember(member: Member) {
+  updateMember(member: Member, photo?: File | null, removePhoto = false) {
     return this.http.put<HttpResult<Member>>(
       `${this.URL}/members/${member.registrationNumber}`,
-      member,
+      this.toFormData(member, photo, removePhoto),
     );
   }
 
   deleteMember(registrationNumber: number) {
     return this.http.delete<HttpResult<null>>(`${this.URL}/members/${registrationNumber}`);
+  }
+
+  private toFormData(member: Member, photo?: File | null, removePhoto = false): FormData {
+    const formData = new FormData();
+    const excluded = new Set(['registrationNumber', 'profileImage', 'createdAt', 'updatedAt']);
+    for (const [key, value] of Object.entries(member)) {
+      if (excluded.has(key)) continue;
+      formData.append(key, value == null ? '' : String(value));
+    }
+    if (photo) formData.append('photo', photo, photo.name);
+    if (removePhoto) formData.append('removeProfileImage', 'true');
+    return formData;
   }
 }

@@ -20,6 +20,21 @@
     "passwordLength": "Use at least 8 characters.",
     "passwordRules": "Use at least 8 characters, including a letter and a number."
   },
+  "memberPhoto": {
+    "title": "Member photo",
+    "help": "Optional. Use a JPEG, PNG or WebP image up to 5 MB.",
+    "previewAlt": "Member photo preview",
+    "take": "Take a photo",
+    "import": "Import a photo",
+    "remove": "Remove photo",
+    "capture": "Capture",
+    "errors": {
+      "unavailable": "Camera is not available. Import an image instead.",
+      "denied": "Camera access was denied or is unavailable. Import an image instead.",
+      "type": "Only JPEG, PNG, or WebP images are allowed.",
+      "size": "The image must not exceed 5 MB."
+    }
+  },
   "access": {
     "title": "Access settings",
     "description": "Choose what each role can see and do across the app.",

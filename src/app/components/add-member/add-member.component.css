@@ -8,3 +8,121 @@
   background-color: #374151;
   color: #9ca3af;
 }
+
+.member-photo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  background: var(--muted);
+}
+.member-photo__preview {
+  flex: 0 0 auto;
+  width: 5.5rem;
+  height: 5.5rem;
+  overflow: hidden;
+  border: 3px solid var(--card);
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 0 4px 14px #142e5a1a;
+}
+.member-photo__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.member-photo__content {
+  min-width: 0;
+}
+.member-photo__content h2,
+.member-photo__content p {
+  margin: 0;
+}
+.member-photo__content h2 {
+  color: var(--foreground);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.member-photo__content > p {
+  margin-top: 0.25rem;
+  color: var(--muted-foreground);
+  font-size: 0.8rem;
+}
+.member-photo__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+.member-photo__upload {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.15rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #cbd7e8;
+  border-radius: 0.65rem;
+  color: #244575;
+  background: var(--card);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.member-photo__upload:hover {
+  color: #173f87;
+  border-color: #9bb5dd;
+  background: #f2f6fc;
+}
+.member-photo__upload input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+.member-photo__error {
+  color: var(--destructive) !important;
+  font-weight: 600;
+}
+.member-camera {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(15 23 42 / 72%);
+}
+.member-camera__panel {
+  width: min(100%, 38rem);
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--card);
+  box-shadow: 0 24px 64px rgb(15 23 42 / 30%);
+}
+.member-camera video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  border-radius: 0.75rem;
+  background: #0f172a;
+}
+.member-camera__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+@media (max-width: 640px) {
+  .member-photo {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .member-photo__content {
+    width: 100%;
+  }
+}

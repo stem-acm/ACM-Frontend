@@ -20,6 +20,21 @@
     "passwordLength": "Ampidiro tarehintsoratra 8 farafahakeliny.",
     "passwordRules": "Mampiasà tarehintsoratra 8 farafahakeliny, misy litera sy isa."
   },
+  "memberPhoto": {
+    "title": "Sarin'ny mpikambana",
+    "help": "Tsy voatery. Mampiasà sary JPEG, PNG na WebP tsy mihoatra ny 5 Mo.",
+    "previewAlt": "Topi-maso ny sarin'ny mpikambana",
+    "take": "Maka sary",
+    "import": "Mampiditra sary",
+    "remove": "Manala ny sary",
+    "capture": "Maka",
+    "errors": {
+      "unavailable": "Tsy misy fakantsary. Mampidira sary avy amin'ny rakitra.",
+      "denied": "Tsy nahazo alalana na tsy misy ny fakantsary. Mampidira sary avy amin'ny rakitra.",
+      "type": "Sary JPEG, PNG na WebP ihany no ekena.",
+      "size": "Tsy tokony hihoatra ny 5 Mo ny sary."
+    }
+  },
   "access": {
     "title": "Fikirana fidirana",
     "description": "Farito izay azon'ny andraikitra tsirairay jerena sy atao ao amin'ny rindranasa.",

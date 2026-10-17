@@ -11,6 +11,80 @@
       {{ pageTitle }}
     </h1>
 
+    <section class="member-photo" aria-labelledby="member-photo-title">
+      <div class="member-photo__preview">
+        <img
+          [src]="displayPhotoUrl"
+          [alt]="'memberPhoto.previewAlt' | translate"
+          (error)="onPhotoError($event)"
+        />
+      </div>
+      <div class="member-photo__content">
+        <h2 id="member-photo-title">{{ 'memberPhoto.title' | translate }}</h2>
+        <p>{{ 'memberPhoto.help' | translate }}</p>
+        <div class="member-photo__actions">
+          <button
+            z-button
+            zType="outline"
+            type="button"
+            class="acm-btn acm-btn--outline acm-btn--sm"
+            (click)="openCamera()"
+          >
+            {{ 'memberPhoto.take' | translate }}
+          </button>
+          <label class="member-photo__upload acm-btn acm-btn--outline acm-btn--sm">
+            {{ 'memberPhoto.import' | translate }}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              (change)="onPhotoSelected($event)"
+            />
+          </label>
+          @if (photoPreviewUrl) {
+            <button
+              z-button
+              zType="link"
+              type="button"
+              class="acm-btn acm-btn--link-danger acm-btn--sm"
+              (click)="removePhoto()"
+            >
+              {{ 'memberPhoto.remove' | translate }}
+            </button>
+          }
+        </div>
+        @if (cameraError) {
+          <p class="member-photo__error" role="alert">{{ cameraError }}</p>
+        }
+      </div>
+    </section>
+
+    @if (cameraOpen) {
+      <div class="member-camera" role="dialog" aria-modal="true">
+        <div class="member-camera__panel">
+          <video #cameraVideo autoplay playsinline muted></video>
+          <div class="member-camera__actions">
+            <button
+              z-button
+              zType="outline"
+              type="button"
+              class="acm-btn acm-btn--outline"
+              (click)="stopCamera()"
+            >
+              {{ 'buttons.cancel' | translate }}
+            </button>
+            <button
+              z-button
+              type="button"
+              class="acm-btn acm-btn--primary"
+              (click)="capturePhoto()"
+            >
+              {{ 'memberPhoto.capture' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
     <div class="acm-entry-modal__row">
       <div class="w-1/2 mb-5">
         <label for="firstName" class="block mb-2 text-sm font-medium"

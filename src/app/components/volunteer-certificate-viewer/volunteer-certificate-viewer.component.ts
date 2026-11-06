@@ -249,6 +249,7 @@ export class VolunteerCertificateViewerComponent implements OnInit {
     const name =
       this.certificate.recipient
         .trim()
+        // eslint-disable-next-line no-control-regex
         .replace(/[\\/:*?"<>|\x00-\x1f]/g, '')
         .replace(/\s+/g, ' ')
         .replace(/[. ]+$/, '')

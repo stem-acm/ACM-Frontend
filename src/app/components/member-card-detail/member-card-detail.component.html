@@ -7,14 +7,7 @@
         [imgUrl]="getfileUrl(member.profileImage)"
         [imgUrlError]="getfileUrl('user.png')"
       />
-      <app-title
-        [titleText]="
-          member.lastName.charAt(0).toUpperCase() +
-          member.lastName.slice(1) +
-          ' ' +
-          member.firstName
-        "
-      />
+      <app-title [titleText]="(member.lastName | capitalize) + ' ' + member.firstName" />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-destructive/60"></div>
       <div *ngIf="member.registrationNumber" class="text-left">
         <div class="mt-6">
@@ -22,12 +15,7 @@
             <app-list-value
               [label]="'forms.fullName' | translate"
               [boldPrefix]="member.title || ''"
-              [value]="
-                member.firstName +
-                ' ' +
-                member.lastName.charAt(0).toUpperCase() +
-                member.lastName.slice(1)
-              "
+              [value]="member.firstName + ' ' + (member.lastName | capitalize)"
             />
             <app-list-value
               [label]="'forms.dateAndPlaceOfBirth' | translate"
@@ -36,8 +24,7 @@
                 ', ' +
                 ('common.in' | translate) +
                 ' ' +
-                member.birthPlace.charAt(0).toUpperCase() +
-                member.birthPlace.slice(1)
+                (member.birthPlace | capitalize)
               "
             />
             <app-list-value

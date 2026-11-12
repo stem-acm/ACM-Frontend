@@ -21,6 +21,7 @@ import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { Router } from '@angular/router';
 import { AuthService } from '@/app/services/auth.service';
+import { CapitalizePipe } from '@/app/pipes/capitalize.pipe';
 
 @Component({
   selector: 'app-member-card-detail',
@@ -37,6 +38,7 @@ import { AuthService } from '@/app/services/auth.service';
     MemberCardViewerComponent,
     TranslateModule,
     ModalAlertComponent,
+    CapitalizePipe,
   ],
   templateUrl: './member-card-detail.component.html',
   styleUrl: './member-card-detail.component.css',

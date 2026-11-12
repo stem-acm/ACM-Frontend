@@ -61,7 +61,7 @@ export class MemberBadgeRectoComponent implements AfterViewInit, OnChanges, OnDe
   @Input() checkData!: { stamp: boolean; signature: boolean };
 
   formatDate(date?: Date | string) {
-    if (!date) return 'no date';
+    if (!date || !dayjs(date).isValid()) return 'no date';
     return dayjs(date).format('DD / MM / YYYY');
   }
 

@@ -26,6 +26,7 @@ export class ProfilComponent implements OnInit {
   }
 
   convertDate(date: Date | string) {
+    if (!date || !dayjs(date).isValid()) return '';
     return dayjs(date).format('YYYY-MM-DD');
   }
 

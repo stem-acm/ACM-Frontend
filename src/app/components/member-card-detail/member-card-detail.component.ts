@@ -65,7 +65,7 @@ export class MemberCardDetailComponent implements OnInit {
   deleteMessage = '';
 
   formatDate(date?: Date | string) {
-    if (!date) return 'no date';
+    if (!date || !dayjs(date).isValid()) return 'no date';
     const formatted = dayjs(date).format('dddd DD MMMM YYYY');
     const age = dayjs().diff(dayjs(date), 'year');
     return `${formatted} (${age} yrs)`;

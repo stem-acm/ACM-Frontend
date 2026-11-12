@@ -11,11 +11,12 @@ import { TextCursiveComponent } from '@/app/components/text-cursive/text-cursive
 import { Member } from '@/app/interfaces/member';
 import dayjs from 'dayjs';
 import { environment } from '@/environments/environment';
+import { CapitalizePipe } from '@/app/pipes/capitalize.pipe';
 
 @Component({
   selector: 'app-member-badge-recto',
   standalone: true,
-  imports: [TextCursiveComponent],
+  imports: [TextCursiveComponent, CapitalizePipe],
   templateUrl: './member-badge-recto.component.html',
   styleUrl: './member-badge-recto.component.css',
 })

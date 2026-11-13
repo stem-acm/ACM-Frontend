@@ -250,38 +250,64 @@ test.describe('F10 Book loans', () => {
     }
   });
 
-  test('F10.4 the status filter shows only returned loans for "returned" and only the others for "not returned"', async ({
+  test('F10.4 the status filter shows only returned, only active or only overdue loans, and "All statuses" shows the three', async ({
     page,
     api,
   }) => {
     const member = await api.createMember({ firstName: 'Bookstatus' });
     try {
+      // The API compares expectedReturnDate with current_date: a margin of 10 days
+      // keeps "active" and "overdue" unambiguous whatever the server timezone.
+      const today = todayEat();
       const token = `Status${uniqueSuffix()}`;
-      const borrowingDate = addDays(todayEat(), -5);
-      const returnedTitle = `${token} returned`;
-      const openTitle = `${token} open`;
-      await createLoan(api, member, returnedTitle, {
-        borrowingDate,
-        effectiveReturnDate: addDays(borrowingDate, 2),
+      const titles = {
+        returned: `${token} returned`,
+        active: `${token} active`,
+        overdue: `${token} overdue`,
+      };
+      await createLoan(api, member, titles.returned, {
+        borrowingDate: addDays(today, -5),
+        expectedReturnDate: addDays(today, 10),
+        effectiveReturnDate: addDays(today, -3),
       });
-      await createLoan(api, member, openTitle, { borrowingDate });
+      await createLoan(api, member, titles.active, {
+        borrowingDate: addDays(today, -2),
+        expectedReturnDate: addDays(today, 10),
+      });
+      await createLoan(api, member, titles.overdue, {
+        borrowingDate: addDays(today, -20),
+        expectedReturnDate: addDays(today, -10),
+      });
 
       await page.goto('/book');
       await searchBox(page).fill(token);
-      await expect(bodyRows(page)).toHaveCount(2);
 
-      await statusFilter(page).selectOption({ label: 'Returned' });
-      await expect(loanRow(page, returnedTitle)).toHaveCount(1);
-      await expect(loanRow(page, openTitle)).toHaveCount(0);
-      await expect(bodyRows(page)).toHaveCount(1);
-      await expect(loanRow(page, returnedTitle).getByRole('cell').nth(5)).toHaveText('Returned');
+      const filters: { label: string; status: keyof typeof titles }[] = [
+        { label: 'Returned', status: 'returned' },
+        { label: 'Active', status: 'active' },
+        { label: 'Overdue', status: 'overdue' },
+      ];
+      for (const { label, status } of filters) {
+        await statusFilter(page).selectOption({ label });
+        await expect(
+          loanRow(page, titles[status]),
+          `"${label}" lists the ${status} loan`,
+        ).toHaveCount(1);
+        for (const other of Object.keys(titles) as (keyof typeof titles)[]) {
+          if (other === status) continue;
+          await expect(
+            loanRow(page, titles[other]),
+            `"${label}" does not list the ${other} loan`,
+          ).toHaveCount(0);
+        }
+        await expect(bodyRows(page)).toHaveCount(1);
+      }
 
-      const notReturned = statusFilter(page).getByRole('option', { name: /not returned/i });
-      await expect(notReturned, 'a "not returned" status option').toHaveCount(1);
-      await statusFilter(page).selectOption({ label: (await notReturned.textContent()) ?? '' });
-      await expect(loanRow(page, openTitle)).toHaveCount(1);
-      await expect(loanRow(page, returnedTitle)).toHaveCount(0);
-      await expect(bodyRows(page)).toHaveCount(1);
+      await statusFilter(page).selectOption({ label: 'All statuses' });
+      for (const title of Object.values(titles)) {
+        await expect(loanRow(page, title), `"All statuses" lists ${title}`).toHaveCount(1);
+      }
+      await expect(bodyRows(page)).toHaveCount(3);
     } finally {
       await releaseMembers(api, member);
     }

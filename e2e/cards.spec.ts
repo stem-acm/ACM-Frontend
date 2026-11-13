@@ -8,6 +8,9 @@ import { expect, test } from './fixtures/test';
 /** Badge QR images come from this external service; the tests answer them locally. */
 const QR_SERVICE = 'https://api.qrserver.com/v1/create-qr-code/';
 
+/** Members per request of the cards page (MemberService.getAllMembers default limit). */
+const FIRST_PAGE_SIZE = 10;
+
 /** Name as a member card writes it: Firstname Lastname. */
 function cardName(member: Pick<Member, 'firstName' | 'lastName'>): string {
   return `${member.firstName} ${member.lastName}`;
@@ -53,30 +56,50 @@ test.describe('F5 Member cards', () => {
     );
   });
 
-  test('F5.1 search lists only matching members and clearing it restores the full list', async ({
+  test('F5.1 search lists only matching members and clearing it restores the full list, also for a member after the first 10', async ({
     page,
     api,
   }) => {
     const token = `Srch${uniqueSuffix()}`;
-    const match = await api.createMember({ firstName: 'Finder', lastName: `${token}x` });
-    const other = await api.createMember({ firstName: 'Other' });
+    const created: Member[] = [];
     try {
-      const all = await api.getPage<Member>('members?limit=100');
+      created.push(await api.createMember({ firstName: 'Other' }));
+      // More than 10 members in all, the searched member created last.
+      const existing = (await api.getPage<Member>('members?limit=1')).pagination.total;
+      for (let i = existing + 1; i <= FIRST_PAGE_SIZE; i++) {
+        created.push(await api.createMember({ firstName: 'Cardfiller' }));
+      }
+      const match = await api.createMember({ firstName: 'Finder', lastName: `${token}x` });
+      created.push(match);
+      const other = created[0];
+
+      // The request the page sends (MemberService.getAllMembers defaults).
+      const firstPage = await api.getPage<Member>(
+        `members?offset=0&limit=${FIRST_PAGE_SIZE}&search=`,
+      );
+      const total = firstPage.pagination.total;
+      expect(total, 'more than 10 members exist').toBeGreaterThan(FIRST_PAGE_SIZE);
+      expect(
+        firstPage.data.map(m => m.registrationNumber),
+        'the searched member is not among the first 10 returned by the API',
+      ).not.toContain(match.registrationNumber);
 
       await page.goto('/cards');
-      await expect(badgeButtons(page)).toHaveCount(all.pagination.total);
+      await expect(page.getByRole('heading', { name: cardName(match), exact: true })).toBeVisible();
+      await expect(badgeButtons(page)).toHaveCount(total);
 
       await searchBox(page).fill(token);
       await expect(badgeButtons(page)).toHaveCount(1);
       await expect(page.getByRole('heading', { name: cardName(match), exact: true })).toBeVisible();
 
       await searchBox(page).clear();
-      await expect(badgeButtons(page)).toHaveCount(all.pagination.total);
+      await expect(badgeButtons(page)).toHaveCount(total);
       await expect(page.getByRole('heading', { name: cardName(match), exact: true })).toBeVisible();
       await expect(page.getByRole('heading', { name: cardName(other), exact: true })).toBeVisible();
     } finally {
-      await api.deleteMember(match.registrationNumber);
-      await api.deleteMember(other.registrationNumber);
+      for (const member of created) {
+        await api.deleteMemberIfExists(member.registrationNumber);
+      }
     }
   });
 

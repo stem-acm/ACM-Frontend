@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { EMPTY, expand, reduce } from 'rxjs';
 import { environment } from '@/environments/environment';
 import { HttpResult } from '@/app/types/httpResult';
 import { Member } from '@/app/interfaces/member';
@@ -22,6 +23,23 @@ export class MemberService {
       url += `&studyPlaces=${encodeURIComponent(studyPlaces)}`;
     }
     return this.http.get<HttpResult<Member[]>>(url);
+  }
+
+  /** Every member, read page by page: the API returns at most 100 rows per request. */
+  getEveryMember() {
+    const limit = 100;
+    return this.getAllMembers(0, limit).pipe(
+      expand((result, index) =>
+        result.success && result.pagination?.hasMore
+          ? this.getAllMembers((index + 1) * limit, limit)
+          : EMPTY,
+      ),
+      reduce((all, page) => ({
+        ...page,
+        success: all.success && page.success,
+        data: [...all.data, ...(page.data ?? [])],
+      })),
+    );
   }
 
   getStudyPlaces() {

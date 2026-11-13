@@ -67,6 +67,9 @@
   margin: 1.5rem 0;
   border-bottom: 1px solid #dce3ef;
 }
+.access-page-tabs {
+  margin: 0 0 0.2rem;
+}
 .access-tabs button.acm-btn.selected {
   color: #17469e;
   border-bottom: 3px solid #ed1e24;

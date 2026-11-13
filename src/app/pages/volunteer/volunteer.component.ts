@@ -61,7 +61,7 @@ export class VolunteerComponent implements OnInit {
   getVolunteerList() {
     this.isLoading = true;
     this.loadError = false;
-    this.volunteerService.getAllVolunteers(0, 1000).subscribe({
+    this.volunteerService.getEveryVolunteer().subscribe({
       next: (result: HttpResult<Volunteer[]>) => {
         if (result.success && result.data) {
           this.allVolunteers = result.data;

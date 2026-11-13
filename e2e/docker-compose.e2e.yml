@@ -1,0 +1,53 @@
+# Throwaway API and database for the end-to-end tests.
+# Started and removed by e2e/global-setup.ts and e2e/global-teardown.ts (project name "acm-e2e").
+# Nothing is kept: the database and the uploads live in memory and die with the containers.
+# The backend runs the code of the ACM-Backend checkout (E2E_BACKEND_DIR, default ../../ACM-Backend).
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: acm_user
+      POSTGRES_PASSWORD: acm_password
+      POSTGRES_DB: acm_db
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U acm_user -d acm_db']
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+  backend:
+    build:
+      context: ${E2E_BACKEND_DIR:-../../ACM-Backend}
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://acm_user:acm_password@postgres:5432/acm_db
+      # Test-only values: this stack never holds real data.
+      JWT_SECRET: e2e-only-jwt-secret-not-used-anywhere-else
+      QR_SECRET: e2e-only-qr-secret-not-used-anywhere-else
+      PORT: 5002
+      NODE_ENV: development
+      ALLOWED_ORIGINS: ${E2E_ALLOWED_ORIGIN:-http://localhost:4200}
+      LOG_LEVEL: warn
+    ports:
+      - '${E2E_API_PORT:-5003}:5002'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ${E2E_BACKEND_DIR:-../../ACM-Backend}/src:/app/src:ro
+      - ${E2E_BACKEND_DIR:-../../ACM-Backend}/package.json:/app/package.json:ro
+      - ${E2E_BACKEND_DIR:-../../ACM-Backend}/pnpm-lock.yaml:/app/pnpm-lock.yaml:ro
+      - ${E2E_BACKEND_DIR:-../../ACM-Backend}/tsconfig.json:/app/tsconfig.json:ro
+      - ${E2E_BACKEND_DIR:-../../ACM-Backend}/drizzle.config.ts:/app/drizzle.config.ts:ro
+      - /app/node_modules
+    tmpfs:
+      - /app/uploads
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:5002/health > /dev/null']
+      interval: 2s
+      timeout: 5s
+      retries: 60
+      start_period: 5s

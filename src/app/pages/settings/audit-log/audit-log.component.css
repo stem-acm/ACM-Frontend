@@ -1,0 +1,298 @@
+/* Shares settings.component.css (.access-*). Audit log rules use the .audit- prefix. */
+.audit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.audit-filters {
+  display: grid;
+  grid-template-columns: minmax(14rem, 2fr) repeat(3, minmax(9rem, 1fr)) auto;
+  gap: 0.8rem;
+  margin-top: 1.3rem;
+  align-items: end;
+}
+.audit-filters label,
+.audit-period {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #294b7c;
+}
+.audit-filters input,
+.audit-filters select {
+  height: 2rem;
+  width: 100%;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--input);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  background: #fff;
+  color: #172a4a;
+}
+.audit-dates {
+  display: flex;
+  gap: 0.4rem;
+}
+.audit-dates input {
+  min-width: 8.2rem;
+}
+.audit-summary-bar {
+  margin: 1rem 0 0;
+}
+.audit-row {
+  cursor: pointer;
+}
+.audit-row:hover,
+.audit-row.is-open {
+  background: #f5f8fd;
+}
+.audit-row.is-open td {
+  border-bottom-color: transparent;
+}
+.access-table td {
+  vertical-align: top;
+  font-size: 0.92rem;
+}
+.audit-when {
+  white-space: nowrap;
+}
+.audit-sub {
+  display: block;
+  margin-top: 0.15rem;
+  color: #60718d;
+  font-size: 0.75rem;
+}
+.audit-entity strong {
+  font-weight: 600;
+}
+.audit-toggle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  color: #60718d;
+  display: grid;
+  place-items: center;
+}
+.audit-toggle:hover {
+  background: #eaf0fa;
+  color: #173f87;
+}
+.audit-toggle svg,
+.acm-mobile-record-actions svg {
+  width: 0.75rem;
+  transition: transform 160ms ease;
+}
+[aria-expanded='true'] > svg {
+  transform: rotate(180deg);
+}
+.audit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.audit-badge::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.audit-badge--create {
+  color: #17633a;
+  background: #e7f7ed;
+  border-color: #bee5cd;
+}
+.audit-badge--update {
+  color: #1c5794;
+  background: #e7f1fb;
+  border-color: #c9def3;
+}
+.audit-badge--delete {
+  color: #a01f2d;
+  background: #fdebed;
+  border-color: #f5c8ce;
+}
+.audit-badge--cascade {
+  color: #a01f2d;
+  background: #fff;
+  border: 1px dashed #f5c8ce;
+}
+.audit-detail-cell {
+  padding: 0 0.85rem 1rem !important;
+  background: #f5f8fd;
+}
+.audit-detail {
+  border: 1px solid #dce3ef;
+  border-radius: 14px;
+  background: #fff;
+  padding: 1rem 1.2rem;
+}
+.audit-detail h3 {
+  color: #143a7b;
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+.audit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.2rem;
+  margin-bottom: 0.9rem;
+  color: #60718d;
+  font-size: 0.8rem;
+}
+.audit-meta code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  color: #294b7c;
+  background: #f0f3f9;
+  padding: 0.05rem 0.35rem;
+  border-radius: 0.3rem;
+}
+.audit-diff {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.audit-diff th {
+  text-align: left;
+  color: #60718d;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid #e8edf5;
+}
+.audit-diff td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #e8edf5;
+  color: #344763;
+  overflow-wrap: anywhere;
+}
+.audit-diff tr:last-child td {
+  border-bottom: 0;
+}
+.audit-diff td:first-child {
+  color: #294b7c;
+  font-weight: 700;
+  width: 28%;
+}
+.audit-before,
+.audit-after {
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.3rem;
+}
+.audit-before {
+  background: #fdebed;
+  color: #a01f2d;
+  text-decoration: line-through;
+}
+.audit-after {
+  background: #e7f7ed;
+  color: #17633a;
+}
+.audit-none {
+  color: #60718d;
+  font-style: italic;
+}
+.audit-pagination,
+.audit-pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.audit-pagination {
+  padding: 1rem 0 0;
+  color: #60718d;
+  font-size: 0.875rem;
+}
+.audit-spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 3px solid #dce3ef;
+  border-top-color: #173f87;
+  border-radius: 50%;
+  animation: audit-spin 1s linear infinite;
+}
+@keyframes audit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.audit-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  color: #60718d;
+  background: #f0f3f9;
+}
+.audit-empty-icon svg {
+  width: 1.7rem;
+}
+@media (max-width: 1100px) {
+  .audit-filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .audit-wide {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 767px) {
+  .audit-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .audit-wide {
+    grid-column: 1 / -1;
+  }
+  .audit-table-desktop {
+    display: none;
+  }
+  .audit-cards {
+    margin: 1rem -0.25rem 0;
+    border-radius: 0.875rem;
+  }
+  .audit-card-head {
+    align-items: flex-start;
+  }
+  .audit-card-head > div {
+    flex: 1;
+  }
+  .acm-mobile-record .audit-detail {
+    margin-top: 0.75rem;
+    padding: 0.8rem;
+  }
+  .audit-diff thead {
+    display: none;
+  }
+  .audit-diff tr {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e8edf5;
+  }
+  .audit-diff td {
+    border: 0;
+    padding: 0;
+    width: auto !important;
+  }
+  .audit-pagination,
+  .audit-pagination-controls {
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+}

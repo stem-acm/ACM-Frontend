@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VolunteerCertificateViewerComponent } from './volunteer-certificate-viewer.component';
+import { unitTestProviders } from '@/testing/unit-test-providers';
 
 describe('VolunteerCertificateViewerComponent', () => {
   let component: VolunteerCertificateViewerComponent;
@@ -9,6 +10,7 @@ describe('VolunteerCertificateViewerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [VolunteerCertificateViewerComponent],
+      providers: unitTestProviders,
     }).compileComponents();
 
     fixture = TestBed.createComponent(VolunteerCertificateViewerComponent);

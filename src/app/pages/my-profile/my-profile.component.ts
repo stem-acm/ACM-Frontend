@@ -1,7 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, viewChildren } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@/app/services/auth.service';
+import {
+  PasswordFieldImports,
+  PasswordVisibilityDirective,
+} from '@/app/components/password-field/password-field.component';
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
@@ -13,6 +17,7 @@ import { ZardInputComponent } from '@/shared/components/input';
   imports: [
     FormsModule,
     TranslateModule,
+    PasswordFieldImports,
     ZardBadgeComponent,
     ZardButtonComponent,
     ZardCardComponent,
@@ -23,6 +28,7 @@ import { ZardInputComponent } from '@/shared/components/input';
 })
 export class MyProfileComponent implements OnInit {
   auth = inject(AuthService);
+  private readonly passwordFields = viewChildren(PasswordVisibilityDirective);
   username = '';
   email = '';
   identityPassword = '';
@@ -55,6 +61,7 @@ export class MyProfileComponent implements OnInit {
         next: () => {
           this.identityPassword = '';
           form.resetForm({ username: this.username, email: this.email, identityPassword: '' });
+          this.maskPasswords(form);
           this.savingIdentity = false;
           this.identityMessage = 'profile.detailsSaved';
         },
@@ -81,6 +88,7 @@ export class MyProfileComponent implements OnInit {
           this.newPassword = '';
           this.confirmPassword = '';
           form.resetForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+          this.maskPasswords(form);
           this.savingPassword = false;
           this.passwordMessage = 'profile.passwordSaved';
         },
@@ -89,6 +97,12 @@ export class MyProfileComponent implements OnInit {
           this.passwordError = this.errorKey(error);
         },
       });
+  }
+
+  private maskPasswords(form: NgForm): void {
+    this.passwordFields()
+      .filter(field => field.form === form)
+      .forEach(field => field.hide());
   }
 
   private errorKey(error: { status?: number; error?: { message?: string } }): string {

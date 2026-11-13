@@ -66,4 +66,29 @@ describe('MemberService', () => {
     expect((request.request.body as FormData).get('removeProfileImage')).toBe('true');
     request.flush({ success: true, data: { ...member, profileImage: null } });
   });
+
+  it('reads every page of members beyond the API limit of 100', () => {
+    let received: Member[] = [];
+    service.getEveryMember().subscribe(result => (received = result.data));
+
+    const rows = (from: number, count: number) =>
+      Array.from({ length: count }, (_, i) => ({ ...member, registrationNumber: from + i }));
+    http
+      .expectOne(request => request.url.includes('offset=0&limit=100'))
+      .flush({
+        success: true,
+        data: rows(1, 100),
+        pagination: { offset: 0, limit: 100, total: 101, hasMore: true },
+      });
+    http
+      .expectOne(request => request.url.includes('offset=100&limit=100'))
+      .flush({
+        success: true,
+        data: rows(101, 1),
+        pagination: { offset: 100, limit: 100, total: 101, hasMore: false },
+      });
+
+    expect(received.length).toBe(101);
+    expect(received[100].registrationNumber).toBe(101);
+  });
 });

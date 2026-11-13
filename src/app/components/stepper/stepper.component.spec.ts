@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StepperComponent } from './stepper.component';
+import { unitTestProviders } from '@/testing/unit-test-providers';
 
 describe('Stepper', () => {
   let component: StepperComponent;
@@ -9,6 +10,7 @@ describe('Stepper', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [StepperComponent],
+      providers: unitTestProviders,
     }).compileComponents();
 
     fixture = TestBed.createComponent(StepperComponent);

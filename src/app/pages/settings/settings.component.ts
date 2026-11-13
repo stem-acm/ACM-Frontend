@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit, viewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -6,10 +6,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '@/environments/environment';
 import { HttpResult } from '@/app/types/httpResult';
 import { AuthService } from '@/app/services/auth.service';
+import {
+  PasswordFieldImports,
+  PasswordVisibilityDirective,
+} from '@/app/components/password-field/password-field.component';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
 import { ZardInputComponent } from '@/shared/components/input';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
+import { AuditLogComponent } from './audit-log/audit-log.component';
 import { CanDeactivateFn } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -34,10 +39,12 @@ interface Account {
     CommonModule,
     FormsModule,
     TranslateModule,
+    PasswordFieldImports,
     ZardButtonComponent,
     ZardCardComponent,
     ZardInputComponent,
     ZardTableImports,
+    AuditLogComponent,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -46,9 +53,12 @@ export class SettingsComponent implements OnInit {
   private http = inject(HttpClient);
   private translate = inject(TranslateService);
   auth = inject(AuthService);
+  private readonly passwordFields = viewChildren(PasswordVisibilityDirective);
   private url = `${environment.API_URL}/settings`;
   private savedPolicies = new Map<Role, string>();
 
+  /** Page-level tab: roles and accounts, or the audit log. */
+  pageTab: 'access' | 'logs' = 'access';
   roles: Role[] = ['admin', 'intern', 'volunteer'];
   selectedRole: Role = 'intern';
   policies: Policy[] = [];
@@ -265,6 +275,7 @@ export class SettingsComponent implements OnInit {
           this.error = '';
           this.newAccount = { username: '', email: '', password: '', role: 'volunteer' };
           form.resetForm(this.newAccount);
+          this.passwordFields().forEach(field => field.hide());
           // this.loadAccounts();
           this.accounts.push(result.data);
         },

@@ -11,6 +11,7 @@ import { AcmLogoComponent } from '@/app/components/acm-logo/acm-logo.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '@/app/services/language.service';
+import { ToastService } from '@/app/services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -38,11 +39,15 @@ export class AppComponent implements OnInit {
   private router = inject(Router);
   private translateService = inject(TranslateService);
   private languageService = inject(LanguageService);
+  private toastService = inject(ToastService);
 
   ngOnInit() {
     // Initialize translations
     this.initializeTranslations();
     this.checkRoute();
+    this.toastService.toast$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ message, delay }) => this.showToast(message, delay));
   }
 
   private initializeTranslations() {

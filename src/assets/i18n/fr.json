@@ -18,7 +18,9 @@
     "usernameFormat": "Utilisez au moins 3 lettres ou chiffres, sans espace.",
     "invalidEmail": "Saisissez une adresse e-mail valide.",
     "passwordLength": "Utilisez au moins 8 caractères.",
-    "passwordRules": "Utilisez au moins 8 caractères, dont une lettre et un chiffre."
+    "passwordRules": "Utilisez au moins 8 caractères, dont une lettre et un chiffre.",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "memberPhoto": {
     "title": "Photo du membre",
@@ -79,6 +81,179 @@
       "manage": "Gérer les accès",
       "editOwnProfile": "Modifier son profil"
     }
+  },
+  "auditLog": {
+    "tabs": {
+      "access": "Rôles et comptes",
+      "logs": "Journal d'audit"
+    },
+    "title": "Journal d'audit",
+    "description": "Chaque création, modification et suppression faite dans l'application, de la plus récente à la plus ancienne.",
+    "refresh": "Actualiser",
+    "filters": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Nom, titre ou nom d'utilisateur",
+      "recordType": "Type d'élément",
+      "logType": "Type de modification",
+      "doneBy": "Fait par",
+      "period": "Période",
+      "from": "Date de début",
+      "to": "Date de fin",
+      "all": "Tous",
+      "everyone": "Tout le monde"
+    },
+    "columns": {
+      "date": "Date",
+      "doneBy": "Fait par",
+      "action": "Action",
+      "record": "Élément",
+      "change": "Modification",
+      "details": "Détails"
+    },
+    "actions": {
+      "create": "Créé",
+      "update": "Modifié",
+      "delete": "Supprimé",
+      "cascade": "Supprimé avec son parent"
+    },
+    "entities": {
+      "users": "Compte",
+      "role_policies": "Permissions du rôle",
+      "members": "Membre",
+      "activities": "Activité",
+      "checkins": "Présence",
+      "volunteers": "Bénévole",
+      "book_loans": "Emprunt"
+    },
+    "entityGroups": {
+      "users": "Comptes",
+      "role_policies": "Permissions des rôles",
+      "members": "Membres",
+      "activities": "Activités",
+      "checkins": "Présences",
+      "volunteers": "Bénévoles",
+      "book_loans": "Emprunts"
+    },
+    "parentKinds": {
+      "members": "le membre",
+      "activities": "l'activité"
+    },
+    "types": {
+      "user": {
+        "created": "Compte créé",
+        "profile_updated": "Profil modifié",
+        "password_changed": "Mot de passe modifié",
+        "role_changed": "Rôle modifié",
+        "activation_changed": "Statut modifié"
+      },
+      "role_policy": {
+        "created": "Premier enregistrement d'un rôle",
+        "permissions_changed": "Permissions modifiées",
+        "activation_changed": "Statut du rôle modifié"
+      },
+      "member": {
+        "created": "Membre créé",
+        "updated": "Membre modifié",
+        "deleted": "Membre supprimé"
+      },
+      "activity": {
+        "created": "Activité créée",
+        "updated": "Activité modifiée",
+        "deleted": "Activité supprimée"
+      },
+      "checkin": {
+        "deleted": "Présence supprimée",
+        "cascade_deleted": "Présence supprimée avec son membre ou son activité"
+      },
+      "volunteer": {
+        "created": "Bénévole créé",
+        "updated": "Bénévole modifié",
+        "deleted": "Bénévole supprimé",
+        "cascade_deleted": "Bénévole supprimé avec son membre"
+      },
+      "book_loan": {
+        "created": "Emprunt créé",
+        "updated": "Emprunt modifié",
+        "returned": "Livre rendu"
+      }
+    },
+    "sentences": {
+      "user": {
+        "created": "Compte créé avec le rôle {{role}}",
+        "profile_updated": "Modifié : {{fields}}",
+        "password_changed": "Mot de passe modifié",
+        "role_changed": "Rôle : {{before}} vers {{after}}",
+        "activation_changed": "Statut : {{before}} vers {{after}}"
+      },
+      "role_policy": {
+        "created": {
+          "one": "Premier enregistrement, {{count}} permission diffère des valeurs par défaut",
+          "other": "Premier enregistrement, {{count}} permissions diffèrent des valeurs par défaut"
+        },
+        "permissions_changed": {
+          "one": "{{count}} permission modifiée : {{granted}} accordée(s), {{removed}} retirée(s)",
+          "other": "{{count}} permissions modifiées : {{granted}} accordée(s), {{removed}} retirée(s)"
+        },
+        "activation_changed": "Statut du rôle : {{before}} vers {{after}}"
+      },
+      "member": {
+        "created": "Nouveau membre",
+        "updated": {
+          "one": "{{count}} champ modifié : {{fields}}",
+          "other": "{{count}} champs modifiés : {{fields}}"
+        },
+        "deleted": "Membre supprimé"
+      },
+      "activity": {
+        "created": "Nouvelle activité, de {{startTime}} à {{endTime}}",
+        "updated": {
+          "one": "{{count}} champ modifié : {{fields}}",
+          "other": "{{count}} champs modifiés : {{fields}}"
+        },
+        "deleted": "Activité supprimée"
+      },
+      "checkin": {
+        "deleted": "Présence du {{checkInTime}} supprimée",
+        "cascade_deleted": "Présence du {{checkInTime}} supprimée avec {{parentKind}} {{parentLabel}}"
+      },
+      "volunteer": {
+        "created": "Nouveau bénévole",
+        "updated": {
+          "one": "{{count}} champ modifié : {{fields}}",
+          "other": "{{count}} champs modifiés : {{fields}}"
+        },
+        "deleted": "Bénévole supprimé",
+        "cascade_deleted": "Bénévole supprimé avec le membre {{parentLabel}}"
+      },
+      "book_loan": {
+        "created": "Prêté le {{borrowingDate}}, retour prévu le {{expectedReturnDate}}",
+        "updated": {
+          "one": "{{count}} champ modifié : {{fields}}",
+          "other": "{{count}} champs modifiés : {{fields}}"
+        },
+        "returned": "Rendu le {{effectiveReturnDate}}"
+      }
+    },
+    "detail": {
+      "type": "Type",
+      "recordId": "ID de l'élément",
+      "byLine": "{{date}} par {{actor}} ({{role}})",
+      "parentLine": "Supprimé avec {{kind}} {{label}} (#{{id}})",
+      "field": "Champ",
+      "before": "Avant",
+      "after": "Après",
+      "valueAtCreation": "Valeur à la création",
+      "valueBeforeDeletion": "Valeur avant la suppression",
+      "passwordNote": "Le mot de passe a été modifié. Sa valeur n'est jamais enregistrée."
+    },
+    "empty": "Vide",
+    "allowed": "Autorisé",
+    "notAllowed": "Non autorisé",
+    "volunteerWithoutMember": "Bénévole sans membre",
+    "loading": "Chargement du journal d'audit…",
+    "nothingYet": "Rien n'a encore été enregistré.",
+    "showing": "Affichage de {{first}} à {{last}} sur {{total}} résultats",
+    "pageOf": "Page {{page}} sur {{pages}}"
   },
   "nav": {
     "home": "Accueil",
@@ -201,7 +376,25 @@
     "membershipDate": "Date d'adhésion",
     "phoneContact": "Contact téléphonique",
     "titlePrefix": "M. / Mme / Mlle",
-    "role": "Rôle"
+    "role": "Rôle",
+    "id": "ID",
+    "email": "E-mail",
+    "registrationNumber": "Numéro d'inscription",
+    "title": "Civilité",
+    "gender": "Genre",
+    "profileImage": "Photo de profil",
+    "createdAt": "Créé le",
+    "updatedAt": "Modifié le",
+    "image": "Image",
+    "createdBy": "Créé par (ID utilisateur)",
+    "activityId": "ID de l'activité",
+    "checkInTime": "Heure d'arrivée",
+    "checkOutTime": "Heure de départ",
+    "visitReason": "Motif de la visite",
+    "bookTitle": "Titre du livre",
+    "borrowingDate": "Date d'emprunt",
+    "expectedReturnDate": "Date prévue de retour",
+    "effectiveReturnDate": "Date de retour effective"
   },
   "placeholders": {
     "firstName": "ex: Jean",

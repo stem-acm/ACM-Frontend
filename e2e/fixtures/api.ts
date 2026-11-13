@@ -199,6 +199,39 @@ export class ApiHelper {
     });
   }
 
+  /** Creates a member with a photo, as the app does: multipart form with a `photo` file. */
+  async createMemberWithPhoto(
+    photo: Buffer,
+    overrides: Partial<MemberInput> = {},
+  ): Promise<Member> {
+    const suffix = uniqueSuffix();
+    const values: MemberInput = {
+      firstName: 'E2e',
+      lastName: `Member${suffix}`,
+      title: 'Mr',
+      gender: 'male',
+      birthDate: '2001-02-03',
+      birthPlace: 'Mahajanga',
+      address: `${suffix} Test street`,
+      occupation: 'student',
+      phoneNumber: '0341234567',
+      studyOrWorkPlace: `E2e place ${suffix}`,
+      joinDate: '2024-05-06',
+      ...overrides,
+    };
+    const fields = Object.fromEntries(
+      Object.entries(values).map(([key, value]) => [key, value == null ? '' : String(value)]),
+    );
+    const response = await this.ctx.post('members', {
+      multipart: { ...fields, photo: { name: 'photo.png', mimeType: 'image/png', buffer: photo } },
+    });
+    expect(
+      response.ok(),
+      `POST members (multipart) → ${response.status()} ${await response.text()}`,
+    ).toBeTruthy();
+    return ((await response.json()) as ApiResult<Member>).data;
+  }
+
   /** Deletes a test member (its check-ins and volunteer records go with it). Never a seeded one. */
   async deleteMember(registrationNumber: number): Promise<void> {
     await this.delete(`members/${registrationNumber}`);

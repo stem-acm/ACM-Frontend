@@ -305,19 +305,14 @@ readlink -f /var/www/acm/current
 
 ## End-to-end tests
 
-Playwright tests in `e2e/` run against a local stack that is already up. They do not start a server.
+Playwright tests in `e2e/` run against the local frontend and a **throwaway API and database** that each run starts and removes. The development database and the backend `uploads` folder are never read or written.
 
 Prerequisites:
 
-- The development stack is running: frontend on `http://localhost:4200`, API on `http://localhost:5002/api`.
+- Docker is running and the frontend under test is served on `http://localhost:4200` (the development container or `npm start`).
+- The backend checkout is next to this one (`../ACM-Backend`), or `E2E_BACKEND_DIR` points to it.
 - Dependencies and Chromium are installed: `npm ci --legacy-peer-deps`, then `npx playwright install chromium`.
 - `.env.e2e` exists (git-ignored). Copy `.env.e2e.example` and set the admin username and password that the backend seed creates (`ACM-Backend/src/db/seed.ts`).
-
-Reset the data before a full run (in `ACM-Backend/`):
-
-```bash
-docker compose exec backend pnpm seed
-```
 
 Run the tests:
 
@@ -328,7 +323,16 @@ npm run e2e:ui                        # Playwright UI mode
 npx playwright show-report            # last HTML report
 ```
 
-The `setup` project logs in once as admin, saves the session in `playwright/.auth/`, and creates one intern and one volunteer account with generated passwords. The API rate limiters count requests per client IP address and the API trusts one proxy hop, so each test sends its own `X-Forwarded-For` address on every API request (browser and fixture requests). Runs can follow each other without waiting.
+What a run does:
+
+1. The global setup starts the Compose project `acm-e2e` (`e2e/docker-compose.e2e.yml`): an empty PostgreSQL kept in memory and an API container that runs the code of the backend checkout, published on port 5003. The API applies the migrations when it starts; the setup then loads the seed data.
+2. The frontend still calls its usual API address (`http://localhost:5002`). The tests send every such browser request to the throwaway API instead, so the development API is not used.
+3. The `setup` project logs in once as admin, saves the session in `playwright/.auth/`, and creates one intern and one volunteer account with generated passwords.
+4. The global teardown removes the containers. The database and the uploaded files disappear with them.
+
+Options (environment variables, also accepted in `.env.e2e`): `E2E_KEEP_STACK=1` keeps the throwaway API and database after the run to look at the data; `E2E_SKIP_STACK=1` starts nothing and uses the API at `E2E_API_URL`, which must already be seeded; `E2E_API_URL`, `E2E_APP_API_ORIGIN`, `E2E_BASE_URL` and `E2E_BACKEND_DIR` change the addresses and the backend checkout.
+
+The API rate limiters count requests per client IP address and the API trusts one proxy hop, so each test sends its own `X-Forwarded-For` address on every API request (browser and fixture requests).
 
 ## Full Docker deployment on a VPS
 

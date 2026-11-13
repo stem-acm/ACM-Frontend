@@ -3,6 +3,8 @@ import { ADMIN_STORAGE_STATE, BASE_URL } from './e2e/fixtures/env';
 
 export default defineConfig({
   testDir: 'e2e',
+  globalSetup: './e2e/global-setup.ts',
+  globalTeardown: './e2e/global-teardown.ts',
   fullyParallel: false,
   forbidOnly: true,
   retries: 0,

@@ -1,7 +1,8 @@
 import { Browser, BrowserContext, test as base, expect, Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
 import { ApiHelper, Role, RolePolicy, TestAccount, uniqueClientIp } from './api';
-import { ACCOUNTS_FILE, API_URL, BASE_URL, LANGUAGE_STORAGE_KEY, TOKEN_STORAGE_KEY } from './env';
+import { ACCOUNTS_FILE, BASE_URL, LANGUAGE_STORAGE_KEY, TOKEN_STORAGE_KEY } from './env';
+import { routeApi } from './route-api';
 
 interface Fixtures {
   /** Client address of this test, sent as X-Forwarded-For on every API request. */
@@ -73,10 +74,7 @@ export { expect };
  * request) and forces English before any page script runs.
  */
 async function prepareContext(context: BrowserContext, clientIp: string): Promise<void> {
-  // route.continue does not buffer the response, so the SSE stream keeps streaming.
-  await context.route(`${new URL(API_URL).origin}/**`, route =>
-    route.continue({ headers: { ...route.request().headers(), 'x-forwarded-for': clientIp } }),
-  );
+  await routeApi(context, clientIp);
   await context.addInitScript(key => window.localStorage.setItem(key, 'en'), LANGUAGE_STORAGE_KEY);
 }
 

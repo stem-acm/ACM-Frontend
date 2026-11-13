@@ -15,10 +15,20 @@ function required(name: string): string {
 }
 
 export const BASE_URL = (process.env['E2E_BASE_URL'] ?? 'http://localhost:4200').replace(/\/$/, '');
-export const API_URL = (process.env['E2E_API_URL'] ?? 'http://localhost:5002/api').replace(
+/** API the tests use: the throwaway backend started by the global setup. */
+export const API_URL = (process.env['E2E_API_URL'] ?? 'http://localhost:5003/api').replace(
   /\/$/,
   '',
 );
+export const API_ORIGIN = new URL(API_URL).origin;
+/**
+ * Origin of the API as the frontend under test calls it (its environment file).
+ * Browser requests to it are sent to API_ORIGIN instead, so the development API
+ * and its database are never touched.
+ */
+export const APP_API_ORIGIN = (
+  process.env['E2E_APP_API_ORIGIN'] ?? 'http://localhost:5002'
+).replace(/\/$/, '');
 
 export const ADMIN = {
   get username(): string {

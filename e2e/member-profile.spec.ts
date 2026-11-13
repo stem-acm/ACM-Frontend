@@ -1,10 +1,11 @@
 import { Page } from '@playwright/test';
 import { Member } from './fixtures/api';
-import { API_URL, BASE_URL } from './fixtures/env';
+import { API_ORIGIN, APP_API_ORIGIN, BASE_URL } from './fixtures/env';
 import { pngImage } from './fixtures/images';
 import { expect, test } from './fixtures/test';
 
-const UPLOADS_URL = `${new URL(API_URL).origin}/uploads`;
+/** Uploads as the page addresses them (the frontend's API origin). */
+const UPLOADS_URL = `${APP_API_ORIGIN}/uploads`;
 const DEFAULT_AVATAR_URL = `${UPLOADS_URL}/user.png`;
 
 /** Uppercases the first character, as the app's capitalize pipe does. */
@@ -188,7 +189,9 @@ test.describe('F4 Member profile', () => {
       await expect
         .poll(() => profilePhoto(page).evaluate(img => (img as HTMLImageElement).naturalWidth))
         .toBeGreaterThan(0);
-      expect((await page.request.get(newPhotoUrl)).status()).toBe(200);
+      expect(
+        (await page.request.get(`${API_ORIGIN}/uploads/${replaced.profileImage}`)).status(),
+      ).toBe(200);
 
       // Remove the photo.
       await page.getByRole('button', { name: 'Edit Member' }).click();

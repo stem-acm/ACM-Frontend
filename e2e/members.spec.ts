@@ -1,13 +1,14 @@
 import { Page } from '@playwright/test';
 import { ApiHelper, Member, MemberInput, uniqueSuffix } from './fixtures/api';
-import { API_URL } from './fixtures/env';
+import { API_ORIGIN, APP_API_ORIGIN } from './fixtures/env';
 import { installFakeCamera } from './fixtures/fake-camera';
 import { pngDataUrl, pngImage } from './fixtures/images';
 import { expect, test } from './fixtures/test';
 
 /** Rows per page of the members list (MembersComponent.pageSize). */
 const PAGE_SIZE = 100;
-const UPLOADS_URL = `${new URL(API_URL).origin}/uploads`;
+/** Uploads as the page addresses them (the frontend's API origin). */
+const UPLOADS_URL = `${APP_API_ORIGIN}/uploads`;
 
 /** Name as the members table writes it: LASTNAME Firstname. */
 function tableName(member: Pick<Member, 'firstName' | 'lastName'>): string {
@@ -262,7 +263,11 @@ test.describe('F3 Members', () => {
       expect(stored[0].profileImage, 'stored photo reference').toBeTruthy();
       const photoUrl = `${UPLOADS_URL}/${stored[0].profileImage}`;
 
-      const photoResponse = page.waitForResponse(response => response.url() === photoUrl);
+      // The request is served by the throwaway API: match the path, not the origin.
+      const photoPath = `/uploads/${stored[0].profileImage}`;
+      const photoResponse = page.waitForResponse(
+        response => new URL(response.url()).pathname === photoPath,
+      );
       await page.goto(`/profil/${stored[0].registrationNumber}`);
       expect((await photoResponse).status()).toBe(200);
       // The profile image has no accessible name: located by its source.
@@ -298,7 +303,7 @@ test.describe('F3 Members', () => {
       const stored = await findMembersByLastName(api, values.lastName as string);
       expect(stored).toHaveLength(1);
       expect(stored[0].profileImage, 'stored photo reference').toBeTruthy();
-      const photo = await page.request.get(`${UPLOADS_URL}/${stored[0].profileImage}`);
+      const photo = await page.request.get(`${API_ORIGIN}/uploads/${stored[0].profileImage}`);
       expect(photo.status()).toBe(200);
       expect(photo.headers()['content-type']).toMatch(/^image\//);
     } finally {

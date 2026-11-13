@@ -2,7 +2,8 @@ import { test as base, expect, Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { uniqueClientIp } from './fixtures/api';
-import { API_URL, BASE_URL } from './fixtures/env';
+import { BASE_URL } from './fixtures/env';
+import { routeApi } from './fixtures/route-api';
 
 type Language = 'en' | 'fr' | 'mg';
 
@@ -39,9 +40,7 @@ const MENU_KEYS = ['home', 'members', 'volunteer', 'activity', 'checkin-history'
 const test = base.extend({
   context: async ({ context }, use) => {
     const clientIp = uniqueClientIp();
-    await context.route(`${new URL(API_URL).origin}/**`, route =>
-      route.continue({ headers: { ...route.request().headers(), 'x-forwarded-for': clientIp } }),
-    );
+    await routeApi(context, clientIp);
     await use(context);
   },
 });

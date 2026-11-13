@@ -345,6 +345,9 @@ test.describe('F3 Members', () => {
     try {
       await page.goto('/members');
       await searchBox(page).fill(member.lastName as string);
+      // The new member is already on the unfiltered first page: wait for the
+      // debounced search to reload the table, or the reload closes the modal.
+      await expect(resultCount(page, 1)).toBeVisible();
       const row = memberRow(page, member);
       await expect(row).toHaveCount(1);
 

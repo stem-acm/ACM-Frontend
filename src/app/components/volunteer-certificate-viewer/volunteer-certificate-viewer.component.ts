@@ -3,7 +3,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { environment } from '@/environments/environment';
 import { Volunteer } from '@/app/interfaces/volunteer';
 import { VolunteerService } from '@/app/services/volunteer.service';
 import { AcmLogoComponent } from '../acm-logo/acm-logo.component';
@@ -18,7 +17,6 @@ import { AcmLogoComponent } from '../acm-logo/acm-logo.component';
 export class VolunteerCertificateViewerComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private volunteerService = inject(VolunteerService);
-  private fileUrl = environment.FILE_URL;
 
   data: Volunteer | null = null;
   loading = true;
@@ -101,7 +99,7 @@ export class VolunteerCertificateViewerComponent implements OnInit {
   }
 
   asset(name: string): string {
-    return `${this.fileUrl}/${name}`;
+    return `assets/images/${name}`;
   }
 
   async downloadPdf(form: NgForm): Promise<void> {

@@ -5,7 +5,8 @@ import { expect, test } from './fixtures/test';
 /**
  * The API has no endpoint to delete a book loan, and a member that has a loan
  * cannot be deleted (foreign key). Each test therefore uses its own members and
- * unique book titles, so no test depends on loans left by another run.
+ * unique book titles, so no test depends on loans left by another run; at the
+ * end its loans move to one keeper member and its members are deleted.
  */
 
 /** Rows per page of the loans list (BooksComponent.pageSize). */
@@ -107,10 +108,34 @@ async function memberLoans(api: ApiHelper, member: Member): Promise<BookLoan[]> 
   return data.filter(loan => loan.registrationNumber === member.registrationNumber);
 }
 
-/** Deletes a test member only when it has no loan (a member with a loan cannot be deleted). */
-async function deleteMemberWithoutLoans(api: ApiHelper, member: Member): Promise<void> {
-  if ((await memberLoans(api, member)).length === 0) {
-    await api.deleteMemberIfExists(member.registrationNumber);
+/** The one test member that keeps the loans of deleted test members. */
+const LOAN_KEEPER = { firstName: 'E2e', lastName: 'Loankeeper' };
+
+async function loanKeeper(api: ApiHelper): Promise<Member> {
+  const { data } = await api.getPage<Member>(
+    `members?limit=100&search=${encodeURIComponent(LOAN_KEEPER.lastName)}`,
+  );
+  const existing = data.find(
+    m => m.firstName === LOAN_KEEPER.firstName && m.lastName === LOAN_KEEPER.lastName,
+  );
+  return existing ?? api.createMember(LOAN_KEEPER);
+}
+
+/**
+ * Deletes a test member. Loans cannot be deleted and block the member's
+ * deletion, so its loans first move to the loan keeper member.
+ */
+async function releaseMembers(api: ApiHelper, ...members: Member[]): Promise<void> {
+  for (const member of members) {
+    if ((await api.status(`members/${member.registrationNumber}`)) !== 200) continue;
+    for (let left = await memberLoans(api, member); left.length > 0; ) {
+      const keeper = await loanKeeper(api);
+      for (const loan of left) {
+        await api.put(`book-loans/${loan.id}`, { registrationNumber: keeper.registrationNumber });
+      }
+      left = await memberLoans(api, member);
+    }
+    await api.deleteMember(member.registrationNumber);
   }
 }
 
@@ -158,7 +183,7 @@ test.describe('F10 Book loans', () => {
         effectiveReturnDate: null,
       });
     } finally {
-      await deleteMemberWithoutLoans(api, member);
+      await releaseMembers(api, member);
     }
   });
 
@@ -167,19 +192,23 @@ test.describe('F10 Book loans', () => {
     api,
   }) => {
     const member = await api.createMember({ firstName: 'Booksuggest' });
-    const prefix = `Sg${uniqueSuffix()}`;
-    const title = `${prefix} Suggested title`;
-    await createLoan(api, member, title);
+    try {
+      const prefix = `Sg${uniqueSuffix()}`;
+      const title = `${prefix} Suggested title`;
+      await createLoan(api, member, title);
 
-    await page.goto('/book');
-    await page.getByRole('button', { name: 'New loan' }).click();
-    await titleInput(page).pressSequentially(prefix);
+      await page.goto('/book');
+      await page.getByRole('button', { name: 'New loan' }).click();
+      await titleInput(page).pressSequentially(prefix);
 
-    await expect(
-      loanForm(page)
-        .getByRole('listbox', { name: 'Book title' })
-        .getByRole('option', { name: title, exact: true }),
-    ).toBeVisible();
+      await expect(
+        loanForm(page)
+          .getByRole('listbox', { name: 'Book title' })
+          .getByRole('option', { name: title, exact: true }),
+      ).toBeVisible();
+    } finally {
+      await releaseMembers(api, member);
+    }
   });
 
   test('F10.3 searching by title or by member lists only the matching loans', async ({
@@ -194,27 +223,31 @@ test.describe('F10 Book loans', () => {
       firstName: 'Booksearch',
       lastName: `Bkb${uniqueSuffix()}`,
     });
-    const firstTitle = `Searched title ${uniqueSuffix()}`;
-    const secondTitles = [`Other title ${uniqueSuffix()}`, `Other title ${uniqueSuffix()}`];
-    await createLoan(api, first, firstTitle);
-    for (const title of secondTitles) {
-      await createLoan(api, second, title);
+    try {
+      const firstTitle = `Searched title ${uniqueSuffix()}`;
+      const secondTitles = [`Other title ${uniqueSuffix()}`, `Other title ${uniqueSuffix()}`];
+      await createLoan(api, first, firstTitle);
+      for (const title of secondTitles) {
+        await createLoan(api, second, title);
+      }
+
+      await page.goto('/book');
+
+      await searchBox(page).fill(firstTitle);
+      await expect(bodyRows(page)).toHaveCount(1);
+      await expect(loanRow(page, firstTitle)).toHaveCount(1);
+      await expect(showing(page, 1, 1, 1)).toBeVisible();
+
+      await searchBox(page).fill(second.lastName ?? '');
+      await expect(bodyRows(page)).toHaveCount(2);
+      for (const title of secondTitles) {
+        await expect(loanRow(page, title)).toHaveCount(1);
+      }
+      await expect(loanRow(page, firstTitle)).toHaveCount(0);
+      await expect(showing(page, 1, 2, 2)).toBeVisible();
+    } finally {
+      await releaseMembers(api, first, second);
     }
-
-    await page.goto('/book');
-
-    await searchBox(page).fill(firstTitle);
-    await expect(bodyRows(page)).toHaveCount(1);
-    await expect(loanRow(page, firstTitle)).toHaveCount(1);
-    await expect(showing(page, 1, 1, 1)).toBeVisible();
-
-    await searchBox(page).fill(second.lastName ?? '');
-    await expect(bodyRows(page)).toHaveCount(2);
-    for (const title of secondTitles) {
-      await expect(loanRow(page, title)).toHaveCount(1);
-    }
-    await expect(loanRow(page, firstTitle)).toHaveCount(0);
-    await expect(showing(page, 1, 2, 2)).toBeVisible();
   });
 
   test('F10.4 the status filter shows only returned loans for "returned" and only the others for "not returned"', async ({
@@ -222,32 +255,36 @@ test.describe('F10 Book loans', () => {
     api,
   }) => {
     const member = await api.createMember({ firstName: 'Bookstatus' });
-    const token = `Status${uniqueSuffix()}`;
-    const borrowingDate = addDays(todayEat(), -5);
-    const returnedTitle = `${token} returned`;
-    const openTitle = `${token} open`;
-    await createLoan(api, member, returnedTitle, {
-      borrowingDate,
-      effectiveReturnDate: addDays(borrowingDate, 2),
-    });
-    await createLoan(api, member, openTitle, { borrowingDate });
+    try {
+      const token = `Status${uniqueSuffix()}`;
+      const borrowingDate = addDays(todayEat(), -5);
+      const returnedTitle = `${token} returned`;
+      const openTitle = `${token} open`;
+      await createLoan(api, member, returnedTitle, {
+        borrowingDate,
+        effectiveReturnDate: addDays(borrowingDate, 2),
+      });
+      await createLoan(api, member, openTitle, { borrowingDate });
 
-    await page.goto('/book');
-    await searchBox(page).fill(token);
-    await expect(bodyRows(page)).toHaveCount(2);
+      await page.goto('/book');
+      await searchBox(page).fill(token);
+      await expect(bodyRows(page)).toHaveCount(2);
 
-    await statusFilter(page).selectOption({ label: 'Returned' });
-    await expect(loanRow(page, returnedTitle)).toHaveCount(1);
-    await expect(loanRow(page, openTitle)).toHaveCount(0);
-    await expect(bodyRows(page)).toHaveCount(1);
-    await expect(loanRow(page, returnedTitle).getByRole('cell').nth(5)).toHaveText('Returned');
+      await statusFilter(page).selectOption({ label: 'Returned' });
+      await expect(loanRow(page, returnedTitle)).toHaveCount(1);
+      await expect(loanRow(page, openTitle)).toHaveCount(0);
+      await expect(bodyRows(page)).toHaveCount(1);
+      await expect(loanRow(page, returnedTitle).getByRole('cell').nth(5)).toHaveText('Returned');
 
-    const notReturned = statusFilter(page).getByRole('option', { name: /not returned/i });
-    await expect(notReturned, 'a "not returned" status option').toHaveCount(1);
-    await statusFilter(page).selectOption({ label: (await notReturned.textContent()) ?? '' });
-    await expect(loanRow(page, openTitle)).toHaveCount(1);
-    await expect(loanRow(page, returnedTitle)).toHaveCount(0);
-    await expect(bodyRows(page)).toHaveCount(1);
+      const notReturned = statusFilter(page).getByRole('option', { name: /not returned/i });
+      await expect(notReturned, 'a "not returned" status option').toHaveCount(1);
+      await statusFilter(page).selectOption({ label: (await notReturned.textContent()) ?? '' });
+      await expect(loanRow(page, openTitle)).toHaveCount(1);
+      await expect(loanRow(page, returnedTitle)).toHaveCount(0);
+      await expect(bodyRows(page)).toHaveCount(1);
+    } finally {
+      await releaseMembers(api, member);
+    }
   });
 
   test('F10.5 marking a loan as returned changes its status and stores the effective return date', async ({
@@ -255,22 +292,26 @@ test.describe('F10 Book loans', () => {
     api,
   }) => {
     const member = await api.createMember({ firstName: 'Bookreturn' });
-    const title = `Returned book ${uniqueSuffix()}`;
-    const loan = await createLoan(api, member, title);
-    const today = todayEat();
+    try {
+      const title = `Returned book ${uniqueSuffix()}`;
+      const loan = await createLoan(api, member, title);
+      const today = todayEat();
 
-    await page.goto('/book');
-    await searchBox(page).fill(title);
-    const row = loanRow(page, title);
-    await expect(row.getByRole('cell').nth(5)).toHaveText('On loan');
+      await page.goto('/book');
+      await searchBox(page).fill(title);
+      const row = loanRow(page, title);
+      await expect(row.getByRole('cell').nth(5)).toHaveText('On loan');
 
-    await row.getByRole('button', { name: 'Mark as returned' }).click();
+      await row.getByRole('button', { name: 'Mark as returned' }).click();
 
-    await expect(row.getByRole('cell').nth(5)).toHaveText('Returned');
-    await expect(row.getByRole('cell').nth(4)).toHaveText(mediumDate(today));
-    await expect(row.getByRole('button', { name: 'Mark as returned' })).toHaveCount(0);
-    const stored = await api.get<BookLoan>(`book-loans/${loan.id}`);
-    expect(stored.effectiveReturnDate).toBe(today);
+      await expect(row.getByRole('cell').nth(5)).toHaveText('Returned');
+      await expect(row.getByRole('cell').nth(4)).toHaveText(mediumDate(today));
+      await expect(row.getByRole('button', { name: 'Mark as returned' })).toHaveCount(0);
+      const stored = await api.get<BookLoan>(`book-loans/${loan.id}`);
+      expect(stored.effectiveReturnDate).toBe(today);
+    } finally {
+      await releaseMembers(api, member);
+    }
   });
 
   test('F10.6 a required field left empty creates nothing and shows a validation message, pagination moves to the next page and back', async ({
@@ -333,7 +374,7 @@ test.describe('F10 Book loans', () => {
       await expect(bodyRows(page)).toHaveCount(PAGE_SIZE);
       await expect(loanRow(page, firstPage.data[0].bookTitle)).toHaveCount(1);
     } finally {
-      await deleteMemberWithoutLoans(api, member);
+      await releaseMembers(api, member, pager);
     }
   });
 });

@@ -82,6 +82,179 @@
       "editOwnProfile": "Edit own profile"
     }
   },
+  "auditLog": {
+    "tabs": {
+      "access": "Roles and accounts",
+      "logs": "Audit log"
+    },
+    "title": "Audit log",
+    "description": "Every creation, change and deletion made in the app, newest first.",
+    "refresh": "Refresh",
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Name, title or username",
+      "recordType": "Record type",
+      "logType": "Type of change",
+      "doneBy": "Done by",
+      "period": "Period",
+      "from": "Start date",
+      "to": "End date",
+      "all": "All",
+      "everyone": "Everyone"
+    },
+    "columns": {
+      "date": "Date",
+      "doneBy": "Done by",
+      "action": "Action",
+      "record": "Record",
+      "change": "Change",
+      "details": "Details"
+    },
+    "actions": {
+      "create": "Created",
+      "update": "Updated",
+      "delete": "Deleted",
+      "cascade": "Deleted with parent"
+    },
+    "entities": {
+      "users": "Account",
+      "role_policies": "Role permissions",
+      "members": "Member",
+      "activities": "Activity",
+      "checkins": "Check-in",
+      "volunteers": "Volunteer",
+      "book_loans": "Book loan"
+    },
+    "entityGroups": {
+      "users": "Accounts",
+      "role_policies": "Role permissions",
+      "members": "Members",
+      "activities": "Activities",
+      "checkins": "Check-ins",
+      "volunteers": "Volunteers",
+      "book_loans": "Book loans"
+    },
+    "parentKinds": {
+      "members": "member",
+      "activities": "activity"
+    },
+    "types": {
+      "user": {
+        "created": "Account created",
+        "profile_updated": "Profile updated",
+        "password_changed": "Password changed",
+        "role_changed": "Role changed",
+        "activation_changed": "Status changed"
+      },
+      "role_policy": {
+        "created": "First save of a role",
+        "permissions_changed": "Permissions changed",
+        "activation_changed": "Role status changed"
+      },
+      "member": {
+        "created": "Member created",
+        "updated": "Member updated",
+        "deleted": "Member deleted"
+      },
+      "activity": {
+        "created": "Activity created",
+        "updated": "Activity updated",
+        "deleted": "Activity deleted"
+      },
+      "checkin": {
+        "deleted": "Check-in deleted",
+        "cascade_deleted": "Check-in deleted with its member or activity"
+      },
+      "volunteer": {
+        "created": "Volunteer created",
+        "updated": "Volunteer updated",
+        "deleted": "Volunteer deleted",
+        "cascade_deleted": "Volunteer deleted with its member"
+      },
+      "book_loan": {
+        "created": "Loan created",
+        "updated": "Loan updated",
+        "returned": "Book returned"
+      }
+    },
+    "sentences": {
+      "user": {
+        "created": "Account created with role {{role}}",
+        "profile_updated": "Changed: {{fields}}",
+        "password_changed": "Password changed",
+        "role_changed": "Role: {{before}} to {{after}}",
+        "activation_changed": "Status: {{before}} to {{after}}"
+      },
+      "role_policy": {
+        "created": {
+          "one": "First save, {{count}} permission differs from the defaults",
+          "other": "First save, {{count}} permissions differ from the defaults"
+        },
+        "permissions_changed": {
+          "one": "{{count}} permission changed: {{granted}} granted, {{removed}} removed",
+          "other": "{{count}} permissions changed: {{granted}} granted, {{removed}} removed"
+        },
+        "activation_changed": "Role status: {{before}} to {{after}}"
+      },
+      "member": {
+        "created": "New member",
+        "updated": {
+          "one": "{{count}} field changed: {{fields}}",
+          "other": "{{count}} fields changed: {{fields}}"
+        },
+        "deleted": "Member removed"
+      },
+      "activity": {
+        "created": "New activity, {{startTime}} to {{endTime}}",
+        "updated": {
+          "one": "{{count}} field changed: {{fields}}",
+          "other": "{{count}} fields changed: {{fields}}"
+        },
+        "deleted": "Activity removed"
+      },
+      "checkin": {
+        "deleted": "Check-in of {{checkInTime}} removed",
+        "cascade_deleted": "Check-in of {{checkInTime}} removed with {{parentKind}} {{parentLabel}}"
+      },
+      "volunteer": {
+        "created": "New volunteer",
+        "updated": {
+          "one": "{{count}} field changed: {{fields}}",
+          "other": "{{count}} fields changed: {{fields}}"
+        },
+        "deleted": "Volunteer removed",
+        "cascade_deleted": "Volunteer removed with member {{parentLabel}}"
+      },
+      "book_loan": {
+        "created": "Lent on {{borrowingDate}}, due {{expectedReturnDate}}",
+        "updated": {
+          "one": "{{count}} field changed: {{fields}}",
+          "other": "{{count}} fields changed: {{fields}}"
+        },
+        "returned": "Returned on {{effectiveReturnDate}}"
+      }
+    },
+    "detail": {
+      "type": "Type",
+      "recordId": "Record ID",
+      "byLine": "{{date}} by {{actor}} ({{role}})",
+      "parentLine": "Deleted with {{kind}} {{label}} (#{{id}})",
+      "field": "Field",
+      "before": "Before",
+      "after": "After",
+      "valueAtCreation": "Value at creation",
+      "valueBeforeDeletion": "Value before deletion",
+      "passwordNote": "The password was changed. Its value is never recorded."
+    },
+    "empty": "Empty",
+    "allowed": "Allowed",
+    "notAllowed": "Not allowed",
+    "volunteerWithoutMember": "Volunteer without member",
+    "loading": "Loading the audit log…",
+    "nothingYet": "Nothing has been recorded yet.",
+    "showing": "Showing {{first}} to {{last}} of {{total}} results",
+    "pageOf": "Page {{page}} of {{pages}}"
+  },
   "nav": {
     "home": "Home",
     "members": "Members",
@@ -203,7 +376,25 @@
     "membershipDate": "Membership date",
     "phoneContact": "Phone Contact",
     "titlePrefix": "Mr. / Mrs. / Miss.",
-    "role": "Role"
+    "role": "Role",
+    "id": "ID",
+    "email": "Email",
+    "registrationNumber": "Registration number",
+    "title": "Title",
+    "gender": "Gender",
+    "profileImage": "Profile photo",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "image": "Image",
+    "createdBy": "Created by (user ID)",
+    "activityId": "Activity ID",
+    "checkInTime": "Check-in time",
+    "checkOutTime": "Check-out time",
+    "visitReason": "Purpose of visit",
+    "bookTitle": "Book title",
+    "borrowingDate": "Borrowing date",
+    "expectedReturnDate": "Expected return date",
+    "effectiveReturnDate": "Effective return date"
   },
   "placeholders": {
     "firstName": "eg: John",

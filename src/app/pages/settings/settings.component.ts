@@ -14,6 +14,7 @@ import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
 import { ZardInputComponent } from '@/shared/components/input';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
+import { AuditLogComponent } from './audit-log/audit-log.component';
 import { CanDeactivateFn } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -43,6 +44,7 @@ interface Account {
     ZardCardComponent,
     ZardInputComponent,
     ZardTableImports,
+    AuditLogComponent,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -55,6 +57,8 @@ export class SettingsComponent implements OnInit {
   private url = `${environment.API_URL}/settings`;
   private savedPolicies = new Map<Role, string>();
 
+  /** Page-level tab: roles and accounts, or the audit log. */
+  pageTab: 'access' | 'logs' = 'access';
   roles: Role[] = ['admin', 'intern', 'volunteer'];
   selectedRole: Role = 'intern';
   policies: Policy[] = [];

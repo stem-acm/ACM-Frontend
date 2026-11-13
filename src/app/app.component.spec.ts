@@ -4,6 +4,7 @@ import { provideRouter, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
 import { AuthService } from './services/auth.service';
+import { ToastService } from './services/toast.service';
 import { User } from './interfaces/user';
 
 const testUser: User = {
@@ -42,5 +43,23 @@ describe('AppComponent navigation visibility', () => {
     TestBed.inject(AuthService).logout();
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('app-navbar')).toBeNull();
+  });
+});
+
+describe('AppComponent toast', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AppComponent, TranslateModule.forRoot()],
+      providers: [provideHttpClient(), provideRouter([])],
+    }).compileComponents();
+  });
+
+  it('displays messages sent through ToastService', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
+    TestBed.inject(ToastService).showToast('Member not found');
+    fixture.detectChanges();
+    const alert = fixture.nativeElement.querySelector('app-toast [role="alert"]');
+    expect(alert?.textContent).toContain('Member not found');
   });
 });

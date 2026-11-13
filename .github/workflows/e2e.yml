@@ -1,0 +1,102 @@
+name: E2E tests
+
+on:
+  pull_request:
+    branches: [develop]
+
+permissions: { contents: read }
+
+concurrency:
+  group: e2e-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: Playwright e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    defaults:
+      run:
+        working-directory: ACM-Frontend
+
+    env:
+      # Admin created by the backend seed. It exists only in the throwaway database of the run.
+      E2E_ADMIN_USERNAME: ${{ vars.E2E_ADMIN_USERNAME }}
+      E2E_ADMIN_PASSWORD: ${{ vars.E2E_ADMIN_PASSWORD }}
+      # The backend is checked out next to the frontend, the default place for the tests.
+      E2E_BACKEND_DIR: ${{ github.workspace }}/ACM-Backend
+
+    steps:
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+        with:
+          path: ACM-Frontend
+
+      - name: Checkout backend (develop)
+        uses: actions/checkout@v4
+        with:
+          repository: stem-acm/ACM-Backend
+          ref: develop
+          path: ACM-Backend
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: ACM-Frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Read Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browser
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
+
+      - name: Install Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Chromium system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Serve frontend on http://localhost:4200
+        run: |
+          nohup npx ng serve --configuration development --port 4200 > "$RUNNER_TEMP/ng-serve.log" 2>&1 &
+          for i in $(seq 1 180); do
+            if curl -sf -o /dev/null http://localhost:4200; then
+              echo "Frontend answers after ${i}s."
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::The frontend did not answer on http://localhost:4200 within 180s."
+          cat "$RUNNER_TEMP/ng-serve.log"
+          exit 1
+
+      - name: Run e2e tests
+        run: npm run e2e
+
+      - name: Upload Playwright report and traces
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            ACM-Frontend/playwright-report/
+            ACM-Frontend/test-results/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Show frontend server log
+        if: failure()
+        run: cat "$RUNNER_TEMP/ng-serve.log" || true

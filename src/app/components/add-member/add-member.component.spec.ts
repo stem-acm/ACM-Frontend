@@ -1,3 +1,4 @@
+import { ElementRef, NgZone } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddMemberComponent } from './add-member.component';
@@ -64,5 +65,26 @@ describe('AddMemberComponent', () => {
 
     expect(stop).toHaveBeenCalled();
     expect(component.cameraOpen).toBeFalse();
+  });
+
+  it('applies a captured photo inside the Angular zone', () => {
+    const zone = TestBed.inject(NgZone);
+    spyOn(HTMLCanvasElement.prototype, 'getContext').and.returnValue(null);
+    spyOn(HTMLCanvasElement.prototype, 'toBlob').and.callFake(callback =>
+      zone.runOutsideAngular(() => callback(new Blob(['photo'], { type: 'image/jpeg' }))),
+    );
+    let closedInZone = false;
+    spyOn(component, 'stopCamera').and.callFake(() => {
+      closedInZone = NgZone.isInAngularZone();
+    });
+    component.cameraVideo = new ElementRef({
+      videoWidth: 4,
+      videoHeight: 4,
+    } as unknown as HTMLVideoElement);
+
+    component.capturePhoto();
+
+    expect(component.selectedPhoto).not.toBeNull();
+    expect(closedInZone).toBeTrue();
   });
 });

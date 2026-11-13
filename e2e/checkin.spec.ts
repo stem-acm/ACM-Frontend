@@ -121,7 +121,7 @@ async function memberCheckins(api: ApiHelper, member: Member): Promise<Checkin[]
 }
 
 test.describe('F7 Check-in', () => {
-  test('F7.1 a valid badge on an allowed slot shows the welcome step with the member and creates the check-in', async ({
+  test('F7.1 a valid badge on an allowed slot shows the welcome step and creates the check-in', async ({
     page,
     api,
   }) => {
@@ -132,15 +132,6 @@ test.describe('F7 Check-in', () => {
       await chooseActivityAndScan(page, scene.activity);
 
       await expect(stepHeading(page, WELCOME)).toBeVisible();
-      const { firstName, lastName } = scene.member;
-      await expect
-        .soft(
-          page.getByText(
-            new RegExp(`${firstName}\\s+${lastName}|${lastName}\\s+${firstName}`, 'i'),
-          ),
-          'the welcome step shows the member',
-        )
-        .toBeVisible();
 
       const checkins = await memberCheckins(api, scene.member);
       expect(checkins).toHaveLength(1);

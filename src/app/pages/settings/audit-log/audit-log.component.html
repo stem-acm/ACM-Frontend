@@ -1,0 +1,429 @@
+<section class="access-card" aria-labelledby="audit-title">
+  <div class="access-section-head audit-head">
+    <div>
+      <h2 id="audit-title">{{ 'auditLog.title' | translate }}</h2>
+      <p>{{ 'auditLog.description' | translate }}</p>
+    </div>
+    <button
+      z-button
+      zType="outline"
+      class="acm-btn acm-btn--outline acm-btn--sm"
+      type="button"
+      (click)="load()"
+    >
+      {{ 'auditLog.refresh' | translate }}
+    </button>
+  </div>
+
+  <div class="audit-filters">
+    <label class="audit-wide"
+      >{{ 'auditLog.filters.search' | translate }}
+      <input
+        type="search"
+        name="audit-search"
+        [placeholder]="'auditLog.filters.searchPlaceholder' | translate"
+        [(ngModel)]="search"
+        (ngModelChange)="searchChanged()"
+      />
+    </label>
+    <label
+      >{{ 'auditLog.filters.recordType' | translate }}
+      <select name="audit-entity" [(ngModel)]="entity" (ngModelChange)="entityChanged()">
+        <option value="">{{ 'auditLog.filters.all' | translate }}</option>
+        @for (item of entities; track item) {
+          <option [value]="item">{{ 'auditLog.entityGroups.' + item | translate }}</option>
+        }
+      </select>
+    </label>
+    <label
+      >{{ 'auditLog.filters.logType' | translate }}
+      <select name="audit-type" [(ngModel)]="type" (ngModelChange)="applyFilters()">
+        <option value="">{{ 'auditLog.filters.all' | translate }}</option>
+        @for (group of typeGroups; track group.entity) {
+          <optgroup [label]="'auditLog.entityGroups.' + group.entity | translate">
+            @for (item of group.types; track item) {
+              <option [value]="item">{{ 'auditLog.types.' + item | translate }}</option>
+            }
+          </optgroup>
+        }
+      </select>
+    </label>
+    <label
+      >{{ 'auditLog.filters.doneBy' | translate }}
+      <select name="audit-actor" [(ngModel)]="actorId" (ngModelChange)="applyFilters()">
+        <option [ngValue]="null">{{ 'auditLog.filters.everyone' | translate }}</option>
+        @for (account of accounts; track account.id) {
+          <option [ngValue]="account.id">
+            {{ account.username }} ({{ roleName(account.role) }})
+          </option>
+        }
+      </select>
+    </label>
+    <div class="audit-wide audit-period" role="group" aria-labelledby="audit-period-label">
+      <span id="audit-period-label">{{ 'auditLog.filters.period' | translate }}</span>
+      <span class="audit-dates">
+        <input
+          type="date"
+          name="audit-from"
+          [attr.aria-label]="'auditLog.filters.from' | translate"
+          [max]="to"
+          [(ngModel)]="from"
+          (ngModelChange)="applyFilters()"
+        />
+        <input
+          type="date"
+          name="audit-to"
+          [attr.aria-label]="'auditLog.filters.to' | translate"
+          [min]="from"
+          [(ngModel)]="to"
+          (ngModelChange)="applyFilters()"
+        />
+      </span>
+    </div>
+  </div>
+
+  <div class="acm-filter-summary audit-summary-bar" role="status">
+    @if (state === 'ready') {
+      <span>{{ (total === 1 ? 'ux.oneResult' : 'ux.results') | translate: { count: total } }}</span>
+    }
+    @if (search.trim()) {
+      <button
+        class="acm-btn acm-btn--secondary acm-btn--sm"
+        type="button"
+        [attr.aria-label]="('ux.removeFilter' | translate) + ': ' + search"
+        (click)="clear('search')"
+      >
+        “{{ search.trim() }}” <span aria-hidden="true">&times;</span>
+      </button>
+    }
+    @if (entity) {
+      <button
+        class="acm-btn acm-btn--secondary acm-btn--sm"
+        type="button"
+        [attr.aria-label]="
+          ('ux.removeFilter' | translate) + ': ' + ('auditLog.entityGroups.' + entity | translate)
+        "
+        (click)="clear('entity')"
+      >
+        {{ 'auditLog.entityGroups.' + entity | translate }} <span aria-hidden="true">&times;</span>
+      </button>
+    }
+    @if (type) {
+      <button
+        class="acm-btn acm-btn--secondary acm-btn--sm"
+        type="button"
+        [attr.aria-label]="
+          ('ux.removeFilter' | translate) + ': ' + ('auditLog.types.' + type | translate)
+        "
+        (click)="clear('type')"
+      >
+        {{ 'auditLog.types.' + type | translate }} <span aria-hidden="true">&times;</span>
+      </button>
+    }
+    @if (actorId) {
+      <button
+        class="acm-btn acm-btn--secondary acm-btn--sm"
+        type="button"
+        [attr.aria-label]="('ux.removeFilter' | translate) + ': ' + actorName"
+        (click)="clear('actorId')"
+      >
+        {{ actorName }} <span aria-hidden="true">&times;</span>
+      </button>
+    }
+    @if (from || to) {
+      <button
+        class="acm-btn acm-btn--secondary acm-btn--sm"
+        type="button"
+        [attr.aria-label]="('ux.removeFilter' | translate) + ': ' + period"
+        (click)="clear('period')"
+      >
+        {{ period }} <span aria-hidden="true">&times;</span>
+      </button>
+    }
+    @if (hasFilters) {
+      <button class="acm-btn acm-btn--link" type="button" (click)="clearAll()">
+        {{ 'ux.clearFilters' | translate }}
+      </button>
+    }
+  </div>
+
+  @if (state === 'loading') {
+    <div class="acm-list-state" role="status">
+      <div class="audit-spinner" aria-hidden="true"></div>
+      <p>{{ 'auditLog.loading' | translate }}</p>
+    </div>
+  } @else if (state === 'error') {
+    <div class="acm-list-state" role="alert">
+      <p>{{ 'ux.loadError' | translate }}</p>
+      <button z-button class="acm-btn acm-btn--primary" type="button" (click)="load()">
+        {{ 'ux.retry' | translate }}
+      </button>
+    </div>
+  } @else if (rows.length === 0) {
+    <div class="acm-list-state" role="status">
+      <div class="audit-empty-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M9 5h10M9 12h10M9 19h10M5 5h.01M5 12h.01M5 19h.01"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+      @if (hasFilters) {
+        <p>{{ 'ux.noMatches' | translate }}</p>
+        <button
+          z-button
+          zType="outline"
+          class="acm-btn acm-btn--outline"
+          type="button"
+          (click)="clearAll()"
+        >
+          {{ 'ux.clearFilters' | translate }}
+        </button>
+      } @else {
+        <p>{{ 'auditLog.nothingYet' | translate }}</p>
+      }
+    </div>
+  } @else {
+    <div class="access-table-wrap audit-table-desktop">
+      <table class="access-table">
+        <thead>
+          <tr>
+            <th>{{ 'auditLog.columns.date' | translate }}</th>
+            <th>{{ 'auditLog.columns.doneBy' | translate }}</th>
+            <th>{{ 'auditLog.columns.action' | translate }}</th>
+            <th>{{ 'auditLog.columns.record' | translate }}</th>
+            <th>{{ 'auditLog.columns.change' | translate }}</th>
+            <th>
+              <span class="sr-only">{{ 'auditLog.columns.details' | translate }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows; track row.log.id) {
+            <tr
+              class="audit-row"
+              [class.is-open]="expanded.has(row.log.id)"
+              (click)="toggle(row.log.id)"
+            >
+              <td class="audit-when">{{ row.date }}</td>
+              <td>
+                <strong>{{ row.log.actorUsername }}</strong>
+                <small class="audit-sub">{{ row.actorRole }}</small>
+              </td>
+              <td>
+                <span [class]="'audit-badge audit-badge--' + row.family">{{
+                  'auditLog.actions.' + row.family | translate
+                }}</span>
+              </td>
+              <td class="audit-entity">
+                <strong>{{ row.record }}</strong>
+                <small class="audit-sub">{{ row.kind }} #{{ row.log.entityId }}</small>
+              </td>
+              <td class="audit-summary">{{ row.sentence }}</td>
+              <td>
+                <button
+                  class="audit-toggle"
+                  type="button"
+                  [attr.aria-expanded]="expanded.has(row.log.id)"
+                  [attr.aria-label]="'auditLog.columns.details' | translate"
+                  (click)="$event.stopPropagation(); toggle(row.log.id)"
+                >
+                  <ng-container *ngTemplateOutlet="chevron" />
+                </button>
+              </td>
+            </tr>
+            @if (expanded.has(row.log.id)) {
+              <tr>
+                <td colspan="6" class="audit-detail-cell">
+                  <ng-container *ngTemplateOutlet="detail; context: { $implicit: row }" />
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="acm-mobile-records md:hidden audit-cards">
+      @for (row of rows; track row.log.id) {
+        <article class="acm-mobile-record">
+          <div class="acm-mobile-record-head audit-card-head">
+            <div>
+              <strong>{{ row.record }}</strong>
+              <span>{{ row.kind }} #{{ row.log.entityId }}</span>
+            </div>
+            <span [class]="'audit-badge audit-badge--' + row.family">{{
+              'auditLog.actions.' + row.family | translate
+            }}</span>
+          </div>
+          <dl>
+            <div>
+              <dt>{{ 'auditLog.columns.date' | translate }}</dt>
+              <dd>{{ row.date }}</dd>
+            </div>
+            <div>
+              <dt>{{ 'auditLog.columns.doneBy' | translate }}</dt>
+              <dd>{{ row.log.actorUsername }} ({{ row.actorRole }})</dd>
+            </div>
+            <div>
+              <dt>{{ 'auditLog.columns.change' | translate }}</dt>
+              <dd>{{ row.sentence }}</dd>
+            </div>
+          </dl>
+          <div class="acm-mobile-record-actions">
+            <button
+              class="acm-btn acm-btn--link"
+              type="button"
+              [attr.aria-expanded]="expanded.has(row.log.id)"
+              (click)="toggle(row.log.id)"
+            >
+              {{ 'auditLog.columns.details' | translate }}
+              <ng-container *ngTemplateOutlet="chevron" />
+            </button>
+          </div>
+          @if (expanded.has(row.log.id)) {
+            <ng-container *ngTemplateOutlet="detail; context: { $implicit: row }" />
+          }
+        </article>
+      }
+    </div>
+
+    <nav class="audit-pagination" [attr.aria-label]="'auditLog.title' | translate">
+      <p>
+        {{ 'auditLog.showing' | translate: { first: firstShown, last: lastShown, total: total } }}
+      </p>
+      <div class="audit-pagination-controls">
+        <button
+          z-button
+          zType="outline"
+          class="acm-btn acm-btn--outline acm-btn--sm"
+          type="button"
+          [zDisabled]="page === 0"
+          [disabled]="page === 0"
+          (click)="goTo(page - 1)"
+        >
+          {{ 'table.pagination.previous' | translate }}
+        </button>
+        <span>{{ 'auditLog.pageOf' | translate: { page: page + 1, pages: pageCount } }}</span>
+        <button
+          z-button
+          zType="outline"
+          class="acm-btn acm-btn--outline acm-btn--sm"
+          type="button"
+          [zDisabled]="page + 1 >= pageCount"
+          [disabled]="page + 1 >= pageCount"
+          (click)="goTo(page + 1)"
+        >
+          {{ 'table.pagination.next' | translate }}
+        </button>
+      </div>
+    </nav>
+  }
+</section>
+
+<ng-template #chevron>
+  <svg viewBox="0 0 10 6" fill="none" aria-hidden="true">
+    <path
+      d="m1 1 4 4 4-4"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</ng-template>
+
+<ng-template #detail let-row>
+  <div class="audit-detail">
+    <h3>{{ 'auditLog.actions.' + row.family | translate }}: {{ row.kind }} - {{ row.record }}</h3>
+    <div class="audit-meta">
+      <span
+        >{{ 'auditLog.detail.type' | translate }} <code>{{ row.log.type }}</code></span
+      >
+      <span
+        >{{ 'auditLog.detail.recordId' | translate }} <code>#{{ row.log.entityId }}</code></span
+      >
+      <span>{{
+        'auditLog.detail.byLine'
+          | translate: { date: row.date, actor: row.log.actorUsername, role: row.actorRole }
+      }}</span>
+      @if (row.log.parentEntity) {
+        <span>{{
+          'auditLog.detail.parentLine'
+            | translate: { kind: row.parentKind, label: row.log.parentLabel, id: row.log.parentId }
+        }}</span>
+      }
+    </div>
+    @switch (row.detail.mode) {
+      @case ('password') {
+        <p class="audit-none">{{ 'auditLog.detail.passwordNote' | translate }}</p>
+      }
+      @case ('diff') {
+        <table class="audit-diff">
+          <thead>
+            <tr>
+              <th>{{ 'auditLog.detail.field' | translate }}</th>
+              <th>{{ 'auditLog.detail.before' | translate }}</th>
+              <th>{{ 'auditLog.detail.after' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of row.detail.rows; track item.label) {
+              <tr>
+                <td>{{ item.label }}</td>
+                <td>
+                  @if (item.before === null) {
+                    <span class="audit-none">{{ 'auditLog.empty' | translate }}</span>
+                  } @else {
+                    <span class="audit-before">{{ item.before }}</span>
+                  }
+                </td>
+                <td>
+                  @if (item.after === null) {
+                    <span class="audit-none">{{ 'auditLog.empty' | translate }}</span>
+                  } @else {
+                    <span class="audit-after">{{ item.after }}</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+      @case ('snapshot') {
+        <table class="audit-diff">
+          <thead>
+            <tr>
+              <th>{{ 'auditLog.detail.field' | translate }}</th>
+              <th>
+                {{
+                  (row.family === 'create'
+                    ? 'auditLog.detail.valueAtCreation'
+                    : 'auditLog.detail.valueBeforeDeletion'
+                  ) | translate
+                }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of row.detail.rows; track item.label) {
+              <tr>
+                <td>{{ item.label }}</td>
+                <td>
+                  @if (item.value === null) {
+                    <span class="audit-none">{{ 'auditLog.empty' | translate }}</span>
+                  } @else {
+                    {{ item.value }}
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    }
+  </div>
+</ng-template>

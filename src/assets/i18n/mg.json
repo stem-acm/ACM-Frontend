@@ -82,6 +82,179 @@
       "editOwnProfile": "Hanova ny mombamomba azy"
     }
   },
+  "auditLog": {
+    "tabs": {
+      "access": "Andraikitra sy kaonty",
+      "logs": "Tantaran'ny fanovana"
+    },
+    "title": "Tantaran'ny fanovana",
+    "description": "Ny famoronana, ny fanovana ary ny famafana rehetra natao tao amin'ny rindranasa, ny vao haingana no voalohany.",
+    "refresh": "Havaozina",
+    "filters": {
+      "search": "Hikaroka",
+      "searchPlaceholder": "Anarana, lohateny na anaran'ny mpampiasa",
+      "recordType": "Karazana firaketana",
+      "logType": "Karazana fanovana",
+      "doneBy": "Nataon'i",
+      "period": "Fe-potoana",
+      "from": "Daty fanombohana",
+      "to": "Daty farany",
+      "all": "Rehetra",
+      "everyone": "Ny rehetra"
+    },
+    "columns": {
+      "date": "Daty",
+      "doneBy": "Nataon'i",
+      "action": "Asa",
+      "record": "Firaketana",
+      "change": "Fanovana",
+      "details": "Antsipiriany"
+    },
+    "actions": {
+      "create": "Noforonina",
+      "update": "Novaina",
+      "delete": "Voafafa",
+      "cascade": "Voafafa niaraka tamin'ny tompony"
+    },
+    "entities": {
+      "users": "Kaonty",
+      "role_policies": "Fahazoan-dalan'ny andraikitra",
+      "members": "Mpikambana",
+      "activities": "Hetsika",
+      "checkins": "Fisoratana anarana",
+      "volunteers": "Mpilatsaka an-tsitrapo",
+      "book_loans": "Fampindramam-boky"
+    },
+    "entityGroups": {
+      "users": "Kaonty",
+      "role_policies": "Fahazoan-dalan'ny andraikitra",
+      "members": "Mpikambana",
+      "activities": "Hetsika",
+      "checkins": "Fisoratana anarana",
+      "volunteers": "Mpilatsaka an-tsitrapo",
+      "book_loans": "Fampindramam-boky"
+    },
+    "parentKinds": {
+      "members": "ny mpikambana",
+      "activities": "ny hetsika"
+    },
+    "types": {
+      "user": {
+        "created": "Kaonty noforonina",
+        "profile_updated": "Mombamomba novaina",
+        "password_changed": "Tenimiafina novaina",
+        "role_changed": "Andraikitra novaina",
+        "activation_changed": "Toetra novaina"
+      },
+      "role_policy": {
+        "created": "Fitehirizana voalohany ny andraikitra",
+        "permissions_changed": "Fahazoan-dalana novaina",
+        "activation_changed": "Toetry ny andraikitra novaina"
+      },
+      "member": {
+        "created": "Mpikambana noforonina",
+        "updated": "Mpikambana novaina",
+        "deleted": "Mpikambana voafafa"
+      },
+      "activity": {
+        "created": "Hetsika noforonina",
+        "updated": "Hetsika novaina",
+        "deleted": "Hetsika voafafa"
+      },
+      "checkin": {
+        "deleted": "Fisoratana anarana voafafa",
+        "cascade_deleted": "Fisoratana anarana voafafa niaraka tamin'ny mpikambana na hetsika"
+      },
+      "volunteer": {
+        "created": "Mpilatsaka an-tsitrapo noforonina",
+        "updated": "Mpilatsaka an-tsitrapo novaina",
+        "deleted": "Mpilatsaka an-tsitrapo voafafa",
+        "cascade_deleted": "Mpilatsaka an-tsitrapo voafafa niaraka tamin'ny mpikambana"
+      },
+      "book_loan": {
+        "created": "Fampindramana noforonina",
+        "updated": "Fampindramana novaina",
+        "returned": "Boky naverina"
+      }
+    },
+    "sentences": {
+      "user": {
+        "created": "Kaonty noforonina miaraka amin'ny andraikitra {{role}}",
+        "profile_updated": "Novaina: {{fields}}",
+        "password_changed": "Novaina ny tenimiafina",
+        "role_changed": "Andraikitra: {{before}} ho {{after}}",
+        "activation_changed": "Toetra: {{before}} ho {{after}}"
+      },
+      "role_policy": {
+        "created": {
+          "one": "Fitehirizana voalohany, fahazoan-dalana {{count}} tsy mitovy amin'ny fototra",
+          "other": "Fitehirizana voalohany, fahazoan-dalana {{count}} tsy mitovy amin'ny fototra"
+        },
+        "permissions_changed": {
+          "one": "Fahazoan-dalana {{count}} novaina: {{granted}} nomena, {{removed}} nesorina",
+          "other": "Fahazoan-dalana {{count}} novaina: {{granted}} nomena, {{removed}} nesorina"
+        },
+        "activation_changed": "Toetry ny andraikitra: {{before}} ho {{after}}"
+      },
+      "member": {
+        "created": "Mpikambana vaovao",
+        "updated": {
+          "one": "Saha {{count}} novaina: {{fields}}",
+          "other": "Saha {{count}} novaina: {{fields}}"
+        },
+        "deleted": "Mpikambana nesorina"
+      },
+      "activity": {
+        "created": "Hetsika vaovao, {{startTime}} hatramin'ny {{endTime}}",
+        "updated": {
+          "one": "Saha {{count}} novaina: {{fields}}",
+          "other": "Saha {{count}} novaina: {{fields}}"
+        },
+        "deleted": "Hetsika nesorina"
+      },
+      "checkin": {
+        "deleted": "Nesorina ny fisoratana anarana tamin'ny {{checkInTime}}",
+        "cascade_deleted": "Nesorina niaraka tamin'{{parentKind}} {{parentLabel}} ny fisoratana anarana tamin'ny {{checkInTime}}"
+      },
+      "volunteer": {
+        "created": "Mpilatsaka an-tsitrapo vaovao",
+        "updated": {
+          "one": "Saha {{count}} novaina: {{fields}}",
+          "other": "Saha {{count}} novaina: {{fields}}"
+        },
+        "deleted": "Mpilatsaka an-tsitrapo nesorina",
+        "cascade_deleted": "Mpilatsaka an-tsitrapo nesorina niaraka tamin'ny mpikambana {{parentLabel}}"
+      },
+      "book_loan": {
+        "created": "Nindramina tamin'ny {{borrowingDate}}, haverina amin'ny {{expectedReturnDate}}",
+        "updated": {
+          "one": "Saha {{count}} novaina: {{fields}}",
+          "other": "Saha {{count}} novaina: {{fields}}"
+        },
+        "returned": "Naverina tamin'ny {{effectiveReturnDate}}"
+      }
+    },
+    "detail": {
+      "type": "Karazany",
+      "recordId": "ID ny firaketana",
+      "byLine": "{{date}} nataon'i {{actor}} ({{role}})",
+      "parentLine": "Voafafa niaraka tamin'{{kind}} {{label}} (#{{id}})",
+      "field": "Saha",
+      "before": "Taloha",
+      "after": "Vaovao",
+      "valueAtCreation": "Sanda tamin'ny namoronana",
+      "valueBeforeDeletion": "Sanda talohan'ny famafana",
+      "passwordNote": "Novaina ny tenimiafina. Tsy voatahiry mihitsy ny sandany."
+    },
+    "empty": "Foana",
+    "allowed": "Avela",
+    "notAllowed": "Tsy avela",
+    "volunteerWithoutMember": "Mpilatsaka an-tsitrapo tsy misy mpikambana",
+    "loading": "Ampidirina ny tantaran'ny fanovana…",
+    "nothingYet": "Tsy mbola misy voarakitra.",
+    "showing": "Aseho {{first}} hatramin'ny {{last}} amin'ny valiny {{total}}",
+    "pageOf": "Pejy {{page}} amin'ny {{pages}}"
+  },
   "nav": {
     "home": "Fandraisana",
     "members": "Mpikambana",
@@ -203,7 +376,25 @@
     "membershipDate": "Daty nidirana",
     "phoneContact": "Laharana finday",
     "titlePrefix": "Ramose / Madama / Madamozely",
-    "role": "Andraikitra"
+    "role": "Andraikitra",
+    "id": "ID",
+    "email": "Mailaka",
+    "registrationNumber": "Laharana fisoratana anarana",
+    "title": "Fiantsoana",
+    "gender": "Lahy na vavy",
+    "profileImage": "Sary famantarana",
+    "createdAt": "Daty namoronana",
+    "updatedAt": "Daty nanovana",
+    "image": "Sary",
+    "createdBy": "Noforonin'ny (ID mpampiasa)",
+    "activityId": "ID ny hetsika",
+    "checkInTime": "Ora nidirana",
+    "checkOutTime": "Ora nivoahana",
+    "visitReason": "Tanjon'ny fitsidihana",
+    "bookTitle": "Lohatenin'ny boky",
+    "borrowingDate": "Daty nindramana",
+    "expectedReturnDate": "Daty tokony hamerenana",
+    "effectiveReturnDate": "Daty tena namerenana"
   },
   "placeholders": {
     "firstName": "oh: Jean",

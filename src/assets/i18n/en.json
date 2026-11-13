@@ -18,7 +18,9 @@
     "usernameFormat": "Use at least 3 letters or numbers, with no spaces.",
     "invalidEmail": "Enter a valid email address.",
     "passwordLength": "Use at least 8 characters.",
-    "passwordRules": "Use at least 8 characters, including a letter and a number."
+    "passwordRules": "Use at least 8 characters, including a letter and a number.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "memberPhoto": {
     "title": "Member photo",

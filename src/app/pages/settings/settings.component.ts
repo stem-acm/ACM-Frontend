@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit, viewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -6,6 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { environment } from '@/environments/environment';
 import { HttpResult } from '@/app/types/httpResult';
 import { AuthService } from '@/app/services/auth.service';
+import {
+  PasswordFieldImports,
+  PasswordVisibilityDirective,
+} from '@/app/components/password-field/password-field.component';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
 import { ZardInputComponent } from '@/shared/components/input';
@@ -34,6 +38,7 @@ interface Account {
     CommonModule,
     FormsModule,
     TranslateModule,
+    PasswordFieldImports,
     ZardButtonComponent,
     ZardCardComponent,
     ZardInputComponent,
@@ -46,6 +51,7 @@ export class SettingsComponent implements OnInit {
   private http = inject(HttpClient);
   private translate = inject(TranslateService);
   auth = inject(AuthService);
+  private readonly passwordFields = viewChildren(PasswordVisibilityDirective);
   private url = `${environment.API_URL}/settings`;
   private savedPolicies = new Map<Role, string>();
 
@@ -265,6 +271,7 @@ export class SettingsComponent implements OnInit {
           this.error = '';
           this.newAccount = { username: '', email: '', password: '', role: 'volunteer' };
           form.resetForm(this.newAccount);
+          this.passwordFields().forEach(field => field.hide());
           // this.loadAccounts();
           this.accounts.push(result.data);
         },

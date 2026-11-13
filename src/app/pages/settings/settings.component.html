@@ -196,16 +196,19 @@
         </label>
         <label
           >{{ 'forms.password' | translate
-          }}<input
-            z-input
-            name="password"
-            type="password"
-            required
-            minlength="8"
-            [(ngModel)]="newAccount.password"
-            #accountPassword="ngModel"
-            [attr.aria-invalid]="accountPassword.invalid && accountPassword.touched ? true : null"
-          />
+          }}<app-password-field>
+            <input
+              z-input
+              appPasswordVisibility
+              name="password"
+              [attr.aria-label]="'forms.password' | translate"
+              required
+              minlength="8"
+              [(ngModel)]="newAccount.password"
+              #accountPassword="ngModel"
+              [attr.aria-invalid]="accountPassword.invalid && accountPassword.touched ? true : null"
+            />
+          </app-password-field>
           @if (accountPassword.touched && accountPassword.invalid) {
             <small class="access-field-error">{{
               (accountPassword.errors?.['required'] ? 'ux.requiredField' : 'ux.passwordLength')

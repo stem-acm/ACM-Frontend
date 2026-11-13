@@ -1,5 +1,5 @@
 import { ZardButtonComponent } from '@/shared/components/button';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Member } from '@/app/interfaces/member';
 import { ImgRoundComponent } from '../img-round/img-round.component';
 import { TitleComponent } from '../title/title.component';
@@ -43,7 +43,7 @@ import { CapitalizePipe } from '@/app/pipes/capitalize.pipe';
   templateUrl: './member-card-detail.component.html',
   styleUrl: './member-card-detail.component.css',
 })
-export class MemberCardDetailComponent implements OnInit {
+export class MemberCardDetailComponent implements OnInit, OnChanges {
   public auth = inject(AuthService);
   @Input() member!: Member;
   @Input() notFound = false;
@@ -117,10 +117,15 @@ export class MemberCardDetailComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['member'] && !this.isLoadingVolunteers) this.checkIfVolunteer();
+  }
+
   checkIfVolunteer(): void {
-    this.isVolunteer = this.volunteers.some(
-      volunteer => volunteer.registrationNumber === this.member.registrationNumber,
-    );
+    const registrationNumber = this.member?.registrationNumber;
+    this.isVolunteer =
+      !!registrationNumber &&
+      this.volunteers.some(volunteer => volunteer.registrationNumber === registrationNumber);
   }
 
   onDeleteClick() {

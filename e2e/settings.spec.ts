@@ -466,4 +466,46 @@ test.describe('F11 Settings', () => {
       await restorePolicy(api, original);
     }
   });
+
+  test('F11.12 an admin updates a member, then finds the log in the audit log of Settings', async ({
+    page,
+    api,
+  }) => {
+    const member = await api.createMember({ firstName: 'Audited' });
+    const label = `${(member.lastName ?? '').toUpperCase()} ${member.firstName}`;
+    const newPhone = `03${Date.now().toString().slice(-8)}`;
+    try {
+      await page.goto(`/profil/${member.registrationNumber}`);
+      await page.getByRole('button', { name: 'Edit Member' }).click();
+      const form = page.getByRole('dialog', { name: 'Update Member' });
+      await form.getByLabel('Phone Number').fill(newPhone);
+      await form.getByRole('button', { name: 'Update member' }).click();
+      await expect(form).toBeHidden();
+
+      await page.goto('/setting');
+      // The tabs carry role="tab", but the z-button directive turns them into "button".
+      await page.getByRole('tablist').getByRole('button', { name: 'Audit log' }).click();
+      await page.getByRole('searchbox', { name: 'Search' }).fill(member.lastName ?? '');
+
+      const row = page
+        .locator('tr.audit-row')
+        .filter({ hasText: label })
+        .filter({ hasText: 'Updated' });
+      await expect(row).toHaveCount(1);
+      await expect(row).toContainText('admin');
+      await expect(row).toContainText(`Member #${member.registrationNumber}`);
+      await expect(row).toContainText(/fields? changed: .*Phone Number/);
+      await expect(
+        page.locator('tr.audit-row').filter({ hasText: label }).filter({ hasText: 'Created' }),
+      ).toHaveCount(1);
+
+      await row.getByRole('button', { name: 'Details' }).click();
+      const detail = page.locator('.audit-detail').filter({ hasText: 'member.updated' });
+      const phone = detail.getByRole('row').filter({ hasText: 'Phone Number' });
+      await expect(phone).toContainText(member.phoneNumber ?? '');
+      await expect(phone).toContainText(newPhone);
+    } finally {
+      await api.deleteMemberIfExists(member.registrationNumber);
+    }
+  });
 });

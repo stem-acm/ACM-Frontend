@@ -280,4 +280,25 @@ test.describe('F12 Permissions', () => {
       await api.updateUser(user.id, { role: user.role, active: false });
     }
   });
+
+  test('F12.8 an intern cannot open the audit log: no Settings page and 403 from GET /api/settings/logs', async ({
+    page,
+  }) => {
+    const intern = readAccounts().intern;
+    await login(page, intern);
+
+    await page.goto('/setting');
+    await expect(page).toHaveURL(HOME_URL);
+    await expect(page.getByRole('button', { name: 'Audit log' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Audit log' })).toHaveCount(0);
+
+    const { status, token } = await apiLogin(intern.username, intern.password);
+    expect(status).toBe(200);
+    const asIntern = await ApiHelper.create(token as string);
+    try {
+      expect(await asIntern.status('settings/logs')).toBe(403);
+    } finally {
+      await asIntern.dispose();
+    }
+  });
 });

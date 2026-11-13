@@ -25,6 +25,55 @@ interface ApiResult<T> {
   data: T;
 }
 
+export interface Pagination {
+  offset: number;
+  limit: number;
+  total: number;
+  hasMore: boolean;
+}
+
+export interface Page<T> {
+  data: T[];
+  pagination: Pagination;
+}
+
+export type Occupation = 'student' | 'unemployed' | 'employee' | 'entrepreneur';
+
+export interface MemberInput {
+  firstName: string;
+  lastName: string | null;
+  title: 'Miss' | 'Mr' | 'Mrs' | null;
+  gender: 'male' | 'female' | null;
+  birthDate: string | null;
+  birthPlace: string | null;
+  address: string | null;
+  occupation: Occupation | null;
+  phoneNumber: string | null;
+  studyOrWorkPlace: string | null;
+  joinDate: string | null;
+}
+
+export interface Member extends MemberInput {
+  registrationNumber: number;
+  profileImage: string | null;
+}
+
+export interface Activity {
+  id: number;
+  name: string;
+  emoji?: string | null;
+}
+
+export interface Checkin {
+  id: number;
+  registrationNumber: number;
+  activityId: number;
+  checkInTime: string;
+  checkOutTime: string | null;
+  Member?: Member | null;
+  Activity?: Activity | null;
+}
+
 /** A unique, alphanumeric suffix for test data names. */
 export function uniqueSuffix(): string {
   return `${Date.now().toString(36)}${randomBytes(3).toString('hex')}`;
@@ -82,25 +131,107 @@ export class ApiHelper {
 
   async get<T>(path: string): Promise<T> {
     const response = await this.ctx.get(path);
-    expect(response.ok(), `GET ${path} → ${response.status()}`).toBeTruthy();
+    expect(
+      response.ok(),
+      `GET ${path} → ${response.status()} ${await response.text()}`,
+    ).toBeTruthy();
     return ((await response.json()) as ApiResult<T>).data;
+  }
+
+  /** GET of a paginated list: the rows and the pagination block. */
+  async getPage<T>(path: string): Promise<Page<T>> {
+    const response = await this.ctx.get(path);
+    expect(
+      response.ok(),
+      `GET ${path} → ${response.status()} ${await response.text()}`,
+    ).toBeTruthy();
+    const body = (await response.json()) as ApiResult<T[]> & { pagination: Pagination };
+    return { data: body.data, pagination: body.pagination };
+  }
+
+  /** HTTP status of a GET, without asserting on it. */
+  async status(path: string): Promise<number> {
+    return (await this.ctx.get(path)).status();
   }
 
   async post<T>(path: string, data: unknown): Promise<T> {
     const response = await this.ctx.post(path, { data });
-    expect(response.ok(), `POST ${path} → ${response.status()}`).toBeTruthy();
+    expect(
+      response.ok(),
+      `POST ${path} → ${response.status()} ${await response.text()}`,
+    ).toBeTruthy();
     return ((await response.json()) as ApiResult<T>).data;
   }
 
   async put<T>(path: string, data: unknown): Promise<T> {
     const response = await this.ctx.put(path, { data });
-    expect(response.ok(), `PUT ${path} → ${response.status()}`).toBeTruthy();
+    expect(
+      response.ok(),
+      `PUT ${path} → ${response.status()} ${await response.text()}`,
+    ).toBeTruthy();
     return ((await response.json()) as ApiResult<T>).data;
   }
 
   async delete(path: string): Promise<void> {
     const response = await this.ctx.delete(path);
-    expect(response.ok(), `DELETE ${path} → ${response.status()}`).toBeTruthy();
+    expect(
+      response.ok(),
+      `DELETE ${path} → ${response.status()} ${await response.text()}`,
+    ).toBeTruthy();
+  }
+
+  /** Creates a member with complete, unique field values (JSON, no photo). */
+  async createMember(overrides: Partial<MemberInput> = {}): Promise<Member> {
+    const suffix = uniqueSuffix();
+    return this.post<Member>('members', {
+      firstName: 'E2e',
+      lastName: `Member${suffix}`,
+      title: 'Mr',
+      gender: 'male',
+      birthDate: '2001-02-03',
+      birthPlace: 'Mahajanga',
+      address: `${suffix} Test street`,
+      occupation: 'student',
+      phoneNumber: '0341234567',
+      studyOrWorkPlace: `E2e place ${suffix}`,
+      joinDate: '2024-05-06',
+      ...overrides,
+    });
+  }
+
+  /** Deletes a test member (its check-ins and volunteer records go with it). Never a seeded one. */
+  async deleteMember(registrationNumber: number): Promise<void> {
+    await this.delete(`members/${registrationNumber}`);
+  }
+
+  /** Deletes a test member if it still exists (cleanup after a test that may have deleted it). */
+  async deleteMemberIfExists(registrationNumber: number): Promise<void> {
+    if ((await this.status(`members/${registrationNumber}`)) === 200) {
+      await this.deleteMember(registrationNumber);
+    }
+  }
+
+  async getMember(registrationNumber: number): Promise<Member> {
+    return this.get<Member>(`members/${registrationNumber}`);
+  }
+
+  /** Creates a check-in with the member's signed QR payload. */
+  async createCheckin(
+    registrationNumber: number,
+    activityId: number,
+    checkInTime: Date,
+    checkOutTime?: Date,
+  ): Promise<Checkin> {
+    const qr = await this.get<{ registrationNumber: number; signature: string }>(
+      `members/registration/${registrationNumber}/qr-code`,
+    );
+    return this.post<Checkin>('checkins', {
+      registrationNumber: qr.registrationNumber,
+      signature: qr.signature,
+      activityId,
+      checkInTime: checkInTime.toISOString(),
+      ...(checkOutTime ? { checkOutTime: checkOutTime.toISOString() } : {}),
+    });
   }
 
   /** Creates a staff account through POST /api/auth/register with a generated password. */

@@ -1,13 +1,19 @@
-import { test as base, expect, Page } from '@playwright/test';
+import { Browser, BrowserContext, test as base, expect, Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
-import { ApiHelper, Role, TestAccount, uniqueClientIp } from './api';
-import { ACCOUNTS_FILE, API_URL, LANGUAGE_STORAGE_KEY, TOKEN_STORAGE_KEY } from './env';
+import { ApiHelper, Role, RolePolicy, TestAccount, uniqueClientIp } from './api';
+import { ACCOUNTS_FILE, API_URL, BASE_URL, LANGUAGE_STORAGE_KEY, TOKEN_STORAGE_KEY } from './env';
 
 interface Fixtures {
   /** Client address of this test, sent as X-Forwarded-For on every API request. */
   clientIp: string;
   /** API helper authenticated with the admin token of the setup project. */
   api: ApiHelper;
+  /**
+   * Role policies to restore after the test: `remember(role)` reads the policy
+   * before the test changes it; the fixture teardown saves it back, even when
+   * the test fails or times out.
+   */
+  policies: { remember: (role: Exclude<Role, 'admin'>) => Promise<RolePolicy> };
 }
 
 /**
@@ -21,14 +27,7 @@ export const test = base.extend<Fixtures>({
     await use(uniqueClientIp());
   },
   context: async ({ context, clientIp }, use) => {
-    // route.continue does not buffer the response, so the SSE stream keeps streaming.
-    await context.route(`${new URL(API_URL).origin}/**`, route =>
-      route.continue({ headers: { ...route.request().headers(), 'x-forwarded-for': clientIp } }),
-    );
-    await context.addInitScript(
-      key => window.localStorage.setItem(key, 'en'),
-      LANGUAGE_STORAGE_KEY,
-    );
+    await prepareContext(context, clientIp);
     await use(context);
   },
   api: async ({ clientIp }, use) => {
@@ -36,9 +35,67 @@ export const test = base.extend<Fixtures>({
     await use(api);
     await api.dispose();
   },
+  // eslint-disable-next-line no-empty-pattern
+  policies: async ({}, use) => {
+    const remembered = new Map<Role, RolePolicy>();
+    await use({
+      remember: async role => {
+        const api = await ApiHelper.create();
+        try {
+          const policy = await api.getRolePolicy(role);
+          if (!remembered.has(role)) remembered.set(role, policy);
+          return policy;
+        } finally {
+          await api.dispose();
+        }
+      },
+    });
+    if (remembered.size === 0) return;
+    // A helper of its own: the test's request contexts may be closed after a timeout.
+    const api = await ApiHelper.create();
+    try {
+      for (const policy of remembered.values()) {
+        await api.saveRolePolicy(policy.role, {
+          active: policy.active,
+          permissions: policy.permissions,
+        });
+      }
+    } finally {
+      await api.dispose();
+    }
+  },
 });
 
 export { expect };
+
+/**
+ * Gives a browser context its client address (X-Forwarded-For on every API
+ * request) and forces English before any page script runs.
+ */
+async function prepareContext(context: BrowserContext, clientIp: string): Promise<void> {
+  // route.continue does not buffer the response, so the SSE stream keeps streaming.
+  await context.route(`${new URL(API_URL).origin}/**`, route =>
+    route.continue({ headers: { ...route.request().headers(), 'x-forwarded-for': clientIp } }),
+  );
+  await context.addInitScript(key => window.localStorage.setItem(key, 'en'), LANGUAGE_STORAGE_KEY);
+}
+
+/**
+ * A second, logged-out browser session with its own client address, for a
+ * test that needs another user next to the admin page. Close its context.
+ */
+export async function newGuestPage(
+  browser: Browser,
+): Promise<{ context: BrowserContext; page: Page }> {
+  const context = await browser.newContext({
+    baseURL: BASE_URL,
+    locale: 'en-US',
+    timezoneId: 'Africa/Nairobi',
+    storageState: { cookies: [], origins: [] },
+  });
+  await prepareContext(context, uniqueClientIp());
+  return { context, page: await context.newPage() };
+}
 
 /** Accounts created by the setup project, by role. */
 export function readAccounts(): Record<Exclude<Role, 'admin'>, TestAccount> {

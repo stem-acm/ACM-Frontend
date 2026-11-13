@@ -13,6 +13,15 @@ export interface TestAccount {
   role: Role;
 }
 
+/** A staff account as GET /api/settings/users returns it. */
+export interface UserAccess {
+  id: number;
+  username: string;
+  email: string;
+  role: Role;
+  active: boolean;
+}
+
 export interface RolePolicy {
   role: Role;
   active: boolean;
@@ -192,6 +201,18 @@ export class ApiHelper {
     return ((await response.json()) as ApiResult<T>).data;
   }
 
+  /** PUT without asserting on the outcome: the status and the message of the response. */
+  async putRaw(path: string, data: unknown): Promise<{ status: number; message: string }> {
+    const response = await this.ctx.put(path, { data });
+    const body = (await response.json().catch(() => ({}))) as { message?: string };
+    return { status: response.status(), message: body.message ?? '' };
+  }
+
+  /** HTTP status of a DELETE, without asserting on it. */
+  async deleteStatus(path: string): Promise<number> {
+    return (await this.ctx.delete(path)).status();
+  }
+
   async delete(path: string): Promise<void> {
     const response = await this.ctx.delete(path);
     expect(
@@ -356,6 +377,14 @@ export class ApiHelper {
     return this.put(`settings/users/${id}`, changes);
   }
 
+  async getUsers(): Promise<UserAccess[]> {
+    return this.get<UserAccess[]>('settings/users');
+  }
+
+  async getUserByName(username: string): Promise<UserAccess | undefined> {
+    return (await this.getUsers()).find(user => user.username === username);
+  }
+
   async getRolePolicies(): Promise<RolePolicy[]> {
     return this.get<RolePolicy[]>('settings/roles');
   }
@@ -371,5 +400,30 @@ export class ApiHelper {
     policy: { active: boolean; permissions: Record<string, boolean> },
   ) {
     return this.put<RolePolicy>(`settings/roles/${role}`, policy);
+  }
+}
+
+/**
+ * POST /api/auth/login from its own client address, without asserting on the
+ * outcome: the status, the message and the token (null when refused).
+ */
+export async function apiLogin(
+  username: string,
+  password: string,
+): Promise<{ status: number; message: string; token: string | null }> {
+  const ctx = await request.newContext({
+    baseURL: `${API_URL}/`,
+    extraHTTPHeaders: { 'X-Forwarded-For': uniqueClientIp() },
+  });
+  try {
+    const response = await ctx.post('auth/login', { data: { username, password } });
+    const body = (await response.json().catch(() => ({}))) as ApiResult<{ token?: string } | null>;
+    return {
+      status: response.status(),
+      message: body.message ?? '',
+      token: body.data?.token ?? null,
+    };
+  } finally {
+    await ctx.dispose();
   }
 }

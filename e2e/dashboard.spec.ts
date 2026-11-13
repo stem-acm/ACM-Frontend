@@ -12,6 +12,13 @@ function todayAtNineEat(): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 6, 0, 0));
 }
 
+/**
+ * A fixed Tuesday at 09:00 EAT (06:00 UTC): inside an allowed check-in slot whatever the
+ * day the suite runs. The live row is pushed for every created check-in, so the test that
+ * uses it does not depend on the current day.
+ */
+const A_TUESDAY_AT_NINE_EAT = new Date('2026-10-20T06:00:00.000Z');
+
 async function firstSeededActivity(api: ApiHelper): Promise<Activity> {
   const { data } = await api.getPage<Activity>('activities?limit=1');
   expect(data.length, 'at least one seeded activity').toBeGreaterThan(0);
@@ -112,7 +119,7 @@ test.describe('F2 Dashboard', () => {
       const checkin = await api.createCheckin(
         member.registrationNumber,
         activity.id,
-        todayAtNineEat(),
+        A_TUESDAY_AT_NINE_EAT,
       );
 
       await expect(

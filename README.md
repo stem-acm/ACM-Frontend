@@ -303,6 +303,33 @@ readlink -f /var/www/acm/current
 - `npm test` runs browser-based Karma tests and needs a compatible browser; building successfully does not replace end-to-end verification.
 - The existing production Dockerfile builds Angular and then runs `serve` on port 4200. `docker-compose.prod.yml` publishes that port publicly. The root `docker-compose.yml` is commented out; plain `docker compose up` is not the production frontend command.
 
+## End-to-end tests
+
+Playwright tests in `e2e/` run against a local stack that is already up. They do not start a server.
+
+Prerequisites:
+
+- The development stack is running: frontend on `http://localhost:4200`, API on `http://localhost:5002/api`.
+- Dependencies and Chromium are installed: `npm ci --legacy-peer-deps`, then `npx playwright install chromium`.
+- `.env.e2e` exists (git-ignored). Copy `.env.e2e.example` and set the admin username and password that the backend seed creates (`ACM-Backend/src/db/seed.ts`).
+
+Reset the data before a full run (in `ACM-Backend/`):
+
+```bash
+docker compose exec backend pnpm seed
+```
+
+Run the tests:
+
+```bash
+npm run e2e                           # all flows, headless Chromium
+npm run e2e -- e2e/auth.spec.ts       # one flow (the setup project runs first)
+npm run e2e:ui                        # Playwright UI mode
+npx playwright show-report            # last HTML report
+```
+
+The `setup` project logs in once as admin, saves the session in `playwright/.auth/`, and creates one intern and one volunteer account with generated passwords. The API rate limiter accepts 5 login requests per 15 minutes per IP address; a run that needs more logins gets HTTP 429.
+
 ## Full Docker deployment on a VPS
 
 This path runs the production Angular build in an **Nginx container**, with **host Nginx and Certbot** handling public HTTPS. Pair it with the [backend Docker deployment](../ACM-Backend/README.md#full-docker-deployment-on-a-vps), which runs the API and PostgreSQL in Docker. Host Node/npm and the static release symlink setup above are not needed for this path.

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppComponent } from '@/app/app.component';
@@ -55,5 +55,19 @@ describe('MemberCardDetailComponent', () => {
     expect(element.querySelector('dl')).toBeNull();
     expect(element.querySelector('[zType="destructive"]')).toBeNull();
     expect(element.querySelector('[routerLink="/members"]')).not.toBeNull();
+  });
+
+  it('checks the volunteer status when the volunteers arrive before the member', () => {
+    const http = TestBed.inject(HttpTestingController);
+    const volunteersRequest = http.expectOne(request => request.url.includes('/volunteers'));
+    expect(() =>
+      volunteersRequest.flush({ success: true, data: [{ registrationNumber: 42 }] }),
+    ).not.toThrow();
+    expect(component.isVolunteer).toBeFalse();
+
+    fixture.componentRef.setInput('member', { registrationNumber: 42, firstName: 'Late' });
+    fixture.detectChanges();
+
+    expect(component.isVolunteer).toBeTrue();
   });
 });

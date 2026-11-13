@@ -110,7 +110,7 @@ export class MemberCardDetailComponent implements OnInit, OnChanges {
   }
 
   getVolunteersList() {
-    this.volunteerService.getAllVolunteers(0, 1000).subscribe(res => {
+    this.volunteerService.getEveryVolunteer().subscribe(res => {
       this.volunteers = res.data;
       this.checkIfVolunteer();
       this.isLoadingVolunteers = false;

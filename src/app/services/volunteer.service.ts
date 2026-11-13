@@ -1,6 +1,7 @@
 import { environment } from '@/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { EMPTY, expand, reduce } from 'rxjs';
 import { HttpResult } from '../types/httpResult';
 import { Volunteer } from '../interfaces/volunteer';
 
@@ -14,6 +15,23 @@ export class VolunteerService {
   getAllVolunteers(offset = 0, limit = 10, search = '') {
     return this.http.get<HttpResult<Volunteer[]>>(
       `${this.URL}/volunteers?offset=${offset}&limit=${limit}&search=${search}`,
+    );
+  }
+
+  /** Every volunteer, read page by page: the API returns at most 100 rows per request. */
+  getEveryVolunteer() {
+    const limit = 100;
+    return this.getAllVolunteers(0, limit).pipe(
+      expand((result, index) =>
+        result.success && result.pagination?.hasMore
+          ? this.getAllVolunteers((index + 1) * limit, limit)
+          : EMPTY,
+      ),
+      reduce((all, page) => ({
+        ...page,
+        success: all.success && page.success,
+        data: [...all.data, ...(page.data ?? [])],
+      })),
     );
   }
 

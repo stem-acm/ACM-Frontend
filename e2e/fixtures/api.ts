@@ -30,6 +30,16 @@ export function uniqueSuffix(): string {
   return `${Date.now().toString(36)}${randomBytes(3).toString('hex')}`;
 }
 
+/**
+ * A client address unique to the caller (format 10.x.y.z). The API trusts one
+ * proxy hop, so a request that carries it as X-Forwarded-For counts against
+ * its own rate-limit bucket.
+ */
+export function uniqueClientIp(): string {
+  const [a, b, c] = randomBytes(3);
+  return `10.${a}.${b}.${c}`;
+}
+
 /** A password that satisfies the register rules: 8+ characters, a letter and a digit. */
 export function generatePassword(): string {
   return `Pw${randomBytes(12).toString('hex')}9`;
@@ -55,10 +65,13 @@ export function readAdminToken(): string {
 export class ApiHelper {
   private constructor(private readonly ctx: APIRequestContext) {}
 
-  static async create(token: string = readAdminToken()): Promise<ApiHelper> {
+  static async create(
+    token: string = readAdminToken(),
+    clientIp: string = uniqueClientIp(),
+  ): Promise<ApiHelper> {
     const ctx = await request.newContext({
       baseURL: `${API_URL.replace(/\/$/, '')}/`,
-      extraHTTPHeaders: { Authorization: `Bearer ${token}` },
+      extraHTTPHeaders: { Authorization: `Bearer ${token}`, 'X-Forwarded-For': clientIp },
     });
     return new ApiHelper(ctx);
   }

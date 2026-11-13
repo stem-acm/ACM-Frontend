@@ -1,28 +1,38 @@
 import { test as base, expect, Page } from '@playwright/test';
 import { existsSync, readFileSync } from 'node:fs';
-import { ApiHelper, Role, TestAccount } from './api';
-import { ACCOUNTS_FILE, LANGUAGE_STORAGE_KEY, TOKEN_STORAGE_KEY } from './env';
+import { ApiHelper, Role, TestAccount, uniqueClientIp } from './api';
+import { ACCOUNTS_FILE, API_URL, LANGUAGE_STORAGE_KEY, TOKEN_STORAGE_KEY } from './env';
 
 interface Fixtures {
+  /** Client address of this test, sent as X-Forwarded-For on every API request. */
+  clientIp: string;
   /** API helper authenticated with the admin token of the setup project. */
   api: ApiHelper;
 }
 
 /**
  * Base test of every spec: forces English before any page script runs
- * (only the language flow switches language) and exposes the API helper.
+ * (only the language flow switches language), gives the test its own client
+ * address for the API rate limiters and exposes the API helper.
  */
 export const test = base.extend<Fixtures>({
-  context: async ({ context }, use) => {
+  // eslint-disable-next-line no-empty-pattern
+  clientIp: async ({}, use) => {
+    await use(uniqueClientIp());
+  },
+  context: async ({ context, clientIp }, use) => {
+    // route.continue does not buffer the response, so the SSE stream keeps streaming.
+    await context.route(`${new URL(API_URL).origin}/**`, route =>
+      route.continue({ headers: { ...route.request().headers(), 'x-forwarded-for': clientIp } }),
+    );
     await context.addInitScript(
       key => window.localStorage.setItem(key, 'en'),
       LANGUAGE_STORAGE_KEY,
     );
     await use(context);
   },
-  // eslint-disable-next-line no-empty-pattern
-  api: async ({}, use) => {
-    const api = await ApiHelper.create();
+  api: async ({ clientIp }, use) => {
+    const api = await ApiHelper.create(undefined, clientIp);
     await use(api);
     await api.dispose();
   },

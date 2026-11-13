@@ -328,7 +328,7 @@ npm run e2e:ui                        # Playwright UI mode
 npx playwright show-report            # last HTML report
 ```
 
-The `setup` project logs in once as admin, saves the session in `playwright/.auth/`, and creates one intern and one volunteer account with generated passwords. The API rate limiter accepts 5 login requests per 15 minutes per IP address; a run that needs more logins gets HTTP 429.
+The `setup` project logs in once as admin, saves the session in `playwright/.auth/`, and creates one intern and one volunteer account with generated passwords. The API rate limiters count requests per client IP address and the API trusts one proxy hop, so each test sends its own `X-Forwarded-For` address on every API request (browser and fixture requests). Runs can follow each other without waiting.
 
 ## Full Docker deployment on a VPS
 

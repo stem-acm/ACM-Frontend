@@ -3,6 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TableMembersComponent } from './table-members.component';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { unitTestProviders } from '@/testing/unit-test-providers';
 
 describe('TableMembersComponent', () => {
   let component: TableMembersComponent;
@@ -12,6 +13,7 @@ describe('TableMembersComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TableMembersComponent, TranslateModule.forRoot()],
       providers: [
+        ...unitTestProviders,
         {
           provide: ActivatedRoute,
           useValue: {

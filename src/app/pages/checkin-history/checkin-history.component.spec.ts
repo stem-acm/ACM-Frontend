@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CheckinHistoryComponent } from './checkin-history.component';
+import { unitTestProviders } from '@/testing/unit-test-providers';
 
 describe('CheckinHistoryComponent', () => {
   let component: CheckinHistoryComponent;
@@ -9,6 +10,7 @@ describe('CheckinHistoryComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CheckinHistoryComponent],
+      providers: unitTestProviders,
     }).compileComponents();
 
     fixture = TestBed.createComponent(CheckinHistoryComponent);

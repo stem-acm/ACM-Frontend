@@ -123,7 +123,7 @@
         <div
           role="button"
           tabindex="0"
-          *ngFor="let minute of minutes"
+          *ngFor="let minute of availableMinutes"
           class="minute-option"
           [class.selected]="selectedTime.minute === minute"
           (click)="selectMinute(minute)"

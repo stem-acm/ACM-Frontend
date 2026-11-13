@@ -11,6 +11,7 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  NgZone,
 } from '@angular/core';
 import { Occupation } from '@/app/types/occupation';
 import { MemberService } from '@/app/services/member.service';
@@ -68,6 +69,7 @@ export class AddMemberComponent implements OnChanges, OnInit, OnDestroy {
 
   private memberService = inject(MemberService);
   private translate = inject(TranslateService);
+  private ngZone = inject(NgZone);
 
   ngOnInit() {
     if (this.mode == 'update') {
@@ -173,9 +175,12 @@ export class AddMemberComponent implements OnChanges, OnInit, OnDestroy {
     canvas.getContext('2d')?.drawImage(video, 0, 0);
     canvas.toBlob(
       blob => {
-        if (blob)
-          this.usePhoto(new File([blob], `member-${Date.now()}.jpg`, { type: 'image/jpeg' }));
-        this.stopCamera();
+        // zone.js does not patch toBlob: re-enter the zone so the view is refreshed.
+        this.ngZone.run(() => {
+          if (blob)
+            this.usePhoto(new File([blob], `member-${Date.now()}.jpg`, { type: 'image/jpeg' }));
+          this.stopCamera();
+        });
       },
       'image/jpeg',
       0.9,

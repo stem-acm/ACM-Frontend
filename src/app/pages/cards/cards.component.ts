@@ -56,7 +56,7 @@ export class CardsComponent implements OnInit {
   getMemberList() {
     this.isLoading = true;
     this.loadingService.busy();
-    this.memberService.getAllMembers().subscribe({
+    this.memberService.getEveryMember().subscribe({
       next: (result: HttpResult<Member[]>) => {
         if (result.success && result.data) {
           this.member = result.data;

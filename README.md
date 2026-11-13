@@ -332,6 +332,8 @@ What a run does:
 
 Options (environment variables, also accepted in `.env.e2e`): `E2E_KEEP_STACK=1` keeps the throwaway API and database after the run to look at the data; `E2E_SKIP_STACK=1` starts nothing and uses the API at `E2E_API_URL`, which must already be seeded; `E2E_API_URL`, `E2E_APP_API_ORIGIN`, `E2E_BASE_URL` and `E2E_BACKEND_DIR` change the addresses and the backend checkout.
 
+In CI, the workflow `.github/workflows/e2e.yml` runs the tests on every pull request into `develop`, against the backend `develop` branch. A failed run blocks the merge. The HTML report and the traces are attached to the run as the `playwright-report` artifact, also when it fails. The admin login comes from the repository variables `E2E_ADMIN_USERNAME` and `E2E_ADMIN_PASSWORD` (the seed admin, which exists only in the throwaway database).
+
 The API rate limiters count requests per client IP address and the API trusts one proxy hop, so each test sends its own `X-Forwarded-For` address on every API request (browser and fixture requests).
 
 ## Full Docker deployment on a VPS

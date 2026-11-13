@@ -7,9 +7,12 @@
         [imgUrl]="getfileUrl(member.profileImage)"
         [imgUrlError]="getfileUrl('user.png')"
       />
-      <app-title [titleText]="(member.lastName | capitalize) + ' ' + member.firstName" />
+      <app-title
+        *ngIf="!notFound"
+        [titleText]="(member.lastName | capitalize) + ' ' + member.firstName"
+      />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-destructive/60"></div>
-      <div *ngIf="member.registrationNumber" class="text-left">
+      <div *ngIf="!notFound" class="text-left">
         <div class="mt-6">
           <dl class="divide-y divide-gray-100">
             <app-list-value
@@ -47,10 +50,7 @@
           </dl>
         </div>
       </div>
-      <app-text-description
-        *ngIf="!member.registrationNumber"
-        [textDescription]="getMemberNotFoundMessage()"
-      />
+      <app-text-description *ngIf="notFound" [textDescription]="getMemberNotFoundMessage()" />
     </div>
 
     <div *ngIf="!member" class="p-12 text-center animate-pulse">
@@ -129,7 +129,7 @@
       <button
         z-button
         zType="secondary"
-        *ngIf="member && member.registrationNumber && auth.can('members.cards')"
+        *ngIf="member && !notFound && auth.can('members.cards')"
         (click)="open()"
         type="button"
         class="acm-btn acm-btn--secondary text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
@@ -170,7 +170,7 @@
       <button
         z-button
         zType="destructive"
-        *ngIf="member && member.registrationNumber && auth.can('members.delete')"
+        *ngIf="member && !notFound && auth.can('members.delete')"
         type="button"
         (click)="onDeleteClick()"
         class="acm-btn acm-btn--danger text-white text-nowrap bg-red-600 h-fit cursor-pointer hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
@@ -192,7 +192,7 @@
       </button>
       <button
         z-button
-        *ngIf="member && member.registrationNumber && auth.can('members.update')"
+        *ngIf="member && !notFound && auth.can('members.update')"
         type="button"
         (click)="updateMember()"
         class="acm-btn acm-btn--primary text-white text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center gap-2"
@@ -214,7 +214,7 @@
       </button>
       <button
         z-button
-        *ngIf="member && !member.registrationNumber"
+        *ngIf="member && notFound"
         type="button"
         routerLink="/members"
         class="acm-btn acm-btn--primary text-white w-full text-nowrap bg-primary h-fit cursor-pointer hover:bg-primary/90 focus:ring-4 focus:outline-none focus:ring-primary/20 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2"

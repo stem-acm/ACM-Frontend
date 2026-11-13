@@ -201,6 +201,15 @@ export class ApiHelper {
     return ((await response.json()) as ApiResult<T>).data;
   }
 
+  async patch<T>(path: string, data: unknown): Promise<T> {
+    const response = await this.ctx.patch(path, { data });
+    expect(
+      response.ok(),
+      `PATCH ${path} → ${response.status()} ${await response.text()}`,
+    ).toBeTruthy();
+    return ((await response.json()) as ApiResult<T>).data;
+  }
+
   /** PUT without asserting on the outcome: the status and the message of the response. */
   async putRaw(path: string, data: unknown): Promise<{ status: number; message: string }> {
     const response = await this.ctx.put(path, { data });

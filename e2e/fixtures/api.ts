@@ -58,10 +58,30 @@ export interface Member extends MemberInput {
   profileImage: string | null;
 }
 
-export interface Activity {
+export type DayOfWeek =
+  | 'everyday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+export interface ActivityInput {
+  name: string;
+  description: string | null;
+  emoji: string | null;
+  isPeriodic: boolean;
+  dayOfWeek: DayOfWeek | null;
+  startTime: string;
+  endTime: string;
+  startDate: string | null;
+  endDate: string | null;
+}
+
+export interface Activity extends Partial<Omit<ActivityInput, 'name'>> {
   id: number;
   name: string;
-  emoji?: string | null;
 }
 
 export interface Checkin {
@@ -246,6 +266,55 @@ export class ApiHelper {
 
   async getMember(registrationNumber: number): Promise<Member> {
     return this.get<Member>(`members/${registrationNumber}`);
+  }
+
+  /**
+   * Creates an activity with complete, unique field values (periodic, every day).
+   * `image` is an empty string, as the app's form and the seed store it.
+   */
+  async createActivity(overrides: Partial<ActivityInput> = {}): Promise<Activity> {
+    const suffix = uniqueSuffix();
+    return this.post<Activity>('activities', {
+      name: `E2e activity ${suffix}`,
+      description: `E2e description ${suffix}`,
+      image: '',
+      emoji: '🧪',
+      isPeriodic: true,
+      dayOfWeek: 'everyday',
+      startTime: '08:00:00',
+      endTime: '18:00:00',
+      startDate: null,
+      endDate: null,
+      ...overrides,
+    });
+  }
+
+  /** Deletes a test activity (its check-ins go with it). Never a seeded one. */
+  async deleteActivity(id: number): Promise<void> {
+    await this.delete(`activities/${id}`);
+  }
+
+  /** Deletes a test activity if it still exists. */
+  async deleteActivityIfExists(id: number): Promise<void> {
+    if ((await this.status(`activities/${id}`)) === 200) {
+      await this.deleteActivity(id);
+    }
+  }
+
+  async getActivity(id: number): Promise<Activity> {
+    return this.get<Activity>(`activities/${id}`);
+  }
+
+  /** Check-ins of a member, from GET /api/checkins?memberId=… (newest first). */
+  async getMemberCheckins(registrationNumber: number): Promise<Checkin[]> {
+    const { data } = await this.getPage<Checkin>(
+      `checkins?limit=100&memberId=${registrationNumber}`,
+    );
+    return data;
+  }
+
+  async deleteCheckin(id: number): Promise<void> {
+    await this.delete(`checkins/${id}`);
   }
 
   /** Creates a check-in with the member's signed QR payload. */

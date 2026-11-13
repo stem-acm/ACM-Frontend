@@ -46,6 +46,7 @@ import { CapitalizePipe } from '@/app/pipes/capitalize.pipe';
 export class MemberCardDetailComponent implements OnInit {
   public auth = inject(AuthService);
   @Input() member!: Member;
+  @Input() notFound = false;
   private URL: string = environment.FILE_URL;
   public showAddForm = false;
   public showCard = false;

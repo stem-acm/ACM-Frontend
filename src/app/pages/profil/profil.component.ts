@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 })
 export class ProfilComponent implements OnInit {
   public member!: Member;
+  public notFound = false;
   private registrationNumber!: string;
 
   private memberService = inject(MemberService);
@@ -38,9 +39,10 @@ export class ProfilComponent implements OnInit {
           this.member.birthDate = this.convertDate(this.member.birthDate);
           this.member.joinDate = this.convertDate(this.member.joinDate);
         } else {
+          this.notFound = true;
           this.member = {
             registrationNumber: parseInt(this.registrationNumber),
-            firstName: '404',
+            firstName: '',
             lastName: '',
             title: '',
             gender: '',
@@ -58,9 +60,10 @@ export class ProfilComponent implements OnInit {
       err => {
         console.log(err);
 
+        this.notFound = true;
         this.member = {
           registrationNumber: parseInt(this.registrationNumber),
-          firstName: '404',
+          firstName: '',
           lastName: '',
           title: '',
           gender: '',

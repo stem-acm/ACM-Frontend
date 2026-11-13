@@ -32,6 +32,14 @@ function stepHeading(page: Page, name: RegExp) {
 const CHOOSE_ACTIVITY = /^CHOOSE ACTIVITIES/;
 const LEAVING_TIME = /^LEAVING TIME/;
 const WELCOME = /^WELCOME \/ TONGASOA$/;
+const CLOSED = /^ACM Closed$/;
+
+/** Outside the opening hours /checkin shows the closed screen and no stepper. */
+async function expectClosedScreen(page: Page): Promise<void> {
+  await expect(stepHeading(page, CLOSED)).toBeVisible();
+  await expect(page.getByRole('timer', { name: 'Time until opening' })).toBeVisible();
+  await expect(stepHeading(page, CHOOSE_ACTIVITY)).toHaveCount(0);
+}
 
 /** The toast (role alert) that shows API refusals. */
 function toast(page: Page) {
@@ -270,7 +278,7 @@ test.describe('F7 Check-in', () => {
     }
   });
 
-  test('F7.7 a check-in on a Monday is refused with the "not allowed" reason and creates nothing', async ({
+  test('F7.7 on a Monday the check-in page shows the closed screen and creates nothing', async ({
     page,
     api,
   }) => {
@@ -278,19 +286,15 @@ test.describe('F7 Check-in', () => {
     const at = eat('2026-10-05', '09:00'); // Monday
     try {
       await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
-      const post = checkinPost(page);
-      await chooseActivityAndScan(page, scene.activity);
 
-      expect((await post).ok(), 'the API refuses the check-in').toBe(false);
-      await expect.soft(toast(page), 'the refusal is shown').toContainText(/not allowed/i);
-      await expect(stepHeading(page, WELCOME)).toHaveCount(0);
+      await expectClosedScreen(page);
       expect(await memberCheckins(api, scene.member)).toHaveLength(0);
     } finally {
       await cleanup(api, scene);
     }
   });
 
-  test('F7.8 a check-in on Tuesday at 13:00, between the windows, is refused and creates nothing', async ({
+  test('F7.8 on Tuesday at 13:00, between the windows, the check-in page shows the closed screen and creates nothing', async ({
     page,
     api,
   }) => {
@@ -298,25 +302,19 @@ test.describe('F7 Check-in', () => {
     const at = eat('2026-10-20', '13:00'); // Tuesday
     try {
       await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
-      const post = checkinPost(page);
-      await chooseActivityAndScan(page, scene.activity);
 
-      expect((await post).ok(), 'the API refuses the check-in').toBe(false);
-      // After a refusal the stepper goes back to the first step, without the welcome step.
-      await expect(stepHeading(page, CHOOSE_ACTIVITY)).toBeVisible();
-      await expect(stepHeading(page, WELCOME)).toHaveCount(0);
+      await expectClosedScreen(page);
       expect(await memberCheckins(api, scene.member)).toHaveLength(0);
     } finally {
       await cleanup(api, scene);
     }
   });
 
-  test('F7.9 a check-in on Saturday at 10:00 is accepted and on Saturday at 17:00 is refused', async ({
+  test('F7.9 a check-in on Saturday at 10:00 is accepted and on Saturday at 17:00 the closed screen is shown', async ({
     page,
     api,
   }) => {
     const scene = await createScene(api, 'Saturday');
-    const evening = await api.createMember({ firstName: 'Saturdaypm' });
     const morningAt = eat('2026-10-10', '10:00'); // Saturday
     const eveningAt = eat('2026-10-10', '17:00');
     try {
@@ -332,21 +330,12 @@ test.describe('F7 Check-in', () => {
       expect(new Date(accepted[0].checkInTime).toISOString()).toBe(morningAt.toISOString());
 
       await page.clock.setFixedTime(eveningAt);
-      await installFakeCamera(
-        page,
-        await qrImageDataUrl(await fetchQrPayload(api, evening.registrationNumber)),
-      );
       await page.goto('/checkin');
-      const post = checkinPost(page);
-      await chooseActivityAndScan(page, scene.activity);
 
-      expect((await post).ok(), 'the API refuses the evening check-in').toBe(false);
-      // After a refusal the stepper goes back to the first step, without the welcome step.
-      await expect(stepHeading(page, CHOOSE_ACTIVITY)).toBeVisible();
-      await expect(stepHeading(page, WELCOME)).toHaveCount(0);
-      expect(await memberCheckins(api, evening)).toHaveLength(0);
+      await expectClosedScreen(page);
+      expect(await memberCheckins(api, scene.member)).toHaveLength(1);
     } finally {
-      await cleanup(api, scene, evening);
+      await cleanup(api, scene);
     }
   });
 

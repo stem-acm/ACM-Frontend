@@ -4,6 +4,7 @@ npm-debug.log*
 
 # Build output (we build inside the container)
 dist
+.angular
 
 # Git
 .git

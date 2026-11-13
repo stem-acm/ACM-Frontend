@@ -18,7 +18,9 @@
     "usernameFormat": "Mampiasà litera na isa 3 farafahakeliny, tsy misy elanelana.",
     "invalidEmail": "Ampidiro ny adiresy mailaka manan-kery.",
     "passwordLength": "Ampidiro tarehintsoratra 8 farafahakeliny.",
-    "passwordRules": "Mampiasà tarehintsoratra 8 farafahakeliny, misy litera sy isa."
+    "passwordRules": "Mampiasà tarehintsoratra 8 farafahakeliny, misy litera sy isa.",
+    "showPassword": "Asehoy ny tenimiafina",
+    "hidePassword": "Afeno ny tenimiafina"
   },
   "memberPhoto": {
     "title": "Sarin'ny mpikambana",

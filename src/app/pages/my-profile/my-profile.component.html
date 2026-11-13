@@ -56,21 +56,24 @@
         </label>
         <label
           >{{ 'profile.currentPassword' | translate }}
-          <input
-            z-input
-            name="identityPassword"
-            type="password"
-            required
-            [(ngModel)]="identityPassword"
-            autocomplete="current-password"
-            #identityPasswordField="ngModel"
-            [attr.aria-invalid]="
-              (identityPasswordField.invalid && identityPasswordField.touched) ||
-              identityError === 'profile.wrongPassword'
-                ? true
-                : null
-            "
-          />
+          <app-password-field>
+            <input
+              z-input
+              appPasswordVisibility
+              name="identityPassword"
+              [attr.aria-label]="'profile.currentPassword' | translate"
+              required
+              [(ngModel)]="identityPassword"
+              autocomplete="current-password"
+              #identityPasswordField="ngModel"
+              [attr.aria-invalid]="
+                (identityPasswordField.invalid && identityPasswordField.touched) ||
+                identityError === 'profile.wrongPassword'
+                  ? true
+                  : null
+              "
+            />
+          </app-password-field>
           @if (identityPasswordField.touched && identityPasswordField.invalid) {
             <small class="profile-field-error">{{ 'ux.requiredField' | translate }}</small>
           } @else if (identityError === 'profile.wrongPassword') {
@@ -102,21 +105,24 @@
       <form (ngSubmit)="savePassword(passwordForm)" #passwordForm="ngForm">
         <label
           >{{ 'profile.currentPassword' | translate }}
-          <input
-            z-input
-            name="currentPassword"
-            type="password"
-            required
-            [(ngModel)]="currentPassword"
-            autocomplete="current-password"
-            #currentPasswordField="ngModel"
-            [attr.aria-invalid]="
-              (currentPasswordField.invalid && currentPasswordField.touched) ||
-              passwordError === 'profile.wrongPassword'
-                ? true
-                : null
-            "
-          />
+          <app-password-field>
+            <input
+              z-input
+              appPasswordVisibility
+              name="currentPassword"
+              [attr.aria-label]="'profile.currentPassword' | translate"
+              required
+              [(ngModel)]="currentPassword"
+              autocomplete="current-password"
+              #currentPasswordField="ngModel"
+              [attr.aria-invalid]="
+                (currentPasswordField.invalid && currentPasswordField.touched) ||
+                passwordError === 'profile.wrongPassword'
+                  ? true
+                  : null
+              "
+            />
+          </app-password-field>
           @if (currentPasswordField.touched && currentPasswordField.invalid) {
             <small class="profile-field-error">{{ 'ux.requiredField' | translate }}</small>
           } @else if (passwordError === 'profile.wrongPassword') {
@@ -125,18 +131,23 @@
         </label>
         <label
           >{{ 'profile.newPassword' | translate }}
-          <input
-            z-input
-            name="newPassword"
-            type="password"
-            required
-            minlength="8"
-            pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}"
-            [(ngModel)]="newPassword"
-            autocomplete="new-password"
-            #newPasswordField="ngModel"
-            [attr.aria-invalid]="newPasswordField.invalid && newPasswordField.touched ? true : null"
-          />
+          <app-password-field>
+            <input
+              z-input
+              appPasswordVisibility
+              name="newPassword"
+              [attr.aria-label]="'profile.newPassword' | translate"
+              required
+              minlength="8"
+              pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}"
+              [(ngModel)]="newPassword"
+              autocomplete="new-password"
+              #newPasswordField="ngModel"
+              [attr.aria-invalid]="
+                newPasswordField.invalid && newPasswordField.touched ? true : null
+              "
+            />
+          </app-password-field>
           @if (newPasswordField.touched && newPasswordField.invalid) {
             <small class="profile-field-error">{{
               (newPasswordField.errors?.['required'] ? 'ux.requiredField' : 'ux.passwordRules')
@@ -146,21 +157,24 @@
         </label>
         <label
           >{{ 'profile.confirmPassword' | translate }}
-          <input
-            z-input
-            name="confirmPassword"
-            type="password"
-            required
-            [(ngModel)]="confirmPassword"
-            autocomplete="new-password"
-            #confirmPasswordField="ngModel"
-            [attr.aria-invalid]="
-              confirmPasswordField.touched &&
-              (confirmPasswordField.invalid || newPassword !== confirmPassword)
-                ? true
-                : null
-            "
-          />
+          <app-password-field>
+            <input
+              z-input
+              appPasswordVisibility
+              name="confirmPassword"
+              [attr.aria-label]="'profile.confirmPassword' | translate"
+              required
+              [(ngModel)]="confirmPassword"
+              autocomplete="new-password"
+              #confirmPasswordField="ngModel"
+              [attr.aria-invalid]="
+                confirmPasswordField.touched &&
+                (confirmPasswordField.invalid || newPassword !== confirmPassword)
+                  ? true
+                  : null
+              "
+            />
+          </app-password-field>
           @if (confirmPasswordField.touched && confirmPasswordField.invalid) {
             <small class="profile-field-error">{{ 'ux.requiredField' | translate }}</small>
           } @else if (confirmPasswordField.touched && newPassword !== confirmPassword) {

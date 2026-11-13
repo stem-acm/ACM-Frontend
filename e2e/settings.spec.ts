@@ -271,7 +271,7 @@ test.describe('F11 Settings', () => {
       const form = createForm(page);
       await form.getByLabel('Username').fill(username);
       await form.getByLabel('Email').fill(email);
-      await form.getByLabel('Password').fill(password);
+      await form.getByLabel('Password', { exact: true }).fill(password);
       await form.getByLabel('Role').selectOption({ label: 'Volunteer' });
       await form.getByRole('button', { name: 'Create account' }).click();
 
@@ -310,7 +310,7 @@ test.describe('F11 Settings', () => {
       const form = createForm(page);
       await form.getByLabel('Username').fill(existing.username);
       await form.getByLabel('Email').fill(`other${uniqueSuffix()}@e2e.test`);
-      await form.getByLabel('Password').fill(generatePassword());
+      await form.getByLabel('Password', { exact: true }).fill(generatePassword());
       await form.getByRole('button', { name: 'Create account' }).click();
 
       const error = form.getByRole('alert');

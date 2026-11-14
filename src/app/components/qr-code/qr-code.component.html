@@ -1,3 +1,7 @@
 <div class="w-28 h-28 flex items-center justify-center">
-  <img [src]="qrUrl" alt="QR Code" class="w-full h-full object-contain" />
+  @if (qrUrl) {
+    <img [src]="qrUrl" alt="QR Code" class="w-full h-full object-contain" />
+  } @else if (generationFailed) {
+    <span role="alert">Unable to generate QR code.</span>
+  }
 </div>

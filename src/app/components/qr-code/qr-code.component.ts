@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { toDataURL } from 'qrcode';
 
 @Component({
   selector: 'app-qr-code',
@@ -8,12 +9,29 @@ import { Component, Input } from '@angular/core';
   styleUrl: './qr-code.component.css',
 })
 export class QrCodeComponent {
-  @Input() data!: string;
+  qrUrl = '';
+  generationFailed = false;
+  private generation = 0;
 
-  get qrUrl(): string {
-    if (!this.data) {
-      return '';
+  @Input() set data(value: string | null | undefined) {
+    const generation = ++this.generation;
+    this.qrUrl = '';
+    this.generationFailed = false;
+    if (!value) {
+      return;
     }
-    return `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(this.data)}`;
+
+    // Keep the signed payload local, with a quiet zone and extra error correction for print.
+    void toDataURL(value, { width: 448, margin: 4, errorCorrectionLevel: 'Q' })
+      .then(url => {
+        if (generation === this.generation) {
+          this.qrUrl = url;
+        }
+      })
+      .catch(() => {
+        if (generation === this.generation) {
+          this.generationFailed = true;
+        }
+      });
   }
 }

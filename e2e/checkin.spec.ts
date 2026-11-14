@@ -432,4 +432,34 @@ test.describe('F7 Check-in', () => {
       await cleanup(api, scene);
     }
   });
+
+  test('F7.13 the actual locally generated badge image is accepted by the check-in camera', async ({
+    page,
+    api,
+  }) => {
+    const scene = await createScene(api, 'Localbadge');
+    const at = eat('2026-10-28', '09:00');
+    try {
+      await page.goto('/cards');
+      await page
+        .getByRole('searchbox', { name: 'Search for members' })
+        .fill(scene.member.lastName as string);
+      await page.getByRole('button', { name: `View ${scene.member.lastName}'s badge` }).click();
+      const image = page.getByRole('img', { name: 'QR Code' });
+      await expect(image).toHaveAttribute('src', /^data:image\/png;base64,/);
+      const dataUrl = (await image.getAttribute('src')) as string;
+
+      await page.clock.setFixedTime(at);
+      await installFakeCamera(page, dataUrl, { motion: true });
+      await page.goto('/checkin');
+      await chooseActivityAndScan(page, scene.activity);
+      await expect(stepHeading(page, WELCOME)).toBeVisible();
+      const checkins = await memberCheckins(api, scene.member);
+      expect(checkins).toHaveLength(1);
+      expect(checkins[0].registrationNumber).toBe(scene.member.registrationNumber);
+      expect(checkins[0].activityId).toBe(scene.activity.id);
+    } finally {
+      await cleanup(api, scene);
+    }
+  });
 });

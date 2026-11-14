@@ -1,11 +1,10 @@
 import { Page } from '@playwright/test';
 import { Member, uniqueSuffix } from './fixtures/api';
-import { pngImage } from './fixtures/images';
 import { printCalls, stubPrint } from './fixtures/print';
-import { fetchQrPayload } from './fixtures/qr';
+import { decodeQrImage, fetchQrPayload } from './fixtures/qr';
 import { expect, test } from './fixtures/test';
 
-/** Badge QR images come from this external service; the tests answer them locally. */
+/** Requests to the former QR provider must never be made. */
 const QR_SERVICE = 'https://api.qrserver.com/v1/create-qr-code/';
 
 /** Members per request of the cards page (MemberService.getAllMembers default limit). */
@@ -50,12 +49,6 @@ function cardViewer(page: Page) {
 }
 
 test.describe('F5 Member cards', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.route(`${QR_SERVICE}**`, route =>
-      route.fulfill({ status: 200, contentType: 'image/png', body: pngImage(80, 80) }),
-    );
-  });
-
   test('F5.1 search lists only matching members and clearing it restores the full list, also for a member after the first 10', async ({
     page,
     api,
@@ -183,27 +176,37 @@ test.describe('F5 Member cards', () => {
     }
   });
 
-  test("F5.4 the badge back QR image request carries the member's registration number and API signature", async ({
+  test('F5.4 badge QR is generated locally, preserves the signed payload and prints without third-party requests', async ({
     page,
     api,
   }) => {
     const member = await api.createMember({ firstName: 'Qrbadge' });
+    const thirdPartyRequests: string[] = [];
+    page.on('request', request => {
+      if (request.url().startsWith(QR_SERVICE)) thirdPartyRequests.push(request.url());
+    });
+    await page.route(`${QR_SERVICE}**`, route => route.abort());
+    await stubPrint(page);
     try {
       const expected = await fetchQrPayload(api, member.registrationNumber);
-
       await page.goto('/cards');
       await searchBox(page).fill(member.lastName as string);
-      const qrRequest = page.waitForRequest(request => request.url().startsWith(QR_SERVICE));
       await page.getByRole('button', { name: `View ${member.lastName}'s badge` }).click();
 
-      const url = new URL((await qrRequest).url());
-      const data = url.searchParams.get('data');
-      expect(data, 'data parameter of the QR image URL').not.toBeNull();
-      expect(JSON.parse(data as string)).toEqual({
-        registrationNumber: member.registrationNumber,
-        signature: expected.signature,
-      });
-      await expect(cardViewer(page).getByRole('img', { name: 'QR Code' })).toBeVisible();
+      const image = cardViewer(page).getByRole('img', { name: 'QR Code' });
+      await expect(image).toBeVisible();
+      await expect(image).toHaveAttribute('src', /^data:image\/png;base64,/);
+      expect(JSON.parse(await decodeQrImage(image))).toEqual(expected);
+
+      await cardViewer(page).getByRole('button', { name: 'Print', exact: true }).click();
+      await expect.poll(() => printCalls(page)).toBe(1);
+      const printedImage = page.frameLocator('iframe').getByRole('img', { name: 'QR Code' });
+      await expect(printedImage).toHaveAttribute(
+        'src',
+        (await image.getAttribute('src')) as string,
+      );
+      expect(JSON.parse(await decodeQrImage(printedImage))).toEqual(expected);
+      expect(thirdPartyRequests).toEqual([]);
     } finally {
       await api.deleteMember(member.registrationNumber);
     }

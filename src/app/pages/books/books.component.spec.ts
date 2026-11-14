@@ -82,7 +82,7 @@ describe('BooksComponent', () => {
     component.currentPage = 2;
     component.addLoan();
     expect(component.currentPage).toBe(1);
-    expect(getAll).toHaveBeenCalledWith(0, 25, '', 'all');
+    expect(getAll).toHaveBeenCalledWith(0, 25, '', 'all', 'createdAt', 'desc');
     expect(component.totalLoans).toBe(26);
 
     expect(component.loans.length).toBe(1);
@@ -101,7 +101,7 @@ describe('BooksComponent', () => {
     getAll.and.returnValue(of({ success: true, data: [loan], pagination: { total: 26 } }));
     component.changePage(2);
     fixture.detectChanges();
-    expect(getAll).toHaveBeenCalledWith(25, 25, '', 'all');
+    expect(getAll).toHaveBeenCalledWith(25, 25, '', 'all', 'createdAt', 'desc');
     expect(component.firstLoan).toBe(26);
     expect(component.lastLoan).toBe(26);
     expect(component.totalPages).toBe(2);
@@ -109,7 +109,7 @@ describe('BooksComponent', () => {
     expect(buttons[0].disabled).toBeFalse();
     expect(buttons[1].disabled).toBeTrue();
     component.changePage(1);
-    expect(getAll).toHaveBeenCalledWith(0, 25, '', 'all');
+    expect(getAll).toHaveBeenCalledWith(0, 25, '', 'all', 'createdAt', 'desc');
   });
 
   it('prevents invalid navigation and duplicate requests while loading', () => {
@@ -144,7 +144,7 @@ describe('BooksComponent', () => {
     expect(component.loadError).toBeTruthy();
     getAll.and.returnValue(of({ success: true, data: [loan], pagination: { total: 26 } }));
     component.loadLoans();
-    expect(getAll).toHaveBeenCalledWith(25, 25, '', 'all');
+    expect(getAll).toHaveBeenCalledWith(25, 25, '', 'all', 'createdAt', 'desc');
     expect(component.loadError).toBe('');
     expect(component.loans).toEqual([loan]);
   });
@@ -159,7 +159,7 @@ describe('BooksComponent', () => {
 
     tick(1);
     expect(component.currentPage).toBe(1);
-    expect(getAll).toHaveBeenCalledOnceWith(0, 25, 'Ada', 'all');
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, 'Ada', 'all', 'createdAt', 'desc');
   }));
 
   it('clears the search and reloads all loans', fakeAsync(() => {
@@ -172,7 +172,7 @@ describe('BooksComponent', () => {
 
     expect(component.searchWord).toBe('');
     expect(component.currentPage).toBe(1);
-    expect(getAll).toHaveBeenCalledOnceWith(0, 25, '', 'all');
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, '', 'all', 'createdAt', 'desc');
   }));
 
   it('combines the status filter with the current search and ignores duplicate selections', () => {
@@ -184,7 +184,7 @@ describe('BooksComponent', () => {
 
     expect(component.currentPage).toBe(1);
     expect(component.searchWord).toBe('Ada');
-    expect(getAll).toHaveBeenCalledOnceWith(0, 25, 'Ada', 'overdue');
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, 'Ada', 'overdue', 'createdAt', 'desc');
 
     getAll.calls.reset();
     component.changeStatus('overdue');
@@ -198,6 +198,6 @@ describe('BooksComponent', () => {
     component.clearFilters();
 
     expect(component.selectedStatus).toBe('all');
-    expect(getAll).toHaveBeenCalledOnceWith(0, 25, '', 'all');
+    expect(getAll).toHaveBeenCalledOnceWith(0, 25, '', 'all', 'createdAt', 'desc');
   });
 });

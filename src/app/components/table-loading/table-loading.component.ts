@@ -10,5 +10,6 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './table-loading.component.css',
 })
 export class TableLoadingComponent {
+  readonly rows = [0, 1, 2, 3, 4];
   @Input() data!: { columns: string[]; textLoading: string };
 }

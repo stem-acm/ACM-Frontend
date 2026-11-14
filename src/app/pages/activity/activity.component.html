@@ -90,8 +90,7 @@
         </button>
       </div>
     } @else if (totalActivities === 0) {
-      <div class="acm-list-state" role="status">
-        <p>{{ (searchWord ? 'ux.noMatches' : 'ux.noActivities') | translate }}</p>
+      <app-table-empty [message]="searchWord ? 'ux.noMatches' : 'ux.noActivities'">
         @if (searchWord) {
           <button
             z-button
@@ -103,9 +102,11 @@
             {{ 'ux.clearFilters' | translate }}
           </button>
         }
-      </div>
+      </app-table-empty>
     } @else {
       <app-table-activities
+        [sortDirection]="tableSort.directionFor()"
+        (sortChange)="sortByName()"
         [data]="activity"
         (editClicked)="clickEdit($event)"
         (activityDeleted)="getActivityList()"

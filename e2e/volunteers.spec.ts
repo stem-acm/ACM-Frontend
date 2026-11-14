@@ -178,17 +178,17 @@ test.describe('F9 Volunteers', () => {
       await expect(showing(page, 1, PAGE_SIZE, bigTotal)).toBeVisible();
       await expect(bodyRows(page)).toHaveCount(PAGE_SIZE);
       await expect(pageIndicator(page, 1, totalPages)).toBeVisible();
-      await expect(volunteerRow(page, seeded[0])).toHaveCount(1);
+      await expect(volunteerRow(page, seeded[0])).toHaveCount(0);
 
       await page.getByRole('button', { name: 'Next' }).filter({ visible: true }).click();
       await expect(pageIndicator(page, 2, totalPages)).toBeVisible();
       await expect(bodyRows(page)).toHaveCount(Math.min(PAGE_SIZE, bigTotal - PAGE_SIZE));
-      await expect(volunteerRow(page, seeded[0])).toHaveCount(0);
+      await expect(volunteerRow(page, seeded[0])).toHaveCount(1);
 
       await page.getByRole('button', { name: 'Previous' }).filter({ visible: true }).click();
       await expect(pageIndicator(page, 1, totalPages)).toBeVisible();
       await expect(bodyRows(page)).toHaveCount(PAGE_SIZE);
-      await expect(volunteerRow(page, seeded[0])).toHaveCount(1);
+      await expect(volunteerRow(page, seeded[0])).toHaveCount(0);
     } finally {
       await cleanup(api, searched, filler);
     }

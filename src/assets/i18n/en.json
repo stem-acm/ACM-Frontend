@@ -1,5 +1,7 @@
 {
   "ux": {
+    "loading": "Loading data…",
+    "noAccounts": "No accounts yet.",
     "filterActivity": "Filter by activity",
     "allActivities": "All activities",
     "loadError": "Could not load this list. Please try again.",
@@ -253,7 +255,7 @@
     "notAllowed": "Not allowed",
     "volunteerWithoutMember": "Volunteer without member",
     "loading": "Loading the audit log…",
-    "nothingYet": "Nothing has been recorded yet.",
+    "nothingYet": "No audit logs yet.",
     "showing": "Showing {{first}} to {{last}} of {{total}} results",
     "pageOf": "Page {{page}} of {{pages}}"
   },
@@ -304,7 +306,7 @@
     "loanList": "Recorded loans",
     "loadingLoans": "Loading book loans…",
     "loanCount": "{{count}} loan(s)",
-    "emptyTitle": "No loans recorded",
+    "emptyTitle": "No book loans yet.",
     "emptyDescription": "Loans added with the form will appear here.",
     "status": "Status",
     "actions": "Actions",

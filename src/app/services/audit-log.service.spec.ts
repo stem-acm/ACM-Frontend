@@ -52,4 +52,31 @@ describe('AuditLogService', () => {
     expect(params.get('to')).toBe('2026-11-13T20:59:59.999Z');
     request.flush({ success: true, data: [] });
   });
+  it('collects all filtered pages for global name sorting, independently of the displayed page', () => {
+    let count = 0;
+    service
+      .getEveryLog({ offset: 25, limit: 25, search: 'Ada', entity: 'members' })
+      .subscribe(result => {
+        count = result.data.length;
+      });
+    const first = http.expectOne(req => req.url === `${environment.API_URL}/settings/logs`);
+    expect(first.request.params.get('offset')).toBe('0');
+    expect(first.request.params.get('limit')).toBe('100');
+    expect(first.request.params.get('search')).toBe('Ada');
+    first.flush({
+      success: true,
+      data: Array.from({ length: 100 }, (_, id) => ({ id })),
+      pagination: { offset: 0, limit: 100, total: 101, hasMore: true },
+    });
+    expect(count).toBe(0);
+    const last = http.expectOne(req => req.url === `${environment.API_URL}/settings/logs`);
+    expect(last.request.params.get('offset')).toBe('100');
+    expect(last.request.params.get('entity')).toBe('members');
+    last.flush({
+      success: true,
+      data: [{ id: 100 }],
+      pagination: { offset: 100, limit: 100, total: 101, hasMore: false },
+    });
+    expect(count).toBe(101);
+  });
 });

@@ -117,9 +117,11 @@ test.describe('F3 Members', () => {
       for (let i = 0; i < toCreate; i++) {
         created.push(await api.createMember({ firstName: 'Pager', lastName: `${prefix}n${i}` }));
       }
-      const firstPage = await api.getPage<Member>(`members?limit=${PAGE_SIZE}&offset=0`);
+      const firstPage = await api.getPage<Member>(
+        `members?limit=${PAGE_SIZE}&offset=0&sortBy=id&order=desc`,
+      );
       const secondPage = await api.getPage<Member>(
-        `members?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}`,
+        `members?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}&sortBy=id&order=desc`,
       );
       const total = firstPage.pagination.total;
       const totalPages = Math.ceil(total / PAGE_SIZE);

@@ -1,3 +1,4 @@
+import { TableSort, sortTableRows, memberName } from '@/app/utils/table-sort';
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CardStatisticComponent } from '@/app/components/card-statistic/card-statistic.component';
 import { DashboardService } from '@/app/services/dashboard.service';
@@ -26,6 +27,12 @@ import { AuthService } from '@/app/services/auth.service';
   styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  sortByName(): void {
+    this.tableSort.toggle();
+    this.sortCheckins();
+  }
+
+  readonly tableSort = new TableSort();
   auth = inject(AuthService);
   public statistics!: Statistics;
   private dashboard = inject(DashboardService);
@@ -72,12 +79,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private sortCheckins() {
-    if (this.statistics && this.statistics.checkins) {
-      this.statistics.checkins.sort((a, b) => {
-        const dateA = new Date(a.checkInTime).getTime();
-        const dateB = new Date(b.checkInTime).getTime();
-        return dateB - dateA; // Descending order (newest first)
-      });
+    if (this.statistics) {
+      this.statistics.checkins = sortTableRows(this.statistics.checkins, this.tableSort, row =>
+        memberName(row.Member),
+      );
     }
   }
 

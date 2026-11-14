@@ -1,3 +1,5 @@
+import { TableSort, sortTableRows, memberName } from '@/app/utils/table-sort';
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardInputComponent } from '@/shared/components/input';
 import { CardStatisticSkeletonComponent } from '@/app/components/card-statistic-skeleton/card-statistic-skeleton.component';
@@ -16,6 +18,7 @@ import { Subject } from 'rxjs/internal/Subject';
   selector: 'app-checkin-history',
   standalone: true,
   imports: [
+    TableEmptyComponent,
     ZardButtonComponent,
     ZardInputComponent,
     TableCheckinsComponent,
@@ -28,6 +31,13 @@ import { Subject } from 'rxjs/internal/Subject';
   styleUrl: './checkin-history.component.css',
 })
 export class CheckinHistoryComponent implements OnInit {
+  sortByName(): void {
+    this.tableSort.toggle();
+    this.currentPage = 1;
+    this.updateDisplayedCheckins();
+  }
+
+  readonly tableSort = new TableSort();
   protected Math = Math;
   private checkinService = inject(CheckinService);
   private allCheckins: Checkin[] = [];
@@ -130,7 +140,11 @@ export class CheckinHistoryComponent implements OnInit {
   }
 
   private updateDisplayedCheckins() {
-    const filtered = this.filterCheckins(this.searchWord, this.startDate, this.endDate);
+    const filtered = sortTableRows(
+      this.filterCheckins(this.searchWord, this.startDate, this.endDate),
+      this.tableSort,
+      row => memberName(row.Member),
+    );
     this.totalCheckins = filtered.length;
 
     if (this.totalCheckins > 0 && this.currentPage > this.totalPages) {

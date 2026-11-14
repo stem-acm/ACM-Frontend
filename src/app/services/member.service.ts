@@ -26,12 +26,12 @@ export class MemberService {
   }
 
   /** Every member, read page by page: the API returns at most 100 rows per request. */
-  getEveryMember() {
+  getEveryMember(search = '', studyPlaces = '') {
     const limit = 100;
-    return this.getAllMembers(0, limit).pipe(
+    return this.getAllMembers(0, limit, search, studyPlaces).pipe(
       expand((result, index) =>
         result.success && result.pagination?.hasMore
-          ? this.getAllMembers((index + 1) * limit, limit)
+          ? this.getAllMembers((index + 1) * limit, limit, search, studyPlaces)
           : EMPTY,
       ),
       reduce((all, page) => ({

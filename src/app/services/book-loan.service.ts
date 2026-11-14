@@ -11,12 +11,21 @@ export class BookLoanService {
   private readonly http = inject(HttpClient);
   private readonly url = `${environment.API_URL}/book-loans`;
 
-  getAll(offset = 0, limit = 100, search = '', status: BookLoanStatusFilter = 'all') {
+  getAll(
+    offset = 0,
+    limit = 100,
+    search = '',
+    status: BookLoanStatusFilter = 'all',
+    sortBy: 'createdAt' | 'bookTitle' = 'createdAt',
+    order: 'asc' | 'desc' = 'desc',
+  ) {
     const params = new HttpParams()
       .set('offset', offset)
       .set('limit', limit)
       .set('search', search)
-      .set('status', status);
+      .set('status', status)
+      .set('sortBy', sortBy)
+      .set('order', order);
     return this.http.get<HttpResult<BookLoan[]>>(this.url, { params });
   }
 

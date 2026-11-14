@@ -1,5 +1,7 @@
 {
   "ux": {
+    "loading": "Eo am-pisintonana ny angona…",
+    "noAccounts": "Tsy mbola misy kaonty.",
     "filterActivity": "Sivano araka ny hetsika",
     "allActivities": "Ny hetsika rehetra",
     "loadError": "Tsy voasintona ny lisitra. Andramo indray.",
@@ -253,7 +255,7 @@
     "notAllowed": "Tsy avela",
     "volunteerWithoutMember": "Mpilatsaka an-tsitrapo tsy misy mpikambana",
     "loading": "Ampidirina ny tantaran'ny fanovana…",
-    "nothingYet": "Tsy mbola misy voarakitra.",
+    "nothingYet": "Tsy mbola misy tantaran’ny asa.",
     "showing": "Aseho {{first}} hatramin'ny {{last}} amin'ny valiny {{total}}",
     "pageOf": "Pejy {{page}} amin'ny {{pages}}"
   },
@@ -304,7 +306,7 @@
     "loanList": "Fampindramana voarakitra",
     "loadingLoans": "Ampidirina ny fampindramam-boky…",
     "loanCount": "Fampindramana {{count}}",
-    "emptyTitle": "Tsy mbola misy fampindramana",
+    "emptyTitle": "Tsy mbola misy findramam-boky.",
     "emptyDescription": "Hiseho eto ny fampindramana ampidirina amin'ny taratasy.",
     "status": "Toetra",
     "actions": "Asa",

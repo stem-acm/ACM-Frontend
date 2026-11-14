@@ -130,58 +130,77 @@
           <p>{{ 'access.accountsDescription' | translate }}</p>
         </div>
       </div>
-      <div class="access-table-wrap">
-        <table z-table class="access-table">
-          <thead z-table-header>
-            <tr z-table-row>
-              <th z-table-head>{{ 'forms.username' | translate }}</th>
-              <th z-table-head>Email</th>
-              <th z-table-head>{{ 'forms.role' | translate }}</th>
-              <th z-table-head>{{ 'access.status' | translate }}</th>
-              <th z-table-head>{{ 'access.action' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody z-table-body>
-            @for (account of accounts; track account.id) {
+      @if (accountsLoading) {
+        <app-table-loading [data]="{ columns: accountColumns, textLoading: 'ux.loading' }" />
+      } @else if (accountsLoadError) {
+        <div class="acm-list-state" role="alert">
+          <p>{{ 'ux.loadError' | translate }}</p>
+          <button class="acm-btn acm-btn--outline" type="button" (click)="loadAccounts()">
+            {{ 'ux.retry' | translate }}
+          </button>
+        </div>
+      } @else if (accounts.length === 0) {
+        <app-table-empty message="ux.noAccounts" />
+      } @else {
+        <div class="access-table-wrap">
+          <table z-table class="access-table">
+            <thead z-table-header>
               <tr z-table-row>
-                <td z-table-cell>
-                  <strong>{{ account.username }}</strong>
-                </td>
-                <td z-table-cell>{{ account.email }}</td>
-                <td z-table-cell>
-                  <select [(ngModel)]="account.role" [disabled]="account.id === auth.user?.id">
-                    @for (role of roles; track role) {
-                      <option [value]="role">{{ 'access.roles.' + role | translate }}</option>
-                    }
-                  </select>
-                </td>
-                <td z-table-cell>
-                  <label class="access-switch"
-                    ><input
-                      type="checkbox"
-                      [(ngModel)]="account.active"
-                      [disabled]="account.id === auth.user?.id"
-                    /><span>{{
-                      (account.active ? 'access.active' : 'access.inactive') | translate
-                    }}</span></label
-                  >
-                </td>
-                <td z-table-cell>
-                  <button
-                    z-button
-                    zType="link"
-                    class="acm-btn acm-btn--link"
-                    type="button"
-                    (click)="saveAccount(account)"
-                  >
-                    {{ 'access.save' | translate }}
-                  </button>
-                </td>
+                <th z-table-head [attr.aria-sort]="accountSort.directionFor()">
+                  <app-table-sort
+                    label="forms.username"
+                    [direction]="accountSort.directionFor()"
+                    (sortChange)="sortAccounts()"
+                  />
+                </th>
+                <th z-table-head>Email</th>
+                <th z-table-head>{{ 'forms.role' | translate }}</th>
+                <th z-table-head>{{ 'access.status' | translate }}</th>
+                <th z-table-head>{{ 'access.action' | translate }}</th>
               </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody z-table-body>
+              @for (account of sortedAccounts; track account.id) {
+                <tr z-table-row>
+                  <td z-table-cell>
+                    <strong>{{ account.username }}</strong>
+                  </td>
+                  <td z-table-cell>{{ account.email }}</td>
+                  <td z-table-cell>
+                    <select [(ngModel)]="account.role" [disabled]="account.id === auth.user?.id">
+                      @for (role of roles; track role) {
+                        <option [value]="role">{{ 'access.roles.' + role | translate }}</option>
+                      }
+                    </select>
+                  </td>
+                  <td z-table-cell>
+                    <label class="access-switch"
+                      ><input
+                        type="checkbox"
+                        [(ngModel)]="account.active"
+                        [disabled]="account.id === auth.user?.id"
+                      /><span>{{
+                        (account.active ? 'access.active' : 'access.inactive') | translate
+                      }}</span></label
+                    >
+                  </td>
+                  <td z-table-cell>
+                    <button
+                      z-button
+                      zType="link"
+                      class="acm-btn acm-btn--link"
+                      type="button"
+                      (click)="saveAccount(account)"
+                    >
+                      {{ 'access.save' | translate }}
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
       <form class="access-create" (ngSubmit)="createAccount(accountForm)" #accountForm="ngForm">
         <h3>{{ 'access.addAccount' | translate }}</h3>
         @if (message === 'access.created') {

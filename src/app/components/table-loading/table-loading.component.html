@@ -1,34 +1,30 @@
-<table z-table zSize="comfortable" class="acm-data-table" aria-busy="true">
+<span class="sr-only" role="status">{{ data.textLoading | translate }}</span>
+<table
+  z-table
+  zSize="comfortable"
+  class="acm-data-table"
+  aria-busy="true"
+  [attr.aria-label]="data.textLoading | translate"
+>
   <thead z-table-header>
     <tr z-table-row>
-      @for (item of data.columns; track item) {
+      @for (item of data.columns; track $index) {
         <th z-table-head scope="col">{{ item | translate }}</th>
       }
     </tr>
   </thead>
-  <tbody z-table-body>
-    <tr z-table-row>
-      <td z-table-cell [attr.colspan]="data.columns.length" class="acm-empty-cell">
-        <div class="flex items-center justify-center gap-2" role="status">
-          <svg
-            class="size-5 animate-spin"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <g fill="currentColor">
-              <path
-                fill-rule="evenodd"
-                d="M12 19a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0 3c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10Z"
-                clip-rule="evenodd"
-                opacity=".2"
-              />
-              <path d="M2 12C2 6.477 6.477 2 12 2v3a7 7 0 0 0-7 7H2Z" />
-            </g>
-          </svg>
-          <span>{{ data.textLoading | translate }}</span>
-        </div>
-      </td>
-    </tr>
+  <tbody z-table-body aria-hidden="true">
+    @for (row of rows; track row) {
+      <tr z-table-row>
+        @for (column of data.columns; track $index) {
+          <td z-table-cell>
+            <span
+              class="block h-4 w-3/4 min-w-8 rounded bg-gray-200 dark:bg-gray-700 motion-safe:animate-pulse"
+              >&nbsp;</span
+            >
+          </td>
+        }
+      </tr>
+    }
   </tbody>
 </table>

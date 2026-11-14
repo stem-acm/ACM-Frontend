@@ -1,3 +1,7 @@
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
+import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
+import { TableSortComponent } from '@/app/components/table-sort/table-sort.component';
+import { TableSort, sortTableRows } from '@/app/utils/table-sort';
 import { Component, HostListener, inject, OnInit, viewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -25,6 +29,7 @@ interface Policy {
   permissions: Record<string, boolean>;
 }
 interface Account {
+  createdAt?: string;
   id: number;
   username: string;
   email: string;
@@ -36,6 +41,9 @@ interface Account {
   selector: 'app-settings',
   standalone: true,
   imports: [
+    TableEmptyComponent,
+    TableLoadingComponent,
+    TableSortComponent,
     CommonModule,
     FormsModule,
     TranslateModule,
@@ -63,6 +71,22 @@ export class SettingsComponent implements OnInit {
   selectedRole: Role = 'intern';
   policies: Policy[] = [];
   accounts: Account[] = [];
+  accountsLoading = true;
+  accountsLoadError = false;
+  readonly accountSort = new TableSort();
+  get sortedAccounts(): Account[] {
+    return sortTableRows(this.accounts, this.accountSort, row => row.username);
+  }
+  sortAccounts(): void {
+    this.accountSort.toggle();
+  }
+  readonly accountColumns = [
+    'forms.username',
+    'forms.email',
+    'forms.role',
+    'access.status',
+    'access.action',
+  ];
   message = '';
   error = '';
   accountError = '';
@@ -209,10 +233,20 @@ export class SettingsComponent implements OnInit {
     });
   }
 
-  private loadAccounts(): void {
+  loadAccounts(): void {
+    this.accountsLoading = true;
+    this.accountsLoadError = false;
     this.http.get<HttpResult<Account[]>>(`${this.url}/users`).subscribe({
-      next: result => (this.accounts = result.data),
-      error: error => this.fail(error),
+      next: result => {
+        this.accounts = result.data;
+        this.accountsLoading = false;
+        this.accountsLoadError = !result.success;
+      },
+      error: error => {
+        this.accountsLoading = false;
+        this.accountsLoadError = true;
+        this.fail(error);
+      },
     });
   }
 

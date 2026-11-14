@@ -90,8 +90,7 @@
         </button>
       </div>
     } @else if (totalVolunteers === 0) {
-      <div class="acm-list-state" role="status">
-        <p>{{ (searchWord ? 'ux.noMatches' : 'ux.noVolunteers') | translate }}</p>
+      <app-table-empty [message]="searchWord ? 'ux.noMatches' : 'ux.noVolunteers'">
         @if (searchWord) {
           <button
             z-button
@@ -103,9 +102,13 @@
             {{ 'ux.clearFilters' | translate }}
           </button>
         }
-      </div>
+      </app-table-empty>
     } @else {
-      <app-table-volunteers [data]="displayedVolunteers" />
+      <app-table-volunteers
+        [sortDirection]="tableSort.directionFor()"
+        (sortChange)="sortByName()"
+        [data]="displayedVolunteers"
+      />
 
       <!-- Pagination Controls -->
       <div

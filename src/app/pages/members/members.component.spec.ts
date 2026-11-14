@@ -14,7 +14,7 @@ describe('MembersComponent', () => {
   let fixture: ComponentFixture<MembersComponent>;
 
   const mockMemberService = {
-    getAllMembers: () => of({ success: true, data: [] as Member[], pagination: { total: 0 } }),
+    getEveryMember: () => of({ success: true, data: [] as Member[], pagination: { total: 0 } }),
     getStudyPlaces: () => of({ success: true, data: [] }),
   };
 
@@ -56,12 +56,13 @@ describe('MembersComponent', () => {
       registrationNumber,
       firstName: `Member ${registrationNumber}`,
       lastName: 'Test',
+      createdAt: new Date(`2026-01-0${4 - registrationNumber}`),
     })) as Member[];
     component.pageSize = 1;
-    spyOn(mockMemberService, 'getAllMembers').and.callFake(() =>
+    spyOn(mockMemberService, 'getEveryMember').and.callFake(() =>
       of({
         success: true,
-        data: [{ ...members[component.currentPage - 1] }],
+        data: members,
         pagination: { total: 3 },
       }),
     );
@@ -142,7 +143,7 @@ describe('MembersComponent', () => {
   });
 
   it('offers retry after the member list fails to load', () => {
-    const getMembers = spyOn(mockMemberService, 'getAllMembers').and.returnValue(
+    const getMembers = spyOn(mockMemberService, 'getEveryMember').and.returnValue(
       throwError(() => new Error('offline')),
     );
     component.getMemberList();

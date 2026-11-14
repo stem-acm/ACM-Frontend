@@ -1,3 +1,6 @@
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
+import { TableSortComponent } from '@/app/components/table-sort/table-sort.component';
+import { SortDirection } from '@/app/utils/table-sort';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { Component, Input, Output, inject, EventEmitter } from '@angular/core';
@@ -18,6 +21,8 @@ import { AuthService } from '@/app/services/auth.service';
   selector: 'app-table-members',
   standalone: true,
   imports: [
+    TableEmptyComponent,
+    TableSortComponent,
     ZardButtonComponent,
     ZardTableImports,
     RouterModule,
@@ -29,11 +34,13 @@ import { AuthService } from '@/app/services/auth.service';
   styleUrl: './table-members.component.css',
 })
 export class TableMembersComponent {
+  @Input() sortDirection: SortDirection = 'none';
+  @Output() sortChange = new EventEmitter<void>();
   public auth = inject(AuthService);
   private URL: string = environment.FILE_URL;
   public userImg = `${this.URL}/user.png`;
-  @Input() data!: { selected: boolean; member: Member }[];
-  @Input() volunteersList!: Volunteer[];
+  @Input() data: { selected: boolean; member: Member }[] = [];
+  @Input() volunteersList: Volunteer[] = [];
 
   @Output() memberDeleted = new EventEmitter<number>();
 

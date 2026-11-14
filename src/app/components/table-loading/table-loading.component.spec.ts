@@ -22,4 +22,16 @@ describe('TableLoadingComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  it('renders a skeleton cell for every real column on each placeholder row', () => {
+    fixture.componentRef.setInput('data', {
+      columns: ['Name', 'Email', 'Role'],
+      textLoading: 'Loading',
+    });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('table').getAttribute('aria-busy')).toBe('true');
+    expect(fixture.nativeElement.querySelectorAll('thead th').length).toBe(3);
+    expect(fixture.nativeElement.querySelectorAll('tbody tr').length).toBe(5);
+    expect(fixture.nativeElement.querySelectorAll('tbody td').length).toBe(15);
+    expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toContain('Loading');
+  });
 });

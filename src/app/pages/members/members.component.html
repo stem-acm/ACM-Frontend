@@ -269,6 +269,7 @@
       <app-table-loading
         [data]="{
           columns: [
+            '#',
             'table.columns.name',
             'table.columns.occupation',
             'table.columns.placeOfWorkStudy',
@@ -286,12 +287,9 @@
         </button>
       </div>
     } @else if (totalMembers === 0) {
-      <div class="acm-list-state" role="status">
-        <p>
-          {{
-            (searchWord || selectedStudyPlaces.length ? 'ux.noMatches' : 'ux.noMembers') | translate
-          }}
-        </p>
+      <app-table-empty
+        [message]="searchWord || selectedStudyPlaces.length ? 'ux.noMatches' : 'ux.noMembers'"
+      >
         @if (searchWord || selectedStudyPlaces.length) {
           <button
             z-button
@@ -303,9 +301,11 @@
             {{ 'ux.clearFilters' | translate }}
           </button>
         }
-      </div>
+      </app-table-empty>
     } @else {
       <app-table-members
+        [sortDirection]="tableSort.directionFor()"
+        (sortChange)="sortByName()"
         [data]="membersChooseList"
         [volunteersList]="volunteers"
         (memberDeleted)="onMemberDeleted($event)"

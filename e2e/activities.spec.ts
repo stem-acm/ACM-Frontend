@@ -120,7 +120,6 @@ test.describe('F6 Activities', () => {
     api,
   }) => {
     const before = await api.getPage<Activity>('activities?limit=100');
-    const seeded = before.data.slice(0, 5);
     const toCreate = Math.max(1, PAGE_SIZE + 1 - before.pagination.total);
     const prefix = `Pager${uniqueSuffix()}`;
     const token = `Srch${uniqueSuffix()}`;
@@ -130,9 +129,11 @@ test.describe('F6 Activities', () => {
         created.push(await api.createActivity({ name: `${prefix}n${String(i).padStart(3, '0')}` }));
       }
       created.push(await api.createActivity({ name: `${token} activity` }));
-      const firstPage = await api.getPage<Activity>(`activities?limit=${PAGE_SIZE}&offset=0`);
+      const firstPage = await api.getPage<Activity>(
+        `activities?limit=${PAGE_SIZE}&offset=0&sortBy=createdAt&order=desc`,
+      );
       const secondPage = await api.getPage<Activity>(
-        `activities?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}`,
+        `activities?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}&sortBy=createdAt&order=desc`,
       );
       const total = firstPage.pagination.total;
       const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -142,7 +143,7 @@ test.describe('F6 Activities', () => {
 
       await expect(showing(page, 1, PAGE_SIZE, total)).toBeVisible();
       await expect(bodyRows(page)).toHaveCount(PAGE_SIZE);
-      for (const activity of seeded) {
+      for (const activity of firstPage.data.slice(0, 5)) {
         await expect(activityRow(page, activity.name)).toHaveCount(1);
       }
       await expect(pageIndicator(page, 1, totalPages)).toBeVisible();
@@ -151,12 +152,12 @@ test.describe('F6 Activities', () => {
       await expect(pageIndicator(page, 2, totalPages)).toBeVisible();
       await expect(bodyRows(page)).toHaveCount(secondPage.data.length);
       await expect(activityRow(page, secondPage.data[0].name)).toHaveCount(1);
-      await expect(activityRow(page, seeded[0].name)).toHaveCount(0);
+      await expect(activityRow(page, firstPage.data[0].name)).toHaveCount(0);
 
       await page.getByRole('button', { name: 'Previous' }).click();
       await expect(pageIndicator(page, 1, totalPages)).toBeVisible();
       await expect(bodyRows(page)).toHaveCount(PAGE_SIZE);
-      await expect(activityRow(page, seeded[0].name)).toHaveCount(1);
+      await expect(activityRow(page, firstPage.data[0].name)).toHaveCount(1);
 
       await searchBox(page).fill(token);
       await expect(bodyRows(page)).toHaveCount(1);
@@ -166,7 +167,7 @@ test.describe('F6 Activities', () => {
       await searchBox(page).clear();
       await expect(showing(page, 1, PAGE_SIZE, total)).toBeVisible();
       await expect(bodyRows(page)).toHaveCount(PAGE_SIZE);
-      await expect(activityRow(page, seeded[0].name)).toHaveCount(1);
+      await expect(activityRow(page, firstPage.data[0].name)).toHaveCount(1);
     } finally {
       for (const activity of created) {
         await api.deleteActivity(activity.id);

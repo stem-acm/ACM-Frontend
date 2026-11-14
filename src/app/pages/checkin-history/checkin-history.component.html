@@ -110,15 +110,13 @@
         </button>
       </div>
     } @else if (totalCheckins === 0) {
-      <div class="acm-list-state" role="status">
-        <p>
-          {{
-            (searchWord || startDate || endDate || selectedActivityId !== null
-              ? 'ux.noMatches'
-              : 'ux.noCheckins'
-            ) | translate
-          }}
-        </p>
+      <app-table-empty
+        [message]="
+          searchWord || startDate || endDate || selectedActivityId !== null
+            ? 'ux.noMatches'
+            : 'ux.noCheckins'
+        "
+      >
         @if (searchWord || startDate || endDate || selectedActivityId !== null) {
           <button
             z-button
@@ -130,9 +128,14 @@
             {{ 'ux.clearFilters' | translate }}
           </button>
         }
-      </div>
+      </app-table-empty>
     } @else {
-      <app-table-checkins [checkins]="displayedCheckins" [showDate]="true" />
+      <app-table-checkins
+        [sortDirection]="tableSort.directionFor()"
+        (sortChange)="sortByName()"
+        [checkins]="displayedCheckins"
+        [showDate]="true"
+      />
 
       <!-- Pagination Controls -->
       <div

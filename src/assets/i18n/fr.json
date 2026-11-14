@@ -1,5 +1,7 @@
 {
   "ux": {
+    "loading": "Chargement des données…",
+    "noAccounts": "Aucun compte pour le moment.",
     "filterActivity": "Filtrer par activité",
     "allActivities": "Toutes les activités",
     "loadError": "Impossible de charger cette liste. Réessayez.",
@@ -253,7 +255,7 @@
     "notAllowed": "Non autorisé",
     "volunteerWithoutMember": "Bénévole sans membre",
     "loading": "Chargement du journal d'audit…",
-    "nothingYet": "Rien n'a encore été enregistré.",
+    "nothingYet": "Aucun journal d’audit pour le moment.",
     "showing": "Affichage de {{first}} à {{last}} sur {{total}} résultats",
     "pageOf": "Page {{page}} sur {{pages}}"
   },
@@ -304,7 +306,7 @@
     "loanList": "Emprunts enregistrés",
     "loadingLoans": "Chargement des emprunts…",
     "loanCount": "{{count}} emprunt(s)",
-    "emptyTitle": "Aucun emprunt enregistré",
+    "emptyTitle": "Aucun emprunt de livre pour le moment.",
     "emptyDescription": "Les emprunts ajoutés depuis le formulaire apparaîtront ici.",
     "status": "Statut",
     "actions": "Actions",

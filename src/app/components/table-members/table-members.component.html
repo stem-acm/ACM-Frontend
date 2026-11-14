@@ -1,144 +1,161 @@
-<div class="acm-mobile-records md:hidden">
-  @for (item of data; track item.member.registrationNumber) {
-    <article class="acm-mobile-record">
-      <div class="acm-mobile-record-head">
-        <img
-          [src]="getfileUrl(item.member.profileImage)"
-          (error)="onImageError($event)"
-          [alt]="item.member.lastName"
-        />
-        <div>
-          <strong>{{
-            item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName
-          }}</strong>
-          <span>{{ item.member.registrationNumber }}</span>
-        </div>
-        @if (auth.can('members.cards')) {
-          <label class="acm-mobile-select">
-            <input
-              type="checkbox"
-              [checked]="item.selected"
-              (change)="onCheckboxChange($event, item.member)"
-            />
-            <span class="sr-only"
-              >{{ 'ux.selectMember' | translate }} {{ item.member.firstName }}
-              {{ item.member.lastName }}</span
-            >
-          </label>
-        }
-      </div>
-      <dl>
-        <div>
-          <dt>{{ 'table.columns.occupation' | translate }}</dt>
-          <dd>{{ item.member.occupation }}</dd>
-        </div>
-        <div>
-          <dt>{{ 'table.columns.placeOfWorkStudy' | translate }}</dt>
-          <dd>{{ item.member.studyOrWorkPlace }}</dd>
-        </div>
-        <div>
-          <dt>{{ 'table.columns.memberFor' | translate }}</dt>
-          <dd>{{ formatDate(item.member.joinDate) }}</dd>
-        </div>
-      </dl>
-      <div class="acm-mobile-record-actions">
-        <a [routerLink]="['/profil', item.member.registrationNumber]">{{
-          'table.viewProfil' | translate
-        }}</a>
-        @if (auth.can('members.delete')) {
-          <button
-            z-button
-            zType="link"
-            type="button"
-            class="acm-btn acm-btn--link-danger"
-            (click)="onDeleteClick(item.member)"
-          >
-            {{ 'buttons.delete' | translate }}
-          </button>
-        }
-      </div>
-    </article>
-  }
-</div>
-<table z-table zSize="comfortable" class="acm-data-table hidden md:table">
-  <thead z-table-header>
-    <tr z-table-row>
-      <th z-table-head scope="col">#</th>
-      <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.occupation' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.placeOfWorkStudy' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.memberFor' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
-    </tr>
-  </thead>
-  <tbody z-table-body>
+@if (data.length === 0) {
+  <app-table-empty message="ux.noMembers" />
+} @else {
+  <div class="md:hidden mb-2">
+    <app-table-sort
+      label="table.columns.name"
+      [direction]="sortDirection"
+      (sortChange)="sortChange.emit()"
+    />
+  </div>
+  <div class="acm-mobile-records md:hidden">
     @for (item of data; track item.member.registrationNumber) {
-      <tr z-table-row>
-        <td z-table-cell class="capitalize">
-          @if (auth.can('members.cards')) {
-            <input
-              [id]="item.member.registrationNumber"
-              type="checkbox"
-              [checked]="item.selected"
-              (change)="onCheckboxChange($event, item.member)"
-              name="bordered-checkbox"
-              class="w-4 h-4 text-primary bg-primary border-gray-300 rounded-sm focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-            />
-          }
-        </td>
-        <th z-table-cell scope="row" class="acm-person-cell">
+      <article class="acm-mobile-record">
+        <div class="acm-mobile-record-head">
           <img
-            class="w-10 h-10 rounded-full"
             [src]="getfileUrl(item.member.profileImage)"
             (error)="onImageError($event)"
             [alt]="item.member.lastName"
           />
-          <div class="ps-3">
-            <div class="text-base font-semibold">
-              {{ item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName }}
-            </div>
-            <div class="font-normal text-gray-500">{{ item.member.registrationNumber }}</div>
+          <div>
+            <strong>{{
+              item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName
+            }}</strong>
+            <span>{{ item.member.registrationNumber }}</span>
           </div>
-        </th>
-        <td z-table-cell class="capitalize">
-          {{ item.member.occupation }}
-        </td>
-        <td z-table-cell class="capitalize">
-          {{ item.member.studyOrWorkPlace }}
-        </td>
-        <td z-table-cell class="capitalize">
-          {{ formatDate(item.member.joinDate) }}
-        </td>
-        <td z-table-cell>
-          <a
-            [routerLink]="['/profil', item.member.registrationNumber]"
-            class="font-medium text-primary dark:text-primary hover:underline mr-4"
-            >{{ 'table.viewProfil' | translate }}</a
-          >
+          @if (auth.can('members.cards')) {
+            <label class="acm-mobile-select">
+              <input
+                type="checkbox"
+                [checked]="item.selected"
+                (change)="onCheckboxChange($event, item.member)"
+              />
+              <span class="sr-only"
+                >{{ 'ux.selectMember' | translate }} {{ item.member.firstName }}
+                {{ item.member.lastName }}</span
+              >
+            </label>
+          }
+        </div>
+        <dl>
+          <div>
+            <dt>{{ 'table.columns.occupation' | translate }}</dt>
+            <dd>{{ item.member.occupation }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'table.columns.placeOfWorkStudy' | translate }}</dt>
+            <dd>{{ item.member.studyOrWorkPlace }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'table.columns.memberFor' | translate }}</dt>
+            <dd>{{ formatDate(item.member.joinDate) }}</dd>
+          </div>
+        </dl>
+        <div class="acm-mobile-record-actions">
+          <a [routerLink]="['/profil', item.member.registrationNumber]">{{
+            'table.viewProfil' | translate
+          }}</a>
           @if (auth.can('members.delete')) {
             <button
               z-button
-              zSize="sm"
               zType="link"
+              type="button"
+              class="acm-btn acm-btn--link-danger"
               (click)="onDeleteClick(item.member)"
-              class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
             >
               {{ 'buttons.delete' | translate }}
             </button>
           }
-        </td>
-      </tr>
+        </div>
+      </article>
     }
-  </tbody>
-</table>
+  </div>
+  <table z-table zSize="comfortable" class="acm-data-table hidden md:table">
+    <thead z-table-header>
+      <tr z-table-row>
+        <th z-table-head scope="col">#</th>
+        <th z-table-head scope="col" [attr.aria-sort]="sortDirection">
+          <app-table-sort
+            label="table.columns.name"
+            [direction]="sortDirection"
+            (sortChange)="sortChange.emit()"
+          />
+        </th>
+        <th z-table-head scope="col">{{ 'table.columns.occupation' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.placeOfWorkStudy' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.memberFor' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody z-table-body>
+      @for (item of data; track item.member.registrationNumber) {
+        <tr z-table-row>
+          <td z-table-cell class="capitalize">
+            @if (auth.can('members.cards')) {
+              <input
+                [id]="item.member.registrationNumber"
+                type="checkbox"
+                [checked]="item.selected"
+                (change)="onCheckboxChange($event, item.member)"
+                name="bordered-checkbox"
+                class="w-4 h-4 text-primary bg-primary border-gray-300 rounded-sm focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+              />
+            }
+          </td>
+          <th z-table-cell scope="row" class="acm-person-cell">
+            <img
+              class="w-10 h-10 rounded-full"
+              [src]="getfileUrl(item.member.profileImage)"
+              (error)="onImageError($event)"
+              [alt]="item.member.lastName"
+            />
+            <div class="ps-3">
+              <div class="text-base font-semibold">
+                {{ item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName }}
+              </div>
+              <div class="font-normal text-gray-500">{{ item.member.registrationNumber }}</div>
+            </div>
+          </th>
+          <td z-table-cell class="capitalize">
+            {{ item.member.occupation }}
+          </td>
+          <td z-table-cell class="capitalize">
+            {{ item.member.studyOrWorkPlace }}
+          </td>
+          <td z-table-cell class="capitalize">
+            {{ formatDate(item.member.joinDate) }}
+          </td>
+          <td z-table-cell>
+            <a
+              [routerLink]="['/profil', item.member.registrationNumber]"
+              class="font-medium text-primary dark:text-primary hover:underline mr-4"
+              >{{ 'table.viewProfil' | translate }}</a
+            >
+            @if (auth.can('members.delete')) {
+              <button
+                z-button
+                zSize="sm"
+                zType="link"
+                (click)="onDeleteClick(item.member)"
+                class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
+              >
+                {{ 'buttons.delete' | translate }}
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 
-<app-modal-alert
-  [isVisible]="showDeleteModal"
-  [title]="deleteTitle"
-  [message]="deleteMessage"
-  [showCancel]="true"
-  [confirmText]="'Delete'"
-  [cancelText]="'Cancel'"
-  (closeModal)="cancelDelete()"
-  (confirm)="confirmDelete()"
-></app-modal-alert>
+  <app-modal-alert
+    [isVisible]="showDeleteModal"
+    [title]="deleteTitle"
+    [message]="deleteMessage"
+    [showCancel]="true"
+    [confirmText]="'Delete'"
+    [cancelText]="'Cancel'"
+    (closeModal)="cancelDelete()"
+    (confirm)="confirmDelete()"
+  ></app-modal-alert>
+}

@@ -1,5 +1,8 @@
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
+import { TableSortComponent } from '@/app/components/table-sort/table-sort.component';
+import { SortDirection } from '@/app/utils/table-sort';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
-import { Component, Input, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, inject } from '@angular/core';
 import { Checkin } from '@/app/interfaces/checkin';
 import { environment } from '@/environments/environment';
 import dayjs from 'dayjs';
@@ -9,13 +12,21 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-table-checkins',
   standalone: true,
-  imports: [ZardTableImports, RouterModule, TranslateModule],
+  imports: [
+    TableEmptyComponent,
+    TableSortComponent,
+    ZardTableImports,
+    RouterModule,
+    TranslateModule,
+  ],
   templateUrl: './table-checkins.component.html',
   styleUrl: './table-checkins.component.css',
 })
 export class TableCheckinsComponent implements OnInit, OnDestroy {
+  @Input() sortDirection: SortDirection = 'none';
+  @Output() sortChange = new EventEmitter<void>();
   private URL: string = environment.FILE_URL;
-  @Input() checkins!: Checkin[];
+  @Input() checkins: Checkin[] = [];
   @Input() showDate = false;
   private updateInterval?: number;
   public currentTime = new Date().getTime();

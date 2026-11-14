@@ -1,3 +1,4 @@
+import { EMPTY, expand, reduce } from 'rxjs';
 import { AuditLog, AuditLogQuery } from '@/app/interfaces/audit-log';
 import { HttpResult } from '@/app/types/httpResult';
 import { environment } from '@/environments/environment';
@@ -6,6 +7,23 @@ import { inject, Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class AuditLogService {
+  /** Complete filtered list for sorting across page boundaries. */
+  getEveryLog(query: AuditLogQuery) {
+    const limit = 100;
+    return this.getLogs({ ...query, offset: 0, limit }).pipe(
+      expand((result, index) =>
+        result.success && result.pagination?.hasMore
+          ? this.getLogs({ ...query, offset: (index + 1) * limit, limit })
+          : EMPTY,
+      ),
+      reduce((all, page) => ({
+        ...page,
+        success: all.success && page.success,
+        data: [...all.data, ...(page.data ?? [])],
+      })),
+    );
+  }
+
   private readonly http = inject(HttpClient);
   private readonly url = `${environment.API_URL}/settings/logs`;
 

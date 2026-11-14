@@ -12,9 +12,15 @@ export class ActivityService {
   private http = inject(HttpClient);
 
   // Get all activities
-  getAllActivity(offset = 0, limit = 10, search = '') {
+  getAllActivity(
+    offset = 0,
+    limit = 10,
+    search = '',
+    sortBy: 'createdAt' | 'name' = 'createdAt',
+    order: 'asc' | 'desc' = 'desc',
+  ) {
     return this.http.get<HttpResult<Activity[]>>(
-      `${this.URL}/activities?offset=${offset}&limit=${limit}&search=${search}`,
+      `${this.URL}/activities?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search)}&sortBy=${sortBy}&order=${order}`,
     );
   }
 

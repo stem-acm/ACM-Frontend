@@ -102,7 +102,20 @@
   >
     <h2 id="loans-title" class="sr-only">{{ 'books.loanList' | translate }}</h2>
     @if (isLoading) {
-      <div class="acm-list-state">{{ 'books.loadingLoans' | translate }}</div>
+      <app-table-loading
+        [data]="{
+          columns: [
+            'books.registrationNumber',
+            'books.bookTitle',
+            'books.borrowingDate',
+            'books.expectedReturnDate',
+            'books.effectiveReturnDate',
+            'books.status',
+            'books.actions',
+          ],
+          textLoading: 'books.loadingLoans',
+        }"
+      />
     } @else if (loadError) {
       <div class="acm-list-state" role="alert">
         <p>{{ loadError }}</p>
@@ -111,8 +124,7 @@
         </button>
       </div>
     } @else if (totalLoans === 0 && (searchWord || selectedStatus !== 'all')) {
-      <div class="acm-list-state" role="status">
-        <p>{{ 'ux.noMatches' | translate }}</p>
+      <app-table-empty [message]="'ux.noMatches'">
         <button
           z-button
           zType="outline"
@@ -122,9 +134,11 @@
         >
           {{ 'ux.clearFilters' | translate }}
         </button>
-      </div>
+      </app-table-empty>
     } @else {
       <app-table-book-loans
+        [sortDirection]="tableSort.directionFor()"
+        (sortChange)="sortByName()"
         [data]="loans"
         [today]="today"
         [canUpdate]="auth.can('books.update')"

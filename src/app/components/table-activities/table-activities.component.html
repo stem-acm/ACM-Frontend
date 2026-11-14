@@ -1,83 +1,93 @@
-<table z-table zSize="comfortable" class="acm-data-table">
-  <thead z-table-header>
-    <tr z-table-row>
-      <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.description' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.periodicity' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.dayOfWeek' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.startDate' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.endDate' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.startTime' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.endTime' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
-    </tr>
-  </thead>
-  <tbody z-table-body>
-    @for (item of data; track item.name) {
+@if (data.length === 0) {
+  <app-table-empty message="ux.noActivities" />
+} @else {
+  <table z-table zSize="comfortable" class="acm-data-table">
+    <thead z-table-header>
       <tr z-table-row>
-        <th z-table-cell scope="row" class="acm-person-cell">
-          <span class="text-2xl mr-2">{{ item.emoji || '😊' }}</span>
-          <div class="text-xs font-semibold">{{ item.name }}</div>
+        <th z-table-head scope="col" [attr.aria-sort]="sortDirection">
+          <app-table-sort
+            label="table.columns.name"
+            [direction]="sortDirection"
+            (sortChange)="sortChange.emit()"
+          />
         </th>
-        <td z-table-cell class="capitalize">
-          {{ item.description }}
-        </td>
-        <td z-table-cell>
-          {{ item.isPeriodic ? ('table.yes' | translate) : ('table.no' | translate) }}
-        </td>
-        <td z-table-cell>
-          {{
-            item.dayOfWeek
-              ? item.dayOfWeek.charAt(0)!.toUpperCase() + '' + item.dayOfWeek.slice(1)
-              : ('table.notAvailable' | translate)
-          }}
-        </td>
-        <td z-table-cell>
-          {{ item.startDate ?? ('table.notAvailable' | translate) }}
-        </td>
-        <td z-table-cell>
-          {{ item.endDate ?? ('table.notAvailable' | translate) }}
-        </td>
-        <td z-table-cell>
-          {{ item.startTime }}
-        </td>
-        <td z-table-cell>
-          {{ item.endTime }}
-        </td>
-        <td z-table-cell>
-          @if (auth.can('activities.update')) {
-            <a
-              role="button"
-              tabindex="0"
-              (click)="updateMember(item)"
-              class="font-medium text-primary dark:text-primary hover:underline mr-4 cursor-pointer"
-              >{{ 'table.edit' | translate }}</a
-            >
-          }
-          @if (auth.can('activities.delete')) {
-            <button
-              z-button
-              zSize="sm"
-              zType="link"
-              (click)="onDeleteClick(item)"
-              class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
-            >
-              {{ 'buttons.delete' | translate }}
-            </button>
-          }
-        </td>
+        <th z-table-head scope="col">{{ 'table.columns.description' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.periodicity' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.dayOfWeek' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.startDate' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.endDate' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.startTime' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.endTime' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody z-table-body>
+      @for (item of data; track item.name) {
+        <tr z-table-row>
+          <th z-table-cell scope="row" class="acm-person-cell">
+            <span class="text-2xl mr-2">{{ item.emoji || '😊' }}</span>
+            <div class="text-xs font-semibold">{{ item.name }}</div>
+          </th>
+          <td z-table-cell class="capitalize">
+            {{ item.description }}
+          </td>
+          <td z-table-cell>
+            {{ item.isPeriodic ? ('table.yes' | translate) : ('table.no' | translate) }}
+          </td>
+          <td z-table-cell>
+            {{
+              item.dayOfWeek
+                ? item.dayOfWeek.charAt(0)!.toUpperCase() + '' + item.dayOfWeek.slice(1)
+                : ('table.notAvailable' | translate)
+            }}
+          </td>
+          <td z-table-cell>
+            {{ item.startDate ?? ('table.notAvailable' | translate) }}
+          </td>
+          <td z-table-cell>
+            {{ item.endDate ?? ('table.notAvailable' | translate) }}
+          </td>
+          <td z-table-cell>
+            {{ item.startTime }}
+          </td>
+          <td z-table-cell>
+            {{ item.endTime }}
+          </td>
+          <td z-table-cell>
+            @if (auth.can('activities.update')) {
+              <a
+                role="button"
+                tabindex="0"
+                (click)="updateMember(item)"
+                class="font-medium text-primary dark:text-primary hover:underline mr-4 cursor-pointer"
+                >{{ 'table.edit' | translate }}</a
+              >
+            }
+            @if (auth.can('activities.delete')) {
+              <button
+                z-button
+                zSize="sm"
+                zType="link"
+                (click)="onDeleteClick(item)"
+                class="acm-btn acm-btn--link-danger acm-btn--sm font-medium text-red-600 dark:text-red-500 hover:underline"
+              >
+                {{ 'buttons.delete' | translate }}
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 
-<app-modal-alert
-  [isVisible]="showDeleteModal"
-  [title]="deleteTitle"
-  [message]="deleteMessage"
-  [showCancel]="true"
-  [confirmText]="'Delete'"
-  [cancelText]="'Cancel'"
-  (closeModal)="cancelDelete()"
-  (confirm)="confirmDelete()"
-></app-modal-alert>
+  <app-modal-alert
+    [isVisible]="showDeleteModal"
+    [title]="deleteTitle"
+    [message]="deleteMessage"
+    [showCancel]="true"
+    [confirmText]="'Delete'"
+    [cancelText]="'Cancel'"
+    (closeModal)="cancelDelete()"
+    (confirm)="confirmDelete()"
+  ></app-modal-alert>
+}

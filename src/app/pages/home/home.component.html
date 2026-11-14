@@ -58,7 +58,11 @@
         }"
       />
     } @else {
-      <app-table-checkins [checkins]="statistics.checkins" />
+      <app-table-checkins
+        [sortDirection]="tableSort.directionFor()"
+        (sortChange)="sortByName()"
+        [checkins]="statistics.checkins"
+      />
     }
   }
 </div>

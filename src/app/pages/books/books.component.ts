@@ -1,3 +1,6 @@
+import { TableSort } from '@/app/utils/table-sort';
+import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
 import { AddBookLoanComponent } from '@/app/components/add-book-loan/add-book-loan.component';
 import { TableBookLoansComponent } from '@/app/components/table-book-loans/table-book-loans.component';
 import { BookLoan } from '@/app/interfaces/book-loan';
@@ -14,6 +17,8 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   selector: 'app-books',
   standalone: true,
   imports: [
+    TableLoadingComponent,
+    TableEmptyComponent,
     TranslateModule,
     FormsModule,
     ZardButtonComponent,
@@ -25,6 +30,13 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   styleUrl: './books.component.css',
 })
 export class BooksComponent implements OnInit {
+  sortByName(): void {
+    this.tableSort.toggle();
+    this.currentPage = 1;
+    this.loadLoans();
+  }
+
+  readonly tableSort = new TableSort();
   private readonly bookLoanService = inject(BookLoanService);
   readonly auth = inject(AuthService);
 
@@ -77,6 +89,8 @@ export class BooksComponent implements OnInit {
         this.pageSize,
         this.searchWord,
         this.selectedStatus,
+        this.tableSort.key === 'createdAt' ? 'createdAt' : 'bookTitle',
+        this.tableSort.direction === 'ascending' ? 'asc' : 'desc',
       )
       .subscribe({
         next: result => {

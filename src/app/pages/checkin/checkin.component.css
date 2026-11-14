@@ -1,0 +1,22 @@
+.closed-screen {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.closed-screen h1 {
+  color: #dc2626;
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.countdown {
+  font-size: 3rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}

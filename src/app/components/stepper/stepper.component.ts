@@ -84,6 +84,17 @@ export class StepperComponent implements OnInit, OnDestroy {
   hours: number[] | undefined;
   minutes = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
+  get availableMinutes(): number[] {
+    const closingHours = this.today === 'saturday' ? [16] : [12, 18];
+    return closingHours.includes(this.selectedTime.hour) ? [0] : this.minutes;
+  }
+
+  private coerceClosingMinutes() {
+    if (!this.availableMinutes.includes(this.selectedTime.minute)) {
+      this.selectedTime.minute = 0;
+    }
+  }
+
   ngOnInit() {
     this.setTimeInput();
     this.getActivities();
@@ -237,6 +248,7 @@ export class StepperComponent implements OnInit, OnDestroy {
     } else {
       this.selectedTime.hour = this.currentHour;
     }
+    this.coerceClosingMinutes();
   }
 
   toggleActivity(activity: Activity) {
@@ -285,13 +297,14 @@ export class StepperComponent implements OnInit, OnDestroy {
   }
 
   selectMinute(minute: number) {
-    this.selectedTime.minute = minute;
+    this.selectedTime.minute = this.availableMinutes.includes(minute) ? minute : 0;
     this.showMinutePicker = false;
     this.minuteSelected = true;
   }
 
   selectHour(hour: number) {
     this.selectedTime.hour = hour;
+    this.coerceClosingMinutes();
     this.showHourPicker = false;
     this.hourSelected = true;
   }

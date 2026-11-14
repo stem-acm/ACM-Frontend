@@ -1,1 +1,9 @@
-<app-stepper />
+<app-stepper *ngIf="isOpen; else closed" />
+<ng-template #closed>
+  <section class="closed-screen">
+    <h1>ACM Closed</h1>
+    <p>American Corner of Mahajanga opens in</p>
+    <p class="countdown" role="timer" aria-label="Time until opening">{{ countdown }}</p>
+    <p>Mahajanga time · Tuesday–Friday: 08:00–12:00, 15:00–18:00 · Saturday: 09:00–16:00</p>
+  </section>
+</ng-template>

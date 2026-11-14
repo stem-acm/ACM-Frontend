@@ -1,5 +1,7 @@
 {
   "ux": {
+    "filterActivity": "Filter by activity",
+    "allActivities": "All activities",
     "loadError": "Could not load this list. Please try again.",
     "retry": "Retry",
     "noMatches": "No results match your search or filters.",

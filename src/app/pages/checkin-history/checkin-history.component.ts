@@ -35,6 +35,8 @@ export class CheckinHistoryComponent implements OnInit {
   public searchWord = '';
   public startDate = '';
   public endDate = '';
+  public selectedActivityId: number | null = null;
+  public activities: { id: number; name: string }[] = [];
   private searchSubject = new Subject<string>();
 
   public currentPage = 1;
@@ -60,10 +62,19 @@ export class CheckinHistoryComponent implements OnInit {
   getCheckins() {
     this.isLoading = true;
     this.loadError = false;
-    this.checkinService.getAllCheckin().subscribe({
+    this.checkinService.getEveryCheckin().subscribe({
       next: (result: HttpResult<Checkin[]>) => {
         if (result.success) {
           this.allCheckins = result.data || [];
+          const activities = new Map<number, string>();
+          for (const checkin of this.allCheckins) {
+            if (checkin.Activity?.name) {
+              activities.set(checkin.activityId, checkin.Activity.name);
+            }
+          }
+          this.activities = Array.from(activities, ([id, name]) => ({ id, name })).sort((a, b) =>
+            a.name.localeCompare(b.name),
+          );
           this.currentPage = 1;
           this.updateDisplayedCheckins();
         } else {
@@ -79,6 +90,7 @@ export class CheckinHistoryComponent implements OnInit {
   }
 
   clearFilters() {
+    this.selectedActivityId = null;
     this.searchWord = '';
     this.startDate = '';
     this.endDate = '';
@@ -89,6 +101,11 @@ export class CheckinHistoryComponent implements OnInit {
 
   search(keyWord: string) {
     this.searchSubject.next(keyWord);
+  }
+
+  onActivityChange() {
+    this.currentPage = 1;
+    this.updateDisplayedCheckins();
   }
 
   onDateRangeChange() {
@@ -131,6 +148,9 @@ export class CheckinHistoryComponent implements OnInit {
     const end = endDate ? new Date(endDate) : null;
 
     return this.allCheckins.filter(checkin => {
+      if (this.selectedActivityId !== null && checkin.activityId !== this.selectedActivityId) {
+        return false;
+      }
       const checkInTime = new Date(checkin.checkInTime);
 
       if (start && checkInTime < start) {

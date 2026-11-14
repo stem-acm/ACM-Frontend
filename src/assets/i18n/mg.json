@@ -1,5 +1,7 @@
 {
   "ux": {
+    "filterActivity": "Sivano araka ny hetsika",
+    "allActivities": "Ny hetsika rehetra",
     "loadError": "Tsy voasintona ny lisitra. Andramo indray.",
     "retry": "Andramo indray",
     "noMatches": "Tsy misy valiny mifanaraka amin'ny fikarohana na sivana.",

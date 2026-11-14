@@ -9,6 +9,12 @@ export default defineConfig({
   forbidOnly: true,
   retries: 0,
   workers: 1,
+  webServer: {
+    command: 'npm run start',
+    url: BASE_URL,
+    reuseExistingServer: true,
+    timeout: 180_000,
+  },
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: BASE_URL,

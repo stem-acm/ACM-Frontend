@@ -22,6 +22,7 @@ services:
     build:
       context: ${E2E_BACKEND_DIR:-../../ACM-Backend}
       dockerfile: Dockerfile
+      network: ${E2E_BUILD_NETWORK:-default}
     environment:
       DATABASE_URL: postgresql://acm_user:acm_password@postgres:5432/acm_db
       # Test-only values: this stack never holds real data.

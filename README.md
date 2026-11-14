@@ -305,11 +305,11 @@ readlink -f /var/www/acm/current
 
 ## End-to-end tests
 
-Playwright tests in `e2e/` run against the local frontend and a **throwaway API and database** that each run starts and removes. The development database and the backend `uploads` folder are never read or written.
+Playwright tests in `e2e/` run against the local frontend and a **throwaway API and database** that each run starts and removes. Playwright reuses an existing frontend dev server or starts one automatically. The development database and the backend `uploads` folder are never read or written.
 
 Prerequisites:
 
-- Docker is running and the frontend under test is served on `http://localhost:4200` (the development container or `npm start`).
+- Docker is running. Playwright uses `http://localhost:4200`, reusing the development container or starting `npm start` when needed.
 - The backend checkout is next to this one (`../ACM-Backend`), or `E2E_BACKEND_DIR` points to it.
 - Dependencies and Chromium are installed: `npm ci --legacy-peer-deps`, then `npx playwright install chromium`.
 - `.env.e2e` exists (git-ignored). Copy `.env.e2e.example` and set the admin username and password that the backend seed creates (`ACM-Backend/src/db/seed.ts`).
@@ -329,6 +329,8 @@ What a run does:
 2. The frontend still calls its usual API address (`http://localhost:5002`). The tests send every such browser request to the throwaway API instead, so the development API is not used.
 3. The `setup` project logs in once as admin, saves the session in `playwright/.auth/`, and creates one intern and one volunteer account with generated passwords.
 4. The global teardown removes the containers. The database and the uploaded files disappear with them.
+
+On Linux, if Docker image builds fail to resolve or reach the npm registry, set `E2E_BUILD_NETWORK=host` in `.env.e2e`. This only changes networking during the disposable backend image build; test containers keep their isolated network.
 
 Options (environment variables, also accepted in `.env.e2e`): `E2E_KEEP_STACK=1` keeps the throwaway API and database after the run to look at the data; `E2E_SKIP_STACK=1` starts nothing and uses the API at `E2E_API_URL`, which must already be seeded; `E2E_API_URL`, `E2E_APP_API_ORIGIN`, `E2E_BASE_URL` and `E2E_BACKEND_DIR` change the addresses and the backend checkout.
 

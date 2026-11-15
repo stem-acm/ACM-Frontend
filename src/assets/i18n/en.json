@@ -1,5 +1,6 @@
 {
   "ux": {
+    "selectPageMembers": "Select all members on this page",
     "loading": "Loading data…",
     "noAccounts": "No accounts yet.",
     "filterActivity": "Filter by activity",

@@ -7,7 +7,7 @@ const views = [
     name: 'members',
     url: '/members',
     endpoint: '/api/members',
-    columns: 6,
+    columns: 5,
     empty: 'No members yet.',
   },
   {

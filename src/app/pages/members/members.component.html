@@ -1,7 +1,7 @@
 <div class="acm-page">
-  <div class="flex justify-between items-center">
+  <div class="flex flex-wrap justify-between items-center gap-3">
     <h1 class="text-xl font-bold text-primary my-4">{{ 'pages.listOfMembers' | translate }}</h1>
-    <div class="flex gap-2">
+    <div class="flex flex-wrap justify-end gap-2">
       @if (auth.can('members.create')) {
         <button
           z-button
@@ -25,7 +25,7 @@
           {{ 'buttons.newMember' | translate }}
         </button>
       }
-      @if (auth.can('members.cards')) {
+      @if (auth.can('members.cards') && countMembersChooseList(true) > 0) {
         <button
           z-button
           zType="secondary"
@@ -65,45 +65,7 @@
           </svg>
           {{ 'cards.unselectAll' | translate }} ({{ countMembersChooseList(true) }})
         </button>
-        <button
-          z-button
-          zType="secondary"
-          type="button"
-          (click)="selectAll(true)"
-          class="acm-btn acm-btn--secondary text-gray-900 text-nowrap bg-gray-200 h-fit cursor-pointer hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2 text-center flex items-center gap-2 transition duration-300 ease-in-out"
-        >
-          <svg
-            class="h-6"
-            viewBox="0 0 24 24"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            fill="#000000"
-          >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-            <g id="SVGRepo_iconCarrier">
-              <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-              <title>ic_fluent_select_all_24_regular</title>
-              <desc>Created with Sketch.</desc>
-              <g
-                id="🔍-Product-Icons"
-                stroke="none"
-                stroke-width="1"
-                fill="none"
-                fill-rule="evenodd"
-              >
-                <g id="ic_fluent_select_all_24_regular" fill="#212121" fill-rule="nonzero">
-                  <path
-                    d="M20.4961766,5.62668182 C21.3720675,5.93447702 22,6.76890777 22,7.75 L22,17.75 C22,20.0972102 20.0972102,22 17.75,22 L7.75,22 C6.76890777,22 5.93447702,21.3720675 5.62668182,20.4961766 L7.72396188,20.4995565 L17.75,20.5 C19.2687831,20.5 20.5,19.2687831 20.5,17.75 L20.5,7.75 L20.4960194,7.69901943 L20.4961766,5.62668182 Z M17.246813,2 C18.4894537,2 19.496813,3.00735931 19.496813,4.25 L19.496813,17.246813 C19.496813,18.4894537 18.4894537,19.496813 17.246813,19.496813 L4.25,19.496813 C3.00735931,19.496813 2,18.4894537 2,17.246813 L2,4.25 C2,3.00735931 3.00735931,2 4.25,2 L17.246813,2 Z M17.246813,3.5 L4.25,3.5 C3.83578644,3.5 3.5,3.83578644 3.5,4.25 L3.5,17.246813 C3.5,17.6610266 3.83578644,17.996813 4.25,17.996813 L17.246813,17.996813 C17.6610266,17.996813 17.996813,17.6610266 17.996813,17.246813 L17.996813,4.25 C17.996813,3.83578644 17.6610266,3.5 17.246813,3.5 Z M9.58114564,11.3581942 L13.4696699,7.46966991 C13.7625631,7.1767767 14.2374369,7.1767767 14.5303301,7.46966991 C14.7965966,7.73593648 14.8208027,8.15260016 14.6029482,8.44621165 L14.5303301,8.53033009 L10.0303301,13.0303301 C9.73449239,13.3261678 9.26134027,13.3189471 8.97360394,13.0344464 L8.9,12.95 L7.4,10.95 C7.15147186,10.6186292 7.21862915,10.1485281 7.55,9.9 C7.85124623,9.67406533 8.26714548,9.7090277 8.52699676,9.96621555 L8.6,10.05 L9.58114564,11.3581942 L13.4696699,7.46966991 L9.58114564,11.3581942 Z"
-                    id="🎨-Color"
-                  ></path>
-                </g>
-              </g>
-            </g>
-          </svg>
-          {{ 'cards.selectAll' | translate }} ({{ countMembersChooseList(false) }})
-        </button>
+
         <button
           z-button
           type="button"
@@ -269,7 +231,6 @@
       <app-table-loading
         [data]="{
           columns: [
-            '#',
             'table.columns.name',
             'table.columns.occupation',
             'table.columns.placeOfWorkStudy',
@@ -310,6 +271,7 @@
         [volunteersList]="volunteers"
         (memberDeleted)="onMemberDeleted($event)"
         (memberSelectionChange)="onMemberSelectionChange($event)"
+        (pageSelectionChange)="setPageSelected($event)"
       />
 
       <!-- Pagination Controls -->

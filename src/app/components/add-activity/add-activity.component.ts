@@ -377,7 +377,7 @@ export class AddActivityComponent implements OnChanges, OnInit {
     const m = this.activity;
     const commonFields = m.name?.trim() && m.description && m.startTime && m.endTime;
 
-    if (!commonFields) return false;
+    if (!commonFields || m.name.length > 40) return false;
 
     if (m.isPeriodic) {
       return !!m.dayOfWeek;
@@ -388,6 +388,10 @@ export class AddActivityComponent implements OnChanges, OnInit {
 
   saveActivity() {
     this.submitted = true;
+    if (this.activity.name?.length > 40) {
+      this.loading = false;
+      return;
+    }
     this.loading = true;
     if (this.mode == 'insert') {
       this.insertActivity();

@@ -1,5 +1,6 @@
 {
   "ux": {
+    "activityNameMaxLength": "Le nom de l’activité ne doit pas dépasser 40 caractères.",
     "selectPageMembers": "Sélectionner tous les membres de cette page",
     "loading": "Chargement des données…",
     "noAccounts": "Aucun compte pour le moment.",

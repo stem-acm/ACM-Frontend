@@ -115,6 +115,83 @@ async function expectRowValues(page: Page, values: ActivityInput) {
 }
 
 test.describe('F6 Activities', () => {
+  for (const mode of ['create', 'edit'] as const) {
+    test(`activity names enforce the 40-character boundary on ${mode}`, async ({ page, api }) => {
+      const name = `Limit${uniqueSuffix()}`.padEnd(40, 'x').slice(0, 40);
+      const existing =
+        mode === 'edit' ? await api.createActivity({ name: `Before${uniqueSuffix()}` }) : null;
+      try {
+        await page.goto('/activity');
+        const title = mode === 'create' ? 'New Activity' : 'Update Activity';
+        if (existing) {
+          await searchBox(page).fill(existing.name);
+          await expect(showing(page, 1, 1, 1)).toBeVisible();
+          await activityRow(page, existing.name).getByRole('button', { name: 'Edit' }).click();
+        } else {
+          await page.getByRole('button', { name: 'New Activity' }).click();
+        }
+        await fillActivityForm(page, title, {
+          name,
+          description: 'Name limit',
+          dayOfWeek: 'tuesday',
+          startTime: '09:00',
+          endTime: '10:00',
+        });
+        const form = activityForm(page, title);
+        const input = form.getByLabel('Activity name');
+        const counter = form.locator('#activity-name-count');
+        await expect(counter).toHaveText('40/40');
+        await input.fill('');
+        await expect(counter).toHaveText('0/40');
+        await input.pressSequentially('Activity');
+        await expect(counter).toHaveText('8/40');
+        await input.press('Backspace');
+        await expect(counter).toHaveText('7/40');
+        await expect(input).toHaveAttribute('maxlength', '40');
+        await input.fill(name + 'x');
+        await expect(input).toHaveValue(name);
+        // Bypass the native cap to exercise validation of populated model values.
+        await input.evaluate((element, value) => {
+          const input = element as HTMLInputElement;
+          input.value = value;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        }, name + 'x');
+        await expect(counter).toHaveText('41/40');
+        await expect(input).toHaveAttribute('aria-invalid', 'true');
+        await expect(form.getByRole('status')).toHaveText(
+          'Activity name must be 40 characters or fewer.',
+        );
+        const writes: string[] = [];
+        page.on('request', request => {
+          if (
+            ['POST', 'PUT', 'PATCH'].includes(request.method()) &&
+            /\/api\/activities(?:\/\d+)?$/.test(new URL(request.url()).pathname)
+          )
+            writes.push(request.url());
+        });
+        // Direct submit also covers values that bypass native browser validation.
+        await form.evaluate(element =>
+          element.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })),
+        );
+        await expect(form).toBeVisible();
+        expect(writes).toEqual([]);
+        await input.fill(name);
+        await expect(form.getByRole('status')).toHaveCount(0);
+        await form
+          .getByRole('button', {
+            name: mode === 'create' ? 'Add activity' : 'Update activity',
+            exact: true,
+          })
+          .click();
+        await expect(form).toBeHidden();
+        expect(await findActivitiesByName(api, name)).toHaveLength(1);
+      } finally {
+        await deleteActivitiesByName(api, name);
+        if (existing) await api.deleteActivityIfExists(existing.id);
+      }
+    });
+  }
+
   test('F6.1 the list shows the activities, search and clear work, pagination moves to the next page and back', async ({
     page,
     api,

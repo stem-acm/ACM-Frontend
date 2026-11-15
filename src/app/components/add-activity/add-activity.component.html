@@ -22,6 +22,17 @@
         [(ngModel)]="activity.name"
         name="name"
         #activityName="ngModel"
+        maxlength="40"
+        [attr.aria-invalid]="
+          activity.name.length > 40 || (activityName.invalid && (activityName.touched || submitted))
+        "
+        [attr.aria-describedby]="
+          activity.name.length > 40
+            ? 'activity-name-count activity-name-length-error'
+            : activityName.hasError('required') && (activityName.touched || submitted)
+              ? 'activity-name-count activity-name-required-error'
+              : 'activity-name-count'
+        "
         [placeholder]="'placeholders.activityName' | translate"
         required
         [class.border-red-500]="activityName.invalid && (activityName.touched || submitted)"
@@ -29,10 +40,26 @@
         class="w-full p-2 text-sm border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       />
       <p
-        *ngIf="activityName.invalid && (activityName.touched || submitted)"
+        id="activity-name-count"
+        class="mt-1 text-right text-xs text-gray-500 dark:text-gray-400"
+        [class.text-red-500]="activity.name.length > 40"
+      >
+        {{ activity.name.length }}/40
+      </p>
+      <p
+        *ngIf="activityName.hasError('required') && (activityName.touched || submitted)"
+        id="activity-name-required-error"
         class="mt-1 text-xs text-red-500"
       >
-        This field is required.
+        {{ 'ux.requiredField' | translate }}
+      </p>
+      <p
+        *ngIf="activity.name.length > 40"
+        id="activity-name-length-error"
+        role="status"
+        class="mt-1 text-xs text-red-500"
+      >
+        {{ 'ux.activityNameMaxLength' | translate }}
       </p>
     </div>
 

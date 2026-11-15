@@ -1,5 +1,6 @@
 {
   "ux": {
+    "activityNameMaxLength": "Activity name must be 40 characters or fewer.",
     "selectPageMembers": "Select all members on this page",
     "loading": "Loading data…",
     "noAccounts": "No accounts yet.",

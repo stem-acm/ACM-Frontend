@@ -16,8 +16,12 @@
         class="acm-language"
       >
         @for (lang of languages; track lang.code) {
-          <option [value]="lang.code" [selected]="lang.code === currentLanguage">
-            {{ lang.name }}
+          <option
+            [value]="lang.code"
+            [selected]="lang.code === currentLanguage"
+            [attr.aria-label]="lang.name"
+          >
+            {{ lang.flag }}
           </option>
         }
       </select>

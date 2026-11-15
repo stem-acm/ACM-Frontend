@@ -293,12 +293,13 @@ h6 {
 }
 .acm-language {
   max-width: 125px;
+  min-height: 2.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid #dce3ef;
   border-radius: 0.65rem;
   color: #294b7c;
   background: #fff;
-  font-size: 0.8rem;
+  font-size: 1.25rem;
 }
 .acm-user-trigger {
   width: 2.5rem;

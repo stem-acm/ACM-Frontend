@@ -55,7 +55,7 @@ function languageSelect(page: Page, current: Language) {
 }
 
 async function switchLanguage(page: Page, from: Language, to: Language) {
-  await languageSelect(page, from).selectOption({ label: OPTION_LABELS[to] });
+  await languageSelect(page, from).selectOption(to);
 }
 
 /** Asserts every main menu label in the language, and none of the other language. */
@@ -88,6 +88,39 @@ async function openHomeInEnglish(page: Page) {
 }
 
 test.describe('F14 Language', () => {
+  for (const width of [1440, 390]) {
+    test(`flag-only language options remain accessible and keyboard operable at ${width}px`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.addInitScript(() => {
+        if (!sessionStorage.getItem('flag-test-started')) {
+          localStorage.setItem('acm-language', 'en');
+          sessionStorage.setItem('flag-test-started', '1');
+        }
+      });
+      await page.goto('/');
+      const select = languageSelect(page, 'en');
+      await expect(select).toBeVisible();
+      await expect(select.locator('option')).toHaveText(['🇺🇸', '🇫🇷', '🇲🇬']);
+      for (const language of ['en', 'fr', 'mg'] as Language[]) {
+        await expect(
+          select.getByRole('option', { name: OPTION_LABELS[language], exact: true }),
+        ).toHaveAttribute('value', language);
+      }
+      await select.focus();
+      await page.keyboard.press('ArrowDown');
+      await page.keyboard.press('Enter');
+      await expect(languageSelect(page, 'fr')).toHaveValue('fr');
+      await expect.poll(() => page.evaluate(() => localStorage.getItem('acm-language'))).toBe('fr');
+      await page.reload();
+      await expect(languageSelect(page, 'fr')).toHaveValue('fr');
+      await expect(languageSelect(page, 'fr').locator('option:checked')).toHaveText('🇫🇷');
+      await switchLanguage(page, 'fr', 'mg');
+      await expect(languageSelect(page, 'mg').locator('option:checked')).toHaveText('🇲🇬');
+    });
+  }
+
   test('F14.1 switching to French, Malagasy then English translates the navbar labels', async ({
     page,
   }) => {

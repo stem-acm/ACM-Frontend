@@ -31,9 +31,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   public showExperimentalFeatures = environment.SHOW_EXPERIMENTAL_FEATURES;
   public currentLanguage = 'en';
   public languages = [
-    { code: 'en', name: 'English' },
-    { code: 'fr', name: 'Français' },
-    { code: 'mg', name: 'Malagasy' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'mg', name: 'Malagasy', flag: '🇲🇬' },
   ];
 
   auth = inject(AuthService);

@@ -234,8 +234,12 @@ export class MembersComponent implements OnInit {
   // Selection Logic
   selectAll(select: boolean) {
     if (!select) this.selectedMembers.clear();
-    this.membersChooseList.forEach(e => {
-      this.onMemberSelectionChange({ member: e.member, selected: select });
+    this.setPageSelected(select);
+  }
+
+  setPageSelected(selected: boolean): void {
+    this.membersChooseList.forEach(item => {
+      this.onMemberSelectionChange({ member: item.member, selected });
     });
   }
 

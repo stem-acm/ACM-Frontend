@@ -1,7 +1,17 @@
 @if (data.length === 0) {
   <app-table-empty message="ux.noMembers" />
 } @else {
-  <div class="md:hidden mb-2">
+  <div class="md:hidden mb-2 flex items-center gap-3">
+    @if (auth.can('members.cards')) {
+      <input
+        type="checkbox"
+        [checked]="allPageSelected"
+        [indeterminate]="somePageSelected"
+        (change)="selectPage($event)"
+        [attr.aria-label]="'ux.selectPageMembers' | translate"
+        class="w-4 h-4 shrink-0 accent-primary cursor-pointer"
+      />
+    }
     <app-table-sort
       label="table.columns.name"
       [direction]="sortDirection"
@@ -73,13 +83,24 @@
   <table z-table zSize="comfortable" class="acm-data-table hidden md:table">
     <thead z-table-header>
       <tr z-table-row>
-        <th z-table-head scope="col">#</th>
         <th z-table-head scope="col" [attr.aria-sort]="sortDirection">
-          <app-table-sort
-            label="table.columns.name"
-            [direction]="sortDirection"
-            (sortChange)="sortChange.emit()"
-          />
+          <span class="inline-flex items-center gap-3">
+            @if (auth.can('members.cards')) {
+              <input
+                type="checkbox"
+                [checked]="allPageSelected"
+                [indeterminate]="somePageSelected"
+                (change)="selectPage($event)"
+                [attr.aria-label]="'ux.selectPageMembers' | translate"
+                class="w-4 h-4 shrink-0 accent-primary cursor-pointer"
+              />
+            }
+            <app-table-sort
+              label="table.columns.name"
+              [direction]="sortDirection"
+              (sortChange)="sortChange.emit()"
+            />
+          </span>
         </th>
         <th z-table-head scope="col">{{ 'table.columns.occupation' | translate }}</th>
         <th z-table-head scope="col">{{ 'table.columns.placeOfWorkStudy' | translate }}</th>
@@ -90,31 +111,40 @@
     <tbody z-table-body>
       @for (item of data; track item.member.registrationNumber) {
         <tr z-table-row>
-          <td z-table-cell class="capitalize">
-            @if (auth.can('members.cards')) {
-              <input
-                [id]="item.member.registrationNumber"
-                type="checkbox"
-                [checked]="item.selected"
-                (change)="onCheckboxChange($event, item.member)"
-                name="bordered-checkbox"
-                class="w-4 h-4 text-primary bg-primary border-gray-300 rounded-sm focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-            }
-          </td>
           <th z-table-cell scope="row" class="acm-person-cell">
-            <img
-              class="w-10 h-10 rounded-full"
-              [src]="getfileUrl(item.member.profileImage)"
-              (error)="onImageError($event)"
-              [alt]="item.member.lastName"
-            />
-            <div class="ps-3">
-              <div class="text-base font-semibold">
-                {{ item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName }}
-              </div>
-              <div class="font-normal text-gray-500">{{ item.member.registrationNumber }}</div>
-            </div>
+            <span class="inline-flex items-center gap-3">
+              @if (auth.can('members.cards')) {
+                <input
+                  [id]="item.member.registrationNumber"
+                  type="checkbox"
+                  [checked]="item.selected"
+                  (change)="onCheckboxChange($event, item.member)"
+                  [attr.aria-label]="
+                    ('ux.selectMember' | translate) +
+                    ' ' +
+                    item.member.firstName +
+                    ' ' +
+                    item.member.lastName
+                  "
+                  class="w-4 h-4 text-primary bg-primary border-gray-300 rounded-sm focus:ring-primary/30 dark:focus:ring-primary/40 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                />
+              }
+
+              <img
+                class="w-10 h-10 rounded-full"
+                [src]="getfileUrl(item.member.profileImage)"
+                (error)="onImageError($event)"
+                [alt]="item.member.lastName"
+              />
+              <span>
+                <span class="block text-base font-semibold">
+                  {{ item.member.lastName.toString().toUpperCase() + ' ' + item.member.firstName }}
+                </span>
+                <span class="block font-normal text-gray-500">{{
+                  item.member.registrationNumber
+                }}</span>
+              </span>
+            </span>
           </th>
           <td z-table-cell class="capitalize">
             {{ item.member.occupation }}

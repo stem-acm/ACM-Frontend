@@ -43,6 +43,19 @@ export class TableMembersComponent {
   @Input() volunteersList: Volunteer[] = [];
 
   @Output() memberDeleted = new EventEmitter<number>();
+  @Output() pageSelectionChange = new EventEmitter<boolean>();
+
+  get allPageSelected(): boolean {
+    return this.data.length > 0 && this.data.every(item => item.selected);
+  }
+
+  get somePageSelected(): boolean {
+    return !this.allPageSelected && this.data.some(item => item.selected);
+  }
+
+  selectPage(event: Event): void {
+    this.pageSelectionChange.emit((event.target as HTMLInputElement).checked);
+  }
 
   private translateService = inject(TranslateService);
   private memberService = inject(MemberService);

@@ -255,6 +255,9 @@ test.describe('F6 Activities', () => {
     try {
       await page.goto('/activity');
       await searchBox(page).fill(activity.name);
+      // This row also exists before filtering. Wait for the debounced reload,
+      // which otherwise destroys the table's open confirmation dialog.
+      await expect(showing(page, 1, 1, 1)).toBeVisible();
       const row = activityRow(page, activity.name);
       await expect(row).toHaveCount(1);
 

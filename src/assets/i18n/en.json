@@ -288,8 +288,10 @@
     "title": "Time zone",
     "description": "Check-in times and opening hours are read in this time zone.",
     "label": "Time zone",
+    "placeholder": "Start typing, e.g. Antananarivo",
     "discard": "Discard",
     "save": "Save",
+    "invalid": "Choose a valid time zone from the list.",
     "saved": "Time zone updated"
   },
   "checkinSchedule": {

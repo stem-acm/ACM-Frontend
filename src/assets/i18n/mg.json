@@ -288,8 +288,10 @@
     "title": "Faritry ny ora",
     "description": "Amin'ity faritry ny ora ity no amakiana ny ora fisoratana sy ny ora fisokafana.",
     "label": "Faritry ny ora",
+    "placeholder": "Manomboha manoratra, ohatra Antananarivo",
     "discard": "Hanafoana",
     "save": "Hitahiry",
+    "invalid": "Mifidiana faritry ny ora marina ao amin'ny lisitra.",
     "saved": "Voatahiry ny faritry ny ora"
   },
   "checkinSchedule": {

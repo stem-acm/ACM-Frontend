@@ -565,10 +565,24 @@ test.describe('F11 Settings', () => {
       await tabs.getByRole('button', { name: 'General' }).click();
       await expect(page.getByRole('heading', { name: 'Time zone', level: 2 })).toBeVisible();
 
-      const select = page.getByLabel('Time zone');
-      await expect(select).toHaveValue(original);
-      await expect(select.locator('option:checked')).toHaveText(`${original} (UTC+03:00)`);
-      await select.selectOption('UTC');
+      const input = page.getByRole('combobox', { name: 'Time zone' });
+      await expect(input).toHaveValue(original);
+      await expect(page.locator('#timezone-hint')).toHaveText('UTC+03:00');
+
+      // A name that is not a real time zone is refused and Save stays disabled.
+      await input.fill('Mars/Olympus_Mons');
+      await expect(
+        page.getByRole('alert').filter({ hasText: 'Choose a valid time zone from the list.' }),
+      ).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
+
+      // Typing suggests matching names; one is chosen from the list.
+      await input.fill('utc');
+      await page
+        .getByRole('listbox', { name: 'Time zone' })
+        .getByRole('option', { name: /^UTC\b/ })
+        .click();
+      await expect(input).toHaveValue('UTC');
       await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
       await page.getByRole('button', { name: 'Save', exact: true }).click();
       await expect(page.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
@@ -587,7 +601,11 @@ test.describe('F11 Settings', () => {
 
       // Restore it from the General tab.
       await tabs.getByRole('button', { name: 'General' }).click();
-      await select.selectOption(original);
+      // Typed with the keyboard: the first suggestion is chosen with ArrowDown and Enter.
+      await input.fill(original.split('/').pop()!);
+      await input.press('ArrowDown');
+      await input.press('Enter');
+      await expect(input).toHaveValue(original);
       await page.getByRole('button', { name: 'Save', exact: true }).click();
       await expect(page.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
       expect(await api.getTimezone()).toBe(original);

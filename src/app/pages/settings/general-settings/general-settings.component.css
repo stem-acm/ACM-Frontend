@@ -13,3 +13,67 @@
   justify-content: flex-end;
   gap: 0.6rem;
 }
+.general-timezone-field {
+  display: grid;
+  gap: 0.4rem;
+}
+.general-timezone-field label {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #294b7c;
+}
+.general-timezone-combobox {
+  position: relative;
+}
+.general-timezone-combobox input {
+  height: 2rem;
+  width: 100%;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--input);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+.general-timezone-combobox input[aria-invalid='true'] {
+  border-color: #b92334;
+}
+.general-timezone-suggestions {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 0.2rem);
+  left: 0;
+  right: 0;
+  max-height: 16rem;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+  box-shadow: 0 14px 34px rgb(20 46 90 / 18%);
+}
+.general-timezone-suggestions button {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
+  background: transparent;
+  text-align: left;
+}
+.general-timezone-suggestions button:last-child {
+  border-bottom: 0;
+}
+.general-timezone-suggestions button:hover,
+.general-timezone-suggestions button.active {
+  background: var(--secondary);
+}
+.general-timezone-suggestions span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.general-timezone-suggestions small,
+.general-timezone-hint {
+  color: var(--muted-foreground);
+  font-size: 0.76rem;
+}

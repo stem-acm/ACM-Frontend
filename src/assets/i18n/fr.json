@@ -288,8 +288,10 @@
     "title": "Fuseau horaire",
     "description": "Les heures d'enregistrement et d'ouverture sont lues dans ce fuseau horaire.",
     "label": "Fuseau horaire",
+    "placeholder": "Commencez à taper, ex. Antananarivo",
     "discard": "Annuler",
     "save": "Enregistrer",
+    "invalid": "Choisissez un fuseau horaire valide dans la liste.",
     "saved": "Fuseau horaire mis à jour"
   },
   "checkinSchedule": {

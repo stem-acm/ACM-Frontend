@@ -241,11 +241,13 @@ describe('SettingsComponent', () => {
     await fixture.whenStable();
     fixture.detectChanges();
 
-    const select = () =>
-      element.querySelector<HTMLSelectElement>('app-general-settings select[name="timezone"]')!;
-    expect(select().value).toBe('Indian/Antananarivo');
-    select().value = 'UTC';
-    select().dispatchEvent(new Event('change'));
+    const input = () =>
+      element.querySelector<HTMLInputElement>('app-general-settings input[name="timezone"]')!;
+    expect(input().value).toBe('Indian/Antananarivo');
+    input().value = 'UTC';
+    input().dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    await fixture.whenStable();
     fixture.detectChanges();
     expect(component.generalDirty).toBeTrue();
     expect(component.hasUnsavedChanges).toBeTrue();
@@ -260,7 +262,7 @@ describe('SettingsComponent', () => {
     fixture.detectChanges();
     expect(general.hidden).toBeFalse();
     http.expectNone(request => request.url.endsWith('/settings/timezone'));
-    expect(select().value).toBe('UTC');
+    expect(input().value).toBe('UTC');
 
     const confirm = spyOn(window, 'confirm').and.returnValue(false);
     expect(component.canLeave()).toBeFalse();

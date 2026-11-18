@@ -32,14 +32,62 @@
       }
 
       <div class="access-fields general-fields">
-        <label>
-          {{ 'generalSettings.label' | translate }}
-          <select name="timezone" [(ngModel)]="timezone" (ngModelChange)="changed()">
-            @for (option of options; track option.name) {
-              <option [value]="option.name">{{ option.label }}</option>
+        <div class="general-timezone-field">
+          <label for="timezone-input">{{ 'generalSettings.label' | translate }}</label>
+          <div class="general-timezone-combobox">
+            <input
+              id="timezone-input"
+              name="timezone"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="timezone-suggestions"
+              [attr.aria-expanded]="suggestionsOpen && suggestions.length > 0"
+              [attr.aria-activedescendant]="activeId"
+              [attr.aria-invalid]="invalid"
+              [attr.aria-describedby]="invalid ? 'timezone-error' : 'timezone-hint'"
+              [placeholder]="'generalSettings.placeholder' | translate"
+              [(ngModel)]="timezone"
+              (input)="typed()"
+              (focus)="openSuggestions()"
+              (blur)="blurred()"
+              (keydown)="keydown($event)"
+            />
+            @if (suggestionsOpen && suggestions.length > 0) {
+              <div
+                id="timezone-suggestions"
+                class="general-timezone-suggestions"
+                role="listbox"
+                [attr.aria-label]="'generalSettings.label' | translate"
+              >
+                @for (option of suggestions; track option.name; let i = $index) {
+                  <button
+                    type="button"
+                    role="option"
+                    tabindex="-1"
+                    [id]="'timezone-option-' + i"
+                    [class.active]="i === activeIndex"
+                    [attr.aria-selected]="i === activeIndex"
+                    (mousedown)="$event.preventDefault()"
+                    (click)="choose(option)"
+                  >
+                    <span>{{ option.name }}</span>
+                    <small>{{ option.offset }}</small>
+                  </button>
+                }
+              </div>
             }
-          </select>
-        </label>
+          </div>
+          @if (invalid) {
+            <small id="timezone-error" class="access-field-error" role="alert">
+              {{ 'generalSettings.invalid' | translate }}
+            </small>
+          } @else if (match) {
+            <small id="timezone-hint" class="general-timezone-hint">{{ match.offset }}</small>
+          }
+        </div>
       </div>
 
       <div class="general-settings-actions">
@@ -57,7 +105,7 @@
           z-button
           class="acm-btn acm-btn--primary"
           type="button"
-          [zDisabled]="!dirty || saving"
+          [zDisabled]="!dirty || invalid || saving"
           [zLoading]="saving"
           (click)="save()"
         >

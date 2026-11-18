@@ -6,10 +6,19 @@ import { timeZoneNames, zoneOffsetLabel } from '@/app/utils/checkin-schedule.uti
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCardComponent } from '@/shared/components/card';
 
-interface TimeZoneOption {
+export interface TimeZoneOption {
   name: string;
-  /** "Indian/Antananarivo (UTC+03:00)" */
-  label: string;
+  /** "UTC+03:00" */
+  offset: string;
+  /** Lowercase name with "_" and "/" as spaces, for the search. */
+  search: string;
+}
+
+/** Most suggestions shown under the input. */
+export const MAX_TIMEZONE_SUGGESTIONS = 8;
+
+function searchKey(text: string): string {
+  return text.toLowerCase().replace(/[_/]+/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 /** The "General" tab of Settings: the time zone of the app. */
@@ -27,11 +36,18 @@ export class GeneralSettingsComponent implements OnInit {
   @Output() dirtyChange = new EventEmitter<boolean>();
 
   state: 'loading' | 'ready' | 'error' = 'loading';
-  /** The time zone chosen in the form. */
+  /** The text typed in the time zone input. */
   timezone = '';
   private saved = '';
   private lastDirty = false;
+  /** Every valid time zone: the browser list, plus UTC and the stored value. */
   options: TimeZoneOption[] = [];
+  private byName = new Map<string, TimeZoneOption>();
+  /** Suggestions for the current text. */
+  suggestions: TimeZoneOption[] = [];
+  suggestionsOpen = false;
+  /** Index of the suggestion chosen with the arrow keys, -1 when none. */
+  activeIndex = -1;
   saving = false;
   message = '';
   error = '';
@@ -40,8 +56,21 @@ export class GeneralSettingsComponent implements OnInit {
     this.load();
   }
 
+  /** The valid time zone that the text names (case does not matter), or `null`. */
+  get match(): TimeZoneOption | null {
+    return this.byName.get(this.timezone.trim().toLowerCase()) ?? null;
+  }
+
+  get invalid(): boolean {
+    return this.state === 'ready' && this.match === null;
+  }
+
   get dirty(): boolean {
-    return this.state === 'ready' && this.timezone !== this.saved;
+    return this.state === 'ready' && this.timezone.trim() !== this.saved;
+  }
+
+  get activeId(): string | null {
+    return this.activeIndex >= 0 ? `timezone-option-${this.activeIndex}` : null;
   }
 
   load(): void {
@@ -52,6 +81,58 @@ export class GeneralSettingsComponent implements OnInit {
         this.state = 'error';
       },
     });
+  }
+
+  /** Called on each keystroke in the input. */
+  typed(): void {
+    this.suggest();
+    this.suggestionsOpen = true;
+    this.changed();
+  }
+
+  /** Opens the suggestions for the current text. */
+  openSuggestions(): void {
+    this.suggest();
+    this.suggestionsOpen = true;
+  }
+
+  closeSuggestions(): void {
+    this.suggestionsOpen = false;
+    this.activeIndex = -1;
+  }
+
+  /** On blur: closes the list and writes a valid name with its exact case. */
+  blurred(): void {
+    this.closeSuggestions();
+    const match = this.match;
+    if (match && match.name !== this.timezone) {
+      this.timezone = match.name;
+      this.changed();
+    }
+  }
+
+  keydown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (!this.suggestionsOpen) this.openSuggestions();
+      const count = this.suggestions.length;
+      if (count === 0) return;
+      const step = event.key === 'ArrowDown' ? 1 : -1;
+      this.activeIndex = (this.activeIndex + step + count) % count;
+    } else if (event.key === 'Enter') {
+      if (this.suggestionsOpen && this.activeIndex >= 0) {
+        event.preventDefault();
+        this.choose(this.suggestions[this.activeIndex]);
+      }
+    } else if (event.key === 'Escape') {
+      this.closeSuggestions();
+    }
+  }
+
+  choose(option: TimeZoneOption): void {
+    this.timezone = option.name;
+    this.closeSuggestions();
+    this.changed();
   }
 
   /** Called by each change of the form. */
@@ -67,14 +148,17 @@ export class GeneralSettingsComponent implements OnInit {
   discard(): void {
     this.timezone = this.saved;
     this.error = '';
+    this.closeSuggestions();
     this.changed();
   }
 
   save(): void {
-    if (!this.dirty || this.saving) return;
+    const match = this.match;
+    if (!this.dirty || this.saving || !match) return;
     this.saving = true;
     this.error = '';
-    this.service.saveTimezone(this.timezone).subscribe({
+    this.closeSuggestions();
+    this.service.saveTimezone(match.name).subscribe({
       next: result => {
         this.saving = false;
         this.reset(result.data.timezone);
@@ -88,6 +172,21 @@ export class GeneralSettingsComponent implements OnInit {
     });
   }
 
+  /** Names that contain every word typed, names that start with the text first. */
+  private suggest(): void {
+    this.activeIndex = -1;
+    const query = searchKey(this.timezone);
+    if (!query) {
+      this.suggestions = this.options.slice(0, MAX_TIMEZONE_SUGGESTIONS);
+      return;
+    }
+    const words = query.split(' ');
+    const found = this.options.filter(option => words.every(word => option.search.includes(word)));
+    const starts = found.filter(option => option.search.startsWith(query));
+    const others = found.filter(option => !option.search.startsWith(query));
+    this.suggestions = [...starts, ...others].slice(0, MAX_TIMEZONE_SUGGESTIONS);
+  }
+
   private reset(timezone: string): void {
     this.saved = timezone;
     this.timezone = timezone;
@@ -95,8 +194,12 @@ export class GeneralSettingsComponent implements OnInit {
     const now = new Date();
     this.options = timeZoneNames(timezone).map(name => ({
       name,
-      label: `${name} (${zoneOffsetLabel(name, now)})`,
+      offset: zoneOffsetLabel(name, now),
+      search: searchKey(name),
     }));
+    this.byName = new Map(this.options.map(option => [option.name.toLowerCase(), option]));
+    this.suggestions = [];
+    this.closeSuggestions();
     this.state = 'ready';
     this.changed();
   }

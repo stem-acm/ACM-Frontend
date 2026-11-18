@@ -24,6 +24,37 @@ describe('Stepper', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('activities of the day (#146)', () => {
+    const periodic = (id: number, dayOfWeek: string) =>
+      ({ id, name: `A${id}`, isPeriodic: true, dayOfWeek }) as unknown as Activity;
+    const dated = (id: number, startDate: string, endDate: string) =>
+      ({ id, name: `D${id}`, isPeriodic: false, startDate, endDate }) as unknown as Activity;
+    // Wednesday 2026-11-18 21:37 in Mahajanga is Thursday 2026-11-19 08:37 in Kiritimati.
+    const now = new Date('2026-11-18T18:37:00Z');
+    const list = [
+      periodic(1, 'wednesday'),
+      periodic(2, 'thursday'),
+      dated(3, '2026-11-18', '2026-11-18'),
+      dated(4, '2026-11-19', '2026-11-20'),
+    ];
+
+    it('uses the day and the date in the time zone of the app', () => {
+      fixture.componentRef.setInput('timeZone', 'Pacific/Kiritimati');
+      expect(component.filterActivitiesByCurrentDay(list, now).map(a => a.id)).toEqual([2, 4]);
+      fixture.componentRef.setInput('timeZone', 'Indian/Antananarivo');
+      expect(component.filterActivitiesByCurrentDay(list, now).map(a => a.id)).toEqual([1, 3]);
+    });
+
+    it('chooses the activities again when the time zone changes', () => {
+      fixture.componentRef.setInput('timeZone', 'Indian/Antananarivo');
+      fixture.detectChanges();
+      const spy = spyOn(component, 'getActivities');
+      fixture.componentRef.setInput('timeZone', 'Pacific/Kiritimati');
+      fixture.detectChanges();
+      expect(spy).toHaveBeenCalled();
+    });
+  });
   for (const end of ['12:00', '18:00', '16:00']) {
     const hour = Number(end.slice(0, 2));
 

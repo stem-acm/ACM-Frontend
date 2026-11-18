@@ -25,7 +25,7 @@ import { SseService } from '@/app/services/sse.service';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { ScheduleSlot } from '@/app/interfaces/checkin-schedule';
-import { zoneHourMinute, zoneTimeOfDay } from '@/app/utils/checkin-schedule.util';
+import { zoneDate, zoneHourMinute, zoneTimeOfDay } from '@/app/utils/checkin-schedule.util';
 
 interface ActivityToDisplay {
   id: number;
@@ -86,7 +86,19 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
   selectedTime = { hour: 18, minute: 0 };
 
   weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  today = this.weekday[new Date().getDay()];
+
+  /**
+   * The day of the week and the `YYYY-MM-DD` date of today in the time zone of the app.
+   * Without a time zone, the device clock is used.
+   */
+  today(now = new Date()): { day: string; date: string } {
+    if (this.timeZone) return zoneDate(now, this.timeZone);
+    const pad = (value: number) => String(value).padStart(2, '0');
+    return {
+      day: this.weekday[now.getDay()],
+      date: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
+    };
+  }
 
   dateToday = new Date();
   currentHour = new Date(Date.now()).getHours();
@@ -126,6 +138,8 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['timeZone']) this.refreshNow();
+    // A new time zone can change the day: choose the activities of the day again.
+    if (changes['timeZone'] && !changes['timeZone'].firstChange) this.getActivities();
     if (changes['slot'] || changes['timeZone']) this.setTimeInput();
   }
 
@@ -205,35 +219,15 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  filterActivitiesByCurrentDay(activities: Activity[]): Activity[] {
-    const today = new Date();
-    const todayDayOfWeek = this.today as DayOfWeek;
-
-    const filtered = activities.filter(activity => {
-      if (activity.isPeriodic) {
-        // For periodic activities, check if dayOfWeek matches today
-        const matches = activity.dayOfWeek === todayDayOfWeek;
-        return matches;
-      } else {
-        // For non-periodic activities, check if today falls within the date range
-        if (!activity.startDate || !activity.endDate) {
-          return false;
-        }
-
-        const startDate = new Date(activity.startDate);
-        const endDate = new Date(activity.endDate);
-
-        // Reset time to compare only dates
-        today.setHours(0, 0, 0, 0);
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(0, 0, 0, 0);
-
-        const inRange = today >= startDate && today <= endDate;
-        return inRange;
-      }
+  /** The activities of today, in the time zone of the app. */
+  filterActivitiesByCurrentDay(activities: Activity[], now = new Date()): Activity[] {
+    const { day, date } = this.today(now);
+    return activities.filter(activity => {
+      if (activity.isPeriodic) return activity.dayOfWeek === (day as DayOfWeek);
+      if (!activity.startDate || !activity.endDate) return false;
+      // The API gives `YYYY-MM-DD` dates, which compare in the same order as texts.
+      return date >= activity.startDate.slice(0, 10) && date <= activity.endDate.slice(0, 10);
     });
-
-    return filtered;
   }
 
   setTimeInput() {

@@ -14,6 +14,7 @@ import {
   zoneDayAndSeconds,
   zoneHourMinute,
   zoneOffsetLabel,
+  zoneDate,
   zoneTimeOfDay,
 } from './checkin-schedule.util';
 
@@ -97,6 +98,18 @@ describe('checkin-schedule util', () => {
     expect(formatDaySchedule(defaultSchedule().monday)).toBe('08:00–12:00, 15:00–18:00');
     expect(formatDaySchedule(closed())).toBeNull();
     expect(formatDaySchedule(null)).toBeNull();
+  });
+
+  describe('zoneDate', () => {
+    it('gives the day and the date in the time zone', () => {
+      // Wednesday 18:37 UTC is Wednesday in Mahajanga and Thursday in Kiritimati (UTC+14).
+      const now = new Date('2026-11-18T18:37:00Z');
+      expect(zoneDate(now, MAHAJANGA)).toEqual({ day: 'wednesday', date: '2026-11-18' });
+      expect(zoneDate(now, 'Pacific/Kiritimati')).toEqual({
+        day: 'thursday',
+        date: '2026-11-19',
+      });
+    });
   });
 
   describe('openingState', () => {

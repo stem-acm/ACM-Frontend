@@ -107,6 +107,16 @@ export function zoneDayAndSeconds(
   return { dayIndex, seconds: p.hour * 3600 + p.minute * 60 + p.second };
 }
 
+/** The day of the week and the `YYYY-MM-DD` date of an instant in a time zone. */
+export function zoneDate(now: Date, timeZone: string): { day: CheckinDay; date: string } {
+  const p = zoneParts(now, timeZone);
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return {
+    day: p.weekday.toLowerCase() as CheckinDay,
+    date: `${p.year}-${pad(p.month)}-${pad(p.day)}`,
+  };
+}
+
 /** The hour and the minute of an instant in a time zone. */
 export function zoneHourMinute(now: Date, timeZone: string): { hour: number; minute: number } {
   const p = zoneParts(now, timeZone);

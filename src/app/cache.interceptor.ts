@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { HttpCacheService } from './services/http-cache.service';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { BACKGROUND_REQUEST } from './services/member-photo.service';
 
 function shouldSkipCache(url: string): boolean {
   return url.includes('/auth/');
@@ -31,6 +32,8 @@ export const cacheInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn,
 ) => {
+  if (req.context.get(BACKGROUND_REQUEST)) return next(req);
+
   const cache = inject(HttpCacheService);
   const url = req.urlWithParams;
 

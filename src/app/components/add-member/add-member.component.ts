@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Title } from '@/app/types/title';
 import { environment } from '@/environments/environment';
+import { MemberPhotoService } from '@/app/services/member-photo.service';
 
 @Component({
   selector: 'app-add-member',
@@ -70,12 +71,13 @@ export class AddMemberComponent implements OnChanges, OnInit, OnDestroy {
   private memberService = inject(MemberService);
   private translate = inject(TranslateService);
   private ngZone = inject(NgZone);
+  private memberPhotos = inject(MemberPhotoService);
 
   ngOnInit() {
     if (this.mode == 'update') {
       this.member = { ...this.memberToUpdate };
       this.setTitle(this.member.title);
-      this.photoPreviewUrl = this.getPhotoUrl(this.member.profileImage);
+      this.showStoredPhoto(this.member.profileImage);
     } else {
       this.member = {
         registrationNumber: null,
@@ -131,7 +133,7 @@ export class AddMemberComponent implements OnChanges, OnInit, OnDestroy {
       this.member = { ...this.memberToUpdate };
       this.setTitle(this.member.title);
       this.resetPhotoSelection();
-      this.photoPreviewUrl = this.getPhotoUrl(this.member.profileImage);
+      this.showStoredPhoto(this.member.profileImage);
     }
   }
 
@@ -228,6 +230,16 @@ export class AddMemberComponent implements OnChanges, OnInit, OnDestroy {
     this.photoPreviewUrl = this.objectUrl;
     this.removeCurrentPhoto = false;
     this.cameraError = '';
+  }
+
+  private showStoredPhoto(reference?: string): void {
+    this.photoPreviewUrl = '';
+    const url = this.getPhotoUrl(reference);
+    if (!url) return;
+    // The API needs the token to give the photo: show it from a blob URL.
+    this.memberPhotos.load(url).subscribe(src => {
+      if (!this.selectedPhoto && !this.removeCurrentPhoto) this.photoPreviewUrl = src;
+    });
   }
 
   private getPhotoUrl(reference?: string): string {

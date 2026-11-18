@@ -22,6 +22,7 @@ import { HttpResult } from '@/app/types/httpResult';
 import { Router } from '@angular/router';
 import { AuthService } from '@/app/services/auth.service';
 import { CapitalizePipe } from '@/app/pipes/capitalize.pipe';
+import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
 
 @Component({
   selector: 'app-member-card-detail',
@@ -39,6 +40,7 @@ import { CapitalizePipe } from '@/app/pipes/capitalize.pipe';
     TranslateModule,
     ModalAlertComponent,
     CapitalizePipe,
+    MemberPhotoPipe,
   ],
   templateUrl: './member-card-detail.component.html',
   styleUrl: './member-card-detail.component.css',

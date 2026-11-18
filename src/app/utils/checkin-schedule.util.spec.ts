@@ -181,6 +181,18 @@ describe('checkin-schedule util', () => {
       });
     });
 
+    it('counts the real seconds across a daylight saving time change (#149)', () => {
+      // Sunday opens at 08:00 in Paris.
+      // 2027-03-28 the clocks go forward: Saturday 20:00 CET to Sunday 08:00 CEST is 11 h.
+      expect(
+        openingState(defaultSchedule(), new Date('2027-03-27T19:00:00Z'), 'Europe/Paris'),
+      ).toEqual({ open: false, secondsUntilOpening: 11 * 3600 });
+      // 2026-10-25 the clocks go back: Saturday 20:00 CEST to Sunday 08:00 CET is 13 h.
+      expect(
+        openingState(defaultSchedule(), new Date('2026-10-24T18:00:00Z'), 'Europe/Paris'),
+      ).toEqual({ open: false, secondsUntilOpening: 13 * 3600 });
+    });
+
     it('has no next opening when every day is closed', () => {
       const schedule = normalizeSchedule({
         monday: closed(),

@@ -93,6 +93,21 @@ export interface Activity extends Partial<Omit<ActivityInput, 'name'>> {
   name: string;
 }
 
+export type ScheduleDay =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
+
+/** The check-in schedule as GET /api/settings/checkin-schedule returns it. */
+export type CheckinSchedule = Record<
+  ScheduleDay,
+  { open: boolean; slots: { start: string; end: string }[] }
+>;
+
 export interface Checkin {
   id: number;
   registrationNumber: number;
@@ -409,6 +424,15 @@ export class ApiHelper {
     policy: { active: boolean; permissions: Record<string, boolean> },
   ) {
     return this.put<RolePolicy>(`settings/roles/${role}`, policy);
+  }
+
+  async getCheckinSchedule(): Promise<CheckinSchedule> {
+    return this.get<CheckinSchedule>('settings/checkin-schedule');
+  }
+
+  /** PUT /api/settings/checkin-schedule: replaces the whole schedule. */
+  async saveCheckinSchedule(schedule: CheckinSchedule): Promise<CheckinSchedule> {
+    return this.put<CheckinSchedule>('settings/checkin-schedule', schedule);
   }
 }
 

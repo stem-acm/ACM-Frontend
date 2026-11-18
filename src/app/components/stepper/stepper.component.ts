@@ -3,10 +3,13 @@ import {
   Component,
   EventEmitter,
   inject,
+  Input,
   Output,
   HostListener,
+  OnChanges,
   OnInit,
   OnDestroy,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScannerComponent } from '../scanner/scanner.component';
@@ -21,6 +24,7 @@ import { Checkin } from '@/app/interfaces/checkin';
 import { SseService } from '@/app/services/sse.service';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
+import { ScheduleSlot } from '@/app/interfaces/checkin-schedule';
 
 interface ActivityToDisplay {
   id: number;
@@ -42,8 +46,10 @@ interface ActivityToDisplay {
   templateUrl: './stepper.component.html',
   styleUrls: ['./stepper.component.css'],
 })
-export class StepperComponent implements OnInit, OnDestroy {
+export class StepperComponent implements OnInit, OnChanges, OnDestroy {
   @Output() emiterToast = new EventEmitter<string>();
+  /** The check-in slot open now: the leaving time cannot be after its end. */
+  @Input() slot: ScheduleSlot | null = null;
 
   icon = '🔎';
 
@@ -74,7 +80,6 @@ export class StepperComponent implements OnInit, OnDestroy {
   selectedTime = { hour: 18, minute: 0 };
 
   weekday = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-  normalWeekDay = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
   today = this.weekday[new Date().getDay()];
 
   dateToday = new Date();
@@ -84,15 +89,28 @@ export class StepperComponent implements OnInit, OnDestroy {
   hours: number[] | undefined;
   minutes = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
+  /** The end of the open slot as hour and minute, or `null` without a slot. */
+  get slotEnd(): { hour: number; minute: number } | null {
+    if (!this.slot) return null;
+    const [hour, minute] = this.slot.end.split(':').map(Number);
+    return { hour, minute };
+  }
+
   get availableMinutes(): number[] {
-    const closingHours = this.today === 'saturday' ? [16] : [12, 18];
-    return closingHours.includes(this.selectedTime.hour) ? [0] : this.minutes;
+    const end = this.slotEnd;
+    if (!end || this.selectedTime.hour !== end.hour) return this.minutes;
+    return this.minutes.filter(minute => minute <= end.minute);
   }
 
   private coerceClosingMinutes() {
-    if (!this.availableMinutes.includes(this.selectedTime.minute)) {
-      this.selectedTime.minute = 0;
+    const available = this.availableMinutes;
+    if (!available.includes(this.selectedTime.minute)) {
+      this.selectedTime.minute = available[available.length - 1] ?? 0;
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['slot']) this.setTimeInput();
   }
 
   ngOnInit() {
@@ -202,26 +220,12 @@ export class StepperComponent implements OnInit, OnDestroy {
   }
 
   setTimeInput() {
-    if (this.normalWeekDay.includes(this.today)) {
-      if (this.currentHour <= 12 && this.currentHour >= 6) {
-        this.hours = Array.from(
-          { length: 12 - this.currentHour + 1 },
-          (_, index) => this.currentHour + index,
-        );
-      } else if (this.currentHour <= 18 && this.currentHour >= 14) {
-        this.hours = Array.from(
-          { length: 18 - this.currentHour + 1 },
-          (_, index) => this.currentHour + index,
-        );
-      }
-    } else {
-      if (this.currentHour <= 16 && this.currentHour >= 6) {
-        this.hours = Array.from(
-          { length: 16 - this.currentHour + 1 },
-          (_, index) => this.currentHour + index,
-        );
-      }
-    }
+    // The leaving time is between now and the end of the open slot (or the end of the day).
+    const lastHour = Math.max(this.slotEnd?.hour ?? 23, this.currentHour);
+    this.hours = Array.from(
+      { length: lastHour - this.currentHour + 1 },
+      (_, index) => this.currentHour + index,
+    );
 
     // choose closest minute by excess (round up to next configured minute)
     const desired = this.currentTime + 5;
@@ -248,6 +252,8 @@ export class StepperComponent implements OnInit, OnDestroy {
     } else {
       this.selectedTime.hour = this.currentHour;
     }
+    const end = this.slotEnd;
+    if (end && this.selectedTime.hour > end.hour) this.selectedTime.hour = end.hour;
     this.coerceClosingMinutes();
   }
 
@@ -297,7 +303,10 @@ export class StepperComponent implements OnInit, OnDestroy {
   }
 
   selectMinute(minute: number) {
-    this.selectedTime.minute = this.availableMinutes.includes(minute) ? minute : 0;
+    const available = this.availableMinutes;
+    this.selectedTime.minute = available.includes(minute)
+      ? minute
+      : (available[available.length - 1] ?? 0);
     this.showMinutePicker = false;
     this.minuteSelected = true;
   }

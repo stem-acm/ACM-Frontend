@@ -508,4 +508,43 @@ test.describe('F11 Settings', () => {
       await api.deleteMemberIfExists(member.registrationNumber);
     }
   });
+  test('F11.13 an admin closes Sunday in the Check-in tab, saves, and the API and the audit log follow', async ({
+    page,
+    api,
+  }) => {
+    const original = await api.getCheckinSchedule();
+    const opened = structuredClone(original);
+    opened.sunday = { open: true, slots: [{ start: '08:00', end: '12:00' }] };
+    await api.saveCheckinSchedule(opened);
+    try {
+      await page.goto('/setting');
+      // The tabs carry role="tab", but the z-button directive turns them into "button".
+      await page.getByRole('tablist').getByRole('button', { name: 'Check-in' }).click();
+      await expect(page.getByRole('heading', { name: 'Check-in hours', level: 2 })).toBeVisible();
+
+      const sunday = page.getByRole('group', { name: 'Sunday' });
+      await expect(sunday.getByLabel('Start time')).toHaveValue('08:00');
+      await sunday.getByRole('checkbox').uncheck();
+      await expect(sunday).toContainText('No check-in on this day.');
+      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
+
+      await page.getByRole('button', { name: 'Save', exact: true }).click();
+      await expect(
+        page.getByRole('status').filter({ hasText: 'Check-in hours updated' }),
+      ).toBeVisible();
+      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toHaveCount(0);
+      expect((await api.getCheckinSchedule()).sunday).toEqual({ open: false, slots: [] });
+
+      const [log] = (
+        await api.getPage<{ type: string; changes: Record<string, unknown> }>(
+          'settings/logs?type=checkin_schedule.updated&limit=1',
+        )
+      ).data;
+      expect(log.changes).toEqual({
+        sunday: { before: opened.sunday, after: { open: false, slots: [] } },
+      });
+    } finally {
+      await api.saveCheckinSchedule(original);
+    }
+  });
 });

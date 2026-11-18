@@ -1,14 +1,17 @@
 import { Page } from '@playwright/test';
-import { Activity, ApiHelper, Checkin, Member } from './fixtures/api';
+import { Activity, ApiHelper, Checkin, CheckinSchedule, Member } from './fixtures/api';
 import { installFakeCamera } from './fixtures/fake-camera';
 import { fetchQrPayload, QrPayload, qrImageDataUrl } from './fixtures/qr';
 import { expect, test } from './fixtures/test';
 
 /*
  * The browser sends checkInTime, and the API checks it in Africa/Nairobi time
- * (EAT, UTC+3). Each test fixes the browser clock on its own date of October
- * 2026 and uses its own member, so the "one scan per slot" rule never leaks
- * between tests.
+ * (EAT, UTC+3) against the check-in schedule stored in Settings. The tests use
+ * the default schedule (every day open: 08:00–12:00 and 15:00–18:00, Saturday
+ * 09:00–16:00), except the tests that change it with `withSchedule`, which puts
+ * the stored schedule back at the end. Each test fixes the browser clock on its
+ * own date of October 2026 and uses its own member, so the "one scan per slot"
+ * rule never leaks between tests.
  */
 
 /** A wall-clock time in EAT, e.g. eat('2026-10-06', '09:00'). */
@@ -126,6 +129,31 @@ function checkinPost(page: Page) {
 
 async function memberCheckins(api: ApiHelper, member: Member): Promise<Checkin[]> {
   return api.getMemberCheckins(member.registrationNumber);
+}
+
+/**
+ * Runs `run` with a changed check-in schedule, then stores the previous schedule
+ * again. The tests run one at a time (one worker), so no other test sees the change.
+ */
+async function withSchedule(
+  api: ApiHelper,
+  change: (schedule: CheckinSchedule) => void,
+  run: () => Promise<void>,
+): Promise<void> {
+  const original = await api.getCheckinSchedule();
+  const changed = structuredClone(original);
+  change(changed);
+  await api.saveCheckinSchedule(changed);
+  try {
+    await run();
+  } finally {
+    await api.saveCheckinSchedule(original);
+  }
+}
+
+/** The "Mahajanga time · …" line of the closed screen. */
+function openingHours(page: Page) {
+  return page.locator('.closed-hours');
 }
 
 test.describe('F7 Check-in', () => {
@@ -278,7 +306,7 @@ test.describe('F7 Check-in', () => {
     }
   });
 
-  test('F7.7 on a Monday the check-in page shows the closed screen and creates nothing', async ({
+  test('F7.7a on a Monday at 09:00 the default schedule accepts the check-in', async ({
     page,
     api,
   }) => {
@@ -286,9 +314,37 @@ test.describe('F7 Check-in', () => {
     const at = eat('2026-10-05', '09:00'); // Monday
     try {
       await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
+      await chooseActivityAndScan(page, scene.activity);
 
-      await expectClosedScreen(page);
-      expect(await memberCheckins(api, scene.member)).toHaveLength(0);
+      await expect(stepHeading(page, WELCOME)).toBeVisible();
+      const checkins = await memberCheckins(api, scene.member);
+      expect(checkins).toHaveLength(1);
+      expect(new Date(checkins[0].checkInTime).toISOString()).toBe(at.toISOString());
+    } finally {
+      await cleanup(api, scene);
+    }
+  });
+
+  test('F7.7b on a Monday closed in Settings the check-in page shows the closed screen and creates nothing', async ({
+    page,
+    api,
+  }) => {
+    const scene = await createScene(api, 'Mondayclosed');
+    const at = eat('2026-10-05', '09:30'); // Monday
+    try {
+      await withSchedule(
+        api,
+        schedule => {
+          schedule.monday = { open: false, slots: [] };
+        },
+        async () => {
+          await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
+
+          await expectClosedScreen(page);
+          await expect(openingHours(page)).not.toContainText('Monday');
+          expect(await memberCheckins(api, scene.member)).toHaveLength(0);
+        },
+      );
     } finally {
       await cleanup(api, scene);
     }
@@ -304,6 +360,7 @@ test.describe('F7 Check-in', () => {
       await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
 
       await expectClosedScreen(page);
+      await expect(openingHours(page)).toContainText('Monday–Friday: 08:00–12:00, 15:00–18:00');
       expect(await memberCheckins(api, scene.member)).toHaveLength(0);
     } finally {
       await cleanup(api, scene);
@@ -458,6 +515,65 @@ test.describe('F7 Check-in', () => {
       expect(checkins).toHaveLength(1);
       expect(checkins[0].registrationNumber).toBe(scene.member.registrationNumber);
       expect(checkins[0].activityId).toBe(scene.activity.id);
+    } finally {
+      await cleanup(api, scene);
+    }
+  });
+  test('F7.14 with every day closed the check-in page says that no opening is scheduled', async ({
+    page,
+    api,
+  }) => {
+    const scene = await createScene(api, 'Allclosed');
+    const at = eat('2026-10-21', '09:00'); // Wednesday
+    try {
+      await withSchedule(
+        api,
+        schedule => {
+          for (const day of Object.keys(schedule) as (keyof CheckinSchedule)[]) {
+            schedule[day] = { open: false, slots: [] };
+          }
+        },
+        async () => {
+          await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
+
+          await expect(stepHeading(page, CLOSED)).toBeVisible();
+          await expect(page.getByText('No opening is scheduled.')).toBeVisible();
+          await expect(page.getByRole('timer')).toHaveCount(0);
+          await expect(openingHours(page)).toHaveCount(0);
+          await expect(stepHeading(page, CHOOSE_ACTIVITY)).toHaveCount(0);
+          expect(await memberCheckins(api, scene.member)).toHaveLength(0);
+        },
+      );
+    } finally {
+      await cleanup(api, scene);
+    }
+  });
+
+  test('F7.15 the leaving time stops at the end of the open slot', async ({ page, api }) => {
+    const scene = await createScene(api, 'Slotend');
+    const at = eat('2026-10-22', '10:00'); // Thursday
+    try {
+      await withSchedule(
+        api,
+        schedule => {
+          schedule.thursday = { open: true, slots: [{ start: '08:00', end: '10:30' }] };
+        },
+        async () => {
+          await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
+          await activityTile(page, scene.activity).click();
+          await expect(stepHeading(page, LEAVING_TIME)).toBeVisible();
+
+          // At 10:00 the picker shows 10:05. The hour part pulses, so it is never "stable".
+          await page.getByRole('button', { name: '10', exact: true }).click({ force: true });
+          const hours = page.locator('.hour-picker .minute-option');
+          await expect(hours).toHaveText(['10']);
+          await hours.first().click();
+
+          await page.getByRole('button', { name: '05', exact: true }).click({ force: true });
+          const minutes = page.locator('.minute-picker .minute-option');
+          await expect(minutes).toHaveText(['00', '05', '10', '15', '20', '25', '30']);
+        },
+      );
     } finally {
       await cleanup(api, scene);
     }

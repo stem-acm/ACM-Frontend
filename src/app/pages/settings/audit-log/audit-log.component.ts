@@ -48,6 +48,7 @@ const TYPE_ENTITY: Record<string, AuditLogEntity> = {
   checkin: 'checkins',
   volunteer: 'volunteers',
   book_loan: 'book_loans',
+  checkin_schedule: 'app_settings',
 };
 
 export function entityOfType(type: AuditLogType): AuditLogEntity {

@@ -2,6 +2,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '@/app/services/auth.service';
+import { defaultCheckinSchedule } from '@/testing/checkin-schedule';
 import { SettingsComponent } from './settings.component';
 
 describe('SettingsComponent', () => {
@@ -91,12 +92,12 @@ describe('SettingsComponent', () => {
     component.policies[0].permissions['members.view'] = true;
 
     const tabs = element.querySelectorAll<HTMLButtonElement>('.access-page-tabs button');
-    expect(tabs.length).toBe(2);
-    tabs[1].click();
+    expect(tabs.length).toBe(3);
+    tabs[2].click();
     fixture.detectChanges();
 
     expect(component.pageTab).toBe('logs');
-    expect(tabs[1].getAttribute('aria-selected')).toBe('true');
+    expect(tabs[2].getAttribute('aria-selected')).toBe('true');
     expect(tabs[0].getAttribute('aria-selected')).toBe('false');
     expect(element.querySelector('app-audit-log')).not.toBeNull();
     const logs = http.expectOne(request => request.url.endsWith('/settings/logs'));
@@ -114,6 +115,88 @@ describe('SettingsComponent', () => {
 
     expect(element.querySelector('app-audit-log')).toBeNull();
     expect(component.isRoleDirty('intern')).toBeTrue();
+    // The check-in tab was never opened: its schedule was never requested.
+    http.expectNone(request => request.url.endsWith('/settings/checkin-schedule'));
+    http.verify();
+  });
+
+  it('loads the check-in tab on its first opening and keeps its edits across tabs', async () => {
+    await TestBed.configureTestingModule({
+      imports: [SettingsComponent, HttpClientTestingModule, TranslateModule.forRoot()],
+      providers: [{ provide: AuthService, useValue: { user: { id: 1, role: 'admin' } } }],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(SettingsComponent);
+    const component = fixture.componentInstance;
+    const element: HTMLElement = fixture.nativeElement;
+    const http = TestBed.inject(HttpTestingController);
+    fixture.detectChanges();
+    http
+      .expectOne(request => request.url.endsWith('/settings/roles'))
+      .flush({
+        success: true,
+        data: [{ role: 'intern', active: true, permissions: { 'members.view': false } }],
+      });
+    http
+      .expectOne(request => request.url.endsWith('/settings/users'))
+      .flush({
+        success: true,
+        data: [],
+      });
+    fixture.detectChanges();
+
+    const tabs = element.querySelectorAll<HTMLButtonElement>('.access-page-tabs button');
+    expect(Array.from(tabs).map(tab => tab.textContent?.trim())).toEqual([
+      'auditLog.tabs.access',
+      'auditLog.tabs.checkin',
+      'auditLog.tabs.logs',
+    ]);
+    expect(element.querySelector('app-checkin-schedule')).toBeNull();
+    http.expectNone(request => request.url.endsWith('/settings/checkin-schedule'));
+
+    tabs[1].click();
+    fixture.detectChanges();
+    expect(component.pageTab).toBe('checkin');
+    expect(tabs[1].getAttribute('aria-selected')).toBe('true');
+    expect(element.querySelector('.access-groups')).toBeNull();
+    http
+      .expectOne(request => request.url.endsWith('/settings/checkin-schedule'))
+      .flush({
+        success: true,
+        data: defaultCheckinSchedule(),
+      });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const sunday = element.querySelector<HTMLInputElement>(
+      '.checkin-day[data-day="sunday"] input[type="checkbox"]',
+    )!;
+    sunday.click();
+    fixture.detectChanges();
+    expect(component.checkinDirty).toBeTrue();
+    expect(component.hasUnsavedChanges).toBeTrue();
+    expect(tabs[1].querySelector('.access-unsaved-dot')).not.toBeNull();
+
+    // Away and back: the tab stays mounted (hidden) and is not requested again.
+    tabs[0].click();
+    fixture.detectChanges();
+    const schedule = element.querySelector<HTMLElement>('app-checkin-schedule')!;
+    expect(schedule.hidden).toBeTrue();
+    expect(element.querySelector('.access-groups')).not.toBeNull();
+    tabs[1].click();
+    fixture.detectChanges();
+    expect(schedule.hidden).toBeFalse();
+    http.expectNone(request => request.url.endsWith('/settings/checkin-schedule'));
+    expect(
+      element.querySelector<HTMLInputElement>(
+        '.checkin-day[data-day="sunday"] input[type="checkbox"]',
+      )!.checked,
+    ).toBeFalse();
+
+    const confirm = spyOn(window, 'confirm').and.returnValue(false);
+    expect(component.canLeave()).toBeFalse();
+    expect(confirm).toHaveBeenCalled();
     http.verify();
   });
 });

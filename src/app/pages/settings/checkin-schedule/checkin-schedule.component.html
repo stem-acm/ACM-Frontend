@@ -1,0 +1,150 @@
+@switch (state) {
+  @case ('loading') {
+    <div class="acm-list-state" role="status">
+      <p>{{ 'ux.loading' | translate }}</p>
+    </div>
+  }
+  @case ('error') {
+    <div class="acm-list-state" role="alert">
+      <p>{{ 'ux.loadError' | translate }}</p>
+      <button class="acm-btn acm-btn--outline" type="button" (click)="load()">
+        {{ 'ux.retry' | translate }}
+      </button>
+    </div>
+  }
+  @default {
+    @if (schedule; as schedule) {
+      <section z-card class="access-card checkin-schedule">
+        <div class="access-section-head checkin-schedule-head">
+          <div>
+            <h2>{{ 'checkinSchedule.title' | translate }}</h2>
+            <p>{{ 'checkinSchedule.description' | translate }}</p>
+            <p class="checkin-schedule-zone">{{ 'checkinSchedule.timezone' | translate }}</p>
+          </div>
+          @if (dirty) {
+            <span class="access-unsaved-note" role="status">{{
+              'access.unsaved' | translate
+            }}</span>
+          }
+        </div>
+
+        @if (message) {
+          <div class="access-notice" role="status">{{ message | translate }}</div>
+        }
+        @if (error) {
+          <div class="access-error" role="alert">{{ error }}</div>
+        }
+
+        <div class="checkin-days">
+          @for (day of days; track day) {
+            <div
+              class="checkin-day"
+              role="group"
+              [attr.aria-label]="'days.' + day | translate"
+              [attr.data-day]="day"
+            >
+              <strong class="checkin-day-name">{{ 'days.' + day | translate }}</strong>
+              <label class="access-switch checkin-day-switch">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="schedule[day].open"
+                  (ngModelChange)="toggle(schedule[day])"
+                />
+                <span>{{
+                  (schedule[day].open ? 'checkinSchedule.open' : 'checkinSchedule.closed')
+                    | translate
+                }}</span>
+              </label>
+              <div class="checkin-day-slots">
+                @if (schedule[day].open) {
+                  @for (slot of schedule[day].slots; track $index) {
+                    <div class="checkin-slot">
+                      <input
+                        type="time"
+                        class="checkin-time"
+                        [attr.aria-label]="'checkinSchedule.start' | translate"
+                        [(ngModel)]="slot.start"
+                        (ngModelChange)="changed()"
+                      />
+                      <span>{{ 'checkinSchedule.to' | translate }}</span>
+                      <input
+                        type="time"
+                        class="checkin-time"
+                        [attr.aria-label]="'checkinSchedule.end' | translate"
+                        [(ngModel)]="slot.end"
+                        (ngModelChange)="changed()"
+                      />
+                      <button
+                        z-button
+                        zType="ghost"
+                        class="acm-btn acm-btn--ghost checkin-remove"
+                        type="button"
+                        [attr.aria-label]="'checkinSchedule.removeSlot' | translate"
+                        (click)="removeSlot(schedule[day], $index)"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          width="18"
+                          height="18"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6" />
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                  <button
+                    z-button
+                    zType="link"
+                    class="acm-btn acm-btn--link checkin-add"
+                    type="button"
+                    (click)="addSlot(schedule[day])"
+                  >
+                    + {{ 'checkinSchedule.addSlot' | translate }}
+                  </button>
+                  @if (errorOf(day); as dayErr) {
+                    <small class="access-field-error" role="alert">{{
+                      'checkinSchedule.errors.' + dayErr | translate
+                    }}</small>
+                  }
+                } @else {
+                  <span class="access-hint checkin-closed-hint">{{
+                    'checkinSchedule.closedHint' | translate
+                  }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="checkin-schedule-actions">
+          <button
+            z-button
+            zType="outline"
+            class="acm-btn acm-btn--outline"
+            type="button"
+            [zDisabled]="!dirty || saving"
+            (click)="discard()"
+          >
+            {{ 'checkinSchedule.discard' | translate }}
+          </button>
+          <button
+            z-button
+            class="acm-btn acm-btn--primary"
+            type="button"
+            [zDisabled]="!valid || !dirty || saving"
+            [zLoading]="saving"
+            (click)="save()"
+          >
+            {{ 'checkinSchedule.save' | translate }}
+          </button>
+        </div>
+      </section>
+    }
+  }
+}

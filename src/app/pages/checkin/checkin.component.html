@@ -1,9 +1,38 @@
-<app-stepper *ngIf="isOpen; else closed" />
-<ng-template #closed>
-  <section class="closed-screen">
-    <h1>ACM Closed</h1>
-    <p>American Corner of Mahajanga opens in</p>
-    <p class="countdown" role="timer" aria-label="Time until opening">{{ countdown }}</p>
-    <p>Mahajanga time · Tuesday–Friday: 08:00–12:00, 15:00–18:00 · Saturday: 09:00–16:00</p>
-  </section>
-</ng-template>
+@switch (state) {
+  @case ('loading') {
+    <section class="closed-screen" role="status">
+      <p>{{ 'ux.loading' | translate }}</p>
+    </section>
+  }
+  @case ('error') {
+    <section class="closed-screen" role="alert">
+      <p>{{ 'ux.loadError' | translate }}</p>
+      <button class="acm-btn acm-btn--outline" type="button" (click)="loadSchedule()">
+        {{ 'ux.retry' | translate }}
+      </button>
+    </section>
+  }
+  @default {
+    @if (isOpen) {
+      <app-stepper [slot]="currentSlot" />
+    } @else {
+      <section class="closed-screen">
+        <h1>ACM Closed</h1>
+        @if (hasNextOpening) {
+          <p>American Corner of Mahajanga opens in</p>
+          <p class="countdown" role="timer" aria-label="Time until opening">{{ countdown }}</p>
+        } @else {
+          <p>{{ 'checkin.noOpening' | translate }}</p>
+        }
+        @if (hours.length) {
+          <p class="closed-hours">
+            <span>{{ 'checkin.hoursZone' | translate }}</span>
+            @for (group of hours; track group.from) {
+              <span class="closed-hours-group">{{ ' · ' + groupLabel(group) }}</span>
+            }
+          </p>
+        }
+      </section>
+    }
+  }
+}

@@ -14,7 +14,7 @@
   }
   @default {
     @if (isOpen) {
-      <app-stepper [slot]="currentSlot" />
+      <app-stepper [slot]="currentSlot" [timeZone]="timezone" />
     } @else {
       <section class="closed-screen">
         <h1>ACM Closed</h1>
@@ -26,7 +26,7 @@
         }
         @if (hours.length) {
           <p class="closed-hours">
-            <span>{{ 'checkin.hoursZone' | translate }}</span>
+            <span>{{ 'checkin.hoursZone' | translate: { timezone } }}</span>
             @for (group of hours; track group.from) {
               <span class="closed-hours-group">{{ ' · ' + groupLabel(group) }}</span>
             }

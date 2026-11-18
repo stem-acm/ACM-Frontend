@@ -99,6 +99,7 @@ export const AUDIT_FIELD_KEYS: Record<AuditLogEntity, Record<string, string>> = 
     friday: 'days.friday',
     saturday: 'days.saturday',
     sunday: 'days.sunday',
+    timezone: 'auditLog.settingNames.timezone',
   },
 };
 
@@ -194,6 +195,8 @@ export class AuditLogText {
   formatValue(entity: AuditLogEntity, field: string, value: unknown): string {
     if (value === null || value === undefined || value === '') return this.t('auditLog.empty');
     if (entity === 'app_settings') {
+      // The time zone of the app: its IANA name, as stored.
+      if (field === 'timezone') return String(value);
       // A day of the check-in schedule: its slots, or "Closed".
       return formatDaySchedule(value as DaySchedule) ?? this.t('checkinSchedule.closed');
     }
@@ -312,6 +315,8 @@ export class AuditLogText {
         });
       case 'checkin_schedule.updated':
         return this.plural(key, count, { days: this.fieldList(log) });
+      case 'timezone.updated':
+        return this.t(key, transition('timezone'));
       case 'book_loan.returned':
         return this.t(key, {
           effectiveReturnDate: value(

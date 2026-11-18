@@ -20,6 +20,7 @@ import { ZardInputComponent } from '@/shared/components/input';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { AuditLogComponent } from './audit-log/audit-log.component';
 import { CheckinScheduleComponent } from './checkin-schedule/checkin-schedule.component';
+import { GeneralSettingsComponent } from './general-settings/general-settings.component';
 import { CanDeactivateFn } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -55,6 +56,7 @@ interface Account {
     ZardTableImports,
     AuditLogComponent,
     CheckinScheduleComponent,
+    GeneralSettingsComponent,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -67,9 +69,14 @@ export class SettingsComponent implements OnInit {
   private url = `${environment.API_URL}/settings`;
   private savedPolicies = new Map<Role, string>();
 
-  /** Page-level tab: roles and accounts, the check-in schedule, or the audit log. */
-  pageTab: 'access' | 'checkin' | 'logs' = 'access';
-  /** The check-in tab loads on its first opening, then stays mounted to keep its edits. */
+  /** Page-level tab: roles and accounts, the general settings, the check-in schedule, or the audit log. */
+  pageTab: 'access' | 'general' | 'checkin' | 'logs' = 'access';
+  /**
+   * The general and check-in tabs load on their first opening, then stay mounted to keep
+   * their edits.
+   */
+  generalVisited = false;
+  generalDirty = false;
   checkinVisited = false;
   checkinDirty = false;
   roles: Role[] = ['admin', 'intern', 'volunteer'];
@@ -172,7 +179,14 @@ export class SettingsComponent implements OnInit {
   }
 
   get hasUnsavedChanges(): boolean {
-    return this.checkinDirty || this.roles.some(role => this.isRoleDirty(role));
+    return (
+      this.generalDirty || this.checkinDirty || this.roles.some(role => this.isRoleDirty(role))
+    );
+  }
+
+  openGeneralTab(): void {
+    this.pageTab = 'general';
+    this.generalVisited = true;
   }
 
   openCheckinTab(): void {

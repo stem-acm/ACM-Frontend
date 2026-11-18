@@ -1,0 +1,15 @@
+.general-settings-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.general-fields {
+  grid-template-columns: minmax(0, 28rem);
+  margin: 1.2rem 0;
+}
+.general-settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}

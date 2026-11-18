@@ -91,6 +91,7 @@
   "auditLog": {
     "tabs": {
       "access": "Roles and accounts",
+      "general": "General",
       "checkin": "Check-in",
       "logs": "Audit log"
     },
@@ -187,6 +188,9 @@
       },
       "checkin_schedule": {
         "updated": "Check-in hours changed"
+      },
+      "timezone": {
+        "updated": "Time zone changed"
       }
     },
     "sentences": {
@@ -250,6 +254,9 @@
           "one": "{{count}} day changed: {{days}}",
           "other": "{{count}} days changed: {{days}}"
         }
+      },
+      "timezone": {
+        "updated": "Time zone: {{before}} to {{after}}"
       }
     },
     "detail": {
@@ -269,17 +276,26 @@
     "notAllowed": "Not allowed",
     "volunteerWithoutMember": "Volunteer without member",
     "settingNames": {
-      "checkin_schedule": "Check-in hours"
+      "checkin_schedule": "Check-in hours",
+      "timezone": "Time zone"
     },
     "loading": "Loading the audit log…",
     "nothingYet": "No audit logs yet.",
     "showing": "Showing {{first}} to {{last}} of {{total}} results",
     "pageOf": "Page {{page}} of {{pages}}"
   },
+  "generalSettings": {
+    "title": "Time zone",
+    "description": "Check-in times and opening hours are read in this time zone.",
+    "label": "Time zone",
+    "discard": "Discard",
+    "save": "Save",
+    "saved": "Time zone updated"
+  },
   "checkinSchedule": {
     "title": "Check-in hours",
     "description": "Members can scan only inside these slots.",
-    "timezone": "Times are in Africa/Nairobi (EAT). One scan per slot.",
+    "timezone": "Times are in {{timezone}}. One scan per slot.",
     "open": "Open",
     "closed": "Closed",
     "closedHint": "No check-in on this day.",
@@ -573,7 +589,7 @@
     "welcome": "WELCOME / TONGASOA",
     "go": "GO / MANDROSO",
     "completeCheckIn": "Complete Check-In / Midira tompoko",
-    "hoursZone": "Mahajanga time",
+    "hoursZone": "Time zone: {{timezone}}",
     "noOpening": "No opening is scheduled."
   },
   "certificateEditor": {

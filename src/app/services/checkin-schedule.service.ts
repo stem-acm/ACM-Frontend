@@ -1,4 +1,4 @@
-import { CheckinSchedule } from '@/app/interfaces/checkin-schedule';
+import { CheckinSchedule, KioskSchedule } from '@/app/interfaces/checkin-schedule';
 import { BACKGROUND_REQUEST } from '@/app/services/member-photo.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { environment } from '@/environments/environment';
@@ -22,11 +22,11 @@ export class CheckinScheduleService {
   }
 
   /**
-   * The schedule for the check-in kiosk. The kiosk reads it again every minute: the request
-   * skips the HTTP cache and the spinner.
+   * The time zone of the app and the schedule, for the check-in kiosk. The kiosk reads them
+   * again every minute: the request skips the HTTP cache and the spinner.
    */
   getForCheckin() {
-    return this.http.get<HttpResult<CheckinSchedule>>(this.kioskUrl, {
+    return this.http.get<HttpResult<KioskSchedule>>(this.kioskUrl, {
       context: new HttpContext().set(BACKGROUND_REQUEST, true),
     });
   }

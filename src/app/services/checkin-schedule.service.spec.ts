@@ -41,11 +41,14 @@ describe('CheckinScheduleService', () => {
     request.flush({ success: true, message: 'Check-in schedule updated', data: SCHEDULE });
   });
 
-  it('reads the kiosk schedule in the background, without the HTTP cache', () => {
-    service.getForCheckin().subscribe();
+  it('reads the time zone and the kiosk schedule in the background, without the HTTP cache', () => {
+    let data: unknown;
+    service.getForCheckin().subscribe(result => (data = result.data));
     const request = http.expectOne(`${environment.API_URL}/checkins/schedule`);
     expect(request.request.method).toBe('GET');
     expect(request.request.context.get(BACKGROUND_REQUEST)).toBeTrue();
-    request.flush({ success: true, message: 'Check-in schedule', data: SCHEDULE });
+    const kiosk = { timezone: 'Indian/Antananarivo', schedule: SCHEDULE };
+    request.flush({ success: true, message: 'Check-in schedule', data: kiosk });
+    expect(data).toEqual(kiosk);
   });
 });

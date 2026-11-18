@@ -37,7 +37,7 @@ function row(
 
 const change = (before: unknown, after: unknown) => ({ before, after });
 
-/** One log row for each of the 24 log types, with its expected English sentence. */
+/** One log row for each of the 25 log types, with its expected English sentence. */
 function cases(): [AuditLog, string][] {
   const checkIn = dayjs(CHECK_IN).format('DD / MM / YYYY, HH:mm');
   return [
@@ -160,6 +160,15 @@ function cases(): [AuditLog, string][] {
       ),
       '1 day changed: Sunday',
     ],
+    [
+      row(
+        'timezone.updated',
+        'app_settings',
+        { timezone: change('Indian/Antananarivo', 'UTC') },
+        { entityId: 'timezone', entityLabel: 'timezone' },
+      ),
+      'Time zone: Indian/Antananarivo to UTC',
+    ],
   ];
 }
 
@@ -180,7 +189,7 @@ describe('AuditLogText', () => {
     text = TestBed.inject(AuditLogText);
   });
 
-  it('covers the 24 log types', () => {
+  it('covers the 25 log types', () => {
     expect(cases().map(([log]) => log.type)).toEqual([...AUDIT_LOG_TYPES]);
   });
 
@@ -290,5 +299,22 @@ describe('AuditLogText', () => {
         row('checkin_schedule.updated', 'app_settings', {}, { entityLabel: 'checkin_schedule' }),
       ),
     ).toBe('Check-in hours');
+    expect(
+      text.recordLabel(row('timezone.updated', 'app_settings', {}, { entityLabel: 'timezone' })),
+    ).toBe('Time zone');
+  });
+
+  it('shows the time zone of the app as its IANA name', () => {
+    expect(text.fieldLabel('app_settings', 'timezone')).toBe('Time zone');
+    expect(text.formatValue('app_settings', 'timezone', 'Indian/Antananarivo')).toBe(
+      'Indian/Antananarivo',
+    );
+    const [updated] = cases().find(([log]) => log.type === 'timezone.updated')!;
+    expect(text.detail(updated)).toEqual({
+      mode: 'diff',
+      rows: [{ label: 'Time zone', before: 'Indian/Antananarivo', after: 'UTC' }],
+    });
+    translate.use('fr');
+    expect(text.sentence(updated)).toBe('Fuseau horaire : Indian/Antananarivo vers UTC');
   });
 });

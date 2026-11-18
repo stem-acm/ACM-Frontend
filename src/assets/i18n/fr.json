@@ -91,6 +91,7 @@
   "auditLog": {
     "tabs": {
       "access": "Rôles et comptes",
+      "general": "Général",
       "checkin": "Enregistrement",
       "logs": "Journal d'audit"
     },
@@ -187,6 +188,9 @@
       },
       "checkin_schedule": {
         "updated": "Heures d'enregistrement modifiées"
+      },
+      "timezone": {
+        "updated": "Fuseau horaire modifié"
       }
     },
     "sentences": {
@@ -250,6 +254,9 @@
           "one": "{{count}} jour modifié : {{days}}",
           "other": "{{count}} jours modifiés : {{days}}"
         }
+      },
+      "timezone": {
+        "updated": "Fuseau horaire : {{before}} vers {{after}}"
       }
     },
     "detail": {
@@ -269,17 +276,26 @@
     "notAllowed": "Non autorisé",
     "volunteerWithoutMember": "Bénévole sans membre",
     "settingNames": {
-      "checkin_schedule": "Heures d'enregistrement"
+      "checkin_schedule": "Heures d'enregistrement",
+      "timezone": "Fuseau horaire"
     },
     "loading": "Chargement du journal d'audit…",
     "nothingYet": "Aucun journal d’audit pour le moment.",
     "showing": "Affichage de {{first}} à {{last}} sur {{total}} résultats",
     "pageOf": "Page {{page}} sur {{pages}}"
   },
+  "generalSettings": {
+    "title": "Fuseau horaire",
+    "description": "Les heures d'enregistrement et d'ouverture sont lues dans ce fuseau horaire.",
+    "label": "Fuseau horaire",
+    "discard": "Annuler",
+    "save": "Enregistrer",
+    "saved": "Fuseau horaire mis à jour"
+  },
   "checkinSchedule": {
     "title": "Heures d'enregistrement",
     "description": "Les membres ne peuvent scanner que pendant ces créneaux.",
-    "timezone": "Les heures sont en Africa/Nairobi (EAT). Un scan par créneau.",
+    "timezone": "Les heures sont en {{timezone}}. Un scan par créneau.",
     "open": "Ouvert",
     "closed": "Fermé",
     "closedHint": "Pas d'enregistrement ce jour-là.",
@@ -573,7 +589,7 @@
     "welcome": "BIENVENUE",
     "go": "ALLER",
     "completeCheckIn": "Terminer l'enregistrement",
-    "hoursZone": "Heure de Mahajanga",
+    "hoursZone": "Fuseau horaire : {{timezone}}",
     "noOpening": "Aucune ouverture n'est prévue."
   },
   "certificateEditor": {

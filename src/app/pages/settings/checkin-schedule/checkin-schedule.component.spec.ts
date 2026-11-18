@@ -4,8 +4,11 @@ import { environment } from '@/environments/environment';
 import { unitTestProviders } from '@/testing/unit-test-providers';
 import { closedDay, defaultCheckinSchedule } from '@/testing/checkin-schedule';
 import { CheckinScheduleComponent } from './checkin-schedule.component';
+import { TranslateService } from '@ngx-translate/core';
+import { AppSettingsService } from '@/app/services/app-settings.service';
 
 const URL = `${environment.API_URL}/settings/checkin-schedule`;
+const TIMEZONE_URL = `${environment.API_URL}/settings/timezone`;
 
 describe('CheckinScheduleComponent', () => {
   let fixture: ComponentFixture<CheckinScheduleComponent>;
@@ -35,10 +38,15 @@ describe('CheckinScheduleComponent', () => {
 
   afterEach(() => http.verify());
 
+  function flushTimezone(timezone = 'Indian/Antananarivo') {
+    http.expectOne(TIMEZONE_URL).flush({ success: true, message: 'Time zone', data: { timezone } });
+  }
+
   async function load(schedule = stored()) {
     fixture.detectChanges();
     expect(element.textContent).toContain('ux.loading');
     http.expectOne(URL).flush({ success: true, message: 'Check-in schedule', data: schedule });
+    flushTimezone();
     fixture.detectChanges();
     // ngModel writes the values of the inputs asynchronously.
     await fixture.whenStable();
@@ -224,11 +232,32 @@ describe('CheckinScheduleComponent', () => {
   it('offers a retry when the schedule cannot be loaded', () => {
     fixture.detectChanges();
     http.expectOne(URL).flush(null, { status: 500, statusText: 'Server Error' });
+    // The time zone request of the failed load is cancelled.
+    expect(http.expectOne(TIMEZONE_URL).cancelled).toBeTrue();
     fixture.detectChanges();
     expect(element.textContent).toContain('ux.loadError');
     element.querySelector<HTMLButtonElement>('.acm-list-state button')!.click();
     http.expectOne(URL).flush({ success: true, message: '', data: stored() });
+    flushTimezone();
     fixture.detectChanges();
     expect(element.querySelectorAll('.checkin-day').length).toBe(7);
+  });
+
+  it('shows the time zone of the app and follows a save in the General tab', async () => {
+    await load();
+    const zone = () => element.querySelector('.checkin-schedule-zone')?.textContent?.trim();
+    expect(component.timezone()).toBe('Indian/Antananarivo');
+    expect(zone()).toBe('checkinSchedule.timezone');
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', {
+      checkinSchedule: { timezone: 'Times are in {{timezone}}. One scan per slot.' },
+    });
+    translate.use('en');
+    fixture.detectChanges();
+    expect(zone()).toBe('Times are in Indian/Antananarivo. One scan per slot.');
+
+    TestBed.inject(AppSettingsService).timezone.set('UTC');
+    fixture.detectChanges();
+    expect(zone()).toBe('Times are in UTC. One scan per slot.');
   });
 });

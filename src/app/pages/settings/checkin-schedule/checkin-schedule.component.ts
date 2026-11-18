@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CHECKIN_DAYS,
@@ -7,6 +8,7 @@ import {
   CheckinSchedule,
   DaySchedule,
 } from '@/app/interfaces/checkin-schedule';
+import { AppSettingsService } from '@/app/services/app-settings.service';
 import { CheckinScheduleService } from '@/app/services/checkin-schedule.service';
 import { dayError, DayError, normalizeSchedule } from '@/app/utils/checkin-schedule.util';
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -25,11 +27,14 @@ const FIRST_SLOT = { start: '08:00', end: '12:00' };
 })
 export class CheckinScheduleComponent implements OnInit {
   private service = inject(CheckinScheduleService);
+  private appSettings = inject(AppSettingsService);
 
   /** Emits `true` when the form starts to differ from the stored schedule, `false` when not. */
   @Output() dirtyChange = new EventEmitter<boolean>();
 
   readonly days = CHECKIN_DAYS;
+  /** The time zone of the schedule: a save in the General tab shows here at once. */
+  readonly timezone = this.appSettings.timezone;
   state: 'loading' | 'ready' | 'error' = 'loading';
   /**
    * The form. A closed day keeps its slots here until the save, so that opening it again
@@ -60,8 +65,8 @@ export class CheckinScheduleComponent implements OnInit {
 
   load(): void {
     this.state = 'loading';
-    this.service.get().subscribe({
-      next: result => this.reset(result.data),
+    forkJoin([this.service.get(), this.appSettings.getTimezone()]).subscribe({
+      next: ([result]) => this.reset(result.data),
       error: () => {
         this.state = 'error';
       },

@@ -10,8 +10,15 @@ import {
   normalizeSchedule,
   openingState,
   scheduleSummary,
+  timeZoneNames,
   zoneDayAndSeconds,
+  zoneHourMinute,
+  zoneOffsetLabel,
+  zoneTimeOfDay,
 } from './checkin-schedule.util';
+
+/** The default time zone of the app: Mahajanga, UTC+3. */
+const MAHAJANGA = 'Indian/Antananarivo';
 
 /** A wall-clock time in Mahajanga (UTC+3). */
 const eat = (date: string, time: string) => new Date(`${date}T${time}+03:00`);
@@ -103,11 +110,11 @@ describe('checkin-schedule util', () => {
         ['15:00:00', true],
         ['18:00:00', false],
       ] as const) {
-        expect(openingState(schedule, eat('2026-11-10', time)).open)
+        expect(openingState(schedule, eat('2026-11-10', time), MAHAJANGA).open)
           .withContext(time)
           .toBe(open);
       }
-      expect(openingState(schedule, eat('2026-11-10', '09:00:00'))).toEqual({
+      expect(openingState(schedule, eat('2026-11-10', '09:00:00'), MAHAJANGA)).toEqual({
         open: true,
         day: 'tuesday',
         slot: { start: '08:00', end: '12:00' },
@@ -116,18 +123,18 @@ describe('checkin-schedule util', () => {
 
     it('counts the seconds until the next slot', () => {
       const schedule = defaultSchedule();
-      expect(openingState(schedule, eat('2026-11-13', '12:00:00'))).toEqual({
+      expect(openingState(schedule, eat('2026-11-13', '12:00:00'), MAHAJANGA)).toEqual({
         open: false,
         secondsUntilOpening: 10800,
       });
-      expect(openingState(schedule, eat('2026-11-14', '16:00:00'))).toEqual({
+      expect(openingState(schedule, eat('2026-11-14', '16:00:00'), MAHAJANGA)).toEqual({
         open: false,
         secondsUntilOpening: 57600,
       });
 
       schedule.sunday = closed();
       schedule.monday = closed();
-      expect(openingState(schedule, eat('2026-11-14', '16:00:00'))).toEqual({
+      expect(openingState(schedule, eat('2026-11-14', '16:00:00'), MAHAJANGA)).toEqual({
         open: false,
         secondsUntilOpening: 230400,
       });
@@ -144,7 +151,7 @@ describe('checkin-schedule util', () => {
         saturday: closed(),
         sunday: closed(),
       });
-      expect(openingState(schedule, eat('2026-11-10', '13:00:00'))).toEqual({
+      expect(openingState(schedule, eat('2026-11-10', '13:00:00'), MAHAJANGA)).toEqual({
         open: false,
         secondsUntilOpening: 586800,
       });
@@ -160,19 +167,84 @@ describe('checkin-schedule util', () => {
         saturday: closed(),
         sunday: closed(),
       });
-      expect(openingState(schedule, eat('2026-11-10', '09:00:00'))).toEqual({
+      expect(openingState(schedule, eat('2026-11-10', '09:00:00'), MAHAJANGA)).toEqual({
         open: false,
         secondsUntilOpening: null,
       });
     });
 
-    it('uses the Mahajanga time of the instant, whatever the device time zone', () => {
+    it('uses the time of the instant in the given zone, whatever the device time zone', () => {
       // Monday 21:30 UTC is Tuesday 00:30 in Mahajanga.
-      expect(zoneDayAndSeconds(new Date('2026-11-09T21:30:00Z'))).toEqual({
+      expect(zoneDayAndSeconds(new Date('2026-11-09T21:30:00Z'), MAHAJANGA)).toEqual({
         dayIndex: 1,
         seconds: 1800,
       });
-      expect(openingState(defaultSchedule(), new Date('2026-11-10T05:00:00Z')).open).toBeTrue();
+      expect(
+        openingState(defaultSchedule(), new Date('2026-11-10T05:00:00Z'), MAHAJANGA).open,
+      ).toBeTrue();
+    });
+
+    it('reads the schedule in the time zone of the app', () => {
+      // Tuesday 13:00 UTC is 16:00 in Mahajanga (open) and 13:00 in UTC (closed).
+      const now = new Date('2026-11-10T13:00:00Z');
+      expect(openingState(defaultSchedule(), now, MAHAJANGA).open).toBeTrue();
+      expect(openingState(defaultSchedule(), now, 'UTC')).toEqual({
+        open: false,
+        secondsUntilOpening: 7200,
+      });
+      // Tuesday 06:00 UTC is 09:00 in Mahajanga and 06:00 in UTC.
+      const morning = new Date('2026-11-10T06:00:00Z');
+      expect(openingState(defaultSchedule(), morning, MAHAJANGA).open).toBeTrue();
+      expect(openingState(defaultSchedule(), morning, 'UTC').open).toBeFalse();
+      expect(zoneDayAndSeconds(morning, 'UTC')).toEqual({ dayIndex: 1, seconds: 6 * 3600 });
+    });
+  });
+
+  describe('time zones', () => {
+    it('gives the hour and the minute of an instant in a zone', () => {
+      const now = new Date('2026-11-10T06:20:00Z');
+      expect(zoneHourMinute(now, MAHAJANGA)).toEqual({ hour: 9, minute: 20 });
+      expect(zoneHourMinute(now, 'UTC')).toEqual({ hour: 6, minute: 20 });
+      expect(zoneHourMinute(now, 'America/New_York')).toEqual({ hour: 1, minute: 20 });
+    });
+
+    it('gives the instant of a time of the day in a zone', () => {
+      const now = new Date('2026-11-10T06:20:00Z');
+      expect(zoneTimeOfDay(now, 17, 30, MAHAJANGA).toISOString()).toBe('2026-11-10T14:30:00.000Z');
+      expect(zoneTimeOfDay(now, 17, 30, 'UTC').toISOString()).toBe('2026-11-10T17:30:00.000Z');
+      // 22:30 UTC on Tuesday is already Wednesday in Mahajanga.
+      const late = new Date('2026-11-10T22:30:00Z');
+      expect(zoneTimeOfDay(late, 8, 0, MAHAJANGA).toISOString()).toBe('2026-11-11T05:00:00.000Z');
+    });
+
+    it('follows a daylight saving time change', () => {
+      // Paris is UTC+2 after 01:00 UTC on 2026-03-29, and UTC+1 before.
+      const day = new Date('2026-03-29T00:30:00Z');
+      expect(zoneTimeOfDay(day, 0, 30, 'Europe/Paris').toISOString()).toBe(
+        '2026-03-28T23:30:00.000Z',
+      );
+      expect(zoneTimeOfDay(day, 10, 0, 'Europe/Paris').toISOString()).toBe(
+        '2026-03-29T08:00:00.000Z',
+      );
+      expect(zoneOffsetLabel('Europe/Paris', new Date('2026-01-15T12:00:00Z'))).toBe('UTC+01:00');
+      expect(zoneOffsetLabel('Europe/Paris', new Date('2026-07-15T12:00:00Z'))).toBe('UTC+02:00');
+    });
+
+    it('labels the offset of a zone from UTC', () => {
+      const now = new Date('2026-11-10T12:00:00Z');
+      expect(zoneOffsetLabel(MAHAJANGA, now)).toBe('UTC+03:00');
+      expect(zoneOffsetLabel('UTC', now)).toBe('UTC+00:00');
+      expect(zoneOffsetLabel('America/New_York', now)).toBe('UTC-05:00');
+      expect(zoneOffsetLabel('Asia/Kolkata', now)).toBe('UTC+05:30');
+    });
+
+    it('lists the zones of the browser, UTC and the current value, sorted', () => {
+      const names = timeZoneNames('Etc/GMT-3');
+      expect(names).toContain(MAHAJANGA);
+      expect(names).toContain('UTC');
+      expect(names).toContain('Etc/GMT-3');
+      expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
+      expect(new Set(names).size).toBe(names.length);
     });
   });
 

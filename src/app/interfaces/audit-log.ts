@@ -23,6 +23,7 @@ export const AUDIT_LOG_TYPES = [
   'book_loan.updated',
   'book_loan.returned',
   'checkin_schedule.updated',
+  'timezone.updated',
 ] as const;
 export type AuditLogType = (typeof AUDIT_LOG_TYPES)[number];
 

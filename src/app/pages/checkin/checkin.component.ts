@@ -26,6 +26,8 @@ export class CheckinComponent implements OnInit, OnDestroy {
 
   state: 'loading' | 'ready' | 'error' = 'loading';
   schedule?: CheckinSchedule;
+  /** The time zone of the app: the schedule is read in this zone, not in the device zone. */
+  timezone = '';
   isOpen = false;
   /** The slot open now, for the leaving-time choices of the stepper. */
   currentSlot: ScheduleSlot | null = null;
@@ -50,8 +52,9 @@ export class CheckinComponent implements OnInit, OnDestroy {
   loadSchedule() {
     this.scheduleService.getForCheckin().subscribe({
       next: result => {
-        this.schedule = result.data;
-        this.hours = scheduleSummary(result.data);
+        this.timezone = result.data.timezone;
+        this.schedule = result.data.schedule;
+        this.hours = scheduleSummary(result.data.schedule);
         this.state = 'ready';
         this.updateOpeningState();
       },
@@ -72,8 +75,8 @@ export class CheckinComponent implements OnInit, OnDestroy {
 
   updateOpeningState(now = new Date()) {
     if (!this.schedule) return;
-    // The schedule is in Mahajanga time, regardless of the device timezone.
-    const state = openingState(this.schedule, now);
+    // The schedule is in the time zone of the app, regardless of the device time zone.
+    const state = openingState(this.schedule, now, this.timezone);
     this.isOpen = state.open;
     if (state.open) {
       // Keep the same object while the slot does not change: the stepper reacts to a change.

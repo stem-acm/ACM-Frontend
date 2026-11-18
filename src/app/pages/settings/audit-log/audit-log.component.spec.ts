@@ -87,8 +87,8 @@ describe('AuditLogComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('knows the entity of each of the 24 log types', () => {
-    expect(AUDIT_LOG_TYPES.length).toBe(24);
+  it('knows the entity of each of the 25 log types', () => {
+    expect(AUDIT_LOG_TYPES.length).toBe(25);
     for (const type of AUDIT_LOG_TYPES) {
       expect(AUDIT_LOG_ENTITIES).toContain(entityOfType(type));
     }
@@ -96,6 +96,7 @@ describe('AuditLogComponent', () => {
     expect(entityOfType('book_loan.returned')).toBe('book_loans');
     expect(entityOfType('checkin.cascade_deleted')).toBe('checkins');
     expect(entityOfType('checkin_schedule.updated')).toBe('app_settings');
+    expect(entityOfType('timezone.updated')).toBe('app_settings');
   });
 
   it('loads the first page of 25 without a filter, then shows one row for each log', () => {
@@ -260,7 +261,7 @@ describe('AuditLogComponent', () => {
   it('lists only the log types of the selected record type', () => {
     fixture.detectChanges();
     expect(component.typeGroups.map(group => group.entity)).toEqual([...AUDIT_LOG_ENTITIES]);
-    expect(component.typeGroups.flatMap(group => group.types).length).toBe(24);
+    expect(component.typeGroups.flatMap(group => group.types).length).toBe(25);
 
     component.entity = 'checkins';
     expect(component.typeGroups).toEqual([

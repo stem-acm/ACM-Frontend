@@ -91,6 +91,7 @@
   "auditLog": {
     "tabs": {
       "access": "Andraikitra sy kaonty",
+      "general": "Ankapobeny",
       "checkin": "Fisoratana anarana",
       "logs": "Tantaran'ny fanovana"
     },
@@ -187,6 +188,9 @@
       },
       "checkin_schedule": {
         "updated": "Novaina ny ora fisoratana"
+      },
+      "timezone": {
+        "updated": "Novaina ny faritry ny ora"
       }
     },
     "sentences": {
@@ -250,6 +254,9 @@
           "one": "Andro {{count}} novaina: {{days}}",
           "other": "Andro {{count}} novaina: {{days}}"
         }
+      },
+      "timezone": {
+        "updated": "Faritry ny ora: {{before}} ho {{after}}"
       }
     },
     "detail": {
@@ -269,17 +276,26 @@
     "notAllowed": "Tsy avela",
     "volunteerWithoutMember": "Mpilatsaka an-tsitrapo tsy misy mpikambana",
     "settingNames": {
-      "checkin_schedule": "Ora fisoratana"
+      "checkin_schedule": "Ora fisoratana",
+      "timezone": "Faritry ny ora"
     },
     "loading": "Ampidirina ny tantaran'ny fanovana…",
     "nothingYet": "Tsy mbola misy tantaran’ny asa.",
     "showing": "Aseho {{first}} hatramin'ny {{last}} amin'ny valiny {{total}}",
     "pageOf": "Pejy {{page}} amin'ny {{pages}}"
   },
+  "generalSettings": {
+    "title": "Faritry ny ora",
+    "description": "Amin'ity faritry ny ora ity no amakiana ny ora fisoratana sy ny ora fisokafana.",
+    "label": "Faritry ny ora",
+    "discard": "Hanafoana",
+    "save": "Hitahiry",
+    "saved": "Voatahiry ny faritry ny ora"
+  },
   "checkinSchedule": {
     "title": "Ora fisoratana",
     "description": "Amin'ireo fotoana ireo ihany no afaka mi-scan ny mpikambana.",
-    "timezone": "Ora Africa/Nairobi (EAT) no ampiasaina. Scan iray isaky ny fotoana.",
+    "timezone": "Ora {{timezone}} no ampiasaina. Scan iray isaky ny fotoana.",
     "open": "Misokatra",
     "closed": "Mikatona",
     "closedHint": "Tsy misy fisoratana amin'ity andro ity.",
@@ -573,7 +589,7 @@
     "welcome": "TONGASOA",
     "go": "MANDROSO",
     "completeCheckIn": "Midira tompoko",
-    "hoursZone": "Ora eto Mahajanga",
+    "hoursZone": "Faritry ny ora: {{timezone}}",
     "noOpening": "Tsy misy fotoana fisokafana voalahatra."
   },
   "certificateEditor": {

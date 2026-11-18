@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StepperComponent } from './stepper.component';
 import { unitTestProviders } from '@/testing/unit-test-providers';
+import { Activity } from '@/app/interfaces/activity';
+import { CheckinService } from '@/app/services/checkin.service';
+import { NEVER } from 'rxjs';
 
 describe('Stepper', () => {
   let component: StepperComponent;
@@ -82,5 +85,59 @@ describe('Stepper', () => {
     fixture.componentRef.setInput('slot', { start: '08:00', end: '10:30' });
     fixture.detectChanges();
     expect(component.hours).toEqual([9, 10]);
+  });
+
+  describe('in the time zone of the app', () => {
+    afterEach(() => jasmine.clock().uninstall());
+
+    function at(iso: string) {
+      jasmine.clock().install();
+      jasmine.clock().mockDate(new Date(iso));
+    }
+
+    it('takes the current hour from the zone, not from the device clock', () => {
+      // 06:20 UTC is 09:20 in Mahajanga.
+      at('2026-11-10T06:20:00Z');
+      fixture.componentRef.setInput('slot', { start: '08:00', end: '12:00' });
+      fixture.componentRef.setInput('timeZone', 'Indian/Antananarivo');
+      fixture.detectChanges();
+      expect(component.currentHour).toBe(9);
+      expect(component.currentTime).toBe(20);
+      expect(component.hours).toEqual([9, 10, 11, 12]);
+      expect(component.selectedTime).toEqual({ hour: 9, minute: 25 });
+
+      fixture.componentRef.setInput('timeZone', 'UTC');
+      fixture.detectChanges();
+      expect(component.currentHour).toBe(6);
+      expect(component.hours).toEqual([6, 7, 8, 9, 10, 11, 12]);
+    });
+
+    it('sends the leaving time as the instant of that time in the zone', () => {
+      at('2026-11-10T06:20:00Z');
+      fixture.componentRef.setInput('timeZone', 'Indian/Antananarivo');
+      fixture.detectChanges();
+      component.selectedTime = { hour: 11, minute: 30 };
+      expect(component.leavingTime().toISOString()).toBe('2026-11-10T08:30:00.000Z');
+
+      fixture.componentRef.setInput('timeZone', 'UTC');
+      fixture.detectChanges();
+      component.selectedTime = { hour: 11, minute: 30 };
+      expect(component.leavingTime().toISOString()).toBe('2026-11-10T11:30:00.000Z');
+    });
+
+    it('puts the leaving time in the check-in it sends', () => {
+      at('2026-11-10T06:20:00Z');
+      fixture.componentRef.setInput('timeZone', 'Indian/Antananarivo');
+      fixture.detectChanges();
+      const service = TestBed.inject(CheckinService);
+      const create = spyOn(service, 'createCheckin').and.returnValue(NEVER);
+      component.selectedActivities = [{ id: 4 } as Activity];
+      component.selectedTime = { hour: 17, minute: 45 };
+      component.badgeScanned(JSON.stringify({ registrationNumber: 12, signature: 'sig' }));
+      expect(create).toHaveBeenCalledTimes(1);
+      const payload = create.calls.mostRecent().args[0] as unknown as Record<string, Date>;
+      expect(payload['checkOutTime'].toISOString()).toBe('2026-11-10T14:45:00.000Z');
+      expect(payload['checkInTime'].toISOString()).toBe('2026-11-10T06:20:00.000Z');
+    });
   });
 });

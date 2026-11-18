@@ -6,9 +6,6 @@ import {
   ScheduleSlot,
 } from '@/app/interfaces/checkin-schedule';
 
-/** The time zone of the check-in schedule (Mahajanga, EAT). */
-export const CHECKIN_TIME_ZONE = 'Africa/Nairobi';
-
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 const DAY_SECONDS = 24 * 3600;
 
@@ -55,24 +52,93 @@ export function formatDaySchedule(day: DaySchedule | null | undefined): string |
   return day.slots.map(slot => `${slot.start}–${slot.end}`).join(', ');
 }
 
-const zoneFormat = new Intl.DateTimeFormat('en-GB', {
-  timeZone: CHECKIN_TIME_ZONE,
-  weekday: 'long',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hourCycle: 'h23',
-});
+const formats = new Map<string, Intl.DateTimeFormat>();
 
-/** The day (0 = Monday … 6 = Sunday) and the seconds since midnight in Mahajanga. */
-export function zoneDayAndSeconds(now: Date): { dayIndex: number; seconds: number } {
-  const parts = zoneFormat.formatToParts(now);
+/** One formatter for each time zone: creating an `Intl.DateTimeFormat` is slow. */
+function zoneFormat(timeZone: string): Intl.DateTimeFormat {
+  let format = formats.get(timeZone);
+  if (!format) {
+    format = new Intl.DateTimeFormat('en-GB', {
+      timeZone,
+      weekday: 'long',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hourCycle: 'h23',
+    });
+    formats.set(timeZone, format);
+  }
+  return format;
+}
+
+/** The wall-clock date and time of an instant in a time zone. */
+function zoneParts(now: Date, timeZone: string) {
+  const parts = zoneFormat(timeZone).formatToParts(now);
   const part = (type: Intl.DateTimeFormatPartTypes) =>
     parts.find(item => item.type === type)?.value ?? '';
-  const dayIndex = CHECKIN_DAYS.indexOf(part('weekday').toLowerCase() as CheckinDay);
-  const seconds =
-    Number(part('hour')) * 3600 + Number(part('minute')) * 60 + Number(part('second'));
-  return { dayIndex, seconds };
+  return {
+    weekday: part('weekday'),
+    year: Number(part('year')),
+    month: Number(part('month')),
+    day: Number(part('day')),
+    hour: Number(part('hour')),
+    minute: Number(part('minute')),
+    second: Number(part('second')),
+  };
+}
+
+/** The offset of a time zone from UTC at an instant, in milliseconds (UTC+3 gives 3 h). */
+function zoneOffset(time: number, timeZone: string): number {
+  const p = zoneParts(new Date(time), timeZone);
+  const wall = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+  return wall - Math.floor(time / 1000) * 1000;
+}
+
+/** The day (0 = Monday … 6 = Sunday) and the seconds since midnight in a time zone. */
+export function zoneDayAndSeconds(
+  now: Date,
+  timeZone: string,
+): { dayIndex: number; seconds: number } {
+  const p = zoneParts(now, timeZone);
+  const dayIndex = CHECKIN_DAYS.indexOf(p.weekday.toLowerCase() as CheckinDay);
+  return { dayIndex, seconds: p.hour * 3600 + p.minute * 60 + p.second };
+}
+
+/** The hour and the minute of an instant in a time zone. */
+export function zoneHourMinute(now: Date, timeZone: string): { hour: number; minute: number } {
+  const p = zoneParts(now, timeZone);
+  return { hour: p.hour, minute: p.minute };
+}
+
+/** The instant of `hour:minute` on the day of `now` in a time zone. */
+export function zoneTimeOfDay(now: Date, hour: number, minute: number, timeZone: string): Date {
+  const p = zoneParts(now, timeZone);
+  const wall = Date.UTC(p.year, p.month - 1, p.day, hour, minute);
+  // The offset can change on that day (daylight saving time): take it at the first guess.
+  const guess = wall - zoneOffset(wall, timeZone);
+  return new Date(wall - zoneOffset(guess, timeZone));
+}
+
+/** "UTC+03:00": the offset of a time zone from UTC at an instant. */
+export function zoneOffsetLabel(timeZone: string, now = new Date()): string {
+  const minutes = Math.round(zoneOffset(now.getTime(), timeZone) / 60_000);
+  const sign = minutes < 0 ? '-' : '+';
+  const hours = String(Math.floor(Math.abs(minutes) / 60)).padStart(2, '0');
+  return `UTC${sign}${hours}:${String(Math.abs(minutes) % 60).padStart(2, '0')}`;
+}
+
+/**
+ * The time zones that the browser knows, by name. `UTC` and the current value are added when
+ * the list does not have them: `Intl.supportedValuesOf` lists only the canonical names.
+ */
+export function timeZoneNames(current?: string | null): string[] {
+  const names = new Set(Intl.supportedValuesOf('timeZone'));
+  names.add('UTC');
+  if (current) names.add(current);
+  return [...names].sort((a, b) => a.localeCompare(b));
 }
 
 function timeSeconds(time: string): number {
@@ -88,8 +154,8 @@ export type OpeningState =
  * Whether check-in is open now, and else the seconds until the next slot starts
  * (`null` when no day is open).
  */
-export function openingState(schedule: CheckinSchedule, now: Date): OpeningState {
-  const { dayIndex, seconds } = zoneDayAndSeconds(now);
+export function openingState(schedule: CheckinSchedule, now: Date, timeZone: string): OpeningState {
+  const { dayIndex, seconds } = zoneDayAndSeconds(now, timeZone);
   const day = CHECKIN_DAYS[dayIndex];
   const today = schedule[day];
   if (today?.open) {

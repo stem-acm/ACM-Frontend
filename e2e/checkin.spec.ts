@@ -5,8 +5,9 @@ import { fetchQrPayload, QrPayload, qrImageDataUrl } from './fixtures/qr';
 import { expect, test } from './fixtures/test';
 
 /*
- * The browser sends checkInTime, and the API checks it in Africa/Nairobi time
- * (EAT, UTC+3) against the check-in schedule stored in Settings. The tests use
+ * The browser sends checkInTime, and the API checks it in the time zone of the
+ * app (Settings > General, default Indian/Antananarivo, UTC+3 like the EAT of the
+ * browser) against the check-in schedule stored in Settings. The tests use
  * the default schedule (every day open: 08:00–12:00 and 15:00–18:00, Saturday
  * 09:00–16:00), except the tests that change it with `withSchedule`, which puts
  * the stored schedule back at the end. Each test fixes the browser clock on its
@@ -151,7 +152,25 @@ async function withSchedule(
   }
 }
 
-/** The "Mahajanga time · …" line of the closed screen. */
+/**
+ * Runs `run` with another time zone of the app, then stores the previous time zone
+ * again. The tests run one at a time (one worker), so no other test sees the change.
+ */
+async function withTimezone(
+  api: ApiHelper,
+  timezone: string,
+  run: () => Promise<void>,
+): Promise<void> {
+  const original = await api.getTimezone();
+  await api.saveTimezone(timezone);
+  try {
+    await run();
+  } finally {
+    await api.saveTimezone(original);
+  }
+}
+
+/** The "Time zone: … · …" line of the closed screen. */
 function openingHours(page: Page) {
   return page.locator('.closed-hours');
 }
@@ -360,6 +379,7 @@ test.describe('F7 Check-in', () => {
       await openCheckin(page, at, await fetchQrPayload(api, scene.member.registrationNumber));
 
       await expectClosedScreen(page);
+      await expect(openingHours(page)).toContainText('Time zone: Indian/Antananarivo');
       await expect(openingHours(page)).toContainText('Monday–Friday: 08:00–12:00, 15:00–18:00');
       expect(await memberCheckins(api, scene.member)).toHaveLength(0);
     } finally {
@@ -574,6 +594,52 @@ test.describe('F7 Check-in', () => {
           await expect(minutes).toHaveText(['00', '05', '10', '15', '20', '25', '30']);
         },
       );
+    } finally {
+      await cleanup(api, scene);
+    }
+  });
+
+  test('F7.16 with the time zone set to UTC the kiosk, the leaving time and the API follow UTC', async ({
+    page,
+    api,
+  }) => {
+    const scene = await createScene(api, 'Utczone');
+    // Thursday 17:00 UTC is 20:00 in Mahajanga: closed in UTC+3, open in UTC (15:00–18:00).
+    const at = new Date('2026-10-29T17:00:00.000Z');
+    try {
+      const qr = await fetchQrPayload(api, scene.member.registrationNumber);
+      await openCheckin(page, at, qr);
+      await expectClosedScreen(page);
+
+      await withTimezone(api, 'UTC', async () => {
+        expect((await api.getKioskSchedule()).timezone).toBe('UTC');
+        await page.goto('/checkin');
+        await expect(stepHeading(page, CLOSED)).toHaveCount(0);
+
+        // The browser is in EAT (20:00), but the picker starts at 17:05 UTC; the leaving
+        // time 17:45 is stored as 17:45 UTC.
+        await chooseActivityAndScan(page, scene.activity, {
+          shown: { hour: '17', minute: '05' },
+          minute: '45',
+        });
+        await expect(stepHeading(page, WELCOME)).toBeVisible();
+        const checkins = await memberCheckins(api, scene.member);
+        expect(checkins).toHaveLength(1);
+        expect(new Date(checkins[0].checkInTime).toISOString()).toBe(at.toISOString());
+        expect(new Date(checkins[0].checkOutTime as string).toISOString()).toBe(
+          '2026-10-29T17:45:00.000Z',
+        );
+
+        // 13:00 UTC is between the slots in UTC (16:00 in Mahajanga would be open).
+        await page.clock.setFixedTime(new Date('2026-10-29T13:00:00.000Z'));
+        await page.goto('/checkin');
+        await expectClosedScreen(page);
+        await expect(page.getByRole('timer', { name: 'Time until opening' })).toHaveText(
+          '02:00:00',
+        );
+        await expect(openingHours(page)).toContainText('Time zone: UTC');
+      });
+      expect(await api.getTimezone()).toBe('Indian/Antananarivo');
     } finally {
       await cleanup(api, scene);
     }

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { StepperComponent } from '@/app/components/stepper/stepper.component';
-import { CheckinSchedule, ScheduleSlot } from '@/app/interfaces/checkin-schedule';
+import { CheckinSchedule, KioskSchedule, ScheduleSlot } from '@/app/interfaces/checkin-schedule';
 import { CheckinScheduleService } from '@/app/services/checkin-schedule.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { closedDay, defaultCheckinSchedule } from '@/testing/checkin-schedule';
@@ -13,11 +13,16 @@ import { CheckinComponent } from './checkin.component';
 @Component({ selector: 'app-stepper', standalone: true, template: '' })
 class StepperStubComponent {
   @Input() slot: ScheduleSlot | null = null;
+  @Input() timeZone: string | null = null;
 }
 
-type Answer = Observable<HttpResult<CheckinSchedule>>;
+type Answer = Observable<HttpResult<KioskSchedule>>;
 
-const ok = (data: CheckinSchedule): Answer => of({ success: true, message: '', data });
+/** The default time zone of the app: Mahajanga, UTC+3. */
+const MAHAJANGA = 'Indian/Antananarivo';
+
+const ok = (schedule: CheckinSchedule, timezone = MAHAJANGA): Answer =>
+  of({ success: true, message: '', data: { timezone, schedule } });
 const failure = (): Answer => throwError(() => new Error('offline'));
 
 /** A wall-clock time in Mahajanga (UTC+3). */
@@ -57,7 +62,7 @@ describe('CheckinComponent', () => {
         saturday: 'Saturday',
         sunday: 'Sunday',
       },
-      checkin: { hoursZone: 'Mahajanga time', noOpening: 'No opening is scheduled.' },
+      checkin: { hoursZone: 'Time zone: {{timezone}}', noOpening: 'No opening is scheduled.' },
       ux: { loading: 'Loading data…', loadError: 'Could not load.', retry: 'Retry' },
     });
     TestBed.inject(TranslateService).use('en');
@@ -67,8 +72,8 @@ describe('CheckinComponent', () => {
   });
 
   /** Starts the page with the given schedule and shows it at `now`. */
-  function start(schedule: CheckinSchedule, now: Date) {
-    answers.push(ok(schedule));
+  function start(schedule: CheckinSchedule, now: Date, timezone = MAHAJANGA) {
+    answers.push(ok(schedule, timezone));
     fixture.detectChanges();
     component.updateOpeningState(now);
     fixture.detectChanges();
@@ -79,7 +84,7 @@ describe('CheckinComponent', () => {
   const timer = () => element.querySelector('[role="timer"]');
 
   it('shows neither the stepper nor the closed screen while the schedule loads', () => {
-    const pending = new Subject<HttpResult<CheckinSchedule>>();
+    const pending = new Subject<HttpResult<KioskSchedule>>();
     answers.push(pending);
     fixture.detectChanges();
     expect(component.state).toBe('loading');
@@ -87,7 +92,11 @@ describe('CheckinComponent', () => {
     expect(closedHeading()).toBeNull();
     expect(element.textContent).toContain('Loading data…');
 
-    pending.next({ success: true, message: '', data: defaultCheckinSchedule() });
+    pending.next({
+      success: true,
+      message: '',
+      data: { timezone: MAHAJANGA, schedule: defaultCheckinSchedule() },
+    });
     component.updateOpeningState(eat('2026-11-10', '13:00:00'));
     fixture.detectChanges();
     expect(closedHeading()?.textContent).toBe('ACM Closed');
@@ -155,8 +164,24 @@ describe('CheckinComponent', () => {
       ' · Sunday: 08:00–12:00, 15:00–18:00',
     ]);
     expect(element.querySelector('.closed-hours')?.textContent?.trim()).toBe(
-      'Mahajanga time · Monday–Friday: 08:00–12:00, 15:00–18:00 · Saturday: 09:00–16:00 · Sunday: 08:00–12:00, 15:00–18:00',
+      'Time zone: Indian/Antananarivo · Monday–Friday: 08:00–12:00, 15:00–18:00 · Saturday: 09:00–16:00 · Sunday: 08:00–12:00, 15:00–18:00',
     );
+  });
+
+  it('reads the schedule in the time zone of the app', () => {
+    // Tuesday 13:00 UTC: 16:00 in Mahajanga (open), 13:00 in UTC (closed until 15:00).
+    const now = new Date('2026-11-10T13:00:00Z');
+    start(defaultCheckinSchedule(), now);
+    expect(component.isOpen).toBeTrue();
+
+    answers.push(ok(defaultCheckinSchedule(), 'UTC'));
+    component.loadSchedule();
+    component.updateOpeningState(now);
+    fixture.detectChanges();
+    expect(component.timezone).toBe('UTC');
+    expect(component.isOpen).toBeFalse();
+    expect(component.countdown).toBe('02:00:00');
+    expect(element.querySelector('.closed-hours')?.textContent).toContain('Time zone: UTC');
   });
 
   it('gives the open slot to the stepper', () => {
@@ -166,6 +191,7 @@ describe('CheckinComponent', () => {
       .find(instance => instance instanceof StepperStubComponent) as StepperStubComponent;
     expect(stub).toBeDefined();
     expect(stub.slot).toEqual({ start: '09:00', end: '16:00' });
+    expect(stub.timeZone).toBe(MAHAJANGA);
     expect(closedHeading()).toBeNull();
   });
 

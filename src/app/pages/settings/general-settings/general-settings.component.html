@@ -1,0 +1,69 @@
+@switch (state) {
+  @case ('loading') {
+    <div class="acm-list-state" role="status">
+      <p>{{ 'ux.loading' | translate }}</p>
+    </div>
+  }
+  @case ('error') {
+    <div class="acm-list-state" role="alert">
+      <p>{{ 'ux.loadError' | translate }}</p>
+      <button class="acm-btn acm-btn--outline" type="button" (click)="load()">
+        {{ 'ux.retry' | translate }}
+      </button>
+    </div>
+  }
+  @default {
+    <section z-card class="access-card general-timezone">
+      <div class="access-section-head general-settings-head">
+        <div>
+          <h2>{{ 'generalSettings.title' | translate }}</h2>
+          <p>{{ 'generalSettings.description' | translate }}</p>
+        </div>
+        @if (dirty) {
+          <span class="access-unsaved-note" role="status">{{ 'access.unsaved' | translate }}</span>
+        }
+      </div>
+
+      @if (message) {
+        <div class="access-notice" role="status">{{ message | translate }}</div>
+      }
+      @if (error) {
+        <div class="access-error" role="alert">{{ error }}</div>
+      }
+
+      <div class="access-fields general-fields">
+        <label>
+          {{ 'generalSettings.label' | translate }}
+          <select name="timezone" [(ngModel)]="timezone" (ngModelChange)="changed()">
+            @for (option of options; track option.name) {
+              <option [value]="option.name">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <div class="general-settings-actions">
+        <button
+          z-button
+          zType="outline"
+          class="acm-btn acm-btn--outline"
+          type="button"
+          [zDisabled]="!dirty || saving"
+          (click)="discard()"
+        >
+          {{ 'generalSettings.discard' | translate }}
+        </button>
+        <button
+          z-button
+          class="acm-btn acm-btn--primary"
+          type="button"
+          [zDisabled]="!dirty || saving"
+          [zLoading]="saving"
+          (click)="save()"
+        >
+          {{ 'generalSettings.save' | translate }}
+        </button>
+      </div>
+    </section>
+  }
+}

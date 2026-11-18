@@ -19,7 +19,9 @@
           <div>
             <h2>{{ 'checkinSchedule.title' | translate }}</h2>
             <p>{{ 'checkinSchedule.description' | translate }}</p>
-            <p class="checkin-schedule-zone">{{ 'checkinSchedule.timezone' | translate }}</p>
+            <p class="checkin-schedule-zone">
+              {{ 'checkinSchedule.timezone' | translate: { timezone: timezone() } }}
+            </p>
           </div>
           @if (dirty) {
             <span class="access-unsaved-note" role="status">{{

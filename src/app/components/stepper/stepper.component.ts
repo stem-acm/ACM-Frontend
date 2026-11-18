@@ -25,6 +25,7 @@ import { SseService } from '@/app/services/sse.service';
 import { Subscription } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 import { ScheduleSlot } from '@/app/interfaces/checkin-schedule';
+import { zoneHourMinute, zoneTimeOfDay } from '@/app/utils/checkin-schedule.util';
 
 interface ActivityToDisplay {
   id: number;
@@ -50,6 +51,11 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
   @Output() emiterToast = new EventEmitter<string>();
   /** The check-in slot open now: the leaving time cannot be after its end. */
   @Input() slot: ScheduleSlot | null = null;
+  /**
+   * The time zone of the app. The current hour and the leaving time are in this zone, not in
+   * the device zone. Without it, the device clock is used.
+   */
+  @Input() timeZone: string | null = null;
 
   icon = '🔎';
 
@@ -86,6 +92,15 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
   currentHour = new Date(Date.now()).getHours();
   currentTime = new Date(Date.now()).getMinutes();
 
+  /** Reads the current hour and minute in the time zone of the app. */
+  refreshNow(now = new Date()) {
+    const { hour, minute } = this.timeZone
+      ? zoneHourMinute(now, this.timeZone)
+      : { hour: now.getHours(), minute: now.getMinutes() };
+    this.currentHour = hour;
+    this.currentTime = minute;
+  }
+
   hours: number[] | undefined;
   minutes = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
@@ -110,10 +125,12 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['slot']) this.setTimeInput();
+    if (changes['timeZone']) this.refreshNow();
+    if (changes['slot'] || changes['timeZone']) this.setTimeInput();
   }
 
   ngOnInit() {
+    this.refreshNow();
     this.setTimeInput();
     this.getActivities();
     this.subscribeToRealTimeActivities();
@@ -257,6 +274,16 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
     this.coerceClosingMinutes();
   }
 
+  /** The instant of the chosen leaving time, today, in the time zone of the app. */
+  leavingTime(now = new Date()): Date {
+    if (this.timeZone) {
+      return zoneTimeOfDay(now, this.selectedTime.hour, this.selectedTime.minute, this.timeZone);
+    }
+    const date = new Date(now);
+    date.setHours(this.selectedTime.hour, this.selectedTime.minute, 0, 0);
+    return date;
+  }
+
   toggleActivity(activity: Activity) {
     const index = this.selectedActivities.findIndex(a => a.id === activity.id);
 
@@ -292,6 +319,7 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
   reset() {
     this.currentStep = 1;
     this.selectedActivities = [];
+    this.refreshNow();
     this.selectedTime = { hour: this.currentHour, minute: 0 };
     this.showMinutePicker = false;
     this.showHourPicker = false;
@@ -375,9 +403,8 @@ export class StepperComponent implements OnInit, OnChanges, OnDestroy {
     this.isSubmittingCheckin = true;
     this.scannedBadgeId = badgeId;
 
-    const date = new Date();
-    date.setHours(this.selectedTime.hour);
-    date.setMinutes(this.selectedTime.minute);
+    // The leaving time is chosen in the time zone of the app.
+    const date = this.leavingTime();
 
     const payload = {
       activityId: selectedActivity.id,

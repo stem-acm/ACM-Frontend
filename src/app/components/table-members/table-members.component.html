@@ -23,7 +23,7 @@
       <article class="acm-mobile-record">
         <div class="acm-mobile-record-head">
           <img
-            [src]="getfileUrl(item.member.profileImage)"
+            [src]="getfileUrl(item.member.profileImage) | memberPhoto | async"
             (error)="onImageError($event)"
             [alt]="item.member.lastName"
           />
@@ -132,7 +132,7 @@
 
               <img
                 class="w-10 h-10 rounded-full"
-                [src]="getfileUrl(item.member.profileImage)"
+                [src]="getfileUrl(item.member.profileImage) | memberPhoto | async"
                 (error)="onImageError($event)"
                 [alt]="item.member.lastName"
               />

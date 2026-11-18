@@ -16,6 +16,7 @@ import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@/app/services/auth.service';
+import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
 
 @Component({
   selector: 'app-table-members',
@@ -29,6 +30,7 @@ import { AuthService } from '@/app/services/auth.service';
     TranslateModule,
     ModalAlertComponent,
     CommonModule,
+    MemberPhotoPipe,
   ],
   templateUrl: './table-members.component.html',
   styleUrl: './table-members.component.css',

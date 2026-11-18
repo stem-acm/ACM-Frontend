@@ -8,6 +8,8 @@ import { environment } from '@/environments/environment';
 import dayjs from 'dayjs';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AsyncPipe } from '@angular/common';
+import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
 
 @Component({
   selector: 'app-table-checkins',
@@ -18,6 +20,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     ZardTableImports,
     RouterModule,
     TranslateModule,
+    AsyncPipe,
+    MemberPhotoPipe,
   ],
   templateUrl: './table-checkins.component.html',
   styleUrl: './table-checkins.component.css',

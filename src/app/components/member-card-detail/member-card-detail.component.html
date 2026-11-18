@@ -4,7 +4,7 @@
       <app-img-round
         [isVolunteer]="isVolunteer"
         [isLoadingBadge]="isLoadingVolunteers"
-        [imgUrl]="getfileUrl(member.profileImage)"
+        [imgUrl]="(getfileUrl(member.profileImage) | memberPhoto | async) ?? ''"
         [imgUrlError]="getfileUrl('user.png')"
       />
       <app-title

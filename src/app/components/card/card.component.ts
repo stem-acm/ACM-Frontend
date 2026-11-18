@@ -2,11 +2,13 @@ import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Member } from '@/app/interfaces/member';
 import { environment } from '@/environments/environment';
+import { AsyncPipe } from '@angular/common';
+import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [ZardButtonComponent],
+  imports: [ZardButtonComponent, AsyncPipe, MemberPhotoPipe],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })

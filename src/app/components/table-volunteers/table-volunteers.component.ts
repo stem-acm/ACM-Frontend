@@ -10,6 +10,8 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DateUtil } from '@/app/utils/date.util';
 import { AuthService } from '@/app/services/auth.service';
+import { AsyncPipe } from '@angular/common';
+import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
 
 @Component({
   selector: 'app-table-volunteers',
@@ -21,6 +23,8 @@ import { AuthService } from '@/app/services/auth.service';
     ZardTableImports,
     RouterModule,
     TranslateModule,
+    AsyncPipe,
+    MemberPhotoPipe,
   ],
   templateUrl: './table-volunteers.component.html',
   styleUrl: './table-volunteers.component.css',

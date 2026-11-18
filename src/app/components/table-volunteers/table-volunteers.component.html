@@ -13,7 +13,7 @@
       <article class="acm-mobile-record">
         <div class="acm-mobile-record-head">
           <img
-            [src]="getfileUrl(volunteer.Member?.profileImage)"
+            [src]="getfileUrl(volunteer.Member?.profileImage) | memberPhoto | async"
             (error)="onImageError($event)"
             [alt]="volunteer.Member?.lastName"
           />
@@ -73,7 +73,7 @@
           <th z-table-cell scope="row" class="acm-person-cell">
             <img
               class="w-10 h-10 rounded-full"
-              [src]="getfileUrl(volunteer.Member?.profileImage)"
+              [src]="getfileUrl(volunteer.Member?.profileImage) | memberPhoto | async"
               (error)="onImageError($event)"
               [alt]="volunteer.Member?.lastName"
             />

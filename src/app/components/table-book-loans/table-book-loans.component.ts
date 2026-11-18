@@ -1,3 +1,6 @@
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
+import { TableSortComponent } from '@/app/components/table-sort/table-sort.component';
+import { SortDirection } from '@/app/utils/table-sort';
 import { BookLoan } from '@/app/interfaces/book-loan';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { CommonModule } from '@angular/common';
@@ -9,11 +12,19 @@ type LoanStatus = 'returned' | 'overdue' | 'borrowed';
 @Component({
   selector: 'app-table-book-loans',
   standalone: true,
-  imports: [CommonModule, TranslateModule, ZardButtonComponent],
+  imports: [
+    TableEmptyComponent,
+    TableSortComponent,
+    CommonModule,
+    TranslateModule,
+    ZardButtonComponent,
+  ],
   templateUrl: './table-book-loans.component.html',
   styleUrl: './table-book-loans.component.css',
 })
 export class TableBookLoansComponent {
+  @Input() sortDirection: SortDirection = 'none';
+  @Output() sortChange = new EventEmitter<void>();
   @Input({ required: true }) data: BookLoan[] = [];
   @Input({ required: true }) today = '';
   @Input() canUpdate = false;

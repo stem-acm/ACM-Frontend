@@ -1,3 +1,5 @@
+import { TableSort } from '@/app/utils/table-sort';
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
 import { ZardInputComponent } from '@/shared/components/input';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { CommonModule } from '@angular/common';
@@ -19,6 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-activity',
   standalone: true,
   imports: [
+    TableEmptyComponent,
     ZardInputComponent,
     ZardButtonComponent,
     CommonModule,
@@ -32,6 +35,13 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './activity.component.css',
 })
 export class ActivityComponent implements OnInit {
+  sortByName(): void {
+    this.tableSort.toggle();
+    this.currentPage = 1;
+    this.getActivityList();
+  }
+
+  readonly tableSort = new TableSort();
   public auth = inject(AuthService);
   protected Math = Math;
   public activity!: Activity[];
@@ -64,31 +74,38 @@ export class ActivityComponent implements OnInit {
   getActivityList() {
     this.isLoading = true;
     this.loadError = false;
-    const offset = (this.currentPage - 1) * this.pageSize;
-    this.activityService.getAllActivity(offset, this.pageSize, this.searchWord).subscribe({
-      next: (result: HttpResult<Activity[]>) => {
-        if (result.success && result.data) {
-          this.activity = result.data;
-          this.totalActivities = result.pagination?.total ?? result.data.length;
+    this.activityService
+      .getAllActivity(
+        (this.currentPage - 1) * this.pageSize,
+        this.pageSize,
+        this.searchWord,
+        this.tableSort.key === 'createdAt' ? 'createdAt' : 'name',
+        this.tableSort.direction === 'ascending' ? 'asc' : 'desc',
+      )
+      .subscribe({
+        next: (result: HttpResult<Activity[]>) => {
+          if (result.success && result.data) {
+            this.activity = result.data;
+            this.totalActivities = result.pagination?.total ?? result.data.length;
 
-          if (result.pagination) {
-            if (this.activity.length === 0 && this.currentPage > 1) {
-              this.currentPage--;
-              this.getActivityList();
-              return;
+            if (result.pagination) {
+              if (this.activity.length === 0 && this.currentPage > 1) {
+                this.currentPage--;
+                this.getActivityList();
+                return;
+              }
             }
+          } else {
+            this.loadError = true;
           }
-        } else {
+          this.pageInput = this.currentPage;
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
           this.loadError = true;
-        }
-        this.pageInput = this.currentPage;
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-        this.loadError = true;
-      },
-    });
+        },
+      });
   }
 
   get totalPages(): number {

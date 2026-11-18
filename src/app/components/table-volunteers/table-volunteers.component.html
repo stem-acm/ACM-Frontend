@@ -1,117 +1,126 @@
-<div class="acm-mobile-records md:hidden">
-  @for (volunteer of data; track volunteer) {
-    <article class="acm-mobile-record">
-      <div class="acm-mobile-record-head">
-        <img
-          [src]="getfileUrl(volunteer.Member?.profileImage)"
-          (error)="onImageError($event)"
-          [alt]="volunteer.Member?.lastName"
-        />
-        <div>
-          <strong>{{
-            volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName
-          }}</strong>
-          <span>{{ volunteer.Member?.registrationNumber }}</span>
-        </div>
-      </div>
-      <dl>
-        <div>
-          <dt>{{ 'table.columns.volunteerId' | translate }}</dt>
-          <dd>{{ volunteer.id }}</dd>
-        </div>
-        <div>
-          <dt>{{ 'table.columns.joinDate' | translate }}</dt>
-          <dd>{{ formatDate(volunteer.joinDate) }}</dd>
-        </div>
-        <div>
-          <dt>{{ 'table.columns.expirationDate' | translate }}</dt>
-          <dd>{{ formatDate(volunteer.expirationDate) }}</dd>
-        </div>
-      </dl>
-      <div class="acm-mobile-record-actions">
-        @if (auth.can('volunteers.certificate')) {
-          <a [routerLink]="['/volunteer', volunteer.id, 'certificate']">{{
-            'table.certificate' | translate
-          }}</a>
-        }
-        <a [routerLink]="['/profil', volunteer.Member?.registrationNumber]">{{
-          'table.viewProfil' | translate
-        }}</a>
-      </div>
-    </article>
-  }
-</div>
-<table z-table zSize="comfortable" class="acm-data-table hidden md:table">
-  <thead z-table-header>
-    <tr z-table-row>
-      <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.volunteerId' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.joinDate' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.expirationDate' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
-    </tr>
-  </thead>
-  <tbody z-table-body>
+@if (data.length === 0) {
+  <app-table-empty message="ux.noVolunteers" />
+} @else {
+  <div class="md:hidden mb-2">
+    <app-table-sort
+      label="table.columns.name"
+      [direction]="sortDirection"
+      (sortChange)="sortChange.emit()"
+    />
+  </div>
+  <div class="acm-mobile-records md:hidden">
     @for (volunteer of data; track volunteer) {
-      <tr z-table-row>
-        <th z-table-cell scope="row" class="acm-person-cell">
+      <article class="acm-mobile-record">
+        <div class="acm-mobile-record-head">
           <img
-            class="w-10 h-10 rounded-full"
-            [src]="getfileUrl(volunteer.Member?.profileImage)"
+            [src]="getfileUrl(volunteer.Member?.profileImage) | memberPhoto | async"
             (error)="onImageError($event)"
             [alt]="volunteer.Member?.lastName"
           />
-          <div class="ps-3">
-            <div class="text-base font-semibold">
-              {{ volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName }}
-            </div>
-            <div class="font-normal text-gray-500">
-              {{ volunteer.Member?.registrationNumber }}
-            </div>
+          <div>
+            <strong>{{
+              volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName
+            }}</strong>
+            <span>{{ volunteer.Member?.registrationNumber }}</span>
           </div>
-        </th>
-        <td z-table-cell>
-          <div class="font-normal text-gray-500">
-            {{ volunteer.id }}
+        </div>
+        <dl>
+          <div>
+            <dt>{{ 'table.columns.volunteerId' | translate }}</dt>
+            <dd>{{ volunteer.id }}</dd>
           </div>
-        </td>
-        <td z-table-cell>
-          <div class="font-normal text-gray-500">
-            {{ formatDate(volunteer.joinDate) }}
+          <div>
+            <dt>{{ 'table.columns.joinDate' | translate }}</dt>
+            <dd>{{ formatDate(volunteer.joinDate) }}</dd>
           </div>
-        </td>
-        <td z-table-cell>
-          <div class="font-normal text-gray-500">
-            {{ formatDate(volunteer.expirationDate) }}
+          <div>
+            <dt>{{ 'table.columns.expirationDate' | translate }}</dt>
+            <dd>{{ formatDate(volunteer.expirationDate) }}</dd>
           </div>
-        </td>
-        <td z-table-cell>
+        </dl>
+        <div class="acm-mobile-record-actions">
           @if (auth.can('volunteers.certificate')) {
-            <a
-              z-button
-              zSize="sm"
-              zType="link"
-              [routerLink]="['/volunteer', volunteer.id, 'certificate']"
-              class="acm-btn acm-btn--link acm-btn--sm font-medium text-primary dark:text-primary hover:underline bg-transparent border-none cursor-pointer mr-2"
-            >
-              {{ 'table.certificate' | translate }}
-            </a>
+            <a [routerLink]="['/volunteer', volunteer.id, 'certificate']">{{
+              'table.certificate' | translate
+            }}</a>
           }
-          <a
-            [routerLink]="['/profil', volunteer.Member?.registrationNumber]"
-            class="font-medium text-primary dark:text-primary hover:underline ml-2"
-            >{{ 'table.viewProfil' | translate }}</a
-          >
-        </td>
-      </tr>
+          <a [routerLink]="['/profil', volunteer.Member?.registrationNumber]">{{
+            'table.viewProfil' | translate
+          }}</a>
+        </div>
+      </article>
     }
-
-    @if (data.length === 0) {
+  </div>
+  <table z-table zSize="comfortable" class="acm-data-table hidden md:table">
+    <thead z-table-header>
       <tr z-table-row>
-        <td z-table-cell colspan="5" class="capitalize italic text-center acm-empty-cell">
-          {{ 'table.noVolunteersFound' | translate }}
-        </td>
+        <th z-table-head scope="col" [attr.aria-sort]="sortDirection">
+          <app-table-sort
+            label="table.columns.name"
+            [direction]="sortDirection"
+            (sortChange)="sortChange.emit()"
+          />
+        </th>
+        <th z-table-head scope="col">{{ 'table.columns.volunteerId' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.joinDate' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.expirationDate' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody z-table-body>
+      @for (volunteer of data; track volunteer) {
+        <tr z-table-row>
+          <th z-table-cell scope="row" class="acm-person-cell">
+            <img
+              class="w-10 h-10 rounded-full"
+              [src]="getfileUrl(volunteer.Member?.profileImage) | memberPhoto | async"
+              (error)="onImageError($event)"
+              [alt]="volunteer.Member?.lastName"
+            />
+            <div class="ps-3">
+              <div class="text-base font-semibold">
+                {{ volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName }}
+              </div>
+              <div class="font-normal text-gray-500">
+                {{ volunteer.Member?.registrationNumber }}
+              </div>
+            </div>
+          </th>
+          <td z-table-cell>
+            <div class="font-normal text-gray-500">
+              {{ volunteer.id }}
+            </div>
+          </td>
+          <td z-table-cell>
+            <div class="font-normal text-gray-500">
+              {{ formatDate(volunteer.joinDate) }}
+            </div>
+          </td>
+          <td z-table-cell>
+            <div class="font-normal text-gray-500">
+              {{ formatDate(volunteer.expirationDate) }}
+            </div>
+          </td>
+          <td z-table-cell>
+            @if (auth.can('volunteers.certificate')) {
+              <a
+                z-button
+                zSize="sm"
+                zType="link"
+                [routerLink]="['/volunteer', volunteer.id, 'certificate']"
+                class="acm-btn acm-btn--link acm-btn--sm font-medium text-primary dark:text-primary hover:underline bg-transparent border-none cursor-pointer mr-2"
+              >
+                {{ 'table.certificate' | translate }}
+              </a>
+            }
+            <a
+              [routerLink]="['/profil', volunteer.Member?.registrationNumber]"
+              class="font-medium text-primary dark:text-primary hover:underline ml-2"
+              >{{ 'table.viewProfil' | translate }}</a
+            >
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

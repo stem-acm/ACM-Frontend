@@ -1,126 +1,130 @@
-<div class="acm-mobile-records md:hidden">
-  @for (item of checkins; track item) {
-    <article class="acm-mobile-record">
-      <div class="acm-mobile-record-head">
-        <img
-          [src]="getfileUrl(item.Member?.profileImage)"
-          (error)="onImageError($event)"
-          [alt]="item.Member?.firstName"
-        />
-        <div>
-          <strong>{{ item.Member?.lastName?.toUpperCase() + ' ' + item.Member?.firstName }}</strong>
-          <span>{{ item.Member?.registrationNumber }}</span>
-        </div>
-        @if (isInRoom(item)) {
-          <span class="acm-mobile-in-room">{{ 'ux.inRoom' | translate }}</span>
-        }
-      </div>
-      <dl>
-        @if (showDate) {
-          <div>
-            <dt>{{ 'table.columns.checkinDate' | translate }}</dt>
-            <dd>{{ formatDate(item.checkInTime) }}</dd>
-          </div>
-        }
-        <div>
-          <dt>{{ 'table.columns.startTime' | translate }}</dt>
-          <dd>{{ formatTime(item.checkInTime) }}</dd>
-        </div>
-        <div>
-          <dt>{{ 'table.columns.purposeOfVisit' | translate }}</dt>
-          <dd>{{ item.Activity?.name }}</dd>
-        </div>
-        <div>
-          <dt>{{ 'table.columns.endTimeCheckin' | translate }}</dt>
-          <dd>{{ formatTime(item.checkOutTime) }}</dd>
-        </div>
-      </dl>
-      <div class="acm-mobile-record-actions">
-        <a [routerLink]="['/profil', item.Member?.registrationNumber]">{{
-          'table.viewProfil' | translate
-        }}</a>
-      </div>
-    </article>
-  }
-  @if (checkins.length === 0) {
-    <p class="acm-list-state">{{ 'table.noMembersCheckinToday' | translate }}</p>
-  }
-</div>
-<table z-table zSize="comfortable" class="acm-data-table hidden md:table">
-  <thead z-table-header>
-    <tr z-table-row>
-      <th z-table-head scope="col">{{ 'table.columns.name' | translate }}</th>
-      @if (showDate) {
-        <th z-table-head scope="col">{{ 'table.columns.checkinDate' | translate }}</th>
-      }
-      <th z-table-head scope="col">{{ 'table.columns.startTime' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.purposeOfVisit' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.endTimeCheckin' | translate }}</th>
-      <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
-    </tr>
-  </thead>
-  <tbody z-table-body>
+@if (checkins.length === 0) {
+  <app-table-empty message="ux.noCheckins" />
+} @else {
+  <div class="md:hidden mb-2">
+    <app-table-sort
+      label="table.columns.name"
+      [direction]="sortDirection"
+      (sortChange)="sortChange.emit()"
+    />
+  </div>
+  <div class="acm-mobile-records md:hidden">
     @for (item of checkins; track item) {
-      <tr z-table-row>
-        <th z-table-cell scope="row" class="acm-person-cell">
-          <div class="relative">
-            <img
-              class="w-10 h-10 rounded-full"
-              [src]="getfileUrl(item?.Member?.profileImage)"
-              (error)="onImageError($event)"
-              [alt]="item.Member?.firstName"
-            />
-            @if (isInRoom(item)) {
-              <span
-                class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"
-              ></span>
-            }
+      <article class="acm-mobile-record">
+        <div class="acm-mobile-record-head">
+          <img
+            [src]="getfileUrl(item.Member?.profileImage) | memberPhoto | async"
+            (error)="onImageError($event)"
+            [alt]="item.Member?.firstName"
+          />
+          <div>
+            <strong>{{
+              item.Member?.lastName?.toUpperCase() + ' ' + item.Member?.firstName
+            }}</strong>
+            <span>{{ item.Member?.registrationNumber }}</span>
           </div>
-          <div class="ps-3">
-            <div class="text-base font-semibold flex items-center gap-2">
-              {{ item?.Member?.lastName?.toUpperCase() + ' ' + item?.Member?.firstName }}
-              <!-- @if (isInRoom(item)) {
+          @if (isInRoom(item)) {
+            <span class="acm-mobile-in-room">{{ 'ux.inRoom' | translate }}</span>
+          }
+        </div>
+        <dl>
+          @if (showDate) {
+            <div>
+              <dt>{{ 'table.columns.checkinDate' | translate }}</dt>
+              <dd>{{ formatDate(item.checkInTime) }}</dd>
+            </div>
+          }
+          <div>
+            <dt>{{ 'table.columns.startTime' | translate }}</dt>
+            <dd>{{ formatTime(item.checkInTime) }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'table.columns.purposeOfVisit' | translate }}</dt>
+            <dd>{{ item.Activity?.name }}</dd>
+          </div>
+          <div>
+            <dt>{{ 'table.columns.endTimeCheckin' | translate }}</dt>
+            <dd>{{ formatTime(item.checkOutTime) }}</dd>
+          </div>
+        </dl>
+        <div class="acm-mobile-record-actions">
+          <a [routerLink]="['/profil', item.Member?.registrationNumber]">{{
+            'table.viewProfil' | translate
+          }}</a>
+        </div>
+      </article>
+    }
+  </div>
+  <table z-table zSize="comfortable" class="acm-data-table hidden md:table">
+    <thead z-table-header>
+      <tr z-table-row>
+        <th z-table-head scope="col" [attr.aria-sort]="sortDirection">
+          <app-table-sort
+            label="table.columns.name"
+            [direction]="sortDirection"
+            (sortChange)="sortChange.emit()"
+          />
+        </th>
+        @if (showDate) {
+          <th z-table-head scope="col">{{ 'table.columns.checkinDate' | translate }}</th>
+        }
+        <th z-table-head scope="col">{{ 'table.columns.startTime' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.purposeOfVisit' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.endTimeCheckin' | translate }}</th>
+        <th z-table-head scope="col">{{ 'table.columns.action' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody z-table-body>
+      @for (item of checkins; track item) {
+        <tr z-table-row>
+          <th z-table-cell scope="row" class="acm-person-cell">
+            <div class="relative">
+              <img
+                class="w-10 h-10 rounded-full"
+                [src]="getfileUrl(item?.Member?.profileImage) | memberPhoto | async"
+                (error)="onImageError($event)"
+                [alt]="item.Member?.firstName"
+              />
+              @if (isInRoom(item)) {
+                <span
+                  class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full"
+                ></span>
+              }
+            </div>
+            <div class="ps-3">
+              <div class="text-base font-semibold flex items-center gap-2">
+                {{ item?.Member?.lastName?.toUpperCase() + ' ' + item?.Member?.firstName }}
+                <!-- @if (isInRoom(item)) {
                 <span class="w-2 h-2 bg-green-500 rounded-full"></span>
               } -->
+              </div>
+              <div class="font-normal text-gray-500">{{ item?.Member?.registrationNumber }}</div>
             </div>
-            <div class="font-normal text-gray-500">{{ item?.Member?.registrationNumber }}</div>
-          </div>
-        </th>
+          </th>
 
-        @if (showDate) {
-          <td z-table-cell class="whitespace-nowrap">
-            {{ formatDate(item.checkInTime) }}
+          @if (showDate) {
+            <td z-table-cell class="whitespace-nowrap">
+              {{ formatDate(item.checkInTime) }}
+            </td>
+          }
+          <td z-table-cell class="capitalize">
+            {{ formatTime(item.checkInTime) }}
           </td>
-        }
-        <td z-table-cell class="capitalize">
-          {{ formatTime(item.checkInTime) }}
-        </td>
-        <td z-table-cell class="capitalize">
-          {{ item.Activity?.name }}
-        </td>
-        <td z-table-cell class="capitalize">
-          {{ formatTime(item.checkOutTime) }}
-        </td>
-        <td z-table-cell>
-          <a
-            [routerLink]="['/profil', item?.Member?.registrationNumber]"
-            class="font-medium text-primary dark:text-primary hover:underline"
-            >{{ 'table.viewProfil' | translate }}</a
-          >
-        </td>
-      </tr>
-    }
-
-    @if (checkins.length === 0) {
-      <tr z-table-row>
-        <td
-          z-table-cell
-          [attr.colspan]="showDate ? 6 : 5"
-          class="capitalize italic text-center acm-empty-cell"
-        >
-          {{ 'table.noMembersCheckinToday' | translate }}
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
+          <td z-table-cell class="capitalize">
+            {{ item.Activity?.name }}
+          </td>
+          <td z-table-cell class="capitalize">
+            {{ formatTime(item.checkOutTime) }}
+          </td>
+          <td z-table-cell>
+            <a
+              [routerLink]="['/profil', item?.Member?.registrationNumber]"
+              class="font-medium text-primary dark:text-primary hover:underline"
+              >{{ 'table.viewProfil' | translate }}</a
+            >
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

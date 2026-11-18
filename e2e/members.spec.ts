@@ -1,14 +1,12 @@
 import { Page } from '@playwright/test';
-import { ApiHelper, Member, MemberInput, uniqueSuffix } from './fixtures/api';
-import { API_ORIGIN, APP_API_ORIGIN } from './fixtures/env';
+import { ApiHelper, Member, MemberInput, readAdminToken, uniqueSuffix } from './fixtures/api';
+import { API_ORIGIN } from './fixtures/env';
 import { installFakeCamera } from './fixtures/fake-camera';
 import { pngDataUrl, pngImage } from './fixtures/images';
 import { expect, test } from './fixtures/test';
 
 /** Rows per page of the members list (MembersComponent.pageSize). */
 const PAGE_SIZE = 100;
-/** Uploads as the page addresses them (the frontend's API origin). */
-const UPLOADS_URL = `${APP_API_ORIGIN}/uploads`;
 
 /** Name as the members table writes it: LASTNAME Firstname. */
 function tableName(member: Pick<Member, 'firstName' | 'lastName'>): string {
@@ -117,9 +115,11 @@ test.describe('F3 Members', () => {
       for (let i = 0; i < toCreate; i++) {
         created.push(await api.createMember({ firstName: 'Pager', lastName: `${prefix}n${i}` }));
       }
-      const firstPage = await api.getPage<Member>(`members?limit=${PAGE_SIZE}&offset=0`);
+      const firstPage = await api.getPage<Member>(
+        `members?limit=${PAGE_SIZE}&offset=0&sortBy=id&order=desc`,
+      );
       const secondPage = await api.getPage<Member>(
-        `members?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}`,
+        `members?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}&sortBy=id&order=desc`,
       );
       const total = firstPage.pagination.total;
       const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -206,7 +206,7 @@ test.describe('F3 Members', () => {
         await expect(memberRow(page, member)).toHaveCount(1);
       }
       for (const row of await bodyRows(page).all()) {
-        await expect(row.getByRole('cell').nth(2)).toHaveText(place);
+        await expect(row.getByRole('cell', { name: place, exact: true })).toBeVisible();
       }
       await expect(memberRow(page, elsewhere)).toHaveCount(0);
     } finally {
@@ -261,17 +261,19 @@ test.describe('F3 Members', () => {
       const stored = await findMembersByLastName(api, values.lastName as string);
       expect(stored).toHaveLength(1);
       expect(stored[0].profileImage, 'stored photo reference').toBeTruthy();
-      const photoUrl = `${UPLOADS_URL}/${stored[0].profileImage}`;
-
       // The request is served by the throwaway API: match the path, not the origin.
       const photoPath = `/uploads/${stored[0].profileImage}`;
       const photoResponse = page.waitForResponse(
         response => new URL(response.url()).pathname === photoPath,
       );
       await page.goto(`/profil/${stored[0].registrationNumber}`);
-      expect((await photoResponse).status()).toBe(200);
-      // The profile image has no accessible name: located by its source.
-      const photo = page.locator(`img[src="${photoUrl}"]`);
+      const response = await photoResponse;
+      expect(response.status()).toBe(200);
+      // The API gives a member photo only with a token: the app downloads it with the
+      // Authorization header and shows it from a blob URL.
+      expect(await response.request().headerValue('authorization')).toMatch(/^Bearer /);
+      // The profile image has no accessible name: located by its blob source.
+      const photo = page.locator('img[src^="blob:"]');
       await expect(photo).toBeVisible();
       await expect
         .poll(() => photo.evaluate(img => (img as HTMLImageElement).naturalWidth))
@@ -303,7 +305,9 @@ test.describe('F3 Members', () => {
       const stored = await findMembersByLastName(api, values.lastName as string);
       expect(stored).toHaveLength(1);
       expect(stored[0].profileImage, 'stored photo reference').toBeTruthy();
-      const photo = await page.request.get(`${API_ORIGIN}/uploads/${stored[0].profileImage}`);
+      const photo = await page.request.get(`${API_ORIGIN}/uploads/${stored[0].profileImage}`, {
+        headers: { Authorization: `Bearer ${readAdminToken()}` },
+      });
       expect(photo.status()).toBe(200);
       expect(photo.headers()['content-type']).toMatch(/^image\//);
     } finally {
@@ -381,7 +385,7 @@ test.describe('F3 Members', () => {
       await searchBox(page).fill(token);
       await expect(bodyRows(page)).toHaveCount(2);
       for (const member of members) {
-        // The row checkbox has no accessible name: located inside the member's row.
+        // The row checkbox is named for the member and sits beside their name.
         await memberRow(page, member).getByRole('checkbox').check();
       }
 
@@ -403,5 +407,148 @@ test.describe('F3 Members', () => {
         await api.deleteMember(member.registrationNumber);
       }
     }
+  });
+
+  test('F3.10 the Name header selects visible members and bulk actions follow the selected count', async ({
+    page,
+    api,
+  }) => {
+    const token = `Select${uniqueSuffix()}`;
+    const members = [
+      await api.createMember({ firstName: 'Selectone', lastName: `${token}a` }),
+      await api.createMember({ firstName: 'Selecttwo', lastName: `${token}b` }),
+    ];
+    try {
+      await page.goto('/members');
+      await searchBox(page).fill(token);
+      await expect(bodyRows(page)).toHaveCount(2);
+      await expect(page.getByRole('button', { name: 'New Member', exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: /^Select all/ })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: /^Unselect all/ })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: /^Print cards/ })).toHaveCount(0);
+      await expect(page.getByRole('columnheader', { name: '#', exact: true })).toHaveCount(0);
+      const name = page
+        .getByRole('columnheader')
+        .filter({ has: page.getByRole('button', { name: 'Name', exact: true }) });
+      const header = name.getByRole('checkbox', { name: 'Select all members on this page' });
+      await expect(header).not.toBeChecked();
+      await memberRow(page, members[0]).getByRole('checkbox').check();
+      await expect(header).toBeChecked({ indeterminate: true });
+      await expect(
+        page.getByRole('button', { name: 'Unselect all (1)', exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: 'Print cards (1)', exact: true }),
+      ).toBeVisible();
+      await header.check();
+      await expect(header).toBeChecked();
+      for (const member of members)
+        await expect(memberRow(page, member).getByRole('checkbox')).toBeChecked();
+      await expect(
+        page.getByRole('button', { name: 'Print cards (2)', exact: true }),
+      ).toBeVisible();
+      await expect(name).toHaveAttribute('aria-sort', 'none');
+      await name.getByRole('button', { name: 'Name', exact: true }).click();
+      await expect(name).toHaveAttribute('aria-sort', 'ascending');
+      await expect(header).toBeChecked();
+      await memberRow(page, members[1]).getByRole('checkbox').uncheck();
+      await expect(header).toBeChecked({ indeterminate: true });
+      await memberRow(page, members[0]).getByRole('checkbox').uncheck();
+      await expect(page.getByRole('button', { name: /^Print cards/ })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: /^Unselect all/ })).toHaveCount(0);
+      await header.check();
+      await page.getByRole('button', { name: 'Unselect all (2)', exact: true }).click();
+      await expect(header).not.toBeChecked();
+      await expect(page.getByRole('button', { name: /^Print cards/ })).toHaveCount(0);
+    } finally {
+      for (const member of members) await api.deleteMemberIfExists(member.registrationNumber);
+    }
+  });
+
+  test('F3.11 mobile selection uses the same header control and conditional bulk actions', async ({
+    page,
+    api,
+  }) => {
+    const member = await api.createMember({ firstName: 'Mobileselect' });
+    try {
+      await page.setViewportSize({ width: 375, height: 812 });
+      await page.goto('/members');
+      await searchBox(page).fill(member.lastName as string);
+      const card = page.locator('.acm-mobile-record');
+      await expect(card).toHaveCount(1);
+      await expect(page.getByRole('button', { name: /^Print cards/ })).toHaveCount(0);
+      const header = page.getByRole('checkbox', {
+        name: 'Select all members on this page',
+        exact: true,
+      });
+      await header.check();
+      await expect(card.getByRole('checkbox')).toBeChecked();
+      await expect(
+        page.getByRole('button', { name: 'Print cards (1)', exact: true }),
+      ).toBeVisible();
+      await page.getByRole('button', { name: 'Unselect all (1)', exact: true }).click();
+      await expect(header).not.toBeChecked();
+      await expect(card.getByRole('checkbox')).not.toBeChecked();
+      await expect(page.getByRole('button', { name: /^Print cards/ })).toHaveCount(0);
+    } finally {
+      await api.deleteMemberIfExists(member.registrationNumber);
+    }
+  });
+
+  test('F3.12 page selection preserves other pages and Unselect all clears the complete selection', async ({
+    page,
+  }) => {
+    const members = Array.from({ length: 101 }, (_, index) => ({
+      registrationNumber: index + 1,
+      firstName: 'Paged',
+      lastName: `Member${index + 1}`,
+      createdAt: new Date(Date.UTC(2026, 0, 1) - index * 1000).toISOString(),
+      occupation: 'student',
+      studyOrWorkPlace: 'School',
+      joinDate: '2024-01-01',
+    }));
+    await page.route(
+      url => url.pathname === '/api/members',
+      async route => {
+        const offset = Number(new URL(route.request().url()).searchParams.get('offset'));
+        await route.fulfill({
+          json: {
+            success: true,
+            data: members.slice(offset, offset + 100),
+            pagination: { offset, limit: 100, total: 101, hasMore: offset === 0 },
+          },
+        });
+      },
+    );
+    await page.goto('/members');
+    await expect(bodyRows(page)).toHaveCount(100);
+    const header = page.getByRole('checkbox', {
+      name: 'Select all members on this page',
+      exact: true,
+    });
+    await header.check();
+    await expect(
+      page.getByRole('button', { name: 'Print cards (100)', exact: true }),
+    ).toBeVisible();
+    await page.getByRole('button', { name: 'Next', exact: true }).filter({ visible: true }).click();
+    await expect(bodyRows(page)).toHaveCount(1);
+    await expect(header).not.toBeChecked();
+    await header.check();
+    await expect(
+      page.getByRole('button', { name: 'Print cards (101)', exact: true }),
+    ).toBeVisible();
+    await header.uncheck();
+    await expect(
+      page.getByRole('button', { name: 'Unselect all (100)', exact: true }),
+    ).toBeVisible();
+    await page.getByRole('button', { name: 'Unselect all (100)', exact: true }).click();
+    await expect(page.getByRole('button', { name: /^Print cards/ })).toHaveCount(0);
+    await page
+      .getByRole('button', { name: 'Previous', exact: true })
+      .filter({ visible: true })
+      .click();
+    await expect(bodyRows(page)).toHaveCount(100);
+    await expect(header).not.toBeChecked();
+    await expect(bodyRows(page).getByRole('checkbox', { checked: true })).toHaveCount(0);
   });
 });

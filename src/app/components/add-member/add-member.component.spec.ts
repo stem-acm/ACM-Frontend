@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddMemberComponent } from './add-member.component';
 import { MemberService } from '@/app/services/member.service';
+import { MemberPhotoService } from '@/app/services/member-photo.service';
+import { environment } from '@/environments/environment';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 
@@ -18,6 +20,10 @@ describe('AddMemberComponent', () => {
           provide: MemberService,
           useValue: { addMember: () => of(), updateMember: () => of() },
         },
+        {
+          provide: MemberPhotoService,
+          useValue: { load: (url: string) => of(`blob:${url}`) },
+        },
       ],
     }).compileComponents();
 
@@ -28,6 +34,14 @@ describe('AddMemberComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('shows the stored photo of a member through the photo service', () => {
+    component.mode = 'update';
+    component.memberToUpdate = { ...component.member, profileImage: 'members/a.png' };
+    component.ngOnInit();
+
+    expect(component.photoPreviewUrl).toBe(`blob:${environment.FILE_URL}/members/a.png`);
   });
 
   it('previews an imported image and allows it to be removed', () => {

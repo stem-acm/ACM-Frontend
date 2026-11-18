@@ -1,3 +1,6 @@
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
+import { TableSortComponent } from '@/app/components/table-sort/table-sort.component';
+import { SortDirection } from '@/app/utils/table-sort';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
@@ -14,6 +17,8 @@ import { AuthService } from '@/app/services/auth.service';
   selector: 'app-table-activities',
   standalone: true,
   imports: [
+    TableEmptyComponent,
+    TableSortComponent,
     ZardButtonComponent,
     ZardTableImports,
     TranslateModule,
@@ -24,8 +29,10 @@ import { AuthService } from '@/app/services/auth.service';
   styleUrl: './table-activities.component.css',
 })
 export class TableActivitiesComponent {
+  @Input() sortDirection: SortDirection = 'none';
+  @Output() sortChange = new EventEmitter<void>();
   public auth = inject(AuthService);
-  @Input() data!: Activity[];
+  @Input() data: Activity[] = [];
   @Output() editClicked = new EventEmitter<Activity>();
   @Output() activityDeleted = new EventEmitter<void>();
 

@@ -1,3 +1,5 @@
+import { TableSort, sortTableRows, memberName } from '@/app/utils/table-sort';
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
 import { ZardInputComponent } from '@/shared/components/input';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { Component, inject, OnInit } from '@angular/core';
@@ -21,6 +23,7 @@ import { AuthService } from '@/app/services/auth.service';
   selector: 'app-members',
   standalone: true,
   imports: [
+    TableEmptyComponent,
     ZardInputComponent,
     ZardButtonComponent,
     TableMembersComponent,
@@ -35,6 +38,13 @@ import { AuthService } from '@/app/services/auth.service';
   styleUrl: './members.component.css',
 })
 export class MembersComponent implements OnInit {
+  sortByName(): void {
+    this.tableSort.toggle();
+    this.currentPage = 1;
+    this.getMemberList();
+  }
+
+  readonly tableSort = new TableSort();
   public auth = inject(AuthService);
   protected Math = Math;
   private member!: Member[];
@@ -119,48 +129,48 @@ export class MembersComponent implements OnInit {
   getMemberList() {
     this.isLoading = true;
     this.loadError = false;
-    const offset = (this.currentPage - 1) * this.pageSize;
     const studyPlacesStr = this.selectedStudyPlaces.join(',');
-    this.memberService
-      .getAllMembers(offset, this.pageSize, this.searchWord, studyPlacesStr)
-      .subscribe({
-        next: (result: HttpResult<Member[]>) => {
-          if (result.success && result.data) {
-            this.member = result.data;
-            this.memberFilter = this.member;
-            this.totalMembers = result.pagination?.total ?? result.data.length;
+    this.memberService.getEveryMember(this.searchWord, studyPlacesStr).subscribe({
+      next: (result: HttpResult<Member[]>) => {
+        if (result.success && result.data) {
+          this.member = sortTableRows(result.data, this.tableSort, memberName);
+          this.memberFilter = this.member;
+          this.totalMembers = result.data.length;
+          this.currentPage = Math.min(this.currentPage, Math.max(1, this.totalPages));
 
-            // Restore selections and refresh stored member details for this page.
-            this.member.forEach(m => {
-              if (m.registrationNumber != null && this.selectedMembers.has(m.registrationNumber)) {
-                this.selectedMembers.set(m.registrationNumber, m);
-              }
-            });
-            this.membersChooseList = this.member.map(m => ({
+          // Restore selections and refresh stored member details for this page.
+          this.member.forEach(m => {
+            if (m.registrationNumber != null && this.selectedMembers.has(m.registrationNumber)) {
+              this.selectedMembers.set(m.registrationNumber, m);
+            }
+          });
+          this.membersChooseList = this.member
+            .slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize)
+            .map(m => ({
               selected:
                 m.registrationNumber != null && this.selectedMembers.has(m.registrationNumber),
               member: m,
             }));
 
-            if (result.pagination) {
-              // Handle edge case where current page is empty after delete
-              if (this.member.length === 0 && this.currentPage > 1) {
-                this.currentPage--;
-                this.getMemberList();
-                return;
-              }
+          if (result.pagination) {
+            // Handle edge case where current page is empty after delete
+            if (this.member.length === 0 && this.currentPage > 1) {
+              this.currentPage--;
+              this.getMemberList();
+              return;
             }
-          } else {
-            this.loadError = true;
           }
-          this.pageInput = this.currentPage;
-          this.isLoading = false;
-        },
-        error: () => {
-          this.isLoading = false;
+        } else {
           this.loadError = true;
-        },
-      });
+        }
+        this.pageInput = this.currentPage;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+        this.loadError = true;
+      },
+    });
   }
 
   getVolunteersList() {
@@ -224,8 +234,12 @@ export class MembersComponent implements OnInit {
   // Selection Logic
   selectAll(select: boolean) {
     if (!select) this.selectedMembers.clear();
-    this.membersChooseList.forEach(e => {
-      this.onMemberSelectionChange({ member: e.member, selected: select });
+    this.setPageSelected(select);
+  }
+
+  setPageSelected(selected: boolean): void {
+    this.membersChooseList.forEach(item => {
+      this.onMemberSelectionChange({ member: item.member, selected });
     });
   }
 

@@ -148,10 +148,7 @@
   </div>
 
   @if (state === 'loading') {
-    <div class="acm-list-state" role="status">
-      <div class="audit-spinner" aria-hidden="true"></div>
-      <p>{{ 'auditLog.loading' | translate }}</p>
-    </div>
+    <app-table-loading [data]="{ columns: columns, textLoading: 'auditLog.loading' }" />
   } @else if (state === 'error') {
     <div class="acm-list-state" role="alert">
       <p>{{ 'ux.loadError' | translate }}</p>
@@ -160,19 +157,8 @@
       </button>
     </div>
   } @else if (rows.length === 0) {
-    <div class="acm-list-state" role="status">
-      <div class="audit-empty-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path
-            d="M9 5h10M9 12h10M9 19h10M5 5h.01M5 12h.01M5 19h.01"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-          />
-        </svg>
-      </div>
+    <app-table-empty [message]="hasFilters ? 'ux.noMatches' : 'auditLog.nothingYet'">
       @if (hasFilters) {
-        <p>{{ 'ux.noMatches' | translate }}</p>
         <button
           z-button
           zType="outline"
@@ -182,19 +168,29 @@
         >
           {{ 'ux.clearFilters' | translate }}
         </button>
-      } @else {
-        <p>{{ 'auditLog.nothingYet' | translate }}</p>
       }
-    </div>
+    </app-table-empty>
   } @else {
     <div class="access-table-wrap audit-table-desktop">
       <table class="access-table">
         <thead>
           <tr>
             <th>{{ 'auditLog.columns.date' | translate }}</th>
-            <th>{{ 'auditLog.columns.doneBy' | translate }}</th>
+            <th [attr.aria-sort]="tableSort.directionFor('actor')">
+              <app-table-sort
+                label="auditLog.columns.doneBy"
+                [direction]="tableSort.directionFor('actor')"
+                (sortChange)="sortByName('actor')"
+              />
+            </th>
             <th>{{ 'auditLog.columns.action' | translate }}</th>
-            <th>{{ 'auditLog.columns.record' | translate }}</th>
+            <th [attr.aria-sort]="tableSort.directionFor('record')">
+              <app-table-sort
+                label="auditLog.columns.record"
+                [direction]="tableSort.directionFor('record')"
+                (sortChange)="sortByName('record')"
+              />
+            </th>
             <th>{{ 'auditLog.columns.change' | translate }}</th>
             <th>
               <span class="sr-only">{{ 'auditLog.columns.details' | translate }}</span>
@@ -247,6 +243,18 @@
       </table>
     </div>
 
+    <div class="md:hidden flex gap-4 mb-2">
+      <app-table-sort
+        label="auditLog.columns.record"
+        [direction]="tableSort.directionFor('record')"
+        (sortChange)="sortByName('record')"
+      />
+      <app-table-sort
+        label="auditLog.columns.doneBy"
+        [direction]="tableSort.directionFor('actor')"
+        (sortChange)="sortByName('actor')"
+      />
+    </div>
     <div class="acm-mobile-records md:hidden audit-cards">
       @for (row of rows; track row.log.id) {
         <article class="acm-mobile-record">

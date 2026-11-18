@@ -75,9 +75,20 @@ function pageIndicator(page: Page, current: number, total: number) {
   return page.getByText(`Page ${current} of ${total}`, { exact: true }).filter({ visible: true });
 }
 
-/** The check-ins the page loads: the same request as CheckinService.getAllCheckin. */
+/** All check-ins, including records beyond the API's first page. */
 async function loadedCheckins(api: ApiHelper): Promise<Checkin[]> {
-  return (await api.getPage<Checkin>('checkins')).data;
+  const all: Checkin[] = [];
+  let offset = 0;
+  while (true) {
+    const page = await api.getPage<Checkin>(`checkins?offset=${offset}&limit=100`);
+    all.push(...page.data);
+    if (!page.pagination.hasMore) return all;
+    offset += 100;
+  }
+}
+
+function resultCount(page: Page, count: number) {
+  return page.getByRole('status').filter({ hasText: new RegExp(`^\\s*${count} results?\\s*$`) });
 }
 
 interface Scene {
@@ -296,6 +307,122 @@ test.describe('F8 Check-in history', () => {
           exact: true,
         }),
       ).toBeVisible();
+    } finally {
+      await cleanup(api, scene);
+    }
+  });
+
+  test('F8.6 activity, search and date filters combine, reset pagination and show the matching total including zero', async ({
+    page,
+    api,
+  }) => {
+    test.setTimeout(60_000);
+    const target = await createScene(api, 'Activityfilter');
+    const other = await createScene(api, 'Otheractivity');
+    const days = allowedMornings('2017-01-03', 11);
+    try {
+      for (const at of days) {
+        await api.createCheckin(target.member.registrationNumber, target.activity.id, at);
+      }
+      await api.createCheckin(other.member.registrationNumber, other.activity.id, days[0]);
+      const total = (await api.getPage<Checkin>('checkins?limit=1')).pagination.total;
+      await page.goto('/checkin-history');
+      await expect(resultCount(page, total)).toBeVisible();
+      await page
+        .getByRole('button', { name: 'Next', exact: true })
+        .filter({ visible: true })
+        .click();
+      await page.getByLabel('Filter by activity').selectOption({ label: target.activity.name });
+      await expect(resultCount(page, 11)).toBeVisible();
+      await expect(pageIndicator(page, 1, 2)).toBeVisible();
+      await expect(memberRows(page, target.member)).toHaveCount(10);
+      await expect(memberRows(page, other.member)).toHaveCount(0);
+      await page
+        .getByRole('button', { name: 'Next', exact: true })
+        .filter({ visible: true })
+        .click();
+      await expect(memberRows(page, target.member)).toHaveCount(1);
+      await expect(resultCount(page, 11)).toBeVisible();
+
+      const day = days[0].toISOString().slice(0, 10);
+      await page.getByLabel('Start date').fill(day);
+      await page.getByLabel('End date').fill(day);
+      await searchBox(page).fill(target.member.lastName as string);
+      await expect(resultCount(page, 1)).toBeVisible();
+      await expect(pageIndicator(page, 1, 1)).toBeVisible();
+      await expect(memberRows(page, target.member)).toHaveCount(1);
+      await searchBox(page).fill(other.member.lastName as string);
+      await expect(resultCount(page, 0)).toBeVisible();
+      await expect(
+        page.getByText('No results match your search or filters.', { exact: true }),
+      ).toBeVisible();
+      await page.getByRole('button', { name: 'Clear filters', exact: true }).click();
+      await expect(page.getByLabel('Filter by activity').locator('option:checked')).toHaveText(
+        'All activities',
+      );
+      await expect(searchBox(page)).toHaveValue('');
+      await expect(page.getByLabel('Start date')).toHaveValue('');
+      await expect(page.getByLabel('End date')).toHaveValue('');
+      await expect(resultCount(page, total)).toBeVisible();
+    } finally {
+      await cleanup(api, target, other);
+    }
+  });
+
+  test('F8.7 the total and activity options include history beyond the first 100 API records', async ({
+    page,
+    api,
+  }) => {
+    test.setTimeout(90_000);
+    const oldest = await createScene(api, 'Beyondlimit');
+    const recent = await createScene(api, 'Recenthistory');
+    try {
+      await api.createCheckin(
+        oldest.member.registrationNumber,
+        oldest.activity.id,
+        eat('2016-01-05', '09:00'),
+      );
+      for (const at of allowedMornings('2016-02-02', 100)) {
+        await api.createCheckin(recent.member.registrationNumber, recent.activity.id, at);
+      }
+      const firstPage = await api.getPage<Checkin>('checkins?limit=100');
+      expect(
+        firstPage.data.some(row => row.registrationNumber === oldest.member.registrationNumber),
+      ).toBe(false);
+      await page.goto('/checkin-history');
+      await expect(resultCount(page, firstPage.pagination.total)).toBeVisible();
+      await page.getByLabel('Filter by activity').selectOption({ label: oldest.activity.name });
+      await expect(resultCount(page, 1)).toBeVisible();
+      await expect(memberRows(page, oldest.member)).toHaveCount(1);
+    } finally {
+      await cleanup(api, oldest, recent);
+    }
+  });
+
+  test('F8.8 activity filtering and totals remain visible on mobile and translate with the page', async ({
+    page,
+    api,
+  }) => {
+    const scene = await createScene(api, 'Mobilehistory');
+    try {
+      await api.createCheckin(
+        scene.member.registrationNumber,
+        scene.activity.id,
+        eat('2015-01-06', '09:00'),
+      );
+      await page.setViewportSize({ width: 375, height: 812 });
+      await page.goto('/checkin-history');
+      await page.getByLabel('Filter by activity').selectOption({ label: scene.activity.name });
+      await expect(resultCount(page, 1)).toBeVisible();
+      await expect(page.locator('.acm-mobile-record')).toHaveCount(1);
+      await page.getByRole('combobox', { name: 'Language', exact: true }).selectOption('fr');
+      await expect(page.getByLabel('Filtrer par activité')).toBeVisible();
+      await expect(
+        page.getByRole('status').filter({ hasText: /^\s*1 résultat\s*$/ }),
+      ).toBeVisible();
+      await page.getByRole('combobox', { name: /Language|Langue/, exact: true }).selectOption('mg');
+      await expect(page.getByLabel('Sivano araka ny hetsika')).toBeVisible();
+      await expect(page.getByRole('status').filter({ hasText: /^\s*Valiny 1\s*$/ })).toBeVisible();
     } finally {
       await cleanup(api, scene);
     }

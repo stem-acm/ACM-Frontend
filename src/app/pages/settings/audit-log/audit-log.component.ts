@@ -1,3 +1,7 @@
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
+import { TableLoadingComponent } from '@/app/components/table-loading/table-loading.component';
+import { TableSortComponent } from '@/app/components/table-sort/table-sort.component';
+import { TableSort, sortTableRows } from '@/app/utils/table-sort';
 import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
@@ -53,7 +57,15 @@ export function entityOfType(type: AuditLogType): AuditLogEntity {
 @Component({
   selector: 'app-audit-log',
   standalone: true,
-  imports: [FormsModule, NgTemplateOutlet, TranslateModule, ZardButtonComponent],
+  imports: [
+    TableEmptyComponent,
+    TableLoadingComponent,
+    TableSortComponent,
+    FormsModule,
+    NgTemplateOutlet,
+    TranslateModule,
+    ZardButtonComponent,
+  ],
   templateUrl: './audit-log.component.html',
   styleUrls: ['../settings.component.css', './audit-log.component.css'],
 })
@@ -81,6 +93,32 @@ export class AuditLogComponent implements OnInit {
 
   state: 'loading' | 'ready' | 'error' = 'loading';
   logs: AuditLog[] = [];
+  private allLogs: AuditLog[] = [];
+  readonly tableSort = new TableSort();
+  readonly columns = [
+    'auditLog.columns.date',
+    'auditLog.columns.doneBy',
+    'auditLog.columns.action',
+    'auditLog.columns.record',
+    'auditLog.columns.change',
+    'auditLog.columns.details',
+  ];
+  sortByName(key: string): void {
+    this.tableSort.toggle(key);
+    this.page = 0;
+    this.load();
+  }
+  private updateRows(): void {
+    const sorted = sortTableRows(this.allLogs, this.tableSort, log =>
+      this.tableSort.key === 'actor' ? log.actorUsername : this.text.recordLabel(log),
+    );
+    this.logs =
+      this.tableSort.key === 'createdAt'
+        ? sorted
+        : sorted.slice(this.page * this.pageSize, (this.page + 1) * this.pageSize);
+    this.rows = this.logs.map(log => this.toRow(log));
+    this.expanded.clear();
+  }
   rows: AuditLogRow[] = [];
   total = 0;
   page = 0;
@@ -92,7 +130,7 @@ export class AuditLogComponent implements OnInit {
       .subscribe(() => this.applyFilters());
     this.translate.onLangChange
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => (this.rows = this.logs.map(log => this.toRow(log))));
+      .subscribe(() => this.updateRows());
     this.load();
   }
 
@@ -193,28 +231,37 @@ export class AuditLogComponent implements OnInit {
   load(): void {
     this.state = 'loading';
     this.request?.unsubscribe();
-    this.request = this.service
-      .getLogs({
-        offset: this.page * this.pageSize,
-        limit: this.pageSize,
-        search: this.search,
-        entity: this.entity,
-        type: this.type,
-        actorId: this.actorId,
-        // The period is in the admin's time zone: send the bounds of the local days.
-        from: this.from ? dayjs(this.from).startOf('day').toISOString() : undefined,
-        to: this.to ? dayjs(this.to).endOf('day').toISOString() : undefined,
-      })
-      .subscribe({
-        next: result => {
-          this.logs = result.data;
-          this.rows = result.data.map(log => this.toRow(log));
-          this.total = result.pagination?.total ?? result.data.length;
-          this.expanded.clear();
-          this.state = 'ready';
-        },
-        error: () => (this.state = 'error'),
-      });
+    const load =
+      this.tableSort.key === 'createdAt'
+        ? this.service.getLogs.bind(this.service)
+        : this.service.getEveryLog.bind(this.service);
+    this.request = load({
+      offset: this.page * this.pageSize,
+      limit: this.pageSize,
+      search: this.search,
+      entity: this.entity,
+      type: this.type,
+      actorId: this.actorId,
+      // The period is in the admin's time zone: send the bounds of the local days.
+      from: this.from ? dayjs(this.from).startOf('day').toISOString() : undefined,
+      to: this.to ? dayjs(this.to).endOf('day').toISOString() : undefined,
+    }).subscribe({
+      next: result => {
+        if (!result.success) {
+          this.state = 'error';
+          return;
+        }
+        this.allLogs = result.data;
+        this.total =
+          this.tableSort.key === 'createdAt'
+            ? (result.pagination?.total ?? result.data.length)
+            : result.data.length;
+        this.page = Math.min(this.page, this.pageCount - 1);
+        this.updateRows();
+        this.state = 'ready';
+      },
+      error: () => (this.state = 'error'),
+    });
   }
 
   private toRow(log: AuditLog): AuditLogRow {

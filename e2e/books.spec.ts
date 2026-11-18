@@ -375,9 +375,11 @@ test.describe('F10 Book loans', () => {
       for (let i = 0; i < toCreate; i++) {
         await createLoan(api, pager, `${prefix} n${String(i).padStart(3, '0')}`);
       }
-      const firstPage = await api.getPage<BookLoan>(`book-loans?limit=${PAGE_SIZE}&offset=0`);
+      const firstPage = await api.getPage<BookLoan>(
+        `book-loans?limit=${PAGE_SIZE}&offset=0&sortBy=createdAt&order=desc`,
+      );
       const secondPage = await api.getPage<BookLoan>(
-        `book-loans?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}`,
+        `book-loans?limit=${PAGE_SIZE}&offset=${PAGE_SIZE}&sortBy=createdAt&order=desc`,
       );
       const total = firstPage.pagination.total;
       const totalPages = Math.ceil(total / PAGE_SIZE);

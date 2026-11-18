@@ -1,3 +1,6 @@
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
+import { TableSortComponent } from '@/app/components/table-sort/table-sort.component';
+import { SortDirection } from '@/app/utils/table-sort';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { Component, Input, Output, inject, EventEmitter } from '@angular/core';
@@ -13,29 +16,48 @@ import { ToastService } from '@/app/services/toast.service';
 import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@/app/services/auth.service';
+import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
 
 @Component({
   selector: 'app-table-members',
   standalone: true,
   imports: [
+    TableEmptyComponent,
+    TableSortComponent,
     ZardButtonComponent,
     ZardTableImports,
     RouterModule,
     TranslateModule,
     ModalAlertComponent,
     CommonModule,
+    MemberPhotoPipe,
   ],
   templateUrl: './table-members.component.html',
   styleUrl: './table-members.component.css',
 })
 export class TableMembersComponent {
+  @Input() sortDirection: SortDirection = 'none';
+  @Output() sortChange = new EventEmitter<void>();
   public auth = inject(AuthService);
   private URL: string = environment.FILE_URL;
   public userImg = `${this.URL}/user.png`;
-  @Input() data!: { selected: boolean; member: Member }[];
-  @Input() volunteersList!: Volunteer[];
+  @Input() data: { selected: boolean; member: Member }[] = [];
+  @Input() volunteersList: Volunteer[] = [];
 
   @Output() memberDeleted = new EventEmitter<number>();
+  @Output() pageSelectionChange = new EventEmitter<boolean>();
+
+  get allPageSelected(): boolean {
+    return this.data.length > 0 && this.data.every(item => item.selected);
+  }
+
+  get somePageSelected(): boolean {
+    return !this.allPageSelected && this.data.some(item => item.selected);
+  }
+
+  selectPage(event: Event): void {
+    this.pageSelectionChange.emit((event.target as HTMLInputElement).checked);
+  }
 
   private translateService = inject(TranslateService);
   private memberService = inject(MemberService);

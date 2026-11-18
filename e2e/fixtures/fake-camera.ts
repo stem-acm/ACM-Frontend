@@ -8,9 +8,13 @@ export const FAKE_CAMERA_FRAME = { width: 640, height: 480, room: 384 } as const
  * the given image (for example a member photo or a badge QR code).
  * Call it before the page is opened: it is an init script.
  */
-export async function installFakeCamera(page: Page, imageDataUrl: string): Promise<void> {
+export async function installFakeCamera(
+  page: Page,
+  imageDataUrl: string,
+  options: { motion?: boolean } = {},
+): Promise<void> {
   await page.addInitScript(
-    ({ dataUrl, frame }) => {
+    ({ dataUrl, frame, motion }) => {
       const fakeGetUserMedia = async (): Promise<MediaStream> => {
         const image = new Image();
         image.src = dataUrl;
@@ -26,17 +30,21 @@ export async function installFakeCamera(page: Page, imageDataUrl: string): Promi
         const factor = side <= room ? Math.floor(room / side) : room / side;
         const width = image.naturalWidth * factor;
         const height = image.naturalHeight * factor;
+        let frameNumber = 0;
         const draw = () => {
           context.imageSmoothingEnabled = false;
           context.fillStyle = '#ffffff';
           context.fillRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(
-            image,
-            Math.round((canvas.width - width) / 2),
-            Math.round((canvas.height - height) / 2),
-            width,
-            height,
-          );
+          context.save();
+          context.translate(canvas.width / 2, canvas.height / 2);
+          // A handheld badge moves slightly. Still, axis-aligned frames trigger
+          // known finder-pattern failures in ZXing for some otherwise valid QRs.
+          if (motion) {
+            const angles = [-3, 0, 3];
+            context.rotate((angles[frameNumber++ % angles.length] * Math.PI) / 180);
+          }
+          context.drawImage(image, Math.round(-width / 2), Math.round(-height / 2), width, height);
+          context.restore();
         };
         draw();
         // A canvas stream only emits frames when the canvas is painted again.
@@ -65,6 +73,6 @@ export async function installFakeCamera(page: Page, imageDataUrl: string): Promi
         configurable: true,
       });
     },
-    { dataUrl: imageDataUrl, frame: FAKE_CAMERA_FRAME },
+    { dataUrl: imageDataUrl, frame: FAKE_CAMERA_FRAME, motion: options.motion ?? false },
   );
 }

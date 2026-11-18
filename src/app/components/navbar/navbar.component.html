@@ -16,11 +16,33 @@
         class="acm-language"
       >
         @for (lang of languages; track lang.code) {
-          <option [value]="lang.code" [selected]="lang.code === currentLanguage">
-            {{ lang.name }}
+          <option
+            [value]="lang.code"
+            [selected]="lang.code === currentLanguage"
+            [attr.aria-label]="lang.name"
+          >
+            {{ lang.flag }}
           </option>
         }
       </select>
+      @if (auth.can('settings.manage')) {
+        <a
+          routerLink="/setting"
+          class="acm-btn acm-btn--ghost acm-btn--icon"
+          [attr.aria-label]="'nav.settings' | translate"
+          (click)="isShowUserMenu = false"
+        >
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="m9.5 3-.6 2.3-2 .9-2.2-.7-2.5 4.3 1.7 1.6v2.3l-1.7 1.6 2.5 4.3 2.2-.7 2 .9.6 2.2h5l.6-2.2 2-.9 2.2.7 2.5-4.3-1.7-1.6v-2.3l1.7-1.6-2.5-4.3-2.2.7-2-.9L14.5 3h-5Z"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linejoin="round"
+            />
+            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </a>
+      }
       <button
         z-button
         zType="ghost"
@@ -67,11 +89,6 @@
         @if (auth.can('profile.edit')) {
           <a routerLink="/my-profile" (click)="isShowUserMenu = false">{{
             'nav.myProfile' | translate
-          }}</a>
-        }
-        @if (auth.can('settings.manage')) {
-          <a routerLink="/setting" (click)="isShowUserMenu = false">{{
-            'nav.settings' | translate
           }}</a>
         }
         <button

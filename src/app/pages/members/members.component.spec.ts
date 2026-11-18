@@ -14,7 +14,7 @@ describe('MembersComponent', () => {
   let fixture: ComponentFixture<MembersComponent>;
 
   const mockMemberService = {
-    getAllMembers: () => of({ success: true, data: [] as Member[], pagination: { total: 0 } }),
+    getEveryMember: () => of({ success: true, data: [] as Member[], pagination: { total: 0 } }),
     getStudyPlaces: () => of({ success: true, data: [] }),
   };
 
@@ -56,12 +56,13 @@ describe('MembersComponent', () => {
       registrationNumber,
       firstName: `Member ${registrationNumber}`,
       lastName: 'Test',
+      createdAt: new Date(`2026-01-0${4 - registrationNumber}`),
     })) as Member[];
     component.pageSize = 1;
-    spyOn(mockMemberService, 'getAllMembers').and.callFake(() =>
+    spyOn(mockMemberService, 'getEveryMember').and.callFake(() =>
       of({
         success: true,
-        data: [{ ...members[component.currentPage - 1] }],
+        data: members,
         pagination: { total: 3 },
       }),
     );
@@ -69,23 +70,46 @@ describe('MembersComponent', () => {
     return members;
   }
 
-  it('disables printing and keeps the viewer closed without selected members', () => {
+  it('shows bulk actions only while members are selected and keeps the viewer closed without a selection', () => {
     spyOn(component.auth, 'can').and.returnValue(true);
     mockPages();
     fixture.detectChanges();
-    const button = Array.from<HTMLButtonElement>(
-      fixture.nativeElement.querySelectorAll('button'),
-    ).find(button => button.textContent?.includes('cards.printCards'))!;
-    expect(button.disabled).toBeTrue();
-    button.click();
+    const action = (key: string): HTMLButtonElement | undefined =>
+      Array.from<HTMLButtonElement>(fixture.nativeElement.querySelectorAll('button')).find(button =>
+        button.textContent?.includes(key),
+      );
+    expect(action('cards.printCards')).toBeUndefined();
+    expect(action('cards.unselectAll')).toBeUndefined();
+    expect(action('cards.selectAll')).toBeUndefined();
     component.printAllSelected();
     expect(component.showCard).toBeFalse();
 
-    component.selectAll(true);
+    component.setPageSelected(true);
     fixture.detectChanges();
-    expect(button.disabled).toBeFalse();
-    button.click();
-    expect(component.showCard).toBeTrue();
+    expect(action('cards.printCards')?.disabled).toBeFalse();
+    expect(action('cards.printCards')?.textContent).toContain('(1)');
+    expect(action('cards.unselectAll')?.textContent).toContain('(1)');
+    action('cards.unselectAll')!.click();
+    fixture.detectChanges();
+    expect(action('cards.printCards')).toBeUndefined();
+    expect(action('cards.unselectAll')).toBeUndefined();
+  });
+
+  it('clears only the displayed page with the header checkbox and all pages with Unselect all', () => {
+    mockPages();
+    component.setPageSelected(true);
+    component.changePage(2);
+    component.setPageSelected(true);
+    expect(component.countMembersChooseList(true)).toBe(2);
+    component.setPageSelected(false);
+    expect(component.countMembersChooseList(true)).toBe(1);
+    component.changePage(1);
+    expect(component.membersChooseList[0].selected).toBeTrue();
+    component.changePage(2);
+    component.selectAll(false);
+    expect(component.countMembersChooseList(true)).toBe(0);
+    component.changePage(1);
+    expect(component.membersChooseList[0].selected).toBeFalse();
   });
 
   it('keeps selections across three pages and prints every selected member once', () => {
@@ -142,7 +166,7 @@ describe('MembersComponent', () => {
   });
 
   it('offers retry after the member list fails to load', () => {
-    const getMembers = spyOn(mockMemberService, 'getAllMembers').and.returnValue(
+    const getMembers = spyOn(mockMemberService, 'getEveryMember').and.returnValue(
       throwError(() => new Error('offline')),
     );
     component.getMemberList();

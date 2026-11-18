@@ -3,6 +3,7 @@ import { environment } from '@/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { HttpResult } from '@/app/types/httpResult';
 import { User } from '@/app/interfaces/user';
+import { MemberPhotoService } from '@/app/services/member-photo.service';
 import {
   BehaviorSubject,
   catchError,
@@ -19,6 +20,7 @@ import {
 export class AuthService {
   private URL: string = environment.API_URL;
   private http = inject(HttpClient);
+  private memberPhotos = inject(MemberPhotoService);
   private userSubject = new BehaviorSubject<User | null>(null);
   private verification$?: Observable<HttpResult<User>>;
   readonly user$ = this.userSubject.asObservable();
@@ -63,6 +65,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.memberPhotos.clear();
     this.setUser(null);
   }
 

@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 import { Member } from './fixtures/api';
-import { API_ORIGIN, APP_API_ORIGIN, BASE_URL } from './fixtures/env';
+import { APP_API_ORIGIN, BASE_URL } from './fixtures/env';
 import { pngImage } from './fixtures/images';
 import { expect, test } from './fixtures/test';
 
@@ -163,11 +163,17 @@ test.describe('F4 Member profile', () => {
     });
     try {
       expect(member.profileImage, 'initial photo').toBeTruthy();
-      await page.goto(`/profil/${member.registrationNumber}`);
-      await expect(profilePhoto(page)).toHaveAttribute(
-        'src',
-        `${UPLOADS_URL}/${member.profileImage}`,
+      // The API gives a member photo only with a token: the app downloads it with the
+      // Authorization header and shows it from a blob URL.
+      const firstPhoto = page.waitForResponse(
+        response => new URL(response.url()).pathname === `/uploads/${member.profileImage}`,
       );
+      await page.goto(`/profil/${member.registrationNumber}`);
+      const firstResponse = await firstPhoto;
+      expect(firstResponse.status()).toBe(200);
+      expect(await firstResponse.request().headerValue('authorization')).toMatch(/^Bearer /);
+      await expect(profilePhoto(page)).toHaveAttribute('src', /^blob:/);
+      const firstSrc = await profilePhoto(page).getAttribute('src');
 
       // Replace the photo.
       await page.getByRole('button', { name: 'Edit Member' }).click();
@@ -178,20 +184,25 @@ test.describe('F4 Member profile', () => {
           mimeType: 'image/png',
           buffer: pngImage(64, 64, [10, 180, 90], [250, 220, 10]),
         });
+      const newPhoto = page.waitForResponse(
+        response =>
+          /^\/uploads\/members\//.test(new URL(response.url()).pathname) &&
+          new URL(response.url()).pathname !== `/uploads/${member.profileImage}`,
+      );
       await updateForm(page).getByRole('button', { name: 'Update member' }).click();
       await expect(updateForm(page)).toBeHidden();
 
       const replaced = await api.getMember(member.registrationNumber);
       expect(replaced.profileImage, 'replaced photo').toBeTruthy();
       expect(replaced.profileImage).not.toBe(member.profileImage);
-      const newPhotoUrl = `${UPLOADS_URL}/${replaced.profileImage}`;
-      await expect(profilePhoto(page)).toHaveAttribute('src', newPhotoUrl);
+      const newResponse = await newPhoto;
+      expect(new URL(newResponse.url()).pathname).toBe(`/uploads/${replaced.profileImage}`);
+      expect(newResponse.status()).toBe(200);
+      await expect(profilePhoto(page)).toHaveAttribute('src', /^blob:/);
+      await expect(profilePhoto(page)).not.toHaveAttribute('src', firstSrc as string);
       await expect
         .poll(() => profilePhoto(page).evaluate(img => (img as HTMLImageElement).naturalWidth))
         .toBeGreaterThan(0);
-      expect(
-        (await page.request.get(`${API_ORIGIN}/uploads/${replaced.profileImage}`)).status(),
-      ).toBe(200);
 
       // Remove the photo.
       await page.getByRole('button', { name: 'Edit Member' }).click();

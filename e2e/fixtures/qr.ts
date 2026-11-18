@@ -1,3 +1,4 @@
+import { Locator } from '@playwright/test';
 import {
   BinaryBitmap,
   HybridBinarizer,
@@ -91,4 +92,29 @@ export async function qrImageDataUrl(payload: QrPayload | string): Promise<strin
     scale: moduleScale(symbol.modules.size),
     color: { dark: '#000000', light: '#ffffff' },
   });
+}
+
+/** Decode the actual badge image, including a clone in the print frame. */
+export async function decodeQrImage(image: Locator): Promise<string> {
+  const pixels = await image.evaluate(async element => {
+    const img = element as HTMLImageElement;
+    await img.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const context = canvas.getContext('2d')!;
+    context.drawImage(img, 0, 0);
+    const rgba = context.getImageData(0, 0, canvas.width, canvas.height).data;
+    const luminance = Array.from({ length: canvas.width * canvas.height }, (_, index) => {
+      const offset = index * 4;
+      return (rgba[offset] + 2 * rgba[offset + 1] + rgba[offset + 2]) / 4;
+    });
+    return { width: canvas.width, height: canvas.height, luminance };
+  });
+  const source = new RGBLuminanceSource(
+    Uint8ClampedArray.from(pixels.luminance),
+    pixels.width,
+    pixels.height,
+  );
+  return new MultiFormatReader().decode(new BinaryBitmap(new HybridBinarizer(source))).getText();
 }

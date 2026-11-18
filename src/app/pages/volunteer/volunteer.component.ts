@@ -1,3 +1,5 @@
+import { TableSort, sortTableRows, memberName } from '@/app/utils/table-sort';
+import { TableEmptyComponent } from '@/app/components/table-empty/table-empty.component';
 import { ZardInputComponent } from '@/shared/components/input';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { CommonModule } from '@angular/common';
@@ -18,6 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-volunteer',
   standalone: true,
   imports: [
+    TableEmptyComponent,
     ZardInputComponent,
     ZardButtonComponent,
     CommonModule,
@@ -31,6 +34,13 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './volunteer.component.css',
 })
 export class VolunteerComponent implements OnInit {
+  sortByName(): void {
+    this.tableSort.toggle();
+    this.currentPage = 1;
+    this.updateDisplayedVolunteers();
+  }
+
+  readonly tableSort = new TableSort();
   public auth = inject(AuthService);
   protected Math = Math;
   private allVolunteers: Volunteer[] = [];
@@ -100,7 +110,9 @@ export class VolunteerComponent implements OnInit {
   }
 
   private updateDisplayedVolunteers() {
-    const filtered = this.filterVolunteers(this.searchWord);
+    const filtered = sortTableRows(this.filterVolunteers(this.searchWord), this.tableSort, row =>
+      memberName(row.Member),
+    );
     this.totalVolunteers = filtered.length;
 
     if (this.totalVolunteers > 0 && this.currentPage > this.totalPages) {

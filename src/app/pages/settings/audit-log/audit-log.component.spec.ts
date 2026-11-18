@@ -143,14 +143,14 @@ describe('AuditLogComponent', () => {
     fixture.detectChanges();
 
     expect(component.state).toBe('loading');
-    expect(element().querySelector('.audit-spinner')).not.toBeNull();
+    expect(element().querySelector('app-table-loading table[aria-busy="true"]')).not.toBeNull();
     expect(all('tr.audit-row').length).toBe(0);
 
     pending.next(result(SAMPLE));
     fixture.detectChanges();
 
     expect(component.state).toBe('ready');
-    expect(element().querySelector('.audit-spinner')).toBeNull();
+    expect(element().querySelector('app-table-loading table[aria-busy="true"]')).toBeNull();
     expect(all('tr.audit-row').length).toBe(4);
   });
 

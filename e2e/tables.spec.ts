@@ -185,7 +185,7 @@ test.describe('Uniform data tables', () => {
             const activity = await api.createActivity();
             activities.push(activity.id);
             for (let i = 0; i < members.length; i++)
-              await api.createCheckin(
+              await api.seedCheckin(
                 members[i].registrationNumber,
                 activity.id,
                 new Date(`2020-03-0${5 - i}T09:00:00+03:00`),

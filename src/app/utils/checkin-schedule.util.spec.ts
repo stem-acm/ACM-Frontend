@@ -112,6 +112,17 @@ describe('checkin-schedule util', () => {
     });
   });
 
+  describe('dayError limit', () => {
+    it('refuses more than 12 slots on a day', () => {
+      const slots = Array.from({ length: 13 }, (_, i) => ({
+        start: `${String(i + 8).padStart(2, '0')}:00`,
+        end: `${String(i + 8).padStart(2, '0')}:30`,
+      }));
+      expect(dayError({ open: true, slots })).toBe('tooMany');
+      expect(dayError({ open: true, slots: slots.slice(0, 12) })).toBeNull();
+    });
+  });
+
   describe('openingState', () => {
     it('opens at the start of a slot and closes at its end', () => {
       const schedule = defaultSchedule();

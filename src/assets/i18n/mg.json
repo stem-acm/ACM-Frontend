@@ -306,6 +306,7 @@
     "end": "Ora fiafarana",
     "addSlot": "Hanampy fotoana",
     "removeSlot": "Hamafa ny fotoana",
+    "maxSlots": "Fotoana {{max}} farafahabetsany isan'andro.",
     "discard": "Hanafoana",
     "save": "Hitahiry",
     "saved": "Voavao ny ora fisoratana",
@@ -313,7 +314,8 @@
       "empty": "Ampidiro ny ora fanombohana sy fiafarana.",
       "order": "Tsy maintsy aorian'ny fanombohana ny fiafarana.",
       "overlap": "Mifanindry ny fotoana.",
-      "noSlot": "Manampia fotoana na akatony ny andro."
+      "noSlot": "Manampia fotoana na akatony ny andro.",
+      "tooMany": "Fotoana {{max}} farafahabetsany isan'andro."
     }
   },
   "nav": {

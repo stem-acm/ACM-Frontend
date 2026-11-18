@@ -7,6 +7,7 @@ import {
   CheckinDay,
   CheckinSchedule,
   DaySchedule,
+  MAX_SLOTS_PER_DAY,
 } from '@/app/interfaces/checkin-schedule';
 import { AppSettingsService } from '@/app/services/app-settings.service';
 import { CheckinScheduleService } from '@/app/services/checkin-schedule.service';
@@ -33,6 +34,7 @@ export class CheckinScheduleComponent implements OnInit {
   @Output() dirtyChange = new EventEmitter<boolean>();
 
   readonly days = CHECKIN_DAYS;
+  readonly maxSlots = MAX_SLOTS_PER_DAY;
   /** The time zone of the schedule: a save in the General tab shows here at once. */
   readonly timezone = this.appSettings.timezone;
   state: 'loading' | 'ready' | 'error' = 'loading';
@@ -89,6 +91,7 @@ export class CheckinScheduleComponent implements OnInit {
   }
 
   addSlot(day: DaySchedule): void {
+    if (day.slots.length >= MAX_SLOTS_PER_DAY) return;
     day.slots.push({ start: '', end: '' });
     this.changed();
   }

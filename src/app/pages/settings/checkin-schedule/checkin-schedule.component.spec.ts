@@ -137,6 +137,19 @@ describe('CheckinScheduleComponent', () => {
     ]);
   });
 
+  it('stops adding slots at 12 on a day and shows the limit (#147)', async () => {
+    await load();
+    for (let i = 0; i < 20; i++) {
+      row('saturday').querySelector<HTMLButtonElement>('.checkin-add')?.click();
+      fixture.detectChanges();
+    }
+    expect(row('saturday').querySelectorAll('.checkin-slot').length).toBe(12);
+    expect(row('saturday').querySelector('.checkin-add')).toBeNull();
+    expect(row('saturday').textContent).toContain('checkinSchedule.maxSlots');
+    component.addSlot(component.schedule!.saturday);
+    expect(component.schedule!.saturday.slots.length).toBe(12);
+  });
+
   it('shows each error under its row and refuses to save until all rows are valid', async () => {
     await load();
     const errorOf = (day: string) => row(day).querySelector('.access-field-error')?.textContent;

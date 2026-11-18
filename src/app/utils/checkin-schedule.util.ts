@@ -3,6 +3,7 @@ import {
   CheckinDay,
   CheckinSchedule,
   DaySchedule,
+  MAX_SLOTS_PER_DAY,
   ScheduleSlot,
 } from '@/app/interfaces/checkin-schedule';
 
@@ -10,7 +11,7 @@ const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 const DAY_SECONDS = 24 * 3600;
 
 /** The error of a day, as `checkinSchedule.errors.*`. The API refuses the same cases. */
-export type DayError = 'empty' | 'order' | 'overlap' | 'noSlot';
+export type DayError = 'empty' | 'order' | 'overlap' | 'noSlot' | 'tooMany';
 
 const byStart = (a: ScheduleSlot, b: ScheduleSlot) => a.start.localeCompare(b.start);
 
@@ -18,6 +19,7 @@ const byStart = (a: ScheduleSlot, b: ScheduleSlot) => a.start.localeCompare(b.st
 export function dayError(day: DaySchedule): DayError | null {
   if (!day.open) return null;
   if (day.slots.length === 0) return 'noSlot';
+  if (day.slots.length > MAX_SLOTS_PER_DAY) return 'tooMany';
   if (day.slots.some(slot => !TIME_PATTERN.test(slot.start) || !TIME_PATTERN.test(slot.end))) {
     return 'empty';
   }

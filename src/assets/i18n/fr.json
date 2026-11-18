@@ -59,7 +59,7 @@
     "save": "Enregistrer",
     "saveRole": "Enregistrer les autorisations",
     "unsaved": "Modifications non enregistrées",
-    "unsavedConfirm": "Des autorisations ont été modifiées. Quitter cette page et abandonner les modifications ?",
+    "unsavedConfirm": "Des modifications ne sont pas enregistrées. Quitter cette page et les abandonner ?",
     "saved": "Accès mis à jour",
     "created": "Compte créé",
     "createError": "Impossible de créer le compte. Vérifiez les informations et réessayez.",

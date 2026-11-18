@@ -37,7 +37,7 @@ function row(
 
 const change = (before: unknown, after: unknown) => ({ before, after });
 
-/** One log row for each of the 23 log types, with its expected English sentence. */
+/** One log row for each of the 25 log types, with its expected English sentence. */
 function cases(): [AuditLog, string][] {
   const checkIn = dayjs(CHECK_IN).format('DD / MM / YYYY, HH:mm');
   return [
@@ -140,6 +140,35 @@ function cases(): [AuditLog, string][] {
       }),
       'Returned on 13 / 11 / 2026',
     ],
+    [
+      row(
+        'checkin_schedule.updated',
+        'app_settings',
+        {
+          sunday: change(
+            {
+              open: true,
+              slots: [
+                { start: '08:00', end: '12:00' },
+                { start: '15:00', end: '18:00' },
+              ],
+            },
+            { open: false, slots: [] },
+          ),
+        },
+        { entityId: 'checkin_schedule', entityLabel: 'checkin_schedule' },
+      ),
+      '1 day changed: Sunday',
+    ],
+    [
+      row(
+        'timezone.updated',
+        'app_settings',
+        { timezone: change('Indian/Antananarivo', 'UTC') },
+        { entityId: 'timezone', entityLabel: 'timezone' },
+      ),
+      'Time zone: Indian/Antananarivo to UTC',
+    ],
   ];
 }
 
@@ -160,7 +189,7 @@ describe('AuditLogText', () => {
     text = TestBed.inject(AuditLogText);
   });
 
-  it('covers the 23 log types', () => {
+  it('covers the 25 log types', () => {
     expect(cases().map(([log]) => log.type)).toEqual([...AUDIT_LOG_TYPES]);
   });
 
@@ -204,6 +233,31 @@ describe('AuditLogText', () => {
     expect(text.fieldLabel('members', 'unknownColumn')).toBe('unknownColumn');
   });
 
+  it('formats the days of the check-in schedule', () => {
+    expect(text.fieldLabel('app_settings', 'sunday')).toBe('Sunday');
+    expect(
+      text.formatValue('app_settings', 'monday', {
+        open: true,
+        slots: [
+          { start: '08:00', end: '12:00' },
+          { start: '15:00', end: '18:00' },
+        ],
+      }),
+    ).toBe('08:00–12:00, 15:00–18:00');
+    expect(text.formatValue('app_settings', 'sunday', { open: false, slots: [] })).toBe('Closed');
+
+    const [updated] = cases().find(([log]) => log.type === 'checkin_schedule.updated')!;
+    expect(text.detail(updated)).toEqual({
+      mode: 'diff',
+      rows: [{ label: 'Sunday', before: '08:00–12:00, 15:00–18:00', after: 'Closed' }],
+    });
+    const several = row('checkin_schedule.updated', 'app_settings', {
+      sunday: change({ open: false, slots: [] }, { open: true, slots: [] }),
+      monday: change({ open: false, slots: [] }, { open: true, slots: [] }),
+    });
+    expect(text.sentence(several)).toBe('2 days changed: Monday, Sunday');
+  });
+
   it('chooses the badge family and the detail of each log row', () => {
     expect(text.actionFamily('member.created')).toBe('create');
     expect(text.actionFamily('book_loan.returned')).toBe('update');
@@ -240,5 +294,27 @@ describe('AuditLogText', () => {
         row('volunteer.created', 'volunteers', {}, { entityLabel: VOLUNTEER_WITHOUT_MEMBER_LABEL }),
       ),
     ).toBe('Volunteer without member');
+    expect(
+      text.recordLabel(
+        row('checkin_schedule.updated', 'app_settings', {}, { entityLabel: 'checkin_schedule' }),
+      ),
+    ).toBe('Check-in hours');
+    expect(
+      text.recordLabel(row('timezone.updated', 'app_settings', {}, { entityLabel: 'timezone' })),
+    ).toBe('Time zone');
+  });
+
+  it('shows the time zone of the app as its IANA name', () => {
+    expect(text.fieldLabel('app_settings', 'timezone')).toBe('Time zone');
+    expect(text.formatValue('app_settings', 'timezone', 'Indian/Antananarivo')).toBe(
+      'Indian/Antananarivo',
+    );
+    const [updated] = cases().find(([log]) => log.type === 'timezone.updated')!;
+    expect(text.detail(updated)).toEqual({
+      mode: 'diff',
+      rows: [{ label: 'Time zone', before: 'Indian/Antananarivo', after: 'UTC' }],
+    });
+    translate.use('fr');
+    expect(text.sentence(updated)).toBe('Fuseau horaire : Indian/Antananarivo vers UTC');
   });
 });

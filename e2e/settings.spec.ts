@@ -508,4 +508,111 @@ test.describe('F11 Settings', () => {
       await api.deleteMemberIfExists(member.registrationNumber);
     }
   });
+  test('F11.13 an admin closes Sunday in the Check-in tab, saves, and the API and the audit log follow', async ({
+    page,
+    api,
+  }) => {
+    const original = await api.getCheckinSchedule();
+    const opened = structuredClone(original);
+    opened.sunday = { open: true, slots: [{ start: '08:00', end: '12:00' }] };
+    await api.saveCheckinSchedule(opened);
+    try {
+      await page.goto('/setting');
+      // The tabs carry role="tab", but the z-button directive turns them into "button".
+      await page.getByRole('tablist').getByRole('button', { name: 'Check-in' }).click();
+      await expect(page.getByRole('heading', { name: 'Check-in hours', level: 2 })).toBeVisible();
+
+      const sunday = page.getByRole('group', { name: 'Sunday' });
+      await expect(sunday.getByLabel('Start time')).toHaveValue('08:00');
+      await sunday.getByRole('checkbox').uncheck();
+      await expect(sunday).toContainText('No check-in on this day.');
+      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
+
+      await page.getByRole('button', { name: 'Save', exact: true }).click();
+      await expect(
+        page.getByRole('status').filter({ hasText: 'Check-in hours updated' }),
+      ).toBeVisible();
+      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toHaveCount(0);
+      expect((await api.getCheckinSchedule()).sunday).toEqual({ open: false, slots: [] });
+
+      const [log] = (
+        await api.getPage<{ type: string; changes: Record<string, unknown> }>(
+          'settings/logs?type=checkin_schedule.updated&limit=1',
+        )
+      ).data;
+      expect(log.changes).toEqual({
+        sunday: { before: opened.sunday, after: { open: false, slots: [] } },
+      });
+    } finally {
+      await api.saveCheckinSchedule(original);
+    }
+  });
+
+  test('F11.14 an admin changes the time zone in the General tab, the Check-in tab and the audit log follow, then restores it', async ({
+    page,
+    api,
+  }) => {
+    const original = await api.getTimezone();
+    try {
+      await page.goto('/setting');
+      const tabs = page.locator('.access-page-tabs');
+      await expect(tabs.getByRole('button')).toHaveText([
+        'Roles and accounts',
+        'General',
+        'Check-in',
+        'Audit log',
+      ]);
+      await tabs.getByRole('button', { name: 'General' }).click();
+      await expect(page.getByRole('heading', { name: 'Time zone', level: 2 })).toBeVisible();
+
+      const input = page.getByRole('combobox', { name: 'Time zone' });
+      await expect(input).toHaveValue(original);
+      await expect(page.locator('#timezone-hint')).toHaveText('UTC+03:00');
+
+      // A name that is not a real time zone is refused and Save stays disabled.
+      await input.fill('Mars/Olympus_Mons');
+      await expect(
+        page.getByRole('alert').filter({ hasText: 'Choose a valid time zone from the list.' }),
+      ).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
+
+      // Typing suggests matching names; one is chosen from the list.
+      await input.fill('utc');
+      await page
+        .getByRole('listbox', { name: 'Time zone' })
+        .getByRole('option', { name: /^UTC\b/ })
+        .click();
+      await expect(input).toHaveValue('UTC');
+      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
+      await page.getByRole('button', { name: 'Save', exact: true }).click();
+      await expect(page.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
+      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toHaveCount(0);
+      expect(await api.getTimezone()).toBe('UTC');
+
+      const [log] = (
+        await api.getPage<{ type: string; changes: Record<string, unknown> }>(
+          'settings/logs?type=timezone.updated&limit=1',
+        )
+      ).data;
+      expect(log.changes).toEqual({ timezone: { before: original, after: 'UTC' } });
+
+      await tabs.getByRole('button', { name: 'Check-in' }).click();
+      await expect(page.getByText('Times are in UTC. One scan per slot.')).toBeVisible();
+
+      // Restore it from the General tab.
+      await tabs.getByRole('button', { name: 'General' }).click();
+      // Typed with the keyboard: the first suggestion is chosen with ArrowDown and Enter.
+      await input.fill(original.split('/').pop()!);
+      await input.press('ArrowDown');
+      await input.press('Enter');
+      await expect(input).toHaveValue(original);
+      await page.getByRole('button', { name: 'Save', exact: true }).click();
+      await expect(page.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
+      expect(await api.getTimezone()).toBe(original);
+      await tabs.getByRole('button', { name: 'Check-in' }).click();
+      await expect(page.getByText(`Times are in ${original}. One scan per slot.`)).toBeVisible();
+    } finally {
+      await api.saveTimezone(original);
+    }
+  });
 });

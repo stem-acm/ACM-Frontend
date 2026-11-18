@@ -19,6 +19,8 @@ import { ZardCardComponent } from '@/shared/components/card';
 import { ZardInputComponent } from '@/shared/components/input';
 import { ZardTableImports } from '@/shared/components/table/table.imports';
 import { AuditLogComponent } from './audit-log/audit-log.component';
+import { CheckinScheduleComponent } from './checkin-schedule/checkin-schedule.component';
+import { GeneralSettingsComponent } from './general-settings/general-settings.component';
 import { CanDeactivateFn } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -53,6 +55,8 @@ interface Account {
     ZardInputComponent,
     ZardTableImports,
     AuditLogComponent,
+    CheckinScheduleComponent,
+    GeneralSettingsComponent,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
@@ -65,8 +69,16 @@ export class SettingsComponent implements OnInit {
   private url = `${environment.API_URL}/settings`;
   private savedPolicies = new Map<Role, string>();
 
-  /** Page-level tab: roles and accounts, or the audit log. */
-  pageTab: 'access' | 'logs' = 'access';
+  /** Page-level tab: roles and accounts, the general settings, the check-in schedule, or the audit log. */
+  pageTab: 'access' | 'general' | 'checkin' | 'logs' = 'access';
+  /**
+   * The general and check-in tabs load on their first opening, then stay mounted to keep
+   * their edits.
+   */
+  generalVisited = false;
+  generalDirty = false;
+  checkinVisited = false;
+  checkinDirty = false;
   roles: Role[] = ['admin', 'intern', 'volunteer'];
   selectedRole: Role = 'intern';
   policies: Policy[] = [];
@@ -167,7 +179,19 @@ export class SettingsComponent implements OnInit {
   }
 
   get hasUnsavedChanges(): boolean {
-    return this.roles.some(role => this.isRoleDirty(role));
+    return (
+      this.generalDirty || this.checkinDirty || this.roles.some(role => this.isRoleDirty(role))
+    );
+  }
+
+  openGeneralTab(): void {
+    this.pageTab = 'general';
+    this.generalVisited = true;
+  }
+
+  openCheckinTab(): void {
+    this.pageTab = 'checkin';
+    this.checkinVisited = true;
   }
 
   canLeave(): boolean {

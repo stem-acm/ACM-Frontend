@@ -91,6 +91,8 @@
   "auditLog": {
     "tabs": {
       "access": "Rôles et comptes",
+      "general": "Général",
+      "checkin": "Enregistrement",
       "logs": "Journal d'audit"
     },
     "title": "Journal d'audit",
@@ -129,7 +131,8 @@
       "activities": "Activité",
       "checkins": "Présence",
       "volunteers": "Bénévole",
-      "book_loans": "Emprunt"
+      "book_loans": "Emprunt",
+      "app_settings": "Paramètre"
     },
     "entityGroups": {
       "users": "Comptes",
@@ -138,7 +141,8 @@
       "activities": "Activités",
       "checkins": "Présences",
       "volunteers": "Bénévoles",
-      "book_loans": "Emprunts"
+      "book_loans": "Emprunts",
+      "app_settings": "Paramètres"
     },
     "parentKinds": {
       "members": "le membre",
@@ -181,6 +185,12 @@
         "created": "Emprunt créé",
         "updated": "Emprunt modifié",
         "returned": "Livre rendu"
+      },
+      "checkin_schedule": {
+        "updated": "Heures d'enregistrement modifiées"
+      },
+      "timezone": {
+        "updated": "Fuseau horaire modifié"
       }
     },
     "sentences": {
@@ -238,6 +248,15 @@
           "other": "{{count}} champs modifiés : {{fields}}"
         },
         "returned": "Rendu le {{effectiveReturnDate}}"
+      },
+      "checkin_schedule": {
+        "updated": {
+          "one": "{{count}} jour modifié : {{days}}",
+          "other": "{{count}} jours modifiés : {{days}}"
+        }
+      },
+      "timezone": {
+        "updated": "Fuseau horaire : {{before}} vers {{after}}"
       }
     },
     "detail": {
@@ -256,10 +275,46 @@
     "allowed": "Autorisé",
     "notAllowed": "Non autorisé",
     "volunteerWithoutMember": "Bénévole sans membre",
+    "settingNames": {
+      "checkin_schedule": "Heures d'enregistrement",
+      "timezone": "Fuseau horaire"
+    },
     "loading": "Chargement du journal d'audit…",
     "nothingYet": "Aucun journal d’audit pour le moment.",
     "showing": "Affichage de {{first}} à {{last}} sur {{total}} résultats",
     "pageOf": "Page {{page}} sur {{pages}}"
+  },
+  "generalSettings": {
+    "title": "Fuseau horaire",
+    "description": "Les heures d'enregistrement et d'ouverture sont lues dans ce fuseau horaire.",
+    "label": "Fuseau horaire",
+    "placeholder": "Commencez à taper, ex. Antananarivo",
+    "discard": "Annuler",
+    "save": "Enregistrer",
+    "invalid": "Choisissez un fuseau horaire valide dans la liste.",
+    "saved": "Fuseau horaire mis à jour"
+  },
+  "checkinSchedule": {
+    "title": "Heures d'enregistrement",
+    "description": "Les membres ne peuvent scanner que pendant ces créneaux.",
+    "timezone": "Les heures sont en {{timezone}}. Un scan par créneau.",
+    "open": "Ouvert",
+    "closed": "Fermé",
+    "closedHint": "Pas d'enregistrement ce jour-là.",
+    "to": "à",
+    "start": "Heure de début",
+    "end": "Heure de fin",
+    "addSlot": "Ajouter un créneau",
+    "removeSlot": "Supprimer le créneau",
+    "discard": "Annuler",
+    "save": "Enregistrer",
+    "saved": "Heures d'enregistrement mises à jour",
+    "errors": {
+      "empty": "Saisissez une heure de début et de fin.",
+      "order": "La fin doit être après le début.",
+      "overlap": "Les créneaux se chevauchent.",
+      "noSlot": "Ajoutez un créneau ou fermez le jour."
+    }
   },
   "nav": {
     "home": "Accueil",
@@ -496,7 +551,8 @@
     "wednesday": "Mercredi",
     "thursday": "Jeudi",
     "friday": "Vendredi",
-    "saturday": "Samedi"
+    "saturday": "Samedi",
+    "sunday": "Dimanche"
   },
   "titles": {
     "newMember": "Nouveau Membre",
@@ -534,7 +590,9 @@
     "scanBadge": "SCANNER LE BADGE",
     "welcome": "BIENVENUE",
     "go": "ALLER",
-    "completeCheckIn": "Terminer l'enregistrement"
+    "completeCheckIn": "Terminer l'enregistrement",
+    "hoursZone": "Fuseau horaire : {{timezone}}",
+    "noOpening": "Aucune ouverture n'est prévue."
   },
   "certificateEditor": {
     "back": "Retour aux bénévoles",

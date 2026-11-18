@@ -1,0 +1,69 @@
+.checkin-schedule-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.checkin-schedule-zone {
+  font-size: 0.85rem;
+}
+.checkin-days {
+  margin: 1.2rem 0;
+  border-top: 1px solid #e8edf5;
+}
+.checkin-day {
+  display: grid;
+  grid-template-columns: 8rem 8rem 1fr;
+  align-items: start;
+  gap: 0.8rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid #e8edf5;
+}
+.checkin-day-name {
+  color: #143a7b;
+  padding-top: 0.35rem;
+}
+.checkin-day-switch {
+  padding-top: 0.35rem;
+}
+.checkin-day-slots {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+.checkin-slot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #60718d;
+  font-size: 0.88rem;
+}
+.checkin-time {
+  width: 8rem;
+  height: 2rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--input);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #294b7c;
+}
+.checkin-closed-hint {
+  margin: 0;
+  padding-top: 0.35rem;
+}
+.checkin-schedule-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+@media (max-width: 640px) {
+  .checkin-day {
+    grid-template-columns: 1fr auto;
+  }
+  .checkin-day-slots {
+    grid-column: 1 / -1;
+  }
+  .checkin-time {
+    width: 6.5rem;
+  }
+}

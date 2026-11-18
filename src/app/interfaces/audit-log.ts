@@ -22,6 +22,8 @@ export const AUDIT_LOG_TYPES = [
   'book_loan.created',
   'book_loan.updated',
   'book_loan.returned',
+  'checkin_schedule.updated',
+  'timezone.updated',
 ] as const;
 export type AuditLogType = (typeof AUDIT_LOG_TYPES)[number];
 
@@ -33,6 +35,7 @@ export const AUDIT_LOG_ENTITIES = [
   'book_loans',
   'users',
   'role_policies',
+  'app_settings',
 ] as const;
 export type AuditLogEntity = (typeof AUDIT_LOG_ENTITIES)[number];
 

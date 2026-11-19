@@ -4,11 +4,12 @@ import { Member } from '@/app/interfaces/member';
 import { environment } from '@/environments/environment';
 import { AsyncPipe } from '@angular/common';
 import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
+import { MemberNamePipe } from '@/app/pipes/member-name.pipe';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [ZardButtonComponent, AsyncPipe, MemberPhotoPipe],
+  imports: [MemberNamePipe, ZardButtonComponent, AsyncPipe, MemberPhotoPipe],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })

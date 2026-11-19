@@ -3,7 +3,7 @@ import { Occupation } from '@/app/types/occupation';
 export interface Member {
   registrationNumber?: number | null;
   firstName: string;
-  lastName: string;
+  lastName: string | null;
   title: string;
   gender: string;
   birthDate: Date | string;

@@ -17,11 +17,13 @@ import { HttpResult } from '@/app/types/httpResult';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@/app/services/auth.service';
 import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
+import { MemberNamePipe, memberFullName } from '@/app/pipes/member-name.pipe';
 
 @Component({
   selector: 'app-table-members',
   standalone: true,
   imports: [
+    MemberNamePipe,
     TableEmptyComponent,
     TableSortComponent,
     ZardButtonComponent,
@@ -139,12 +141,12 @@ export class TableMembersComponent {
     this.memberToDeleteId = member.registrationNumber!;
     this.deleteTitle = this.translateService.instant('alert.deleteTitle');
     this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
-      name: `${member.firstName} ${member.lastName}`,
+      name: memberFullName(member),
     });
     // Fallback if translation missing or not set up with params
     if (this.deleteTitle === 'alert.deleteTitle') this.deleteTitle = 'Delete Member';
     if (this.deleteMessage === 'alert.deleteMessage')
-      this.deleteMessage = `Are you sure you want to delete ${member.firstName} ${member.lastName}?`;
+      this.deleteMessage = `Are you sure you want to delete ${memberFullName(member)}?`;
 
     this.showDeleteModal = true;
   }

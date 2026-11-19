@@ -14,6 +14,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import { CardSkeletonComponent } from '../card-skeleton/card-skeleton.component';
 import { CardComponent } from '../card/card.component';
 import { MemberCardViewerComponent } from '../member-card-viewer/member-card-viewer.component';
+import { memberFullName } from '@/app/pipes/member-name.pipe';
 
 @Component({
   selector: 'app-add-volunteer',
@@ -174,7 +175,7 @@ export class AddVolunteerComponent implements OnInit {
             message: '',
           };
           this.showToast.emit(
-            `Member ${this.membersClicked[0].firstName} ${this.membersClicked[0].lastName} created successfully`,
+            `Member ${memberFullName(this.membersClicked[0])} created successfully`,
           );
           this.success.emit(true);
         }
@@ -229,7 +230,7 @@ export class AddVolunteerComponent implements OnInit {
     this.membersChooseListFilter = this.membersChooseList.filter(
       e =>
         e.member.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
-        e.member.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
+        (e.member.lastName ?? '').toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
     );
   }
 }

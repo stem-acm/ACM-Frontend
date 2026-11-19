@@ -18,9 +18,7 @@
             [alt]="volunteer.Member?.lastName"
           />
           <div>
-            <strong>{{
-              volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName
-            }}</strong>
+            <strong>{{ volunteer.Member | memberName: 'list' }}</strong>
             <span>{{ volunteer.Member?.registrationNumber }}</span>
           </div>
         </div>
@@ -79,7 +77,7 @@
             />
             <div class="ps-3">
               <div class="text-base font-semibold">
-                {{ volunteer.Member?.lastName?.toUpperCase() + ' ' + volunteer.Member?.firstName }}
+                {{ volunteer.Member | memberName: 'list' }}
               </div>
               <div class="font-normal text-gray-500">
                 {{ volunteer.Member?.registrationNumber }}

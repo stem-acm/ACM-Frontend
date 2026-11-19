@@ -78,8 +78,15 @@ function createForm(page: Page) {
   return page.locator('form').filter({ has: page.getByRole('heading', { name: 'Add account' }) });
 }
 
-async function openRole(page: Page, role: Role) {
+/** Settings opens on General: the roles and the accounts are in their own tab. */
+async function openAccess(page: Page) {
   await page.goto('/setting');
+  // The tabs carry role="tab", but the z-button directive turns them into "button".
+  await page.getByRole('tablist').getByRole('button', { name: 'Roles and accounts' }).click();
+}
+
+async function openRole(page: Page, role: Role) {
+  await openAccess(page);
   await roleTab(page, role).click();
   await expect(roleTab(page, role)).toHaveAttribute('aria-selected', 'true');
   await expect(roleActiveSwitch(page)).toBeVisible();
@@ -111,7 +118,7 @@ test.describe('F11 Settings', () => {
     const policies = await api.getRolePolicies();
     expect(policies.map(policy => policy.role).sort()).toEqual(['admin', 'intern', 'volunteer']);
 
-    await page.goto('/setting');
+    await openAccess(page);
     for (const policy of policies) {
       expect(Object.keys(policy.permissions).sort(), `features of ${policy.role}`).toEqual(
         Object.keys(FEATURE_LABELS).sort(),
@@ -267,7 +274,7 @@ test.describe('F11 Settings', () => {
     const email = `${username}@e2e.test`;
     const password = generatePassword();
     try {
-      await page.goto('/setting');
+      await openAccess(page);
       const form = createForm(page);
       await form.getByLabel('Username').fill(username);
       await form.getByLabel('Email').fill(email);
@@ -306,7 +313,7 @@ test.describe('F11 Settings', () => {
   }) => {
     const existing = await api.createUser('volunteer');
     try {
-      await page.goto('/setting');
+      await openAccess(page);
       const form = createForm(page);
       await form.getByLabel('Username').fill(existing.username);
       await form.getByLabel('Email').fill(`other${uniqueSuffix()}@e2e.test`);
@@ -338,7 +345,7 @@ test.describe('F11 Settings', () => {
       volunteer.permissions,
     );
     try {
-      await page.goto('/setting');
+      await openAccess(page);
       const row = accountRow(page, user.username);
       await row.getByRole('combobox').selectOption({ label: 'Intern' });
       await row.getByRole('button', { name: 'Save' }).click();
@@ -364,7 +371,7 @@ test.describe('F11 Settings', () => {
   test('F11.9 a user deactivated in the settings cannot log in', async ({ page, api, browser }) => {
     const user = await api.createUser('volunteer');
     try {
-      await page.goto('/setting');
+      await openAccess(page);
       const row = accountRow(page, user.username);
       await row.getByRole('checkbox').uncheck();
       await row.getByRole('button', { name: 'Save' }).click();
@@ -396,7 +403,7 @@ test.describe('F11 Settings', () => {
     const admin = await api.getUserByName(ADMIN.username);
     expect(admin).toMatchObject({ role: 'admin', active: true });
 
-    await page.goto('/setting');
+    await openAccess(page);
     const row = accountRow(page, ADMIN.username);
     await expect(row.getByRole('combobox')).toBeDisabled();
     await expect(row.getByRole('checkbox')).toBeDisabled();
@@ -508,7 +515,7 @@ test.describe('F11 Settings', () => {
       await api.deleteMemberIfExists(member.registrationNumber);
     }
   });
-  test('F11.13 an admin closes Sunday in the Check-in tab, saves, and the API and the audit log follow', async ({
+  test('F11.13 an admin closes Sunday in the check-in hours of the General tab, saves, and the API and the audit log follow', async ({
     page,
     api,
   }) => {
@@ -517,22 +524,22 @@ test.describe('F11 Settings', () => {
     opened.sunday = { open: true, slots: [{ start: '08:00', end: '12:00' }] };
     await api.saveCheckinSchedule(opened);
     try {
+      // Settings opens on General: the check-in hours card comes first.
       await page.goto('/setting');
-      // The tabs carry role="tab", but the z-button directive turns them into "button".
-      await page.getByRole('tablist').getByRole('button', { name: 'Check-in' }).click();
-      await expect(page.getByRole('heading', { name: 'Check-in hours', level: 2 })).toBeVisible();
+      const card = page.locator('app-checkin-schedule');
+      await expect(card.getByRole('heading', { name: 'Check-in hours', level: 2 })).toBeVisible();
 
-      const sunday = page.getByRole('group', { name: 'Sunday' });
+      const sunday = card.getByRole('group', { name: 'Sunday' });
       await expect(sunday.getByLabel('Start time')).toHaveValue('08:00');
       await sunday.getByRole('checkbox').uncheck();
       await expect(sunday).toContainText('No check-in on this day.');
-      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
+      await expect(card.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
 
-      await page.getByRole('button', { name: 'Save', exact: true }).click();
+      await card.getByRole('button', { name: 'Save', exact: true }).click();
       await expect(
-        page.getByRole('status').filter({ hasText: 'Check-in hours updated' }),
+        card.getByRole('status').filter({ hasText: 'Check-in hours updated' }),
       ).toBeVisible();
-      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toHaveCount(0);
+      await expect(card.getByRole('status').filter({ hasText: 'Unsaved changes' })).toHaveCount(0);
       expect((await api.getCheckinSchedule()).sunday).toEqual({ open: false, slots: [] });
 
       const [log] = (
@@ -548,22 +555,30 @@ test.describe('F11 Settings', () => {
     }
   });
 
-  test('F11.14 an admin changes the time zone in the General tab, the Check-in tab and the audit log follow, then restores it', async ({
+  test('F11.14 an admin changes the time zone in the General tab, the check-in hours and the audit log follow, then restores it', async ({
     page,
     api,
   }) => {
     const original = await api.getTimezone();
     try {
       await page.goto('/setting');
+      await expect(page.getByRole('heading', { name: 'Settings', level: 1 })).toBeVisible();
       const tabs = page.locator('.access-page-tabs');
       await expect(tabs.getByRole('button')).toHaveText([
-        'Roles and accounts',
         'General',
-        'Check-in',
+        'Roles and accounts',
         'Audit log',
       ]);
-      await tabs.getByRole('button', { name: 'General' }).click();
-      await expect(page.getByRole('heading', { name: 'Time zone', level: 2 })).toBeVisible();
+      // Settings opens on General: the check-in hours card, then the time zone card.
+      await expect(tabs.getByRole('button', { name: 'General' })).toHaveAttribute(
+        'aria-selected',
+        'true',
+      );
+      await expect(page.locator('.settings-general').getByRole('heading', { level: 2 })).toHaveText(
+        ['Check-in hours', 'Time zone'],
+      );
+      const card = page.locator('app-general-settings');
+      const hours = page.locator('app-checkin-schedule');
 
       const input = page.getByRole('combobox', { name: 'Time zone' });
       await expect(input).toHaveValue(original);
@@ -574,7 +589,7 @@ test.describe('F11 Settings', () => {
       await expect(
         page.getByRole('alert').filter({ hasText: 'Choose a valid time zone from the list.' }),
       ).toBeVisible();
-      await expect(page.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
+      await expect(card.getByRole('button', { name: 'Save', exact: true })).toBeDisabled();
 
       // Typing suggests matching names; one is chosen from the list.
       await input.fill('utc');
@@ -583,10 +598,10 @@ test.describe('F11 Settings', () => {
         .getByRole('option', { name: /^UTC\b/ })
         .click();
       await expect(input).toHaveValue('UTC');
-      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
-      await page.getByRole('button', { name: 'Save', exact: true }).click();
-      await expect(page.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
-      await expect(page.getByRole('status').filter({ hasText: 'Unsaved changes' })).toHaveCount(0);
+      await expect(card.getByRole('status').filter({ hasText: 'Unsaved changes' })).toBeVisible();
+      await card.getByRole('button', { name: 'Save', exact: true }).click();
+      await expect(card.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
+      await expect(card.getByRole('status').filter({ hasText: 'Unsaved changes' })).toHaveCount(0);
       expect(await api.getTimezone()).toBe('UTC');
 
       const [log] = (
@@ -596,21 +611,22 @@ test.describe('F11 Settings', () => {
       ).data;
       expect(log.changes).toEqual({ timezone: { before: original, after: 'UTC' } });
 
-      await tabs.getByRole('button', { name: 'Check-in' }).click();
-      await expect(page.getByText('Times are in UTC. One scan per slot.')).toBeVisible();
+      await expect(
+        hours.getByText('Times are in UTC (time zone below). One scan per slot.'),
+      ).toBeVisible();
 
-      // Restore it from the General tab.
-      await tabs.getByRole('button', { name: 'General' }).click();
+      // Restore it.
       // Typed with the keyboard: the first suggestion is chosen with ArrowDown and Enter.
       await input.fill(original.split('/').pop()!);
       await input.press('ArrowDown');
       await input.press('Enter');
       await expect(input).toHaveValue(original);
-      await page.getByRole('button', { name: 'Save', exact: true }).click();
-      await expect(page.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
+      await card.getByRole('button', { name: 'Save', exact: true }).click();
+      await expect(card.getByRole('status').filter({ hasText: 'Time zone updated' })).toBeVisible();
       expect(await api.getTimezone()).toBe(original);
-      await tabs.getByRole('button', { name: 'Check-in' }).click();
-      await expect(page.getByText(`Times are in ${original}. One scan per slot.`)).toBeVisible();
+      await expect(
+        hours.getByText(`Times are in ${original} (time zone below). One scan per slot.`),
+      ).toBeVisible();
     } finally {
       await api.saveTimezone(original);
     }

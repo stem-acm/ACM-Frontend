@@ -12,43 +12,27 @@
       class="acm-btn acm-btn--ghost"
       type="button"
       role="tab"
+      [attr.aria-selected]="pageTab === 'general'"
+      [class.selected]="pageTab === 'general'"
+      (click)="pageTab = 'general'"
+    >
+      {{ 'auditLog.tabs.general' | translate }}
+      @if (generalTabDirty) {
+        <span class="access-unsaved-dot" aria-hidden="true"></span>
+        <span class="sr-only">{{ 'access.unsaved' | translate }}</span>
+      }
+    </button>
+    <button
+      z-button
+      zType="ghost"
+      class="acm-btn acm-btn--ghost"
+      type="button"
+      role="tab"
       [attr.aria-selected]="pageTab === 'access'"
       [class.selected]="pageTab === 'access'"
       (click)="pageTab = 'access'"
     >
       {{ 'auditLog.tabs.access' | translate }}
-    </button>
-    <button
-      z-button
-      zType="ghost"
-      class="acm-btn acm-btn--ghost"
-      type="button"
-      role="tab"
-      [attr.aria-selected]="pageTab === 'general'"
-      [class.selected]="pageTab === 'general'"
-      (click)="openGeneralTab()"
-    >
-      {{ 'auditLog.tabs.general' | translate }}
-      @if (generalDirty) {
-        <span class="access-unsaved-dot" aria-hidden="true"></span>
-        <span class="sr-only">{{ 'access.unsaved' | translate }}</span>
-      }
-    </button>
-    <button
-      z-button
-      zType="ghost"
-      class="acm-btn acm-btn--ghost"
-      type="button"
-      role="tab"
-      [attr.aria-selected]="pageTab === 'checkin'"
-      [class.selected]="pageTab === 'checkin'"
-      (click)="openCheckinTab()"
-    >
-      {{ 'auditLog.tabs.checkin' | translate }}
-      @if (checkinDirty) {
-        <span class="access-unsaved-dot" aria-hidden="true"></span>
-        <span class="sr-only">{{ 'access.unsaved' | translate }}</span>
-      }
     </button>
     <button
       z-button
@@ -64,12 +48,10 @@
     </button>
   </div>
 
-  @if (generalVisited) {
-    <app-general-settings [hidden]="pageTab !== 'general'" (dirtyChange)="generalDirty = $event" />
-  }
-  @if (checkinVisited) {
-    <app-checkin-schedule [hidden]="pageTab !== 'checkin'" (dirtyChange)="checkinDirty = $event" />
-  }
+  <div class="settings-general" [hidden]="pageTab !== 'general'">
+    <app-checkin-schedule (dirtyChange)="checkinDirty = $event" />
+    <app-general-settings (dirtyChange)="generalDirty = $event" />
+  </div>
 
   @if (pageTab === 'logs') {
     <app-audit-log [accounts]="accounts" />

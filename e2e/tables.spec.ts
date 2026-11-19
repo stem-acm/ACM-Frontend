@@ -62,6 +62,13 @@ const views = [
   },
 ];
 
+async function openAccounts(page: Page) {
+  await page
+    .getByRole('tablist')
+    .getByRole('button', { name: 'Roles and accounts', exact: true })
+    .click();
+}
+
 async function openLogs(page: Page) {
   await page.getByRole('tablist').getByRole('button', { name: 'Audit log', exact: true }).click();
 }
@@ -105,6 +112,7 @@ test.describe('Uniform data tables', () => {
       try {
         await page.goto(view.url);
         if ('logs' in view) await openLogs(page);
+        else if (view.name === 'accounts') await openAccounts(page);
         const loading = page.locator('app-table-loading table');
         await expect(loading).toBeVisible();
         await expect(loading).toHaveAttribute('aria-busy', 'true');
@@ -197,6 +205,7 @@ test.describe('Uniform data tables', () => {
           } else url = '/members';
         }
         await page.goto(url);
+        if (kind === 'accounts') await openAccounts(page);
         if (kind === 'audit') {
           await openLogs(page);
           await page.getByRole('searchbox', { name: 'Search', exact: true }).fill(prefix);

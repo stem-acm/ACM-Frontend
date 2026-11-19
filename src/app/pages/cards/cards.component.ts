@@ -125,7 +125,7 @@ export class CardsComponent implements OnInit {
     this.membersChooseListFilter = this.membersChooseList.filter(
       e =>
         e.member.firstName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1 ||
-        e.member.lastName.toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
+        (e.member.lastName ?? '').toLocaleLowerCase().indexOf(keyWord.toLocaleLowerCase()) != -1,
     );
   }
 }

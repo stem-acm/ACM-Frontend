@@ -12,11 +12,13 @@ import { DateUtil } from '@/app/utils/date.util';
 import { AuthService } from '@/app/services/auth.service';
 import { AsyncPipe } from '@angular/common';
 import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
+import { MemberNamePipe } from '@/app/pipes/member-name.pipe';
 
 @Component({
   selector: 'app-table-volunteers',
   standalone: true,
   imports: [
+    MemberNamePipe,
     TableEmptyComponent,
     TableSortComponent,
     ZardButtonComponent,

@@ -18,6 +18,7 @@ import {
   timer,
 } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { memberFullName } from '@/app/pipes/member-name.pipe';
 
 @Component({
   selector: 'app-add-book-loan',
@@ -170,7 +171,7 @@ export class AddBookLoanComponent implements OnInit {
 
   selectMember(member: Member): void {
     this.selectedMember = member;
-    this.memberSearch = `${member.firstName} ${member.lastName} · ${member.registrationNumber}`;
+    this.memberSearch = `${memberFullName(member)} · ${member.registrationNumber}`;
     this.filteredMembers = [];
   }
 

@@ -9,7 +9,7 @@
       />
       <app-title
         *ngIf="!notFound"
-        [titleText]="(member.lastName | capitalize) + ' ' + member.firstName"
+        [titleText]="((member.lastName | capitalize) + ' ' + member.firstName).trim()"
       />
       <div class="mx-auto w-4/5 pt-3 border-b-2 border-destructive/60"></div>
       <div *ngIf="!notFound" class="text-left">
@@ -18,7 +18,7 @@
             <app-list-value
               [label]="'forms.fullName' | translate"
               [boldPrefix]="member.title || ''"
-              [value]="member.firstName + ' ' + (member.lastName | capitalize)"
+              [value]="(member.firstName + ' ' + (member.lastName | capitalize)).trim()"
             />
             <app-list-value
               [label]="'forms.dateAndPlaceOfBirth' | translate"

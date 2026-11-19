@@ -18,9 +18,7 @@
             [alt]="item.Member?.firstName"
           />
           <div>
-            <strong>{{
-              item.Member?.lastName?.toUpperCase() + ' ' + item.Member?.firstName
-            }}</strong>
+            <strong>{{ item.Member | memberName: 'list' }}</strong>
             <span>{{ item.Member?.registrationNumber }}</span>
           </div>
           @if (isInRoom(item)) {
@@ -93,7 +91,7 @@
             </div>
             <div class="ps-3">
               <div class="text-base font-semibold flex items-center gap-2">
-                {{ item?.Member?.lastName?.toUpperCase() + ' ' + item?.Member?.firstName }}
+                {{ item?.Member | memberName: 'list' }}
                 <!-- @if (isInRoom(item)) {
                 <span class="w-2 h-2 bg-green-500 rounded-full"></span>
               } -->

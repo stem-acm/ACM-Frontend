@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '@/app/services/auth.service';
 import { CapitalizePipe } from '@/app/pipes/capitalize.pipe';
 import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
+import { memberFullName } from '@/app/pipes/member-name.pipe';
 
 @Component({
   selector: 'app-member-card-detail',
@@ -133,12 +134,12 @@ export class MemberCardDetailComponent implements OnInit, OnChanges {
   onDeleteClick() {
     this.deleteTitle = this.translateService.instant('alert.deleteTitle');
     this.deleteMessage = this.translateService.instant('alert.deleteMessage', {
-      name: `${this.member.firstName} ${this.member.lastName}`,
+      name: memberFullName(this.member),
     });
     // Fallback if translation missing
     if (this.deleteTitle === 'alert.deleteTitle') this.deleteTitle = 'Delete Member';
     if (this.deleteMessage === 'alert.deleteMessage') {
-      this.deleteMessage = `Are you sure you want to delete ${this.member.firstName} ${this.member.lastName}?`;
+      this.deleteMessage = `Are you sure you want to delete ${memberFullName(this.member)}?`;
     }
 
     this.showDeleteModal = true;

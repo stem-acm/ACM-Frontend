@@ -10,11 +10,13 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AsyncPipe } from '@angular/common';
 import { MemberPhotoPipe } from '@/app/pipes/member-photo.pipe';
+import { MemberNamePipe } from '@/app/pipes/member-name.pipe';
 
 @Component({
   selector: 'app-table-checkins',
   standalone: true,
   imports: [
+    MemberNamePipe,
     TableEmptyComponent,
     TableSortComponent,
     ZardTableImports,

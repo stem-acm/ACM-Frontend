@@ -1,7 +1,7 @@
 name: Build & Deploy Web
 
 on:
-  push: { branches: [master] }
+  push: { branches: [master, develop] }
   workflow_dispatch:
 
 permissions: { contents: read, packages: write }
@@ -32,6 +32,7 @@ jobs:
 
   build:
     needs: [lint]
+    if: github.ref_name == 'master' || github.ref_name == 'develop'
     runs-on: ubuntu-latest
     outputs: { tag: "${{ steps.meta.outputs.tag }}" }
     steps:
@@ -48,12 +49,13 @@ jobs:
           push: true
           tags: |
             ghcr.io/stem-acm/acm-frontend:${{ steps.meta.outputs.tag }}
-            ghcr.io/stem-acm/acm-frontend:master
+            ghcr.io/stem-acm/acm-frontend:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
     needs: [build]
+    if: github.ref_name == 'master' || github.ref_name == 'develop'
     runs-on: ubuntu-latest
     steps:
       - uses: appleboy/ssh-action@v1
@@ -62,5 +64,5 @@ jobs:
           username: deploy
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /srv/infra/ipass
+            cd /srv/infra/${{ github.ref_name == 'master' && 'ipass' || 'ipass-staging' }}
             ./scripts/deploy.sh web ${{ needs.build.outputs.tag }}

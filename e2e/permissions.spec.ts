@@ -116,7 +116,7 @@ test.describe('F12 Permissions', () => {
 
     await page.goto('/setting');
     await expect(page).toHaveURL(HOME_URL);
-    await expect(page.getByRole('heading', { name: 'Access settings' })).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Settings', level: 1 })).toHaveCount(0);
 
     await page.goto('/cards');
     await expect(page).toHaveURL(HOME_URL);

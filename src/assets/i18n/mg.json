@@ -44,8 +44,8 @@
     }
   },
   "access": {
-    "title": "Fikirana fidirana",
-    "description": "Farito izay azon'ny andraikitra tsirairay jerena sy atao ao amin'ny rindranasa.",
+    "title": "Fikirana",
+    "description": "Farito ny ora fisoratana anarana, ny faritry ny ora, izay azon'ny andraikitra tsirairay atao, ary jereo ny fanovana rehetra.",
     "rolesTitle": "Fahazoan-dalana isaky ny andraikitra",
     "rolesDescription": "Farito ny fidirana amin'ny asa rehetra.",
     "accountsTitle": "Kaonty",
@@ -92,7 +92,6 @@
     "tabs": {
       "access": "Andraikitra sy kaonty",
       "general": "Ankapobeny",
-      "checkin": "Fisoratana anarana",
       "logs": "Tantaran'ny fanovana"
     },
     "title": "Tantaran'ny fanovana",
@@ -297,7 +296,7 @@
   "checkinSchedule": {
     "title": "Ora fisoratana",
     "description": "Amin'ireo fotoana ireo ihany no afaka mi-scan ny mpikambana.",
-    "timezone": "Ora {{timezone}} no ampiasaina. Scan iray isaky ny fotoana.",
+    "timezone": "Ora {{timezone}} no ampiasaina (faritry ny ora etsy ambany). Scan iray isaky ny fotoana.",
     "open": "Misokatra",
     "closed": "Mikatona",
     "closedHint": "Tsy misy fisoratana amin'ity andro ity.",

@@ -44,8 +44,8 @@
     }
   },
   "access": {
-    "title": "Paramètres d'accès",
-    "description": "Choisissez ce que chaque rôle peut voir et faire dans l'application.",
+    "title": "Paramètres",
+    "description": "Définissez les heures d'enregistrement, le fuseau horaire, les droits de chaque rôle, et consultez chaque modification.",
     "rolesTitle": "Autorisations par rôle",
     "rolesDescription": "Définissez l'accès à chaque fonction.",
     "accountsTitle": "Comptes",
@@ -92,7 +92,6 @@
     "tabs": {
       "access": "Rôles et comptes",
       "general": "Général",
-      "checkin": "Enregistrement",
       "logs": "Journal d'audit"
     },
     "title": "Journal d'audit",
@@ -297,7 +296,7 @@
   "checkinSchedule": {
     "title": "Heures d'enregistrement",
     "description": "Les membres ne peuvent scanner que pendant ces créneaux.",
-    "timezone": "Les heures sont en {{timezone}}. Un scan par créneau.",
+    "timezone": "Les heures sont en {{timezone}} (fuseau horaire ci-dessous). Un scan par créneau.",
     "open": "Ouvert",
     "closed": "Fermé",
     "closedHint": "Pas d'enregistrement ce jour-là.",

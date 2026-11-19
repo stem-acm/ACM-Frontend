@@ -69,15 +69,13 @@ export class SettingsComponent implements OnInit {
   private url = `${environment.API_URL}/settings`;
   private savedPolicies = new Map<Role, string>();
 
-  /** Page-level tab: roles and accounts, the general settings, the check-in schedule, or the audit log. */
-  pageTab: 'access' | 'general' | 'checkin' | 'logs' = 'access';
+  /** Page-level tab: the general settings, roles and accounts, or the audit log. */
+  pageTab: 'general' | 'access' | 'logs' = 'general';
   /**
-   * The general and check-in tabs load on their first opening, then stay mounted to keep
-   * their edits.
+   * The general tab holds the check-in hours and the time zone. Both cards stay mounted
+   * (hidden) while another tab is open, to keep their edits.
    */
-  generalVisited = false;
   generalDirty = false;
-  checkinVisited = false;
   checkinDirty = false;
   roles: Role[] = ['admin', 'intern', 'volunteer'];
   selectedRole: Role = 'intern';
@@ -184,14 +182,8 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  openGeneralTab(): void {
-    this.pageTab = 'general';
-    this.generalVisited = true;
-  }
-
-  openCheckinTab(): void {
-    this.pageTab = 'checkin';
-    this.checkinVisited = true;
+  get generalTabDirty(): boolean {
+    return this.generalDirty || this.checkinDirty;
   }
 
   canLeave(): boolean {

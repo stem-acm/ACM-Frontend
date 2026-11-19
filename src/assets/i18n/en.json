@@ -44,8 +44,8 @@
     }
   },
   "access": {
-    "title": "Access settings",
-    "description": "Choose what each role can see and do across the app.",
+    "title": "Settings",
+    "description": "Set check-in hours, the time zone, who can do what, and review every change.",
     "rolesTitle": "Role permissions",
     "rolesDescription": "Set access for every app feature.",
     "accountsTitle": "Accounts",
@@ -92,7 +92,6 @@
     "tabs": {
       "access": "Roles and accounts",
       "general": "General",
-      "checkin": "Check-in",
       "logs": "Audit log"
     },
     "title": "Audit log",
@@ -297,7 +296,7 @@
   "checkinSchedule": {
     "title": "Check-in hours",
     "description": "Members can scan only inside these slots.",
-    "timezone": "Times are in {{timezone}}. One scan per slot.",
+    "timezone": "Times are in {{timezone}} (time zone below). One scan per slot.",
     "open": "Open",
     "closed": "Closed",
     "closedHint": "No check-in on this day.",

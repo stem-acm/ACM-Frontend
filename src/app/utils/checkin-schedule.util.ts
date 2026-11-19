@@ -3,14 +3,14 @@ import {
   CheckinDay,
   CheckinSchedule,
   DaySchedule,
+  MAX_SLOTS_PER_DAY,
   ScheduleSlot,
 } from '@/app/interfaces/checkin-schedule';
 
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
-const DAY_SECONDS = 24 * 3600;
 
 /** The error of a day, as `checkinSchedule.errors.*`. The API refuses the same cases. */
-export type DayError = 'empty' | 'order' | 'overlap' | 'noSlot';
+export type DayError = 'empty' | 'order' | 'overlap' | 'noSlot' | 'tooMany';
 
 const byStart = (a: ScheduleSlot, b: ScheduleSlot) => a.start.localeCompare(b.start);
 
@@ -18,6 +18,7 @@ const byStart = (a: ScheduleSlot, b: ScheduleSlot) => a.start.localeCompare(b.st
 export function dayError(day: DaySchedule): DayError | null {
   if (!day.open) return null;
   if (day.slots.length === 0) return 'noSlot';
+  if (day.slots.length > MAX_SLOTS_PER_DAY) return 'tooMany';
   if (day.slots.some(slot => !TIME_PATTERN.test(slot.start) || !TIME_PATTERN.test(slot.end))) {
     return 'empty';
   }
@@ -107,16 +108,36 @@ export function zoneDayAndSeconds(
   return { dayIndex, seconds: p.hour * 3600 + p.minute * 60 + p.second };
 }
 
+/** The day of the week and the `YYYY-MM-DD` date of an instant in a time zone. */
+export function zoneDate(now: Date, timeZone: string): { day: CheckinDay; date: string } {
+  const p = zoneParts(now, timeZone);
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return {
+    day: p.weekday.toLowerCase() as CheckinDay,
+    date: `${p.year}-${pad(p.month)}-${pad(p.day)}`,
+  };
+}
+
 /** The hour and the minute of an instant in a time zone. */
 export function zoneHourMinute(now: Date, timeZone: string): { hour: number; minute: number } {
   const p = zoneParts(now, timeZone);
   return { hour: p.hour, minute: p.minute };
 }
 
-/** The instant of `hour:minute` on the day of `now` in a time zone. */
-export function zoneTimeOfDay(now: Date, hour: number, minute: number, timeZone: string): Date {
+/**
+ * The instant of `hour:minute`, `dayOffset` days after the day of `now`, in a time zone.
+ * The offset from UTC is taken on that day, so a daylight saving time change between the
+ * two days is counted.
+ */
+export function zoneTimeOfDay(
+  now: Date,
+  hour: number,
+  minute: number,
+  timeZone: string,
+  dayOffset = 0,
+): Date {
   const p = zoneParts(now, timeZone);
-  const wall = Date.UTC(p.year, p.month - 1, p.day, hour, minute);
+  const wall = Date.UTC(p.year, p.month - 1, p.day + dayOffset, hour, minute);
   // The offset can change on that day (daylight saving time): take it at the first guess.
   const guess = wall - zoneOffset(wall, timeZone);
   return new Date(wall - zoneOffset(guess, timeZone));
@@ -169,9 +190,13 @@ export function openingState(schedule: CheckinSchedule, now: Date, timeZone: str
     const candidate = schedule[CHECKIN_DAYS[(dayIndex + offset) % 7]];
     if (!candidate?.open) continue;
     for (const slot of [...candidate.slots].sort(byStart)) {
-      const start = timeSeconds(slot.start);
-      if (offset === 0 && start <= seconds) continue;
-      return { open: false, secondsUntilOpening: offset * DAY_SECONDS + start - seconds };
+      if (offset === 0 && timeSeconds(slot.start) <= seconds) continue;
+      // The difference of the two instants, not of the wall clocks: a day with a daylight
+      // saving time change lasts 23 or 25 hours.
+      const [hour, minute] = slot.start.split(':').map(Number);
+      const opening = zoneTimeOfDay(now, hour, minute, timeZone, offset);
+      const secondsUntilOpening = Math.ceil((opening.getTime() - now.getTime()) / 1000);
+      return { open: false, secondsUntilOpening };
     }
   }
   return { open: false, secondsUntilOpening: null };

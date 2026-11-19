@@ -14,6 +14,7 @@ import {
   zoneDayAndSeconds,
   zoneHourMinute,
   zoneOffsetLabel,
+  zoneDate,
   zoneTimeOfDay,
 } from './checkin-schedule.util';
 
@@ -99,6 +100,29 @@ describe('checkin-schedule util', () => {
     expect(formatDaySchedule(null)).toBeNull();
   });
 
+  describe('zoneDate', () => {
+    it('gives the day and the date in the time zone', () => {
+      // Wednesday 18:37 UTC is Wednesday in Mahajanga and Thursday in Kiritimati (UTC+14).
+      const now = new Date('2026-11-18T18:37:00Z');
+      expect(zoneDate(now, MAHAJANGA)).toEqual({ day: 'wednesday', date: '2026-11-18' });
+      expect(zoneDate(now, 'Pacific/Kiritimati')).toEqual({
+        day: 'thursday',
+        date: '2026-11-19',
+      });
+    });
+  });
+
+  describe('dayError limit', () => {
+    it('refuses more than 12 slots on a day', () => {
+      const slots = Array.from({ length: 13 }, (_, i) => ({
+        start: `${String(i + 8).padStart(2, '0')}:00`,
+        end: `${String(i + 8).padStart(2, '0')}:30`,
+      }));
+      expect(dayError({ open: true, slots })).toBe('tooMany');
+      expect(dayError({ open: true, slots: slots.slice(0, 12) })).toBeNull();
+    });
+  });
+
   describe('openingState', () => {
     it('opens at the start of a slot and closes at its end', () => {
       const schedule = defaultSchedule();
@@ -155,6 +179,18 @@ describe('checkin-schedule util', () => {
         open: false,
         secondsUntilOpening: 586800,
       });
+    });
+
+    it('counts the real seconds across a daylight saving time change (#149)', () => {
+      // Sunday opens at 08:00 in Paris.
+      // 2027-03-28 the clocks go forward: Saturday 20:00 CET to Sunday 08:00 CEST is 11 h.
+      expect(
+        openingState(defaultSchedule(), new Date('2027-03-27T19:00:00Z'), 'Europe/Paris'),
+      ).toEqual({ open: false, secondsUntilOpening: 11 * 3600 });
+      // 2026-10-25 the clocks go back: Saturday 20:00 CEST to Sunday 08:00 CET is 13 h.
+      expect(
+        openingState(defaultSchedule(), new Date('2026-10-24T18:00:00Z'), 'Europe/Paris'),
+      ).toEqual({ open: false, secondsUntilOpening: 13 * 3600 });
     });
 
     it('has no next opening when every day is closed', () => {

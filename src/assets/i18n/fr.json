@@ -59,7 +59,7 @@
     "save": "Enregistrer",
     "saveRole": "Enregistrer les autorisations",
     "unsaved": "Modifications non enregistrées",
-    "unsavedConfirm": "Des autorisations ont été modifiées. Quitter cette page et abandonner les modifications ?",
+    "unsavedConfirm": "Des modifications ne sont pas enregistrées. Quitter cette page et les abandonner ?",
     "saved": "Accès mis à jour",
     "created": "Compte créé",
     "createError": "Impossible de créer le compte. Vérifiez les informations et réessayez.",
@@ -306,6 +306,7 @@
     "end": "Heure de fin",
     "addSlot": "Ajouter un créneau",
     "removeSlot": "Supprimer le créneau",
+    "maxSlots": "{{max}} créneaux au maximum par jour.",
     "discard": "Annuler",
     "save": "Enregistrer",
     "saved": "Heures d'enregistrement mises à jour",
@@ -313,7 +314,8 @@
       "empty": "Saisissez une heure de début et de fin.",
       "order": "La fin doit être après le début.",
       "overlap": "Les créneaux se chevauchent.",
-      "noSlot": "Ajoutez un créneau ou fermez le jour."
+      "noSlot": "Ajoutez un créneau ou fermez le jour.",
+      "tooMany": "{{max}} créneaux au maximum par jour."
     }
   },
   "nav": {

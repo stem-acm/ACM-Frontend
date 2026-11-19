@@ -59,7 +59,7 @@
     "save": "Save",
     "saveRole": "Save permissions",
     "unsaved": "Unsaved changes",
-    "unsavedConfirm": "You have unsaved permission changes. Leave this page and discard them?",
+    "unsavedConfirm": "You have unsaved changes. Leave this page and discard them?",
     "saved": "Access updated",
     "created": "Account created",
     "createError": "Could not create the account. Check the details and try again.",
@@ -306,6 +306,7 @@
     "end": "End time",
     "addSlot": "Add slot",
     "removeSlot": "Remove slot",
+    "maxSlots": "Up to {{max}} slots per day.",
     "discard": "Discard",
     "save": "Save",
     "saved": "Check-in hours updated",
@@ -313,7 +314,8 @@
       "empty": "Enter a start and end time.",
       "order": "End must be after start.",
       "overlap": "Slots overlap.",
-      "noSlot": "Add a slot or close the day."
+      "noSlot": "Add a slot or close the day.",
+      "tooMany": "Up to {{max}} slots per day."
     }
   },
   "nav": {

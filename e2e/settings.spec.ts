@@ -444,7 +444,7 @@ test.describe('F11 Settings', () => {
         .toEqual([
           {
             type: 'confirm',
-            message: 'You have unsaved permission changes. Leave this page and discard them?',
+            message: 'You have unsaved changes. Leave this page and discard them?',
           },
         ]);
 

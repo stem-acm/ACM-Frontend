@@ -106,7 +106,7 @@ test.describe('F15 Audit log', () => {
     const activity = await api.createActivity();
     const label = memberLabel(member);
     try {
-      const checkin = await api.createCheckin(
+      const checkin = await api.seedCheckin(
         member.registrationNumber,
         activity.id,
         eat('2020-03-03', '09:00'),
@@ -174,7 +174,7 @@ test.describe('F15 Audit log', () => {
     const member = await api.createMember({ firstName: 'Checked' });
     const activity = await api.createActivity();
     try {
-      const checkin = await api.createCheckin(
+      const checkin = await api.seedCheckin(
         member.registrationNumber,
         activity.id,
         eat('2020-03-04', '15:30'),

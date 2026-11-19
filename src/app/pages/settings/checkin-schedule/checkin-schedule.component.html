@@ -100,18 +100,24 @@
                       </button>
                     </div>
                   }
-                  <button
-                    z-button
-                    zType="link"
-                    class="acm-btn acm-btn--link checkin-add"
-                    type="button"
-                    (click)="addSlot(schedule[day])"
-                  >
-                    + {{ 'checkinSchedule.addSlot' | translate }}
-                  </button>
+                  @if (schedule[day].slots.length < maxSlots) {
+                    <button
+                      z-button
+                      zType="link"
+                      class="acm-btn acm-btn--link checkin-add"
+                      type="button"
+                      (click)="addSlot(schedule[day])"
+                    >
+                      + {{ 'checkinSchedule.addSlot' | translate }}
+                    </button>
+                  } @else {
+                    <small class="access-hint">{{
+                      'checkinSchedule.maxSlots' | translate: { max: maxSlots }
+                    }}</small>
+                  }
                   @if (errorOf(day); as dayErr) {
                     <small class="access-field-error" role="alert">{{
-                      'checkinSchedule.errors.' + dayErr | translate
+                      'checkinSchedule.errors.' + dayErr | translate: { max: maxSlots }
                     }}</small>
                   }
                 } @else {

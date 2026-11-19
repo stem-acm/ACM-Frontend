@@ -10,6 +10,9 @@ export const CHECKIN_DAYS = [
 ] as const;
 export type CheckinDay = (typeof CHECKIN_DAYS)[number];
 
+/** The most slots a day can have. The API refuses more. */
+export const MAX_SLOTS_PER_DAY = 12;
+
 /** One check-in slot: `start` included, `end` excluded, both `HH:mm` in the time zone of the app. */
 export interface ScheduleSlot {
   start: string;

@@ -117,7 +117,7 @@ test.describe('F8 Check-in history', () => {
   }) => {
     const scene = await createScene(api, 'Historyone');
     try {
-      const checkin = await api.createCheckin(
+      const checkin = await api.seedCheckin(
         scene.member.registrationNumber,
         scene.activity.id,
         eat('2020-03-03', '09:15'),
@@ -148,17 +148,17 @@ test.describe('F8 Check-in history', () => {
     const target = await createScene(api, 'Historysearch');
     const other = await createScene(api, 'Historyother');
     try {
-      await api.createCheckin(
+      await api.seedCheckin(
         target.member.registrationNumber,
         target.activity.id,
         eat('2020-03-04', '09:00'),
       );
-      await api.createCheckin(
+      await api.seedCheckin(
         target.member.registrationNumber,
         target.activity.id,
         eat('2020-03-04', '15:30'),
       );
-      await api.createCheckin(
+      await api.seedCheckin(
         other.member.registrationNumber,
         other.activity.id,
         eat('2020-03-04', '10:00'),
@@ -186,22 +186,22 @@ test.describe('F8 Check-in history', () => {
     const rangeStart = '2019-06-12';
     const rangeEnd = '2019-06-13';
     try {
-      const before = await api.createCheckin(
+      const before = await api.seedCheckin(
         scene.member.registrationNumber,
         scene.activity.id,
         eat('2019-06-11', '09:00'),
       );
-      const insideFirst = await api.createCheckin(
+      const insideFirst = await api.seedCheckin(
         scene.member.registrationNumber,
         scene.activity.id,
         eat('2019-06-12', '09:00'),
       );
-      const insideLast = await api.createCheckin(
+      const insideLast = await api.seedCheckin(
         scene.member.registrationNumber,
         scene.activity.id,
         eat('2019-06-13', '17:00'),
       );
-      const after = await api.createCheckin(
+      const after = await api.seedCheckin(
         scene.member.registrationNumber,
         scene.activity.id,
         eat('2019-06-14', '09:00'),
@@ -246,7 +246,7 @@ test.describe('F8 Check-in history', () => {
       const existing = (await api.getPage<Checkin>('checkins?limit=1')).pagination.total;
       const toCreate = Math.max(1, PAGE_SIZE + 1 - existing);
       for (const at of allowedMornings('2018-01-02', toCreate)) {
-        await api.createCheckin(scene.member.registrationNumber, scene.activity.id, at);
+        await api.seedCheckin(scene.member.registrationNumber, scene.activity.id, at);
       }
       const loaded = await loadedCheckins(api);
       const total = loaded.length;
@@ -289,7 +289,7 @@ test.describe('F8 Check-in history', () => {
   test('F8.5 clicking the member in a row opens that member’s profile', async ({ page, api }) => {
     const scene = await createScene(api, 'Historyprofile');
     try {
-      await api.createCheckin(
+      await api.seedCheckin(
         scene.member.registrationNumber,
         scene.activity.id,
         eat('2020-03-05', '09:00'),
@@ -322,9 +322,9 @@ test.describe('F8 Check-in history', () => {
     const days = allowedMornings('2017-01-03', 11);
     try {
       for (const at of days) {
-        await api.createCheckin(target.member.registrationNumber, target.activity.id, at);
+        await api.seedCheckin(target.member.registrationNumber, target.activity.id, at);
       }
-      await api.createCheckin(other.member.registrationNumber, other.activity.id, days[0]);
+      await api.seedCheckin(other.member.registrationNumber, other.activity.id, days[0]);
       const total = (await api.getPage<Checkin>('checkins?limit=1')).pagination.total;
       await page.goto('/checkin-history');
       await expect(resultCount(page, total)).toBeVisible();
@@ -377,13 +377,13 @@ test.describe('F8 Check-in history', () => {
     const oldest = await createScene(api, 'Beyondlimit');
     const recent = await createScene(api, 'Recenthistory');
     try {
-      await api.createCheckin(
+      await api.seedCheckin(
         oldest.member.registrationNumber,
         oldest.activity.id,
         eat('2016-01-05', '09:00'),
       );
       for (const at of allowedMornings('2016-02-02', 100)) {
-        await api.createCheckin(recent.member.registrationNumber, recent.activity.id, at);
+        await api.seedCheckin(recent.member.registrationNumber, recent.activity.id, at);
       }
       const firstPage = await api.getPage<Checkin>('checkins?limit=100');
       expect(
@@ -405,7 +405,7 @@ test.describe('F8 Check-in history', () => {
   }) => {
     const scene = await createScene(api, 'Mobilehistory');
     try {
-      await api.createCheckin(
+      await api.seedCheckin(
         scene.member.registrationNumber,
         scene.activity.id,
         eat('2015-01-06', '09:00'),

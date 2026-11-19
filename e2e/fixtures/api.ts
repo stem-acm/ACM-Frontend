@@ -2,6 +2,7 @@ import { APIRequestContext, expect, request } from '@playwright/test';
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync } from 'node:fs';
 import { ADMIN_STORAGE_STATE, API_URL, BASE_URL, TOKEN_STORAGE_KEY } from './env';
+import { sql } from './stack';
 
 export type Role = 'admin' | 'intern' | 'volunteer';
 
@@ -92,6 +93,21 @@ export interface Activity extends Partial<Omit<ActivityInput, 'name'>> {
   id: number;
   name: string;
 }
+
+export type ScheduleDay =
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday';
+
+/** The check-in schedule as GET /api/settings/checkin-schedule returns it. */
+export type CheckinSchedule = Record<
+  ScheduleDay,
+  { open: boolean; slots: { start: string; end: string }[] }
+>;
 
 export interface Checkin {
   id: number;
@@ -347,13 +363,38 @@ export class ApiHelper {
     await this.delete(`checkins/${id}`);
   }
 
-  /** Creates a check-in with the member's signed QR payload. */
-  async createCheckin(
+  /**
+   * Stores a check-in at a chosen past or future time, straight in the throwaway
+   * database: the API uses its own clock as the check-in time and refuses a scan outside
+   * the opening hours (stem-acm/ACM-Backend#65). Like the API, it writes no audit log.
+   */
+  async seedCheckin(
     registrationNumber: number,
     activityId: number,
     checkInTime: Date,
     checkOutTime?: Date,
   ): Promise<Checkin> {
+    const utc = (date: Date) => `'${date.toISOString()}'::timestamptz AT TIME ZONE 'UTC'`;
+    const row = sql(`
+      INSERT INTO checkins (registration_number, activity_id, check_in_time, check_out_time)
+      VALUES (${Number(registrationNumber)}, ${Number(activityId)}, ${utc(checkInTime)},
+              ${checkOutTime ? utc(checkOutTime) : 'NULL'})
+      RETURNING id`);
+    const id = Number(row);
+    return {
+      id,
+      registrationNumber,
+      activityId,
+      checkInTime: checkInTime.toISOString(),
+      checkOutTime: checkOutTime ? checkOutTime.toISOString() : null,
+    };
+  }
+
+  /**
+   * Scans the member's signed QR payload through POST /api/checkins now: the check-in
+   * time is the API clock, so the schedule must be open at this moment.
+   */
+  async scanCheckin(registrationNumber: number, activityId: number): Promise<Checkin> {
     const qr = await this.get<{ registrationNumber: number; signature: string }>(
       `members/registration/${registrationNumber}/qr-code`,
     );
@@ -361,8 +402,6 @@ export class ApiHelper {
       registrationNumber: qr.registrationNumber,
       signature: qr.signature,
       activityId,
-      checkInTime: checkInTime.toISOString(),
-      ...(checkOutTime ? { checkOutTime: checkOutTime.toISOString() } : {}),
     });
   }
 
@@ -409,6 +448,30 @@ export class ApiHelper {
     policy: { active: boolean; permissions: Record<string, boolean> },
   ) {
     return this.put<RolePolicy>(`settings/roles/${role}`, policy);
+  }
+
+  async getCheckinSchedule(): Promise<CheckinSchedule> {
+    return this.get<CheckinSchedule>('settings/checkin-schedule');
+  }
+
+  /** PUT /api/settings/checkin-schedule: replaces the whole schedule. */
+  async saveCheckinSchedule(schedule: CheckinSchedule): Promise<CheckinSchedule> {
+    return this.put<CheckinSchedule>('settings/checkin-schedule', schedule);
+  }
+
+  /** GET /api/settings/timezone: the time zone of the app (IANA name). */
+  async getTimezone(): Promise<string> {
+    return (await this.get<{ timezone: string }>('settings/timezone')).timezone;
+  }
+
+  /** PUT /api/settings/timezone. */
+  async saveTimezone(timezone: string): Promise<string> {
+    return (await this.put<{ timezone: string }>('settings/timezone', { timezone })).timezone;
+  }
+
+  /** GET /api/checkins/schedule: what the kiosk reads, the time zone and the schedule. */
+  async getKioskSchedule(): Promise<{ timezone: string; schedule: CheckinSchedule }> {
+    return this.get<{ timezone: string; schedule: CheckinSchedule }>('checkins/schedule');
   }
 }
 

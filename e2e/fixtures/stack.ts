@@ -48,3 +48,38 @@ export function startStack(): void {
 export function stopStack(): void {
   compose(['down', '--volumes', '--remove-orphans'], true);
 }
+
+/**
+ * Runs one SQL statement in the throwaway database and returns its output (psql -At).
+ * Only for test data the API cannot create, such as a check-in at a past time: the API
+ * uses its own clock as the check-in time (stem-acm/ACM-Backend#65).
+ */
+export function sql(statement: string): string {
+  if (stackIsExternal) {
+    throw new Error('E2E_SKIP_STACK=1: the tests cannot write to the database of that API.');
+  }
+  return execFileSync(
+    'docker',
+    [
+      'compose',
+      '-p',
+      PROJECT,
+      '-f',
+      COMPOSE_FILE,
+      'exec',
+      '-T',
+      'postgres',
+      'psql',
+      '-U',
+      'acm_user',
+      '-d',
+      'acm_db',
+      '-v',
+      'ON_ERROR_STOP=1',
+      '-qAt',
+      '-c',
+      statement,
+    ],
+    { encoding: 'utf8', env: { ...process.env, E2E_BACKEND_DIR: BACKEND_DIR } },
+  ).trim();
+}

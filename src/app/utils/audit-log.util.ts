@@ -7,6 +7,8 @@ import {
   AuditLogEntity,
   AuditLogType,
 } from '@/app/interfaces/audit-log';
+import { DaySchedule } from '@/app/interfaces/checkin-schedule';
+import { formatDaySchedule } from '@/app/utils/checkin-schedule.util';
 import { DateUtil } from '@/app/utils/date.util';
 
 /** Translation key of each column, for each entity. A column that is not here shows its name. */
@@ -88,6 +90,16 @@ export const AUDIT_FIELD_KEYS: Record<AuditLogEntity, Record<string, string>> = 
     createdBy: 'forms.createdBy',
     createdAt: 'forms.createdAt',
     updatedAt: 'forms.updatedAt',
+  },
+  app_settings: {
+    monday: 'days.monday',
+    tuesday: 'days.tuesday',
+    wednesday: 'days.wednesday',
+    thursday: 'days.thursday',
+    friday: 'days.friday',
+    saturday: 'days.saturday',
+    sunday: 'days.sunday',
+    timezone: 'auditLog.settingNames.timezone',
   },
 };
 
@@ -182,6 +194,12 @@ export class AuditLogText {
   /** A value of a column, as the screen shows it. */
   formatValue(entity: AuditLogEntity, field: string, value: unknown): string {
     if (value === null || value === undefined || value === '') return this.t('auditLog.empty');
+    if (entity === 'app_settings') {
+      // The time zone of the app: its IANA name, as stored.
+      if (field === 'timezone') return String(value);
+      // A day of the check-in schedule: its slots, or "Closed".
+      return formatDaySchedule(value as DaySchedule) ?? this.t('checkinSchedule.closed');
+    }
     if (field === 'role' && (entity === 'users' || entity === 'role_policies')) {
       return this.t(`access.roles.${value}`);
     }
@@ -208,6 +226,7 @@ export class AuditLogText {
   /** The record name, translated where the server stores a fixed value. */
   recordLabel(log: AuditLog): string {
     if (log.entity === 'role_policies') return this.t(`access.roles.${log.entityLabel}`);
+    if (log.entity === 'app_settings') return this.t(`auditLog.settingNames.${log.entityLabel}`);
     if (log.entity === 'volunteers' && log.entityLabel === VOLUNTEER_WITHOUT_MEMBER_LABEL) {
       return this.t('auditLog.volunteerWithoutMember');
     }
@@ -294,6 +313,10 @@ export class AuditLogText {
           borrowingDate: value('borrowingDate', log.changes['borrowingDate']),
           expectedReturnDate: value('expectedReturnDate', log.changes['expectedReturnDate']),
         });
+      case 'checkin_schedule.updated':
+        return this.plural(key, count, { days: this.fieldList(log) });
+      case 'timezone.updated':
+        return this.t(key, transition('timezone'));
       case 'book_loan.returned':
         return this.t(key, {
           effectiveReturnDate: value(

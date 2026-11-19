@@ -59,7 +59,7 @@
     "save": "Save",
     "saveRole": "Save permissions",
     "unsaved": "Unsaved changes",
-    "unsavedConfirm": "You have unsaved permission changes. Leave this page and discard them?",
+    "unsavedConfirm": "You have unsaved changes. Leave this page and discard them?",
     "saved": "Access updated",
     "created": "Account created",
     "createError": "Could not create the account. Check the details and try again.",
@@ -91,6 +91,8 @@
   "auditLog": {
     "tabs": {
       "access": "Roles and accounts",
+      "general": "General",
+      "checkin": "Check-in",
       "logs": "Audit log"
     },
     "title": "Audit log",
@@ -129,7 +131,8 @@
       "activities": "Activity",
       "checkins": "Check-in",
       "volunteers": "Volunteer",
-      "book_loans": "Book loan"
+      "book_loans": "Book loan",
+      "app_settings": "Setting"
     },
     "entityGroups": {
       "users": "Accounts",
@@ -138,7 +141,8 @@
       "activities": "Activities",
       "checkins": "Check-ins",
       "volunteers": "Volunteers",
-      "book_loans": "Book loans"
+      "book_loans": "Book loans",
+      "app_settings": "Settings"
     },
     "parentKinds": {
       "members": "member",
@@ -181,6 +185,12 @@
         "created": "Loan created",
         "updated": "Loan updated",
         "returned": "Book returned"
+      },
+      "checkin_schedule": {
+        "updated": "Check-in hours changed"
+      },
+      "timezone": {
+        "updated": "Time zone changed"
       }
     },
     "sentences": {
@@ -238,6 +248,15 @@
           "other": "{{count}} fields changed: {{fields}}"
         },
         "returned": "Returned on {{effectiveReturnDate}}"
+      },
+      "checkin_schedule": {
+        "updated": {
+          "one": "{{count}} day changed: {{days}}",
+          "other": "{{count}} days changed: {{days}}"
+        }
+      },
+      "timezone": {
+        "updated": "Time zone: {{before}} to {{after}}"
       }
     },
     "detail": {
@@ -256,10 +275,48 @@
     "allowed": "Allowed",
     "notAllowed": "Not allowed",
     "volunteerWithoutMember": "Volunteer without member",
+    "settingNames": {
+      "checkin_schedule": "Check-in hours",
+      "timezone": "Time zone"
+    },
     "loading": "Loading the audit log…",
     "nothingYet": "No audit logs yet.",
     "showing": "Showing {{first}} to {{last}} of {{total}} results",
     "pageOf": "Page {{page}} of {{pages}}"
+  },
+  "generalSettings": {
+    "title": "Time zone",
+    "description": "Check-in times and opening hours are read in this time zone.",
+    "label": "Time zone",
+    "placeholder": "Start typing, e.g. Antananarivo",
+    "discard": "Discard",
+    "save": "Save",
+    "invalid": "Choose a valid time zone from the list.",
+    "saved": "Time zone updated"
+  },
+  "checkinSchedule": {
+    "title": "Check-in hours",
+    "description": "Members can scan only inside these slots.",
+    "timezone": "Times are in {{timezone}}. One scan per slot.",
+    "open": "Open",
+    "closed": "Closed",
+    "closedHint": "No check-in on this day.",
+    "to": "to",
+    "start": "Start time",
+    "end": "End time",
+    "addSlot": "Add slot",
+    "removeSlot": "Remove slot",
+    "maxSlots": "Up to {{max}} slots per day.",
+    "discard": "Discard",
+    "save": "Save",
+    "saved": "Check-in hours updated",
+    "errors": {
+      "empty": "Enter a start and end time.",
+      "order": "End must be after start.",
+      "overlap": "Slots overlap.",
+      "noSlot": "Add a slot or close the day.",
+      "tooMany": "Up to {{max}} slots per day."
+    }
   },
   "nav": {
     "home": "Home",
@@ -496,7 +553,8 @@
     "wednesday": "Wednesday",
     "thursday": "Thursday",
     "friday": "Friday",
-    "saturday": "Saturday"
+    "saturday": "Saturday",
+    "sunday": "Sunday"
   },
   "titles": {
     "newMember": "New Member",
@@ -534,7 +592,9 @@
     "scanBadge": "SCAN BADGE / ASEHOY ETO NY KARATRAO",
     "welcome": "WELCOME / TONGASOA",
     "go": "GO / MANDROSO",
-    "completeCheckIn": "Complete Check-In / Midira tompoko"
+    "completeCheckIn": "Complete Check-In / Midira tompoko",
+    "hoursZone": "Time zone: {{timezone}}",
+    "noOpening": "No opening is scheduled."
   },
   "certificateEditor": {
     "back": "Back to volunteers",

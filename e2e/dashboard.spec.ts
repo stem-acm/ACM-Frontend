@@ -1,5 +1,6 @@
 import { Page } from '@playwright/test';
 import { Activity, ApiHelper, Checkin, Member } from './fixtures/api';
+import { atLocalHour } from './fixtures/clock';
 import { APP_API_ORIGIN, BASE_URL } from './fixtures/env';
 import { expect, test } from './fixtures/test';
 
@@ -54,8 +55,8 @@ test.describe('F2 Dashboard', () => {
     const member = await api.createMember({ firstName: 'Dash' });
     try {
       const activity = await firstSeededActivity(api);
-      await api.createCheckin(member.registrationNumber, activity.id, A_TUESDAY_AT_NINE_EAT);
-      const otherDay = await api.createCheckin(
+      await api.seedCheckin(member.registrationNumber, activity.id, A_TUESDAY_AT_NINE_EAT);
+      const otherDay = await api.seedCheckin(
         member.registrationNumber,
         activity.id,
         new Date('2026-10-21T06:00:00.000Z'),
@@ -126,15 +127,15 @@ test.describe('F2 Dashboard', () => {
         () => ((window as unknown as { e2eNoReload: boolean }).e2eNoReload = true),
       );
 
-      const checkin = await api.createCheckin(
-        member.registrationNumber,
-        activity.id,
-        A_TUESDAY_AT_NINE_EAT,
-      );
+      // A real scan through the API (it sends the live event), at 09:xx in the time zone
+      // of the app: open on every day of the default schedule.
+      await atLocalHour(api, 9, async () => {
+        const checkin = await api.scanCheckin(member.registrationNumber, activity.id);
 
-      await expect(
-        checkinRow(page, { ...checkin, Member: member, Activity: activity }),
-      ).toHaveCount(1);
+        await expect(
+          checkinRow(page, { ...checkin, Member: member, Activity: activity }),
+        ).toHaveCount(1);
+      });
       expect(
         await page.evaluate(() => (window as unknown as { e2eNoReload?: boolean }).e2eNoReload),
         'the page was not reloaded',

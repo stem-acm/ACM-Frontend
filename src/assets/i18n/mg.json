@@ -91,6 +91,8 @@
   "auditLog": {
     "tabs": {
       "access": "Andraikitra sy kaonty",
+      "general": "Ankapobeny",
+      "checkin": "Fisoratana anarana",
       "logs": "Tantaran'ny fanovana"
     },
     "title": "Tantaran'ny fanovana",
@@ -129,7 +131,8 @@
       "activities": "Hetsika",
       "checkins": "Fisoratana anarana",
       "volunteers": "Mpilatsaka an-tsitrapo",
-      "book_loans": "Fampindramam-boky"
+      "book_loans": "Fampindramam-boky",
+      "app_settings": "Fikirana"
     },
     "entityGroups": {
       "users": "Kaonty",
@@ -138,7 +141,8 @@
       "activities": "Hetsika",
       "checkins": "Fisoratana anarana",
       "volunteers": "Mpilatsaka an-tsitrapo",
-      "book_loans": "Fampindramam-boky"
+      "book_loans": "Fampindramam-boky",
+      "app_settings": "Fikirana"
     },
     "parentKinds": {
       "members": "ny mpikambana",
@@ -181,6 +185,12 @@
         "created": "Fampindramana noforonina",
         "updated": "Fampindramana novaina",
         "returned": "Boky naverina"
+      },
+      "checkin_schedule": {
+        "updated": "Novaina ny ora fisoratana"
+      },
+      "timezone": {
+        "updated": "Novaina ny faritry ny ora"
       }
     },
     "sentences": {
@@ -238,6 +248,15 @@
           "other": "Saha {{count}} novaina: {{fields}}"
         },
         "returned": "Naverina tamin'ny {{effectiveReturnDate}}"
+      },
+      "checkin_schedule": {
+        "updated": {
+          "one": "Andro {{count}} novaina: {{days}}",
+          "other": "Andro {{count}} novaina: {{days}}"
+        }
+      },
+      "timezone": {
+        "updated": "Faritry ny ora: {{before}} ho {{after}}"
       }
     },
     "detail": {
@@ -256,10 +275,48 @@
     "allowed": "Avela",
     "notAllowed": "Tsy avela",
     "volunteerWithoutMember": "Mpilatsaka an-tsitrapo tsy misy mpikambana",
+    "settingNames": {
+      "checkin_schedule": "Ora fisoratana",
+      "timezone": "Faritry ny ora"
+    },
     "loading": "Ampidirina ny tantaran'ny fanovana…",
     "nothingYet": "Tsy mbola misy tantaran’ny asa.",
     "showing": "Aseho {{first}} hatramin'ny {{last}} amin'ny valiny {{total}}",
     "pageOf": "Pejy {{page}} amin'ny {{pages}}"
+  },
+  "generalSettings": {
+    "title": "Faritry ny ora",
+    "description": "Amin'ity faritry ny ora ity no amakiana ny ora fisoratana sy ny ora fisokafana.",
+    "label": "Faritry ny ora",
+    "placeholder": "Manomboha manoratra, ohatra Antananarivo",
+    "discard": "Hanafoana",
+    "save": "Hitahiry",
+    "invalid": "Mifidiana faritry ny ora marina ao amin'ny lisitra.",
+    "saved": "Voatahiry ny faritry ny ora"
+  },
+  "checkinSchedule": {
+    "title": "Ora fisoratana",
+    "description": "Amin'ireo fotoana ireo ihany no afaka mi-scan ny mpikambana.",
+    "timezone": "Ora {{timezone}} no ampiasaina. Scan iray isaky ny fotoana.",
+    "open": "Misokatra",
+    "closed": "Mikatona",
+    "closedHint": "Tsy misy fisoratana amin'ity andro ity.",
+    "to": "ka hatramin'ny",
+    "start": "Ora fanombohana",
+    "end": "Ora fiafarana",
+    "addSlot": "Hanampy fotoana",
+    "removeSlot": "Hamafa ny fotoana",
+    "maxSlots": "Fotoana {{max}} farafahabetsany isan'andro.",
+    "discard": "Hanafoana",
+    "save": "Hitahiry",
+    "saved": "Voavao ny ora fisoratana",
+    "errors": {
+      "empty": "Ampidiro ny ora fanombohana sy fiafarana.",
+      "order": "Tsy maintsy aorian'ny fanombohana ny fiafarana.",
+      "overlap": "Mifanindry ny fotoana.",
+      "noSlot": "Manampia fotoana na akatony ny andro.",
+      "tooMany": "Fotoana {{max}} farafahabetsany isan'andro."
+    }
   },
   "nav": {
     "home": "Fandraisana",
@@ -496,7 +553,8 @@
     "wednesday": "Alarobia",
     "thursday": "Alakamisy",
     "friday": "Zoma",
-    "saturday": "Sabotsy"
+    "saturday": "Sabotsy",
+    "sunday": "Alahady"
   },
   "titles": {
     "newMember": "Mpikambana Vaovao",
@@ -534,7 +592,9 @@
     "scanBadge": "ASEHOY ETO NY KARATRAO",
     "welcome": "TONGASOA",
     "go": "MANDROSO",
-    "completeCheckIn": "Midira tompoko"
+    "completeCheckIn": "Midira tompoko",
+    "hoursZone": "Faritry ny ora: {{timezone}}",
+    "noOpening": "Tsy misy fotoana fisokafana voalahatra."
   },
   "certificateEditor": {
     "back": "Hiverina amin'ny mpanao an-tsitrapo",

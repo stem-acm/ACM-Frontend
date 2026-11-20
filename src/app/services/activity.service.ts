@@ -33,7 +33,10 @@ export class ActivityService {
   }
 
   updateActivity(activity: Activity) {
-    return this.http.put<HttpResult<Activity>>(`${this.URL}/activities/${activity.id}`, activity);
+    // An activity read from an API that still has the image column carries `image: null`,
+    // and that API rejects null on update. The client never sends the field.
+    const { image: _image, ...body } = activity as Activity & { image?: unknown };
+    return this.http.put<HttpResult<Activity>>(`${this.URL}/activities/${activity.id}`, body);
   }
 
   deleteActivity(id: number) {

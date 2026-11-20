@@ -37,7 +37,7 @@ function row(
 
 const change = (before: unknown, after: unknown) => ({ before, after });
 
-/** One log row for each of the 25 log types, with its expected English sentence. */
+/** One log row for each of the 26 log types, with its expected English sentence. */
 function cases(): [AuditLog, string][] {
   const checkIn = dayjs(CHECK_IN).format('DD / MM / YYYY, HH:mm');
   return [
@@ -83,6 +83,10 @@ function cases(): [AuditLog, string][] {
       '2 fields changed: Occupation, Phone Number',
     ],
     [row('member.deleted', 'members', { firstName: 'Tojo' }), 'Member removed'],
+    [
+      row('member.badge_verified', 'members', { status: 'CHECKED_IN', slot: 'am', checkinId: 12 }),
+      'Badge checked: CHECKED_IN',
+    ],
     [
       row('activity.created', 'activities', { startTime: '14:00:00', endTime: '16:00:00' }),
       'New activity, 14:00 to 16:00',
@@ -189,7 +193,7 @@ describe('AuditLogText', () => {
     text = TestBed.inject(AuditLogText);
   });
 
-  it('covers the 25 log types', () => {
+  it('covers the 26 log types', () => {
     expect(cases().map(([log]) => log.type)).toEqual([...AUDIT_LOG_TYPES]);
   });
 
@@ -225,6 +229,9 @@ describe('AuditLogText', () => {
     expect(text.formatValue('role_policies', 'active', false)).toBe('Inactive');
     expect(text.fieldLabel('role_policies', 'checkins.view')).toBe(
       'Check-ins - History and live updates',
+    );
+    expect(text.fieldLabel('role_policies', 'checkins.verify')).toBe(
+      'Check-ins - Badge check (mobile app)',
     );
     expect(text.formatValue('role_policies', 'members.delete', true)).toBe('Allowed');
     expect(text.formatValue('activities', 'dayOfWeek', 'wednesday')).toBe('Wednesday');

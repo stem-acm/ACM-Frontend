@@ -15,6 +15,7 @@ const VOLUNTEER_DEFAULT_FEATURES = [
   'activities.view',
   'books.view',
   'checkins.create',
+  'checkins.verify',
   'profile.edit',
 ];
 

@@ -33,6 +33,7 @@ export const FEATURE_LABELS: Record<string, { group: string; label: string }> = 
   'checkins.create': { group: 'Check-ins', label: 'Create' },
   'checkins.view': { group: 'Check-ins', label: 'History and live updates' },
   'checkins.delete': { group: 'Check-ins', label: 'Delete' },
+  'checkins.verify': { group: 'Check-ins', label: 'Badge check (mobile app)' },
   'books.view': { group: 'Books', label: 'View' },
   'books.create': { group: 'Books', label: 'Create' },
   'books.update': { group: 'Books', label: 'Edit' },

@@ -124,6 +124,7 @@ export const PERMISSION_KEYS: Record<string, [group: string, action: string]> = 
   'checkins.create': ['checkins', 'create'],
   'checkins.view': ['checkins', 'history'],
   'checkins.delete': ['checkins', 'delete'],
+  'checkins.verify': ['checkins', 'verify'],
   'books.view': ['books', 'view'],
   'books.create': ['books', 'create'],
   'books.update': ['books', 'update'],
@@ -317,6 +318,8 @@ export class AuditLogText {
         return this.plural(key, count, { days: this.fieldList(log) });
       case 'timezone.updated':
         return this.t(key, transition('timezone'));
+      case 'member.badge_verified':
+        return this.t(key, { status: value('status', log.changes['status']) });
       case 'book_loan.returned':
         return this.t(key, {
           effectiveReturnDate: value(

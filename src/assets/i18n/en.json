@@ -85,7 +85,8 @@
       "certificate": "Certificates",
       "history": "History and live updates",
       "manage": "Manage access",
-      "editOwnProfile": "Edit own profile"
+      "editOwnProfile": "Edit own profile",
+      "verify": "Badge check (mobile app)"
     }
   },
   "auditLog": {
@@ -163,7 +164,8 @@
       "member": {
         "created": "Member created",
         "updated": "Member updated",
-        "deleted": "Member deleted"
+        "deleted": "Member deleted",
+        "badge_verified": "Badge checked"
       },
       "activity": {
         "created": "Activity created",
@@ -217,7 +219,8 @@
           "one": "{{count}} field changed: {{fields}}",
           "other": "{{count}} fields changed: {{fields}}"
         },
-        "deleted": "Member removed"
+        "deleted": "Member removed",
+        "badge_verified": "Badge checked: {{status}}"
       },
       "activity": {
         "created": "New activity, {{startTime}} to {{endTime}}",

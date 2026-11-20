@@ -48,6 +48,16 @@ describe('SettingsComponent', () => {
     fixture.detectChanges();
 
     component.policies[0].permissions['members.view'] = true;
+    // The badge check of the mobile app is a check-in permission without dependency rules.
+    expect(
+      component.groups.find(group => group.label === 'access.groups.checkins')!.features,
+    ).toContain(['checkins.verify', 'access.actions.verify']);
+    component.policies[0].permissions['checkins.verify'] = true;
+    component.featureChanged(component.policies[0], 'checkins.verify');
+    expect(component.policies[0].permissions).toEqual({
+      'members.view': true,
+      'checkins.verify': true,
+    });
     component.selectedRole = 'volunteer';
     expect(component.isRoleDirty('intern')).toBeTrue();
     expect(component.policies[0].permissions['members.view']).toBeTrue();
@@ -58,12 +68,16 @@ describe('SettingsComponent', () => {
 
     component.selectedRole = 'intern';
     component.savePolicy();
-    http
-      .expectOne(request => request.url.endsWith('/settings/roles/intern'))
-      .flush({
-        success: true,
-        data: { role: 'intern', active: true, permissions: { 'members.view': true } },
-      });
+    const save = http.expectOne(request => request.url.endsWith('/settings/roles/intern'));
+    expect(save.request.body.permissions['checkins.verify']).toBeTrue();
+    save.flush({
+      success: true,
+      data: {
+        role: 'intern',
+        active: true,
+        permissions: { 'members.view': true, 'checkins.verify': true },
+      },
+    });
 
     expect(component.isRoleDirty('intern')).toBeFalse();
     expect(component.canLeave()).toBeTrue();

@@ -13,7 +13,6 @@ export interface Activity {
   id?: number;
   name: string;
   description?: string | null;
-  image?: string | null;
   emoji?: string | null;
   isPeriodic: boolean;
   dayOfWeek?: DayOfWeek | null;

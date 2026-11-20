@@ -42,7 +42,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
   public activity: Activity = {
     name: '',
     description: '',
-    image: '',
     emoji: '',
     isPeriodic: true,
     dayOfWeek: 'tuesday',
@@ -282,7 +281,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
     this.activity = {
       name: '',
       description: '',
-      image: '',
       emoji: '',
       isPeriodic: true,
       dayOfWeek: 'tuesday',
@@ -307,7 +305,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
       this.activity = {
         name: '',
         description: '',
-        image: '',
         emoji: '',
         isPeriodic: true,
         dayOfWeek: 'tuesday',
@@ -326,7 +323,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
         this.activity = {
           name: '',
           description: '',
-          image: '',
           isPeriodic: true,
           dayOfWeek: 'tuesday',
           startDate: '',
@@ -445,7 +441,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
           this.activity = {
             name: '',
             description: '',
-            image: '',
             emoji: '',
             isPeriodic: true,
             dayOfWeek: 'tuesday',
@@ -520,7 +515,6 @@ export class AddActivityComponent implements OnChanges, OnInit {
           this.activity = {
             name: '',
             description: '',
-            image: '',
             emoji: '',
             isPeriodic: true,
             dayOfWeek: 'tuesday',

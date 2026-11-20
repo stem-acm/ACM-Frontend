@@ -316,14 +316,12 @@ export class ApiHelper {
 
   /**
    * Creates an activity with complete, unique field values (periodic, every day).
-   * `image` is an empty string, as the app's form and the seed store it.
    */
   async createActivity(overrides: Partial<ActivityInput> = {}): Promise<Activity> {
     const suffix = uniqueSuffix();
     return this.post<Activity>('activities', {
       name: `E2e activity ${suffix}`,
       description: `E2e description ${suffix}`,
-      image: '',
       emoji: '🧪',
       isPeriodic: true,
       dayOfWeek: 'everyday',

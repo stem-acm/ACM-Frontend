@@ -150,6 +150,7 @@ export class SettingsComponent implements OnInit {
         ['checkins.create', 'access.actions.create'],
         ['checkins.view', 'access.actions.history'],
         ['checkins.delete', 'access.actions.delete'],
+        ['checkins.verify', 'access.actions.verify'],
       ],
     },
     {

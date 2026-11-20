@@ -85,7 +85,8 @@
       "certificate": "Taratasy fanamarinana",
       "history": "Tantara sy fanavaozana",
       "manage": "Hitantana fidirana",
-      "editOwnProfile": "Hanova ny mombamomba azy"
+      "editOwnProfile": "Hanova ny mombamomba azy",
+      "verify": "Fanamarinana karatra (fampiharana finday)"
     }
   },
   "auditLog": {
@@ -163,7 +164,8 @@
       "member": {
         "created": "Mpikambana noforonina",
         "updated": "Mpikambana novaina",
-        "deleted": "Mpikambana voafafa"
+        "deleted": "Mpikambana voafafa",
+        "badge_verified": "Karatra voamarina"
       },
       "activity": {
         "created": "Hetsika noforonina",
@@ -217,7 +219,8 @@
           "one": "Saha {{count}} novaina: {{fields}}",
           "other": "Saha {{count}} novaina: {{fields}}"
         },
-        "deleted": "Mpikambana nesorina"
+        "deleted": "Mpikambana nesorina",
+        "badge_verified": "Karatra voamarina: {{status}}"
       },
       "activity": {
         "created": "Hetsika vaovao, {{startTime}} hatramin'ny {{endTime}}",

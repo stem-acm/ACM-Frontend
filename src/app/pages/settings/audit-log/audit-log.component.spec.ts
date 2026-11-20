@@ -87,8 +87,8 @@ describe('AuditLogComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('knows the entity of each of the 25 log types', () => {
-    expect(AUDIT_LOG_TYPES.length).toBe(25);
+  it('knows the entity of each of the 26 log types', () => {
+    expect(AUDIT_LOG_TYPES.length).toBe(26);
     for (const type of AUDIT_LOG_TYPES) {
       expect(AUDIT_LOG_ENTITIES).toContain(entityOfType(type));
     }
@@ -261,7 +261,7 @@ describe('AuditLogComponent', () => {
   it('lists only the log types of the selected record type', () => {
     fixture.detectChanges();
     expect(component.typeGroups.map(group => group.entity)).toEqual([...AUDIT_LOG_ENTITIES]);
-    expect(component.typeGroups.flatMap(group => group.types).length).toBe(25);
+    expect(component.typeGroups.flatMap(group => group.types).length).toBe(26);
 
     component.entity = 'checkins';
     expect(component.typeGroups).toEqual([

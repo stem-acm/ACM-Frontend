@@ -85,7 +85,8 @@
       "certificate": "Certificats",
       "history": "Historique et mises à jour",
       "manage": "Gérer les accès",
-      "editOwnProfile": "Modifier son profil"
+      "editOwnProfile": "Modifier son profil",
+      "verify": "Contrôle du badge (application mobile)"
     }
   },
   "auditLog": {
@@ -163,7 +164,8 @@
       "member": {
         "created": "Membre créé",
         "updated": "Membre modifié",
-        "deleted": "Membre supprimé"
+        "deleted": "Membre supprimé",
+        "badge_verified": "Badge contrôlé"
       },
       "activity": {
         "created": "Activité créée",
@@ -217,7 +219,8 @@
           "one": "{{count}} champ modifié : {{fields}}",
           "other": "{{count}} champs modifiés : {{fields}}"
         },
-        "deleted": "Membre supprimé"
+        "deleted": "Membre supprimé",
+        "badge_verified": "Badge contrôlé : {{status}}"
       },
       "activity": {
         "created": "Nouvelle activité, de {{startTime}} à {{endTime}}",
